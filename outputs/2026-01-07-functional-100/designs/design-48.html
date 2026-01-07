@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Neon - Time Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Luxe Neon - Time Tracker Design #48
+        ABOUTME: Art Deco glamour meets African bold patterns with hyper-saturated triadic colors in a flat design system
+
+        Design System: "Luxe Neon"
+        Tagline: "Crafted for smb with african bold roots"
+
+        Core Aesthetic Principles:
+        - Art Deco symmetry and geometric glamour with stepped forms
+        - African textile-inspired bold patterns and triangular motifs
+        - Flat UI with zero shadows, relying on saturated color contrast
+        - Triadic color harmony: Orange-red, Yellow-green, Blue-violet
+        - High contrast for readability and dramatic visual impact
+        - Warm hyper-saturated palette with primary mood
+        - Single canvas layout with kanban-style time entry columns
+
+        Key Token Values:
+        --color-primary: #FF4500 (Vibrant orange-red - fire and energy)
+        --color-secondary: #9DFF00 (Electric lime - growth and vitality)
+        --color-tertiary: #6B00FF (Deep violet - wisdom and depth)
+        --color-background: #FFF9F0 (Warm cream base)
+        --space-unit: 24px (balanced density)
+        --radius-default: 0px (sharp, geometric Art Deco)
+
+        Typography:
+        - Headings: Bebas Neue (bold geometric display)
+        - Body: Montserrat (clean, geometric sans)
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Triadic Color System - Warm Hyper-saturated */
+            --color-primary: #FF4500;
+            --color-secondary: #9DFF00;
+            --color-tertiary: #6B00FF;
+            --color-background: #FFF9F0;
+            --color-surface: #FFFFFF;
+            --color-text: #1A0F00;
+            --color-text-muted: #664D00;
+            --color-accent-1: #FF8C42;
+            --color-accent-2: #FFD700;
+
+            /* Typography */
+            --font-heading: 'Bebas Neue', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+            --font-scale: 1.414; /* Augmented fourth */
+
+            /* Spacing - Balanced Density */
+            --space-unit: 24px;
+            --space-xs: calc(var(--space-unit) * 0.25);
+            --space-sm: calc(var(--space-unit) * 0.5);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2);
+            --space-xxl: calc(var(--space-unit) * 3);
+
+            /* Shapes - Sharp geometric Art Deco */
+            --radius-default: 0px;
+            --shadow-default: none;
+
+            /* Borders - Thick, bold */
+            --border-width: 4px;
+            --border-style: solid;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* African-inspired geometric pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 69, 0, 0.03) 35px, rgba(255, 69, 0, 0.03) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(157, 255, 0, 0.03) 35px, rgba(157, 255, 0, 0.03) 70px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        /* Art Deco Header with stepped geometric form */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-1) 100%);
+            color: var(--color-surface);
+            padding: var(--space-lg);
+            position: relative;
+            margin-bottom: var(--space-xl);
+        }
+
+        .header::before,
+        .header::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 8px;
+        }
+
+        .header::before {
+            top: 0;
+            background: var(--color-tertiary);
+        }
+
+        .header::after {
+            bottom: 0;
+            background: var(--color-secondary);
+        }
+
+        /* African-inspired triangular accent */
+        .header-accent {
+            position: absolute;
+            top: 0;
+            right: var(--space-xl);
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-top: 100px solid var(--color-tertiary);
+            opacity: 0.3;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 32px;
+            color: var(--color-text);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .tagline {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-top: var(--space-xs);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: rgba(255, 255, 255, 0.15);
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--color-surface);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--color-secondary);
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Timer Display - Art Deco centerpiece */
+        .timer-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-primary);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            position: relative;
+        }
+
+        .timer-section::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background: var(--color-secondary);
+        }
+
+        .timer-section::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background: var(--color-tertiary);
+        }
+
+        .timer-display {
+            font-family: var(--font-heading);
+            font-size: 120px;
+            color: var(--color-primary);
+            line-height: 1;
+            margin: var(--space-md) 0;
+            letter-spacing: 8px;
+        }
+
+        .timer-status {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-top: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        /* Buttons - Flat, bold, geometric */
+        .btn {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border: var(--border-width) solid;
+            background: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 160px;
+            min-height: 44px;
+        }
+
+        .btn:focus {
+            outline: 4px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-1);
+            border-color: var(--color-accent-1);
+        }
+
+        .btn-secondary {
+            background: var(--color-tertiary);
+            border-color: var(--color-tertiary);
+            color: var(--color-surface);
+        }
+
+        .btn-secondary:hover {
+            background: #8B2BFF;
+            border-color: #8B2BFF;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--color-text);
+            color: var(--color-text);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-text);
+            color: var(--color-surface);
+        }
+
+        /* Project Selector */
+        .project-selector {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-secondary);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 40px;
+            background: var(--color-secondary);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .project-card {
+            background: var(--color-background);
+            border: 3px solid var(--color-text);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .project-card:hover,
+        .project-card.active {
+            border-color: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-1) 100%);
+            color: var(--color-surface);
+        }
+
+        .project-card:focus {
+            outline: 4px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .project-name {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-client {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .project-rate {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            margin-top: var(--space-sm);
+            color: var(--color-secondary);
+        }
+
+        .project-card:hover .project-rate,
+        .project-card.active .project-rate {
+            color: var(--color-surface);
+        }
+
+        /* Billable Toggle */
+        .billable-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--color-background);
+            border-left: 8px solid var(--color-tertiary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 80px;
+            height: 44px;
+            background: var(--color-text-muted);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--color-secondary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 36px;
+            height: 36px;
+            background: var(--color-surface);
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(36px);
+            background: var(--color-text);
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        /* Kanban Time Entries - Three columns */
+        .entries-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .kanban-column {
+            background: var(--color-surface);
+            border: var(--border-width) solid;
+            padding: var(--space-lg);
+        }
+
+        .kanban-column:nth-child(1) {
+            border-color: var(--color-primary);
+        }
+
+        .kanban-column:nth-child(2) {
+            border-color: var(--color-secondary);
+        }
+
+        .kanban-column:nth-child(3) {
+            border-color: var(--color-tertiary);
+        }
+
+        .kanban-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 3px solid currentColor;
+        }
+
+        .kanban-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .kanban-column:nth-child(1) .kanban-title {
+            color: var(--color-primary);
+        }
+
+        .kanban-column:nth-child(2) .kanban-title {
+            color: var(--color-secondary);
+        }
+
+        .kanban-column:nth-child(3) .kanban-title {
+            color: var(--color-tertiary);
+        }
+
+        .kanban-total {
+            font-family: var(--font-heading);
+            font-size: 28px;
+        }
+
+        .time-entry {
+            background: var(--color-background);
+            border-left: 6px solid;
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+
+        .time-entry:nth-child(odd) {
+            border-left-color: var(--color-primary);
+        }
+
+        .time-entry:nth-child(even) {
+            border-left-color: var(--color-tertiary);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-sm);
+        }
+
+        .entry-project {
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .entry-time {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            color: var(--color-primary);
+        }
+
+        .entry-description {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .entry-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .entry-tag {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-sm);
+            font-weight: 600;
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--color-text);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--color-text);
+            color: var(--color-surface);
+        }
+
+        .icon-btn:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Reports Section - Art Deco stats */
+        .reports-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-tertiary);
+            padding: var(--space-xl);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .stat-card {
+            background: var(--color-background);
+            padding: var(--space-lg);
+            text-align: center;
+            position: relative;
+            border-left: 8px solid;
+        }
+
+        .stat-card:nth-child(1) {
+            border-left-color: var(--color-primary);
+        }
+
+        .stat-card:nth-child(2) {
+            border-left-color: var(--color-secondary);
+        }
+
+        .stat-card:nth-child(3) {
+            border-left-color: var(--color-tertiary);
+        }
+
+        .stat-card:nth-child(4) {
+            border-left-color: var(--color-accent-2);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 56px;
+            line-height: 1;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-card:nth-child(2) .stat-value {
+            color: var(--color-secondary);
+        }
+
+        .stat-card:nth-child(3) .stat-value {
+            color: var(--color-tertiary);
+        }
+
+        .stat-card:nth-child(4) .stat-value {
+            color: var(--color-accent-2);
+        }
+
+        .stat-sublabel {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        /* African-inspired decorative elements */
+        .pattern-accent {
+            width: 100%;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--color-primary),
+                var(--color-primary) 20px,
+                var(--color-secondary) 20px,
+                var(--color-secondary) 40px,
+                var(--color-tertiary) 40px,
+                var(--color-tertiary) 60px
+            );
+            margin: var(--space-xl) 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .timer-display {
+                font-size: 72px;
+            }
+
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-accent"></div>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">L</div>
+                    <div>
+                        <h1>Luxe Neon</h1>
+                        <p class="tagline">Crafted for SMB with African Bold Roots</p>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">AK</div>
+                    <div>
+                        <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Amara Kofi</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Design Director</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Timer Display -->
+        <section class="timer-section">
+            <div class="timer-status">Currently Tracking</div>
+            <div class="timer-display">02:47:33</div>
+            <div class="timer-controls">
+                <button class="btn btn-primary">Stop Timer</button>
+                <button class="btn btn-secondary">Pause</button>
+                <button class="btn btn-outline">Reset</button>
+            </div>
+        </section>
+
+        <!-- Project Selector -->
+        <section class="project-selector">
+            <h2 class="section-title">Select Project</h2>
+            <div class="project-grid">
+                <div class="project-card active" tabindex="0">
+                    <div class="project-name">Brand Identity</div>
+                    <div class="project-client">AfroTech Solutions</div>
+                    <div class="project-rate">$120/hr</div>
+                </div>
+                <div class="project-card" tabindex="0">
+                    <div class="project-name">Web Design</div>
+                    <div class="project-client">Lagos Digital</div>
+                    <div class="project-rate">$95/hr</div>
+                </div>
+                <div class="project-card" tabindex="0">
+                    <div class="project-name">Mobile App</div>
+                    <div class="project-client">Nairobi Ventures</div>
+                    <div class="project-rate">$110/hr</div>
+                </div>
+                <div class="project-card" tabindex="0">
+                    <div class="project-name">Marketing</div>
+                    <div class="project-client">Accra Commerce</div>
+                    <div class="project-rate">$85/hr</div>
+                </div>
+            </div>
+
+            <div class="billable-toggle">
+                <div class="toggle-switch active" tabindex="0" role="switch" aria-checked="true">
+                    <div class="toggle-slider"></div>
+                </div>
+                <div class="toggle-label">Billable Time</div>
+            </div>
+        </section>
+
+        <!-- Kanban Time Entries -->
+        <section class="entries-section">
+            <h2 class="section-title">Time Entries</h2>
+
+            <div class="kanban-board">
+                <!-- Today Column -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3 class="kanban-title">Today</h3>
+                        <div class="kanban-total">8:45</div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Brand Identity</div>
+                            <div class="entry-time">2:30</div>
+                        </div>
+                        <div class="entry-description">Logo concepts and color palette development</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Web Design</div>
+                            <div class="entry-time">3:15</div>
+                        </div>
+                        <div class="entry-description">Homepage wireframes and user flow mapping</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Marketing</div>
+                            <div class="entry-time">1:00</div>
+                        </div>
+                        <div class="entry-description">Social media content planning</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Brand Identity</div>
+                            <div class="entry-time">2:00</div>
+                        </div>
+                        <div class="entry-description">Client presentation preparation</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- This Week Column -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3 class="kanban-title">This Week</h3>
+                        <div class="kanban-total">42:20</div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Mobile App</div>
+                            <div class="entry-time">12:45</div>
+                        </div>
+                        <div class="entry-description">UI design system and component library</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Brand Identity</div>
+                            <div class="entry-time">8:30</div>
+                        </div>
+                        <div class="entry-description">Brand guidelines documentation</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Web Design</div>
+                            <div class="entry-time">10:20</div>
+                        </div>
+                        <div class="entry-description">Responsive layouts and prototyping</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Marketing</div>
+                            <div class="entry-time">6:00</div>
+                        </div>
+                        <div class="entry-description">Campaign strategy and asset creation</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Mobile App</div>
+                            <div class="entry-time">4:45</div>
+                        </div>
+                        <div class="entry-description">User testing and feedback analysis</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="Edit entry">✎</button>
+                                <button class="icon-btn" aria-label="Delete entry">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- This Month Column -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3 class="kanban-title">This Month</h3>
+                        <div class="kanban-total">168:15</div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Brand Identity</div>
+                            <div class="entry-time">52:30</div>
+                        </div>
+                        <div class="entry-description">Complete brand refresh project</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="View details">→</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Web Design</div>
+                            <div class="entry-time">48:20</div>
+                        </div>
+                        <div class="entry-description">Full website redesign and development</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="View details">→</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Mobile App</div>
+                            <div class="entry-time">42:45</div>
+                        </div>
+                        <div class="entry-description">iOS and Android app design</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="View details">→</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-entry">
+                        <div class="entry-header">
+                            <div class="entry-project">Marketing</div>
+                            <div class="entry-time">24:40</div>
+                        </div>
+                        <div class="entry-description">Q1 marketing campaign execution</div>
+                        <div class="entry-meta">
+                            <span class="entry-tag">Billable</span>
+                            <div class="entry-actions">
+                                <button class="icon-btn" aria-label="View details">→</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="pattern-accent" role="presentation"></div>
+
+        <!-- Reports Section -->
+        <section class="reports-section">
+            <h2 class="section-title">Performance Reports</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Daily Total</div>
+                    <div class="stat-value">8:45</div>
+                    <div class="stat-sublabel">Hours tracked today</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Weekly Total</div>
+                    <div class="stat-value">42:20</div>
+                    <div class="stat-sublabel">Hours this week</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Billable Hours</div>
+                    <div class="stat-value">158:45</div>
+                    <div class="stat-sublabel">This month</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Revenue</div>
+                    <div class="stat-value">$16.2K</div>
+                    <div class="stat-sublabel">Month to date</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 48;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive elements
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                projectCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    projectCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                }
+            });
+        });
+
+        const toggleSwitch = document.querySelector('.toggle-switch');
+        toggleSwitch.addEventListener('click', () => {
+            toggleSwitch.classList.toggle('active');
+            const isActive = toggleSwitch.classList.contains('active');
+            toggleSwitch.setAttribute('aria-checked', isActive);
+        });
+
+        toggleSwitch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleSwitch.classList.toggle('active');
+                const isActive = toggleSwitch.classList.contains('active');
+                toggleSwitch.setAttribute('aria-checked', isActive);
+            }
+        });
+
+        // Timer functionality
+        let seconds = 10053; // 2:47:33
+        let isRunning = true;
+        const timerDisplay = document.querySelector('.timer-display');
+        const timerStatus = document.querySelector('.timer-status');
+        const startStopBtn = document.querySelector('.btn-primary');
+        const pauseBtn = document.querySelector('.btn-secondary');
+        const resetBtn = document.querySelector('.btn-outline');
+
+        function updateTimer() {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        let interval = setInterval(() => {
+            if (isRunning) {
+                seconds++;
+                updateTimer();
+            }
+        }, 1000);
+
+        startStopBtn.addEventListener('click', () => {
+            isRunning = !isRunning;
+            if (isRunning) {
+                startStopBtn.textContent = 'Stop Timer';
+                timerStatus.textContent = 'Currently Tracking';
+            } else {
+                startStopBtn.textContent = 'Start Timer';
+                timerStatus.textContent = 'Timer Stopped';
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isRunning = !isRunning;
+            pauseBtn.textContent = isRunning ? 'Pause' : 'Resume';
+            timerStatus.textContent = isRunning ? 'Currently Tracking' : 'Timer Paused';
+        });
+
+        resetBtn.addEventListener('click', () => {
+            seconds = 0;
+            updateTimer();
+            isRunning = false;
+            startStopBtn.textContent = 'Start Timer';
+            pauseBtn.textContent = 'Pause';
+            timerStatus.textContent = 'Timer Reset';
+        });
+    })();
+    </script>
+</body>
+</html>

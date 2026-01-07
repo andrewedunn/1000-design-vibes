@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<!--
+ABOUTME: Design #78 - Modern Hub
+ABOUTME: Community directory with organic art deco styling, featuring member cards, search/filter, and location map
+
+DESIGN SYSTEM TOKENS
+====================
+Color Palette: Monochromatic natural greens with hyper-saturated tones
+- Primary: Deep emerald (#1a5f3f)
+- Background: Soft sage gradient mesh
+- Surface: Floating organic shapes with subtle radius
+- Text: Forest green (#0d2f1f)
+- Accent: Bright lime (#7fda1e)
+
+Typography:
+- Headings: Inter (neo-grotesque), lowercase only, tight leading
+- Body: Crimson Text (modern serif), tight leading
+- Scale: Minor third (1.2)
+
+Spacing: 10px base unit, ultra-airy density (3-5x multipliers)
+
+Layout:
+- Single canvas with transparent top nav
+- Split image hero
+- Carousel-based member showcase
+- Organic blob containers with gradient mesh texture
+- Three-column grid for member cards
+
+Art Deco Elements:
+- Symmetrical layouts
+- Glamorous gold accent touches
+- Geometric ornamental details
+- Luxurious spacing
+
+Organic Elements:
+- Blob-like card shapes
+- Flowing, curved boundaries
+- Natural, asymmetric compositions
+- Smooth transitions
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>modern hub - community directory</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors - Monochromatic natural greens, hyper-saturated */
+            --color-primary: #1a5f3f;
+            --color-primary-light: #2a7f5f;
+            --color-background: #e8f3ed;
+            --color-surface: #f5faf7;
+            --color-text: #0d2f1f;
+            --color-text-muted: #4a6f5f;
+            --color-accent: #7fda1e;
+            --color-gold: #d4af37;
+
+            /* Typography */
+            --font-heading: 'Inter', sans-serif;
+            --font-body: 'Crimson Text', serif;
+
+            /* Type scale - Minor third (1.2) */
+            --text-xs: 0.694rem;
+            --text-sm: 0.833rem;
+            --text-base: 1rem;
+            --text-lg: 1.2rem;
+            --text-xl: 1.44rem;
+            --text-2xl: 1.728rem;
+            --text-3xl: 2.074rem;
+            --text-4xl: 2.488rem;
+
+            /* Spacing - 10px base, ultra-airy */
+            --space-unit: 10px;
+            --space-xs: calc(var(--space-unit) * 2);
+            --space-sm: calc(var(--space-unit) * 3);
+            --space-md: calc(var(--space-unit) * 5);
+            --space-lg: calc(var(--space-unit) * 8);
+            --space-xl: calc(var(--space-unit) * 12);
+
+            /* Shapes */
+            --radius-default: 8px;
+            --shadow-default: 0 4px 12px rgba(13, 47, 31, 0.15);
+            --shadow-hover: 0 8px 24px rgba(13, 47, 31, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.3;
+            color: var(--color-text);
+            background: linear-gradient(135deg, #e8f3ed 0%, #f5faf7 50%, #ddf0e4 100%);
+            background-attachment: fixed;
+            text-transform: lowercase;
+            overflow-x: hidden;
+        }
+
+        /* Gradient mesh texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(127, 218, 30, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(26, 95, 63, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Transparent top navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(245, 250, 247, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-brand {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--text-xl);
+            color: var(--color-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-brand::before {
+            content: '◆';
+            color: var(--color-gold);
+            margin-right: 8px;
+            font-size: var(--text-sm);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-sm);
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--color-primary);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+
+        /* Split image hero */
+        .hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            align-items: center;
+            gap: var(--space-lg);
+            padding: var(--space-xl) var(--space-md);
+            z-index: 2;
+        }
+
+        .hero-content {
+            padding-left: var(--space-lg);
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: var(--text-xl);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+            line-height: 1.3;
+        }
+
+        .member-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-surface);
+            border-radius: 100px;
+            box-shadow: var(--shadow-default);
+            margin-bottom: var(--space-md);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+        }
+
+        .member-count-number {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: var(--text-lg);
+        }
+
+        .join-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-primary);
+            color: var(--color-surface);
+            font-family: var(--font-heading);
+            font-size: var(--text-base);
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+            min-height: 44px;
+            justify-content: center;
+        }
+
+        .join-button::after {
+            content: '→';
+            font-size: var(--text-lg);
+        }
+
+        .join-button:hover,
+        .join-button:focus {
+            background: var(--color-primary-light);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+
+        .hero-image {
+            position: relative;
+            height: 600px;
+            background: var(--color-primary);
+            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(127, 218, 30, 0.2) 0%, rgba(26, 95, 63, 0.3) 100%);
+        }
+
+        .hero-image-placeholder {
+            position: relative;
+            z-index: 1;
+            font-size: var(--text-3xl);
+            color: var(--color-surface);
+            text-align: center;
+            font-family: var(--font-heading);
+        }
+
+        /* Art deco decorative element */
+        .deco-accent {
+            position: absolute;
+            top: 30%;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            border: 3px solid var(--color-gold);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .deco-accent::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--color-gold);
+            border-radius: 50%;
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            padding: var(--space-xl) var(--space-md);
+            z-index: 2;
+        }
+
+        /* Search and filter section */
+        .search-section {
+            max-width: 1400px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1.1;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: var(--space-xs) var(--space-sm);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            background: var(--color-surface);
+            border: none;
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            text-transform: lowercase;
+            min-height: 44px;
+        }
+
+        .search-input:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .filter-button {
+            padding: var(--space-xs) var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-default);
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .filter-button:hover,
+        .filter-button:focus {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .filter-button.active {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        /* Category tags */
+        .category-tags {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            padding: 8px var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            background: var(--color-surface);
+            color: var(--color-text-muted);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-default);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-tag:hover,
+        .category-tag:focus {
+            background: var(--color-accent);
+            color: var(--color-text);
+            transform: translateY(-2px);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .category-tag::before {
+            content: '◆';
+            color: var(--color-gold);
+            margin-right: 6px;
+            font-size: 0.7em;
+        }
+
+        /* Featured members carousel */
+        .featured-section {
+            max-width: 1400px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .featured-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .carousel-button {
+            width: 50px;
+            height: 50px;
+            background: var(--color-surface);
+            border: none;
+            border-radius: 50%;
+            font-size: var(--text-xl);
+            color: var(--color-primary);
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-button:hover,
+        .carousel-button:focus {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            box-shadow: var(--shadow-hover);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .carousel-container {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel {
+            display: flex;
+            gap: var(--space-md);
+            padding: var(--space-xs);
+        }
+
+        /* Member cards - organic blob shapes */
+        .member-card {
+            flex: 0 0 350px;
+            background: var(--color-surface);
+            border-radius: 30% 70% 70% 30% / 50% 50% 50% 50%;
+            box-shadow: var(--shadow-default);
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .member-card:hover,
+        .member-card:focus-within {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .member-card.featured::before {
+            content: '★';
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            color: var(--color-gold);
+            font-size: var(--text-xl);
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .member-photo {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-4xl);
+            color: var(--color-surface);
+            font-family: var(--font-heading);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-photo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(127, 218, 30, 0.2) 0%, transparent 70%);
+        }
+
+        .member-info {
+            padding: var(--space-md);
+        }
+
+        .member-name {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .member-role {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .member-location {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .member-location::before {
+            content: '📍';
+            font-size: var(--text-xs);
+        }
+
+        .member-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-sm);
+        }
+
+        .member-tag {
+            padding: 4px 10px;
+            background: rgba(26, 95, 63, 0.1);
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            border-radius: 100px;
+        }
+
+        .member-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 8px 0;
+        }
+
+        .member-link:hover,
+        .member-link:focus {
+            color: var(--color-accent);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+
+        .member-link::after {
+            content: '→';
+        }
+
+        /* All members grid - three columns */
+        .members-section {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        /* Location map */
+        .map-section {
+            max-width: 1400px;
+            margin: var(--space-xl) auto;
+        }
+
+        .map-container {
+            height: 500px;
+            background: var(--color-surface);
+            border-radius: 40px;
+            box-shadow: var(--shadow-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            color: var(--color-text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(127, 218, 30, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(26, 95, 63, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
+
+        .map-placeholder {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-size: var(--text-xl);
+        }
+
+        .map-pins {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--color-primary);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: var(--shadow-default);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .map-pin::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: var(--color-surface);
+            border-radius: 50%;
+        }
+
+        .map-pin:hover,
+        .map-pin:focus {
+            transform: rotate(-45deg) scale(1.3);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+
+        .map-pin:nth-child(1) { top: 30%; left: 20%; }
+        .map-pin:nth-child(2) { top: 50%; left: 45%; }
+        .map-pin:nth-child(3) { top: 60%; left: 70%; }
+        .map-pin:nth-child(4) { top: 25%; left: 65%; }
+        .map-pin:nth-child(5) { top: 70%; left: 30%; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                padding-top: 100px;
+            }
+
+            .hero-content {
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .hero-image {
+                height: 400px;
+            }
+
+            .members-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-controls {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .carousel {
+                gap: var(--space-sm);
+            }
+
+            .member-card {
+                flex: 0 0 280px;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Transparent navigation -->
+    <nav>
+        <div class="nav-brand">modern hub</div>
+        <ul class="nav-links">
+            <li><a href="#members">members</a></li>
+            <li><a href="#featured">featured</a></li>
+            <li><a href="#map">locations</a></li>
+            <li><a href="#join">join us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Split image hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">connect with creative minds around the world</h1>
+            <p class="hero-subtitle">join a vibrant community of designers, artists, and innovators shaping the future together</p>
+
+            <div class="member-count">
+                <span class="member-count-number">1,247</span>
+                <span>active members</span>
+            </div>
+
+            <button class="join-button" id="join">join the community</button>
+        </div>
+
+        <div class="hero-image">
+            <div class="hero-image-placeholder">
+                🌿<br>
+                creative<br>
+                community
+            </div>
+            <div class="deco-accent"></div>
+        </div>
+    </section>
+
+    <main>
+        <!-- Search and filter -->
+        <section class="search-section" id="members">
+            <div class="search-header">
+                <h2 class="section-title">discover members</h2>
+            </div>
+
+            <div class="search-controls">
+                <input type="search" class="search-input" placeholder="search by name, skill, or location..." aria-label="Search members">
+
+                <div class="filter-group">
+                    <button class="filter-button active" aria-label="Grid view">⊞</button>
+                    <button class="filter-button" aria-label="List view">☰</button>
+                    <button class="filter-button" aria-label="Map view">🗺</button>
+                </div>
+            </div>
+
+            <!-- Category tags -->
+            <div class="category-tags">
+                <button class="category-tag">all members</button>
+                <button class="category-tag">designers</button>
+                <button class="category-tag">developers</button>
+                <button class="category-tag">artists</button>
+                <button class="category-tag">writers</button>
+                <button class="category-tag">entrepreneurs</button>
+                <button class="category-tag">educators</button>
+            </div>
+        </section>
+
+        <!-- Featured members carousel -->
+        <section class="featured-section" id="featured">
+            <div class="featured-header">
+                <h2 class="section-title">featured members</h2>
+                <div class="carousel-nav">
+                    <button class="carousel-button" aria-label="Previous">←</button>
+                    <button class="carousel-button" aria-label="Next">→</button>
+                </div>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <article class="member-card featured">
+                        <div class="member-photo">AM</div>
+                        <div class="member-info">
+                            <h3 class="member-name">aria martinez</h3>
+                            <p class="member-role">creative director & brand strategist</p>
+                            <p class="member-location">barcelona, spain</p>
+                            <div class="member-tags">
+                                <span class="member-tag">branding</span>
+                                <span class="member-tag">strategy</span>
+                                <span class="member-tag">design</span>
+                            </div>
+                            <a href="#" class="member-link">view profile</a>
+                        </div>
+                    </article>
+
+                    <article class="member-card featured">
+                        <div class="member-photo">JK</div>
+                        <div class="member-info">
+                            <h3 class="member-name">jordan kim</h3>
+                            <p class="member-role">product designer & ui specialist</p>
+                            <p class="member-location">seoul, south korea</p>
+                            <div class="member-tags">
+                                <span class="member-tag">ui/ux</span>
+                                <span class="member-tag">mobile</span>
+                                <span class="member-tag">product</span>
+                            </div>
+                            <a href="#" class="member-link">view profile</a>
+                        </div>
+                    </article>
+
+                    <article class="member-card featured">
+                        <div class="member-photo">SC</div>
+                        <div class="member-info">
+                            <h3 class="member-name">sofia chen</h3>
+                            <p class="member-role">motion designer & animator</p>
+                            <p class="member-location">san francisco, usa</p>
+                            <div class="member-tags">
+                                <span class="member-tag">animation</span>
+                                <span class="member-tag">motion</span>
+                                <span class="member-tag">video</span>
+                            </div>
+                            <a href="#" class="member-link">view profile</a>
+                        </div>
+                    </article>
+
+                    <article class="member-card featured">
+                        <div class="member-photo">LP</div>
+                        <div class="member-info">
+                            <h3 class="member-name">luca petrov</h3>
+                            <p class="member-role">visual artist & illustrator</p>
+                            <p class="member-location">milan, italy</p>
+                            <div class="member-tags">
+                                <span class="member-tag">illustration</span>
+                                <span class="member-tag">art</span>
+                                <span class="member-tag">editorial</span>
+                            </div>
+                            <a href="#" class="member-link">view profile</a>
+                        </div>
+                    </article>
+
+                    <article class="member-card featured">
+                        <div class="member-photo">EN</div>
+                        <div class="member-info">
+                            <h3 class="member-name">emma nakamura</h3>
+                            <p class="member-role">ux researcher & design lead</p>
+                            <p class="member-location">tokyo, japan</p>
+                            <div class="member-tags">
+                                <span class="member-tag">research</span>
+                                <span class="member-tag">ux</span>
+                                <span class="member-tag">leadership</span>
+                            </div>
+                            <a href="#" class="member-link">view profile</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- All members grid (three columns) -->
+        <section class="members-section">
+            <h2 class="section-title">all members</h2>
+
+            <div class="members-grid">
+                <article class="member-card">
+                    <div class="member-photo">RP</div>
+                    <div class="member-info">
+                        <h3 class="member-name">rafael pinto</h3>
+                        <p class="member-role">web developer</p>
+                        <p class="member-location">lisbon, portugal</p>
+                        <div class="member-tags">
+                            <span class="member-tag">frontend</span>
+                            <span class="member-tag">react</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+
+                <article class="member-card">
+                    <div class="member-photo">MH</div>
+                    <div class="member-info">
+                        <h3 class="member-name">maya hansen</h3>
+                        <p class="member-role">content strategist</p>
+                        <p class="member-location">copenhagen, denmark</p>
+                        <div class="member-tags">
+                            <span class="member-tag">content</span>
+                            <span class="member-tag">writing</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+
+                <article class="member-card">
+                    <div class="member-photo">TW</div>
+                    <div class="member-info">
+                        <h3 class="member-name">theo williams</h3>
+                        <p class="member-role">brand designer</p>
+                        <p class="member-location">london, uk</p>
+                        <div class="member-tags">
+                            <span class="member-tag">branding</span>
+                            <span class="member-tag">identity</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+
+                <article class="member-card">
+                    <div class="member-photo">AS</div>
+                    <div class="member-info">
+                        <h3 class="member-name">aisha sharma</h3>
+                        <p class="member-role">product manager</p>
+                        <p class="member-location">mumbai, india</p>
+                        <div class="member-tags">
+                            <span class="member-tag">product</span>
+                            <span class="member-tag">strategy</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+
+                <article class="member-card">
+                    <div class="member-photo">DN</div>
+                    <div class="member-info">
+                        <h3 class="member-name">diego novak</h3>
+                        <p class="member-role">ux/ui designer</p>
+                        <p class="member-location">são paulo, brazil</p>
+                        <div class="member-tags">
+                            <span class="member-tag">ui/ux</span>
+                            <span class="member-tag">mobile</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+
+                <article class="member-card">
+                    <div class="member-photo">NK</div>
+                    <div class="member-info">
+                        <h3 class="member-name">nora kowalski</h3>
+                        <p class="member-role">digital artist</p>
+                        <p class="member-location">warsaw, poland</p>
+                        <div class="member-tags">
+                            <span class="member-tag">digital art</span>
+                            <span class="member-tag">3d</span>
+                        </div>
+                        <a href="#" class="member-link">view profile</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Location map -->
+        <section class="map-section" id="map">
+            <h2 class="section-title">member locations</h2>
+            <div class="map-container">
+                <div class="map-placeholder">
+                    🗺️<br>
+                    members across 47 countries
+                </div>
+                <div class="map-pins">
+                    <div class="map-pin" tabindex="0" aria-label="Members in Europe"></div>
+                    <div class="map-pin" tabindex="0" aria-label="Members in North America"></div>
+                    <div class="map-pin" tabindex="0" aria-label="Members in Asia"></div>
+                    <div class="map-pin" tabindex="0" aria-label="Members in South America"></div>
+                    <div class="map-pin" tabindex="0" aria-label="Members in Australia"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Navigation script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 78;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Carousel navigation
+        const prevBtn = document.querySelector('.carousel-nav .carousel-button:first-child');
+        const nextBtn = document.querySelector('.carousel-nav .carousel-button:last-child');
+        const carouselContainer = document.querySelector('.carousel-container');
+
+        if (prevBtn && nextBtn && carouselContainer) {
+            prevBtn.addEventListener('click', () => {
+                carouselContainer.scrollBy({ left: -370, behavior: 'smooth' });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                carouselContainer.scrollBy({ left: 370, behavior: 'smooth' });
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

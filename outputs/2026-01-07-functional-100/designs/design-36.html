@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer Ori - Event Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN #36: LAYER ORI
+        ABOUTME: Memphis-inspired event discovery platform with material design layering
+        ABOUTME: Combines Japanese minimalism with playful geometric Memphis patterns
+
+        DESIGN SYSTEM:
+        - UI Paradigm: Material Design with distinct elevation layers
+        - Design Era: Memphis - playful geometric patterns, bold shapes, unconventional color blocks
+        - Color: Jewel-toned neutrals (deep amethyst, jade, topaz) with analogous harmony
+        - Typography: Work Sans (neo-grotesque) + Noto Serif JP (old-style serif)
+        - Scale: Perfect Fourth (1.333)
+        - Cultural: Japanese influence through balance, negative space, and subtle pattern work
+        - Functional: Event discovery with cards, filters, map toggle, calendar
+
+        KEY DESIGN PRINCIPLES:
+        1. Material layering with colored shadows for depth
+        2. Memphis geometric patterns as texture overlays
+        3. Pill-shaped elements throughout (buttons, tags, containers)
+        4. Lowercase-only typography for approachable, modern feel
+        5. Airy spacing with tight line-height for compact text blocks
+        6. Left-aligned hierarchy using size variations
+        7. Two-column grid system with masonry content flow
+        */
+
+        :root {
+            /* Jewel Neutral Palette - Analogous */
+            --color-primary: #8B7BA8;      /* amethyst */
+            --color-secondary: #7A9B8E;    /* jade */
+            --color-tertiary: #A89B7B;     /* topaz */
+            --color-accent: #9B8BA7;       /* lilac */
+
+            --color-background: #F5F3F0;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FDFCFB;
+            --color-text: #3D3B38;
+            --color-text-muted: #8A8783;
+            --color-border: #E0DDD8;
+
+            /* Memphis pattern colors */
+            --pattern-1: #8B7BA8;
+            --pattern-2: #7A9B8E;
+            --pattern-3: #A89B7B;
+
+            /* Typography - Neo-grotesque + Old Style Serif */
+            --font-heading: 'Work Sans', sans-serif;
+            --font-body: 'Noto Serif JP', serif;
+
+            /* Type Scale - Perfect Fourth (1.333) */
+            --text-xs: 0.75rem;      /* 12px */
+            --text-sm: 0.844rem;     /* 13.5px */
+            --text-base: 1rem;       /* 16px */
+            --text-lg: 1.333rem;     /* 21.3px */
+            --text-xl: 1.777rem;     /* 28.4px */
+            --text-2xl: 2.369rem;    /* 37.9px */
+            --text-3xl: 3.157rem;    /* 50.5px */
+
+            /* Spacing - 4px base */
+            --space-unit: 4px;
+            --space-1: calc(var(--space-unit) * 1);   /* 4px */
+            --space-2: calc(var(--space-unit) * 2);   /* 8px */
+            --space-3: calc(var(--space-unit) * 3);   /* 12px */
+            --space-4: calc(var(--space-unit) * 4);   /* 16px */
+            --space-5: calc(var(--space-unit) * 5);   /* 20px */
+            --space-6: calc(var(--space-unit) * 6);   /* 24px */
+            --space-8: calc(var(--space-unit) * 8);   /* 32px */
+            --space-10: calc(var(--space-unit) * 10); /* 40px */
+            --space-12: calc(var(--space-unit) * 12); /* 48px */
+            --space-16: calc(var(--space-unit) * 16); /* 64px */
+
+            /* Shapes - Pill radius */
+            --radius-pill: 999px;
+            --radius-large: 24px;
+            --radius-medium: 16px;
+            --radius-small: 12px;
+
+            /* Shadows - Colored material elevation */
+            --shadow-low: 0 2px 8px rgba(139, 123, 168, 0.12);
+            --shadow-medium: 0 4px 16px rgba(139, 123, 168, 0.16);
+            --shadow-high: 0 8px 24px rgba(139, 123, 168, 0.2);
+            --shadow-colored-1: 0 4px 12px rgba(139, 123, 168, 0.25);
+            --shadow-colored-2: 0 4px 12px rgba(122, 155, 142, 0.25);
+            --shadow-colored-3: 0 4px 12px rgba(168, 155, 123, 0.25);
+
+            /* Borders - Hairline */
+            --border-width: 1px;
+            --border-style: solid;
+            --border-color: var(--color-border);
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #2B2927;
+                --color-surface: #3D3B38;
+                --color-surface-elevated: #4A4845;
+                --color-text: #F5F3F0;
+                --color-text-muted: #ABA8A3;
+                --color-border: #58544F;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.4; /* tight */
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: -0.01em; /* tight */
+            text-transform: lowercase;
+            padding-bottom: 80px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: var(--text-3xl); }
+        h2 { font-size: var(--text-2xl); }
+        h3 { font-size: var(--text-xl); }
+        h4 { font-size: var(--text-lg); }
+
+        /* Memphis Geometric Pattern Background */
+        .pattern-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pattern-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 10px, var(--pattern-1) 10px, var(--pattern-1) 11px),
+                repeating-linear-gradient(-45deg, transparent, transparent 20px, var(--pattern-2) 20px, var(--pattern-2) 21px);
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        /* Glassmorphic Gradient Overlay */
+        .glass-gradient {
+            background: linear-gradient(135deg,
+                rgba(139, 123, 168, 0.1) 0%,
+                rgba(122, 155, 142, 0.08) 50%,
+                rgba(168, 155, 123, 0.1) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+
+        /* Hero Section with Gradient Background */
+        .hero {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 50%,
+                var(--color-tertiary) 100%);
+            color: white;
+            padding: var(--space-16) 0 var(--space-12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            margin-bottom: var(--space-4);
+            font-size: var(--text-3xl);
+        }
+
+        .hero-subtitle {
+            font-size: var(--text-lg);
+            opacity: 0.9;
+            margin-bottom: var(--space-8);
+            max-width: 600px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-8);
+            max-width: 700px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: var(--space-4) var(--space-6);
+            border: var(--border-width) var(--border-style) rgba(255,255,255,0.3);
+            border-radius: var(--radius-pill);
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7);
+            text-transform: lowercase;
+        }
+
+        .search-input:focus {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+        }
+
+        .search-btn {
+            padding: var(--space-4) var(--space-8);
+            background: white;
+            color: var(--color-primary);
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: var(--text-base);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .search-btn:focus {
+            outline: 3px solid rgba(255,255,255,0.5);
+            outline-offset: 2px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            padding: var(--space-8) 0;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-low);
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-5);
+        }
+
+        .filters-title {
+            font-size: var(--text-lg);
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .view-toggles {
+            display: flex;
+            gap: var(--space-2);
+            background: var(--color-background);
+            padding: var(--space-1);
+            border-radius: var(--radius-pill);
+            border: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .view-toggle {
+            padding: var(--space-2) var(--space-5);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--color-text-muted);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .view-toggle.active {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-colored-1);
+        }
+
+        .view-toggle:hover:not(.active) {
+            background: rgba(139, 123, 168, 0.1);
+            color: var(--color-text);
+        }
+
+        .view-toggle:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .filters-chips {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: var(--space-3) var(--space-5);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--color-primary);
+            background: rgba(139, 123, 168, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .filter-chip.active {
+            background: var(--color-secondary);
+            color: white;
+            border-color: var(--color-secondary);
+            box-shadow: var(--shadow-colored-2);
+        }
+
+        .filter-chip:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Content Area - Two Column Grid */
+        .main-content {
+            padding: var(--space-10) 0;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-8);
+        }
+
+        /* Featured Events Carousel */
+        .featured-section {
+            margin-bottom: var(--space-10);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .section-title {
+            font-size: var(--text-2xl);
+            font-family: var(--font-heading);
+        }
+
+        .view-all-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-pill);
+            transition: all 0.2s ease;
+        }
+
+        .view-all-link:hover {
+            background: rgba(139, 123, 168, 0.1);
+        }
+
+        .view-all-link:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .featured-carousel {
+            display: flex;
+            gap: var(--space-6);
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: var(--space-4);
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) var(--color-background);
+        }
+
+        .featured-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .featured-carousel::-webkit-scrollbar-track {
+            background: var(--color-background);
+            border-radius: var(--radius-pill);
+        }
+
+        .featured-carousel::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: var(--radius-pill);
+        }
+
+        .featured-card {
+            min-width: 400px;
+            scroll-snap-align: start;
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-high);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-3xl);
+            color: white;
+            font-family: var(--font-heading);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,0.05) 15px, rgba(255,255,255,0.05) 30px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: white;
+            color: var(--color-primary);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            box-shadow: var(--shadow-low);
+        }
+
+        .featured-info {
+            padding: var(--space-6);
+        }
+
+        .featured-title {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-3);
+            font-family: var(--font-heading);
+        }
+
+        .featured-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .detail-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--color-primary);
+        }
+
+        .featured-price {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--color-tertiary);
+            margin-bottom: var(--space-4);
+        }
+
+        .rsvp-btn {
+            width: 100%;
+            padding: var(--space-4);
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-size: var(--text-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .rsvp-btn:hover {
+            background: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-colored-1);
+        }
+
+        .rsvp-btn:focus {
+            outline: 3px solid rgba(139, 123, 168, 0.3);
+            outline-offset: 2px;
+        }
+
+        /* Masonry Event Grid */
+        .events-masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-6);
+            align-items: start;
+        }
+
+        .event-card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-medium);
+            padding: var(--space-5);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-low);
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--color-primary);
+        }
+
+        .event-card.tall {
+            grid-row: span 2;
+        }
+
+        .event-date {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-3);
+            border-radius: var(--radius-small);
+            margin-bottom: var(--space-4);
+            min-width: 60px;
+            box-shadow: var(--shadow-colored-1);
+        }
+
+        .event-date-day {
+            font-size: var(--text-xl);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .event-date-month {
+            font-size: var(--text-xs);
+            font-family: var(--font-heading);
+            opacity: 0.9;
+        }
+
+        .event-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-3);
+            font-family: var(--font-heading);
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .event-tags {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-4);
+        }
+
+        .event-tag {
+            padding: var(--space-1) var(--space-3);
+            background: var(--color-background);
+            border-radius: var(--radius-pill);
+            font-size: var(--text-xs);
+            font-family: var(--font-heading);
+            color: var(--color-text-muted);
+        }
+
+        .event-price {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-3);
+        }
+
+        .event-cta {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: transparent;
+            color: var(--color-primary);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .event-cta:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .event-cta:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 180px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-medium);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-low);
+        }
+
+        .sidebar-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-5);
+            font-family: var(--font-heading);
+        }
+
+        /* Calendar Widget */
+        .calendar {
+            background: var(--color-background);
+            border-radius: var(--radius-small);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .calendar-month {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: var(--text-base);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .calendar-nav-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--color-surface);
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-1);
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            padding: var(--space-1);
+            font-family: var(--font-heading);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-sm);
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-heading);
+        }
+
+        .calendar-day:hover {
+            background: rgba(139, 123, 168, 0.1);
+        }
+
+        .calendar-day.has-event {
+            background: var(--color-secondary);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-colored-2);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--color-primary);
+        }
+
+        /* Nearby Events */
+        .nearby-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .nearby-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--color-background);
+            border-radius: var(--radius-small);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nearby-item:hover {
+            background: rgba(139, 123, 168, 0.1);
+            transform: translateX(4px);
+        }
+
+        .nearby-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-tertiary);
+            border-radius: var(--radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-lg);
+            font-family: var(--font-heading);
+            flex-shrink: 0;
+        }
+
+        .nearby-info {
+            flex: 1;
+        }
+
+        .nearby-name {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-1);
+        }
+
+        .nearby-distance {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-surface);
+            border-top: var(--border-width) var(--border-style) var(--color-border);
+            padding: var(--space-3) var(--space-4);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-2);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--color-text-muted);
+            min-width: 72px;
+            min-height: 44px;
+            justify-content: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(139, 123, 168, 0.1);
+            color: var(--color-text);
+        }
+
+        .nav-item.active {
+            color: var(--color-primary);
+            background: rgba(139, 123, 168, 0.1);
+        }
+
+        .nav-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-label {
+            font-size: var(--text-xs);
+            font-family: var(--font-heading);
+            font-weight: 500;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .featured-card {
+                min-width: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: var(--space-10) 0 var(--space-8);
+            }
+
+            .hero h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .filters-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-4);
+            }
+
+            .events-masonry {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-card {
+                min-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body class="pattern-bg">
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container hero-content">
+            <h1>discover moments that matter</h1>
+            <p class="hero-subtitle">curated events blending culture, creativity, and connection</p>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="search events, venues, artists...">
+                <button class="search-btn">explore</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-header">
+                <h2 class="filters-title">filter by category</h2>
+                <div class="view-toggles">
+                    <button class="view-toggle active" aria-label="grid view">grid</button>
+                    <button class="view-toggle" aria-label="map view">map</button>
+                    <button class="view-toggle" aria-label="calendar view">cal</button>
+                </div>
+            </div>
+            <div class="filters-chips">
+                <button class="filter-chip active">all events</button>
+                <button class="filter-chip">music</button>
+                <button class="filter-chip">art</button>
+                <button class="filter-chip">food</button>
+                <button class="filter-chip">tech</button>
+                <button class="filter-chip">wellness</button>
+                <button class="filter-chip">outdoor</button>
+                <button class="filter-chip">workshop</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Featured Events Carousel -->
+            <section class="featured-section">
+                <div class="section-header">
+                    <h2 class="section-title">featured this week</h2>
+                    <a href="#" class="view-all-link">view all →</a>
+                </div>
+                <div class="featured-carousel">
+                    <article class="featured-card">
+                        <div class="featured-image">
+                            <span>🎵</span>
+                            <div class="featured-badge">tonight</div>
+                        </div>
+                        <div class="featured-info">
+                            <h3 class="featured-title">midnight jazz at blue moon</h3>
+                            <div class="featured-details">
+                                <div class="detail-row">
+                                    <span class="detail-icon">📅</span>
+                                    <span>tonight, 8:00 pm</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-icon">📍</span>
+                                    <span>blue moon lounge, downtown</span>
+                                </div>
+                            </div>
+                            <div class="featured-price">¥3,500</div>
+                            <button class="rsvp-btn">reserve your spot</button>
+                        </div>
+                    </article>
+
+                    <article class="featured-card">
+                        <div class="featured-image" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-tertiary));">
+                            <span>🍜</span>
+                            <div class="featured-badge">popular</div>
+                        </div>
+                        <div class="featured-info">
+                            <h3 class="featured-title">artisan ramen workshop</h3>
+                            <div class="featured-details">
+                                <div class="detail-row">
+                                    <span class="detail-icon">📅</span>
+                                    <span>sat jan 11, 2:00 pm</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-icon">📍</span>
+                                    <span>culinary studio, shibuya</span>
+                                </div>
+                            </div>
+                            <div class="featured-price">¥8,000</div>
+                            <button class="rsvp-btn">reserve your spot</button>
+                        </div>
+                    </article>
+
+                    <article class="featured-card">
+                        <div class="featured-image" style="background: linear-gradient(135deg, var(--color-tertiary), var(--color-accent));">
+                            <span>🎨</span>
+                            <div class="featured-badge">new</div>
+                        </div>
+                        <div class="featured-info">
+                            <h3 class="featured-title">contemporary art opening</h3>
+                            <div class="featured-details">
+                                <div class="detail-row">
+                                    <span class="detail-icon">📅</span>
+                                    <span>fri jan 10, 6:00 pm</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-icon">📍</span>
+                                    <span>ura gallery, roppongi</span>
+                                </div>
+                            </div>
+                            <div class="featured-price">free entry</div>
+                            <button class="rsvp-btn">reserve your spot</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Two Column Grid Layout -->
+            <div class="content-grid">
+                <!-- Main Events Masonry -->
+                <div class="events-column">
+                    <div class="section-header">
+                        <h2 class="section-title">upcoming events</h2>
+                    </div>
+                    <div class="events-masonry">
+                        <article class="event-card">
+                            <div class="event-date">
+                                <div class="event-date-day">12</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">matcha ceremony experience</h3>
+                            <div class="event-meta">
+                                <span>📍 zen garden, meguro</span>
+                                <span>⏰ 10:00 am - 12:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">wellness</span>
+                                <span class="event-tag">culture</span>
+                            </div>
+                            <div class="event-price">¥4,500</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+
+                        <article class="event-card tall">
+                            <div class="event-date" style="background: var(--color-secondary);">
+                                <div class="event-date-day">13</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">sakura blossom pre-season gathering</h3>
+                            <div class="event-meta">
+                                <span>📍 yoyogi park</span>
+                                <span>⏰ 1:00 pm - 5:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">outdoor</span>
+                                <span class="event-tag">food</span>
+                                <span class="event-tag">music</span>
+                            </div>
+                            <div class="event-price">¥2,000</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+
+                        <article class="event-card">
+                            <div class="event-date" style="background: var(--color-tertiary);">
+                                <div class="event-date-day">14</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">minimalist design talk</h3>
+                            <div class="event-meta">
+                                <span>📍 design hub, shibuya</span>
+                                <span>⏰ 7:00 pm - 9:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">tech</span>
+                                <span class="event-tag">design</span>
+                            </div>
+                            <div class="event-price">free</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+
+                        <article class="event-card">
+                            <div class="event-date" style="background: var(--color-accent);">
+                                <div class="event-date-day">15</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">vinyl listening session</h3>
+                            <div class="event-meta">
+                                <span>📍 record bar, kichijoji</span>
+                                <span>⏰ 8:00 pm - 11:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">music</span>
+                            </div>
+                            <div class="event-price">¥1,500</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+
+                        <article class="event-card tall">
+                            <div class="event-date">
+                                <div class="event-date-day">18</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">sustainable cooking workshop</h3>
+                            <div class="event-meta">
+                                <span>📍 green kitchen, nakameguro</span>
+                                <span>⏰ 11:00 am - 3:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">food</span>
+                                <span class="event-tag">workshop</span>
+                                <span class="event-tag">wellness</span>
+                            </div>
+                            <div class="event-price">¥7,200</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+
+                        <article class="event-card">
+                            <div class="event-date" style="background: var(--color-secondary);">
+                                <div class="event-date-day">20</div>
+                                <div class="event-date-month">jan</div>
+                            </div>
+                            <h3 class="event-title">moonlit meditation</h3>
+                            <div class="event-meta">
+                                <span>📍 rooftop sanctuary, ebisu</span>
+                                <span>⏰ 7:30 pm - 9:00 pm</span>
+                            </div>
+                            <div class="event-tags">
+                                <span class="event-tag">wellness</span>
+                                <span class="event-tag">outdoor</span>
+                            </div>
+                            <div class="event-price">¥3,000</div>
+                            <button class="event-cta">learn more</button>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <!-- Calendar Widget -->
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">calendar view</h3>
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <div class="calendar-month">january 2026</div>
+                                <div class="calendar-nav">
+                                    <button class="calendar-nav-btn" aria-label="previous month">←</button>
+                                    <button class="calendar-nav-btn" aria-label="next month">→</button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="calendar-day-header">su</div>
+                                <div class="calendar-day-header">mo</div>
+                                <div class="calendar-day-header">tu</div>
+                                <div class="calendar-day-header">we</div>
+                                <div class="calendar-day-header">th</div>
+                                <div class="calendar-day-header">fr</div>
+                                <div class="calendar-day-header">sa</div>
+
+                                <div class="calendar-day"></div>
+                                <div class="calendar-day"></div>
+                                <div class="calendar-day"></div>
+                                <div class="calendar-day"></div>
+                                <div class="calendar-day">1</div>
+                                <div class="calendar-day">2</div>
+                                <div class="calendar-day">3</div>
+
+                                <div class="calendar-day">4</div>
+                                <div class="calendar-day">5</div>
+                                <div class="calendar-day">6</div>
+                                <div class="calendar-day today">7</div>
+                                <div class="calendar-day">8</div>
+                                <div class="calendar-day">9</div>
+                                <div class="calendar-day has-event">10</div>
+
+                                <div class="calendar-day has-event">11</div>
+                                <div class="calendar-day has-event">12</div>
+                                <div class="calendar-day has-event">13</div>
+                                <div class="calendar-day has-event">14</div>
+                                <div class="calendar-day has-event">15</div>
+                                <div class="calendar-day">16</div>
+                                <div class="calendar-day">17</div>
+
+                                <div class="calendar-day has-event">18</div>
+                                <div class="calendar-day">19</div>
+                                <div class="calendar-day has-event">20</div>
+                                <div class="calendar-day">21</div>
+                                <div class="calendar-day">22</div>
+                                <div class="calendar-day">23</div>
+                                <div class="calendar-day">24</div>
+
+                                <div class="calendar-day">25</div>
+                                <div class="calendar-day">26</div>
+                                <div class="calendar-day">27</div>
+                                <div class="calendar-day">28</div>
+                                <div class="calendar-day">29</div>
+                                <div class="calendar-day">30</div>
+                                <div class="calendar-day">31</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nearby Events -->
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">nearby events</h3>
+                        <div class="nearby-list">
+                            <div class="nearby-item">
+                                <div class="nearby-icon">🎭</div>
+                                <div class="nearby-info">
+                                    <div class="nearby-name">theater workshop</div>
+                                    <div class="nearby-distance">0.3 km away</div>
+                                </div>
+                            </div>
+                            <div class="nearby-item">
+                                <div class="nearby-icon" style="background: var(--color-secondary);">☕</div>
+                                <div class="nearby-info">
+                                    <div class="nearby-name">coffee tasting</div>
+                                    <div class="nearby-distance">0.5 km away</div>
+                                </div>
+                            </div>
+                            <div class="nearby-item">
+                                <div class="nearby-icon" style="background: var(--color-accent);">📚</div>
+                                <div class="nearby-info">
+                                    <div class="nearby-name">book club meeting</div>
+                                    <div class="nearby-distance">0.8 km away</div>
+                                </div>
+                            </div>
+                            <div class="nearby-item">
+                                <div class="nearby-icon" style="background: var(--color-primary);">🧘</div>
+                                <div class="nearby-info">
+                                    <div class="nearby-name">morning yoga</div>
+                                    <div class="nearby-distance">1.2 km away</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav" role="navigation" aria-label="main navigation">
+        <button class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <span class="nav-label">explore</span>
+        </button>
+        <button class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span class="nav-label">calendar</span>
+        </button>
+        <button class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <span class="nav-label">search</span>
+        </button>
+        <button class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="nav-label">profile</span>
+        </button>
+    </nav>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 36;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

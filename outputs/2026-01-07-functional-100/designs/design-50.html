@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clay Frost - Achievement Showcase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN #50: Clay Frost
+        ABOUTME: Achievement showcase combining claymorphic UI with art deco geometry
+        ABOUTME: Warm desaturated neon accents on light backgrounds with soft puffy depth
+
+        AESTHETIC PRINCIPLES:
+        - Soft, inflated claymorphic surfaces with gentle shadows
+        - Art deco symmetry and geometric radiating patterns
+        - Warm desaturated neon palette (coral, peach, mint, lavender)
+        - Airy spacing with floating pill navigation
+        - Achievement badges as sculpted clay medallions
+        - Tetradic color harmony with medium contrast
+
+        KEY TOKENS:
+        --clay-inflate: Soft extruded depth with dual shadows
+        --deco-radial: Geometric art deco radiating backgrounds
+        --neon-warm: Desaturated coral/peach/mint accent palette
+        --achievement-glow: Subtle warm glow for unlocked items
+        */
+
+        :root {
+            /* Tetradic color palette - warm desaturated neon */
+            --color-primary: #FF8B7A; /* coral neon */
+            --color-secondary: #7AFFB8; /* mint neon */
+            --color-tertiary: #C8A0FF; /* lavender neon */
+            --color-quaternary: #FFD17A; /* peach neon */
+
+            --color-background: #FFF8F4; /* warm off-white */
+            --color-surface: #FFF4ED; /* peachy surface */
+            --color-surface-raised: #FFFFFF;
+            --color-text: #4A3F3F;
+            --color-text-muted: #9B8585;
+            --color-border: #E8D5CC;
+
+            /* Rarity colors */
+            --rarity-common: #9B8585;
+            --rarity-rare: #7AFFB8;
+            --rarity-epic: #C8A0FF;
+            --rarity-legendary: #FFD17A;
+
+            /* Typography - geometric display + humanist body */
+            --font-heading: 'Orbitron', monospace;
+            --font-body: 'Inter', sans-serif;
+            --type-scale: 1.25; /* major third */
+
+            /* Spacing - airy */
+            --space-unit: 24px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: calc(var(--space-unit) * 0.75);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2.5);
+            --space-2xl: calc(var(--space-unit) * 4);
+
+            /* Shapes - very rounded claymorphic */
+            --radius-default: 24px;
+            --radius-small: 16px;
+            --radius-large: 32px;
+            --radius-pill: 999px;
+
+            /* Clay shadows - soft extruded depth */
+            --shadow-clay:
+                6px 6px 12px rgba(0, 0, 0, 0.08),
+                -2px -2px 8px rgba(255, 255, 255, 0.9),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            --shadow-clay-hover:
+                8px 8px 16px rgba(0, 0, 0, 0.12),
+                -3px -3px 10px rgba(255, 255, 255, 0.9),
+                inset 0 1px 3px rgba(255, 255, 255, 0.9);
+            --shadow-clay-pressed:
+                inset 4px 4px 8px rgba(0, 0, 0, 0.08),
+                inset -2px -2px 6px rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Art deco radial background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(255, 139, 122, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(122, 255, 184, 0.03) 0%, transparent 50%),
+                repeating-conic-gradient(from 0deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(200, 160, 255, 0.02) 2deg,
+                    transparent 4deg);
+            z-index: -1;
+            animation: rotate-slow 120s linear infinite;
+        }
+
+        @keyframes rotate-slow {
+            to { transform: rotate(360deg); }
+        }
+
+        /* App shell structure */
+        .app-shell {
+            min-height: 100vh;
+            padding: var(--space-xl) var(--space-md);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Floating pill navigation */
+        .nav-pill {
+            position: fixed;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-surface-raised);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-clay);
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-pill button {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-quaternary));
+            border: none;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-pill);
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-clay);
+            transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .nav-pill button:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateY(-2px);
+        }
+
+        .nav-pill button:active {
+            box-shadow: var(--shadow-clay-pressed);
+            transform: translateY(0);
+        }
+
+        /* Half viewport hero */
+        .hero {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--space-2xl) var(--space-md);
+            position: relative;
+        }
+
+        .player-card {
+            background: var(--color-surface-raised);
+            padding: var(--space-xl);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-clay);
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        .player-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            margin: 0 auto var(--space-md);
+            box-shadow: var(--shadow-clay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: white;
+            font-weight: 900;
+        }
+
+        .player-name {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-xs);
+        }
+
+        .player-level {
+            display: inline-block;
+            background: var(--color-surface);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-text);
+            box-shadow: var(--shadow-clay-pressed);
+            margin-bottom: var(--space-md);
+        }
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .stat-item {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-clay-pressed);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        /* Tabs navigation */
+        .tabs-container {
+            margin-top: var(--space-2xl);
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: var(--color-surface-raised);
+            border: none;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            cursor: pointer;
+            box-shadow: var(--shadow-clay);
+            transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .tab-button:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-quaternary));
+            color: white;
+            box-shadow: var(--shadow-clay-hover);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Achievement grid */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .achievement-card {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-clay);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 139, 122, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateY(-4px);
+        }
+
+        .achievement-card:hover::before {
+            opacity: 1;
+        }
+
+        .achievement-card.locked {
+            opacity: 0.5;
+        }
+
+        .achievement-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: var(--shadow-clay);
+            position: relative;
+        }
+
+        .achievement-badge.common {
+            background: linear-gradient(135deg, #B8B8B8, #8E8E8E);
+        }
+
+        .achievement-badge.rare {
+            background: linear-gradient(135deg, var(--color-secondary), #5FE89D);
+        }
+
+        .achievement-badge.epic {
+            background: linear-gradient(135deg, var(--color-tertiary), #A87FEB);
+        }
+
+        .achievement-badge.legendary {
+            background: linear-gradient(135deg, var(--color-quaternary), #FFB84D);
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: var(--shadow-clay), 0 0 20px rgba(255, 209, 122, 0.4); }
+            50% { box-shadow: var(--shadow-clay), 0 0 30px rgba(255, 209, 122, 0.6); }
+        }
+
+        .achievement-badge.locked {
+            background: linear-gradient(135deg, #E0E0E0, #CACACA);
+            filter: grayscale(1);
+        }
+
+        .rarity-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--color-surface-raised);
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: var(--shadow-clay);
+        }
+
+        .rarity-badge.common { color: var(--rarity-common); }
+        .rarity-badge.rare { color: var(--rarity-rare); }
+        .rarity-badge.epic { color: var(--rarity-epic); }
+        .rarity-badge.legendary { color: var(--rarity-legendary); }
+
+        .achievement-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: var(--space-xs);
+            text-align: center;
+        }
+
+        .achievement-description {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .achievement-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-sm);
+            border-top: 2px solid var(--color-border);
+            font-size: 0.8rem;
+        }
+
+        .unlock-date {
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .achievement-points {
+            background: var(--color-surface);
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            color: var(--color-primary);
+            box-shadow: var(--shadow-clay-pressed);
+        }
+
+        /* Progress section */
+        .progress-section {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-clay);
+            margin-bottom: var(--space-xl);
+        }
+
+        .progress-header {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            color: var(--color-text);
+        }
+
+        .progress-items {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .progress-item {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-clay-pressed);
+        }
+
+        .progress-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .progress-item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .progress-percentage {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar-container {
+            background: var(--color-background);
+            height: 12px;
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: var(--radius-pill);
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Trophy case */
+        .trophy-case {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .trophy-item {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-clay);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .trophy-item:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateY(-4px);
+        }
+
+        .trophy-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-sm);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .trophy-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .trophy-count {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Leaderboard */
+        .leaderboard-list {
+            display: grid;
+            gap: var(--space-sm);
+        }
+
+        .leaderboard-item {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-clay);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateX(4px);
+        }
+
+        .leaderboard-rank {
+            font-family: var(--font-heading);
+            font-weight: 900;
+            font-size: 1.5rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .leaderboard-rank.top-1 { color: var(--rarity-legendary); }
+        .leaderboard-rank.top-2 { color: #B8B8B8; }
+        .leaderboard-rank.top-3 { color: #CD7F32; }
+
+        .leaderboard-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            box-shadow: var(--shadow-clay);
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .leaderboard-level {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .leaderboard-points {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+        }
+
+        /* Accessibility */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-shell {
+                padding: var(--space-lg) var(--space-sm);
+            }
+
+            .nav-pill {
+                top: var(--space-sm);
+                right: var(--space-sm);
+            }
+
+            .player-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .player-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Floating pill navigation -->
+        <nav class="nav-pill" role="navigation" aria-label="Main navigation">
+            <button onclick="window.location.href='#'" aria-label="Menu">Menu</button>
+            <button onclick="window.location.href='#'" aria-label="Settings">⚙️</button>
+        </nav>
+
+        <!-- Half viewport hero with player card -->
+        <header class="hero">
+            <div class="player-card">
+                <div class="player-avatar" aria-hidden="true">
+                    NK
+                </div>
+                <h1 class="player-name">NeonKnight</h1>
+                <div class="player-level">Level 47 • Master Achiever</div>
+
+                <div class="player-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">18,450</span>
+                        <span class="stat-label">Total Points</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">142/200</span>
+                        <span class="stat-label">Achievements</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">71%</span>
+                        <span class="stat-label">Completion</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs panels for content -->
+        <div class="tabs-container">
+            <nav class="tabs-nav" role="tablist">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="panel-achievements" id="tab-achievements" onclick="switchTab('achievements')">
+                    Achievements
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-progress" id="tab-progress" onclick="switchTab('progress')">
+                    In Progress
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-trophies" id="tab-trophies" onclick="switchTab('trophies')">
+                    Trophy Case
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-leaderboard" id="tab-leaderboard" onclick="switchTab('leaderboard')">
+                    Leaderboard
+                </button>
+            </nav>
+
+            <!-- Achievements panel -->
+            <div class="tab-panel active" role="tabpanel" id="panel-achievements" aria-labelledby="tab-achievements">
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-badge legendary">
+                            🏆
+                            <div class="rarity-badge legendary">Legendary</div>
+                        </div>
+                        <h3 class="achievement-title">Grand Champion</h3>
+                        <p class="achievement-description">Win 100 consecutive matches without losing</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Jan 3, 2026</span>
+                            <span class="achievement-points">+500 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card">
+                        <div class="achievement-badge epic">
+                            ⚡
+                            <div class="rarity-badge epic">Epic</div>
+                        </div>
+                        <h3 class="achievement-title">Lightning Fast</h3>
+                        <p class="achievement-description">Complete any level in under 60 seconds</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Jan 2, 2026</span>
+                            <span class="achievement-points">+250 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card">
+                        <div class="achievement-badge rare">
+                            🎯
+                            <div class="rarity-badge rare">Rare</div>
+                        </div>
+                        <h3 class="achievement-title">Perfect Aim</h3>
+                        <p class="achievement-description">Achieve 100% accuracy for an entire match</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Dec 28, 2025</span>
+                            <span class="achievement-points">+150 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card">
+                        <div class="achievement-badge common">
+                            🌟
+                            <div class="rarity-badge common">Common</div>
+                        </div>
+                        <h3 class="achievement-title">First Victory</h3>
+                        <p class="achievement-description">Win your very first match</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Nov 15, 2025</span>
+                            <span class="achievement-points">+50 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card">
+                        <div class="achievement-badge rare">
+                            🔥
+                            <div class="rarity-badge rare">Rare</div>
+                        </div>
+                        <h3 class="achievement-title">Hot Streak</h3>
+                        <p class="achievement-description">Win 10 matches in a row</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Dec 20, 2025</span>
+                            <span class="achievement-points">+150 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card locked">
+                        <div class="achievement-badge locked">
+                            🔒
+                            <div class="rarity-badge legendary">Legendary</div>
+                        </div>
+                        <h3 class="achievement-title">Ultimate Legend</h3>
+                        <p class="achievement-description">Unlock all other achievements</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Locked</span>
+                            <span class="achievement-points">+1000 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card">
+                        <div class="achievement-badge epic">
+                            💎
+                            <div class="rarity-badge epic">Epic</div>
+                        </div>
+                        <h3 class="achievement-title">Treasure Hunter</h3>
+                        <p class="achievement-description">Discover all hidden collectibles</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Unlocked: Dec 30, 2025</span>
+                            <span class="achievement-points">+250 pts</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card locked">
+                        <div class="achievement-badge locked">
+                            🔒
+                            <div class="rarity-badge epic">Epic</div>
+                        </div>
+                        <h3 class="achievement-title">Speed Demon</h3>
+                        <p class="achievement-description">Complete the game in under 4 hours</p>
+                        <div class="achievement-meta">
+                            <span class="unlock-date">Locked</span>
+                            <span class="achievement-points">+300 pts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress panel -->
+            <div class="tab-panel" role="tabpanel" id="panel-progress" aria-labelledby="tab-progress">
+                <div class="progress-section">
+                    <h2 class="progress-header">Next Achievements</h2>
+                    <div class="progress-items">
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <span class="progress-item-title">🎖️ Combat Master (Rare)</span>
+                                <span class="progress-percentage">85%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 85%"></div>
+                            </div>
+                            <p style="margin-top: 8px; font-size: 0.85rem; color: var(--color-text-muted);">
+                                850/1000 enemies defeated • 150 more to go
+                            </p>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <span class="progress-item-title">🗺️ Explorer (Epic)</span>
+                                <span class="progress-percentage">62%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 62%"></div>
+                            </div>
+                            <p style="margin-top: 8px; font-size: 0.85rem; color: var(--color-text-muted);">
+                                31/50 areas discovered • 19 more to go
+                            </p>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <span class="progress-item-title">👥 Social Butterfly (Common)</span>
+                                <span class="progress-percentage">40%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 40%"></div>
+                            </div>
+                            <p style="margin-top: 8px; font-size: 0.85rem; color: var(--color-text-muted);">
+                                8/20 friends added • 12 more to go
+                            </p>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <span class="progress-item-title">🏅 Marathon Runner (Legendary)</span>
+                                <span class="progress-percentage">28%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 28%"></div>
+                            </div>
+                            <p style="margin-top: 8px; font-size: 0.85rem; color: var(--color-text-muted);">
+                                28/100 hours played • 72 more to go
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trophy case panel -->
+            <div class="tab-panel" role="tabpanel" id="panel-trophies" aria-labelledby="tab-trophies">
+                <div class="trophy-case">
+                    <div class="trophy-item">
+                        <div class="trophy-icon">🥇</div>
+                        <h3 class="trophy-title">Gold Medals</h3>
+                        <p class="trophy-count">24 earned</p>
+                    </div>
+
+                    <div class="trophy-item">
+                        <div class="trophy-icon">🥈</div>
+                        <h3 class="trophy-title">Silver Medals</h3>
+                        <p class="trophy-count">38 earned</p>
+                    </div>
+
+                    <div class="trophy-item">
+                        <div class="trophy-icon">🥉</div>
+                        <h3 class="trophy-title">Bronze Medals</h3>
+                        <p class="trophy-count">51 earned</p>
+                    </div>
+
+                    <div class="trophy-item">
+                        <div class="trophy-icon">👑</div>
+                        <h3 class="trophy-title">Legendary Trophies</h3>
+                        <p class="trophy-count">3 earned</p>
+                    </div>
+
+                    <div class="trophy-item">
+                        <div class="trophy-icon">⭐</div>
+                        <h3 class="trophy-title">Perfect Scores</h3>
+                        <p class="trophy-count">15 earned</p>
+                    </div>
+
+                    <div class="trophy-item">
+                        <div class="trophy-icon">🎭</div>
+                        <h3 class="trophy-title">Special Events</h3>
+                        <p class="trophy-count">8 earned</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard panel -->
+            <div class="tab-panel" role="tabpanel" id="panel-leaderboard" aria-labelledby="tab-leaderboard">
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank top-1">1</div>
+                        <div class="leaderboard-avatar">PX</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">PhoenixRider</div>
+                            <div class="leaderboard-level">Level 52</div>
+                        </div>
+                        <div class="leaderboard-points">22,890</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank top-2">2</div>
+                        <div class="leaderboard-avatar">SK</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">ShadowKing</div>
+                            <div class="leaderboard-level">Level 50</div>
+                        </div>
+                        <div class="leaderboard-points">21,450</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank top-3">3</div>
+                        <div class="leaderboard-avatar">NK</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">NeonKnight (You)</div>
+                            <div class="leaderboard-level">Level 47</div>
+                        </div>
+                        <div class="leaderboard-points">18,450</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">4</div>
+                        <div class="leaderboard-avatar">CQ</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">CrimsonQueen</div>
+                            <div class="leaderboard-level">Level 45</div>
+                        </div>
+                        <div class="leaderboard-points">17,230</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">5</div>
+                        <div class="leaderboard-avatar">FW</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">FrostWolf</div>
+                            <div class="leaderboard-level">Level 43</div>
+                        </div>
+                        <div class="leaderboard-points">16,100</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">6</div>
+                        <div class="leaderboard-avatar">VD</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">VoidDancer</div>
+                            <div class="leaderboard-level">Level 42</div>
+                        </div>
+                        <div class="leaderboard-points">15,680</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+
+            // Show selected panel
+            const panel = document.getElementById('panel-' + tabName);
+            panel.classList.add('active');
+
+            // Activate selected button
+            const button = document.getElementById('tab-' + tabName);
+            button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
+        }
+
+        // Navigation script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 50;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

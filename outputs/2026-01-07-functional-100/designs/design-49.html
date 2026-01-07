@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Twilight - Medical Chart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: design-49.html
+Medical chart interface with neo-brutalist flat design, extreme contrast, and triadic color scheme
+
+DESIGN SYSTEM: Modern Twilight
+- Functional Direction: Medical Chart (PRIMARY)
+- UI Paradigm: Flat with neo-brutalist borders
+- Design Era: Neo-brutalist raw HTML aesthetic
+- Color: Triadic (cyan, magenta, yellow) with extreme contrast, monochrome mood, vivid saturation
+- Density: Ultra-dense information display
+- Navigation: Tab-based switching between chart sections
+- Structure: Modular blocks for different medical data types
+
+AESTHETIC PRINCIPLES:
+- Extreme contrast black/white base with vivid triadic accent colors
+- Thick borders and sharp angles (neo-brutalist)
+- Ultra-dense layout maximizing information visibility
+- Flat design with no shadows or gradients
+- Monochrome base with strategic color for data categorization
+- Medical data organized in clear modular blocks
+
+CSS VARIABLES:
+--color-primary: #00ffff (cyan)
+--color-secondary: #ff00ff (magenta)
+--color-tertiary: #ffff00 (yellow)
+--color-background: #ffffff
+--color-surface: #000000
+--color-text: #000000
+--color-text-inverse: #ffffff
+--font-heading: 'Space Grotesk'
+--font-body: 'JetBrains Mono'
+--space-unit: 4px
+--border-width: 4px
+-->
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Triadic colors - extreme contrast */
+    --color-primary: #00ffff;
+    --color-secondary: #ff00ff;
+    --color-tertiary: #ffff00;
+    --color-background: #ffffff;
+    --color-surface: #000000;
+    --color-text: #000000;
+    --color-text-inverse: #ffffff;
+    --color-text-muted: #666666;
+    --color-border: #000000;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'JetBrains Mono', monospace;
+
+    /* Spacing - ultra dense */
+    --space-unit: 4px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+
+    /* Neo-brutalist shapes */
+    --radius-default: 0px;
+    --shadow-default: none;
+    --border-width: 4px;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.3;
+    font-size: 13px;
+    overflow-x: hidden;
+}
+
+/* Patient Header - Split Image Hero */
+.patient-header {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border: var(--border-width) solid var(--color-border);
+    margin: var(--space-md);
+}
+
+.patient-photo {
+    background: var(--color-primary);
+    border-right: var(--border-width) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--color-surface);
+    padding: var(--space-lg);
+}
+
+.patient-info {
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+}
+
+.info-block {
+    border-left: var(--border-width) solid var(--color-primary);
+    padding-left: var(--space-sm);
+}
+
+.info-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-bottom: var(--space-xs);
+}
+
+.info-value {
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-heading);
+}
+
+/* Tab Navigation */
+.chart-tabs {
+    display: flex;
+    margin: 0 var(--space-md) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    border-bottom: none;
+}
+
+.tab {
+    flex: 1;
+    background: var(--color-background);
+    border: none;
+    border-right: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tab:last-child {
+    border-right: none;
+}
+
+.tab:hover {
+    background: var(--color-primary);
+}
+
+.tab.active {
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+}
+
+.tab:focus {
+    outline: var(--border-width) solid var(--color-secondary);
+    outline-offset: -4px;
+}
+
+/* Modular Block Layout */
+.chart-content {
+    margin: 0 var(--space-md) var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.module {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-background);
+}
+
+.module-header {
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.module-content {
+    padding: var(--space-md);
+}
+
+/* Vitals Display */
+.vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+}
+
+.vital {
+    border: 2px solid var(--color-border);
+    padding: var(--space-sm);
+}
+
+.vital-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+.vital-value {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    margin-top: var(--space-xs);
+}
+
+.vital-unit {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-left: var(--space-xs);
+}
+
+.vital.critical {
+    background: var(--color-secondary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-secondary);
+}
+
+.vital.critical .vital-label,
+.vital.critical .vital-unit {
+    color: var(--color-text-inverse);
+    opacity: 0.8;
+}
+
+.vital.warning {
+    background: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+}
+
+.vital.normal {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Medication List */
+.med-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.med-item {
+    border-left: var(--border-width) solid var(--color-primary);
+    padding-left: var(--space-sm);
+}
+
+.med-name {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.med-dose {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+.med-frequency {
+    font-size: 10px;
+    margin-top: var(--space-xs);
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: 2px var(--space-sm);
+    display: inline-block;
+}
+
+/* Allergies */
+.allergy-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.allergy-tag {
+    background: var(--color-secondary);
+    color: var(--color-text-inverse);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid var(--color-surface);
+}
+
+.allergy-severity {
+    font-size: 9px;
+    text-transform: uppercase;
+    margin-top: var(--space-xs);
+    opacity: 0.8;
+}
+
+/* Lab Results Table */
+.lab-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lab-table th {
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: var(--space-sm);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.lab-table td {
+    padding: var(--space-sm);
+    border-top: 2px solid var(--color-border);
+    font-size: 11px;
+}
+
+.lab-table tr:hover {
+    background: var(--color-primary);
+}
+
+.result-abnormal {
+    background: var(--color-tertiary);
+    padding: 2px var(--space-xs);
+    font-weight: 600;
+}
+
+.result-critical {
+    background: var(--color-secondary);
+    color: var(--color-text-inverse);
+    padding: 2px var(--space-xs);
+    font-weight: 600;
+}
+
+/* Visit History */
+.visit-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.visit-entry {
+    border-left: var(--border-width) solid var(--color-tertiary);
+    padding-left: var(--space-md);
+    position: relative;
+}
+
+.visit-entry::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--border-width) - 6px);
+    top: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-tertiary);
+    border: 2px solid var(--color-surface);
+}
+
+.visit-date {
+    font-weight: 700;
+    font-size: 11px;
+    margin-bottom: var(--space-xs);
+}
+
+.visit-type {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.visit-provider {
+    font-size: 10px;
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: 2px var(--space-sm);
+    display: inline-block;
+}
+
+/* Physician Notes */
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.note {
+    border: 2px solid var(--color-border);
+    padding: var(--space-md);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.note-author {
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.note-time {
+    font-size: 10px;
+    color: var(--color-text-muted);
+}
+
+.note-text {
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* Diagnosis Codes */
+.diagnosis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+}
+
+.diagnosis-item {
+    border: 2px solid var(--color-border);
+    padding: var(--space-sm);
+}
+
+.diagnosis-code {
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.diagnosis-desc {
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.diagnosis-status {
+    font-size: 9px;
+    text-transform: uppercase;
+    margin-top: var(--space-xs);
+    background: var(--color-surface);
+    color: var(--color-text-inverse);
+    padding: 2px var(--space-xs);
+    display: inline-block;
+}
+
+/* Full-width modules */
+.module.full {
+    grid-column: span 3;
+}
+
+.module.half {
+    grid-column: span 2;
+}
+
+/* Emergency Banner */
+.emergency-alert {
+    background: var(--color-secondary);
+    color: var(--color-text-inverse);
+    padding: var(--space-md);
+    margin: var(--space-md);
+    border: var(--border-width) solid var(--color-surface);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus states */
+button:focus,
+a:focus {
+    outline: var(--border-width) solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .chart-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .module.full,
+    .module.half {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .patient-header {
+        grid-template-columns: 120px 1fr;
+    }
+
+    .patient-photo {
+        font-size: 48px;
+    }
+
+    .patient-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab {
+        flex: 1 0 50%;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .chart-content {
+        grid-template-columns: 1fr;
+    }
+
+    .module.full,
+    .module.half {
+        grid-column: span 1;
+    }
+}
+</style>
+
+<!-- Emergency Alert -->
+<div class="emergency-alert">
+    DNR ORDER ON FILE - PENICILLIN ALLERGY - FALL RISK
+</div>
+
+<!-- Patient Header - Split Image Hero -->
+<div class="patient-header">
+    <div class="patient-photo">JD</div>
+    <div class="patient-info">
+        <div class="info-block">
+            <div class="info-label">Patient Name</div>
+            <div class="info-value">Jane Doe</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">MRN</div>
+            <div class="info-value">MRN-847392</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">DOB / Age</div>
+            <div class="info-value">03/15/1972 (51y)</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Sex</div>
+            <div class="info-value">Female</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Admission Date</div>
+            <div class="info-value">01/05/2026</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Room / Bed</div>
+            <div class="info-value">3C-412B</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Attending</div>
+            <div class="info-value">Dr. Chen</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Insurance</div>
+            <div class="info-value">BlueCross PPO</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Navigation -->
+<div class="chart-tabs">
+    <button class="tab active" onclick="showTab('overview')">Overview</button>
+    <button class="tab" onclick="showTab('labs')">Lab Results</button>
+    <button class="tab" onclick="showTab('history')">Visit History</button>
+    <button class="tab" onclick="showTab('notes')">Physician Notes</button>
+    <button class="tab" onclick="showTab('diagnosis')">Diagnosis</button>
+</div>
+
+<!-- Chart Content - Modular Blocks -->
+<div class="chart-content" id="overview">
+    <!-- Vital Signs -->
+    <div class="module">
+        <div class="module-header">Current Vitals</div>
+        <div class="module-content">
+            <div class="vitals-grid">
+                <div class="vital critical">
+                    <div class="vital-label">Blood Pressure</div>
+                    <div class="vital-value">165<span class="vital-unit">/95 mmHg</span></div>
+                </div>
+                <div class="vital normal">
+                    <div class="vital-label">Heart Rate</div>
+                    <div class="vital-value">72<span class="vital-unit">bpm</span></div>
+                </div>
+                <div class="vital warning">
+                    <div class="vital-label">Temperature</div>
+                    <div class="vital-value">99.8<span class="vital-unit">°F</span></div>
+                </div>
+                <div class="vital normal">
+                    <div class="vital-label">SpO2</div>
+                    <div class="vital-value">98<span class="vital-unit">%</span></div>
+                </div>
+                <div class="vital normal">
+                    <div class="vital-label">Respiratory Rate</div>
+                    <div class="vital-value">16<span class="vital-unit">/min</span></div>
+                </div>
+                <div class="vital warning">
+                    <div class="vital-label">Pain Level</div>
+                    <div class="vital-value">5<span class="vital-unit">/10</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Medications -->
+    <div class="module">
+        <div class="module-header">Active Medications</div>
+        <div class="module-content">
+            <div class="med-list">
+                <div class="med-item">
+                    <div class="med-name">Lisinopril</div>
+                    <div class="med-dose">20mg oral tablet</div>
+                    <div class="med-frequency">Once daily (AM)</div>
+                </div>
+                <div class="med-item">
+                    <div class="med-name">Metformin</div>
+                    <div class="med-dose">500mg oral tablet</div>
+                    <div class="med-frequency">Twice daily</div>
+                </div>
+                <div class="med-item">
+                    <div class="med-name">Atorvastatin</div>
+                    <div class="med-dose">40mg oral tablet</div>
+                    <div class="med-frequency">Once daily (PM)</div>
+                </div>
+                <div class="med-item">
+                    <div class="med-name">Aspirin</div>
+                    <div class="med-dose">81mg oral tablet</div>
+                    <div class="med-frequency">Once daily</div>
+                </div>
+                <div class="med-item">
+                    <div class="med-name">Morphine PRN</div>
+                    <div class="med-dose">2mg IV push</div>
+                    <div class="med-frequency">Q4H as needed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Allergies -->
+    <div class="module">
+        <div class="module-header">Allergies & Reactions</div>
+        <div class="module-content">
+            <div class="allergy-list">
+                <div class="allergy-tag">
+                    Penicillin
+                    <div class="allergy-severity">Severe - Anaphylaxis</div>
+                </div>
+                <div class="allergy-tag">
+                    Sulfa Drugs
+                    <div class="allergy-severity">Moderate - Rash</div>
+                </div>
+                <div class="allergy-tag">
+                    Latex
+                    <div class="allergy-severity">Mild - Contact Dermatitis</div>
+                </div>
+                <div class="allergy-tag">
+                    Shellfish
+                    <div class="allergy-severity">Moderate - GI Distress</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Lab Results -->
+    <div class="module full">
+        <div class="module-header">Recent Lab Results - 01/06/2026 06:45</div>
+        <div class="module-content">
+            <table class="lab-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Result</th>
+                        <th>Reference Range</th>
+                        <th>Status</th>
+                        <th>Previous</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>WBC</td>
+                        <td>12.8</td>
+                        <td>4.5-11.0 K/μL</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>8.2</td>
+                    </tr>
+                    <tr>
+                        <td>Hemoglobin</td>
+                        <td>10.2</td>
+                        <td>12.0-16.0 g/dL</td>
+                        <td><span class="result-abnormal">Low</span></td>
+                        <td>11.5</td>
+                    </tr>
+                    <tr>
+                        <td>Platelets</td>
+                        <td>245</td>
+                        <td>150-400 K/μL</td>
+                        <td>Normal</td>
+                        <td>238</td>
+                    </tr>
+                    <tr>
+                        <td>Glucose</td>
+                        <td>168</td>
+                        <td>70-100 mg/dL</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>142</td>
+                    </tr>
+                    <tr>
+                        <td>BUN</td>
+                        <td>28</td>
+                        <td>7-20 mg/dL</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>18</td>
+                    </tr>
+                    <tr>
+                        <td>Creatinine</td>
+                        <td>1.8</td>
+                        <td>0.6-1.2 mg/dL</td>
+                        <td><span class="result-critical">Critical</span></td>
+                        <td>1.1</td>
+                    </tr>
+                    <tr>
+                        <td>Sodium</td>
+                        <td>138</td>
+                        <td>136-145 mEq/L</td>
+                        <td>Normal</td>
+                        <td>140</td>
+                    </tr>
+                    <tr>
+                        <td>Potassium</td>
+                        <td>4.2</td>
+                        <td>3.5-5.0 mEq/L</td>
+                        <td>Normal</td>
+                        <td>4.0</td>
+                    </tr>
+                    <tr>
+                        <td>Troponin I</td>
+                        <td>0.08</td>
+                        <td>&lt;0.04 ng/mL</td>
+                        <td><span class="result-abnormal">Elevated</span></td>
+                        <td>0.02</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Visits -->
+    <div class="module half">
+        <div class="module-header">Visit History</div>
+        <div class="module-content">
+            <div class="visit-timeline">
+                <div class="visit-entry">
+                    <div class="visit-date">01/05/2026 14:30</div>
+                    <div class="visit-type">Emergency Department - Chest Pain</div>
+                    <div class="visit-provider">Dr. Rodriguez, MD</div>
+                </div>
+                <div class="visit-entry">
+                    <div class="visit-date">12/20/2025 09:15</div>
+                    <div class="visit-type">Follow-up - Hypertension</div>
+                    <div class="visit-provider">Dr. Chen, MD</div>
+                </div>
+                <div class="visit-entry">
+                    <div class="visit-date">11/08/2025 10:00</div>
+                    <div class="visit-type">Annual Physical</div>
+                    <div class="visit-provider">Dr. Chen, MD</div>
+                </div>
+                <div class="visit-entry">
+                    <div class="visit-date">09/22/2025 14:45</div>
+                    <div class="visit-type">Lab Work - Diabetes Management</div>
+                    <div class="visit-provider">Nurse Peterson, RN</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Diagnoses -->
+    <div class="module">
+        <div class="module-header">Active Diagnoses</div>
+        <div class="module-content">
+            <div class="diagnosis-grid">
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">I10</div>
+                    <div class="diagnosis-desc">Essential Hypertension</div>
+                    <div class="diagnosis-status">Chronic</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">E11.9</div>
+                    <div class="diagnosis-desc">Type 2 Diabetes Mellitus</div>
+                    <div class="diagnosis-status">Chronic</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">I21.9</div>
+                    <div class="diagnosis-desc">Acute MI (Rule Out)</div>
+                    <div class="diagnosis-status">Acute</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">E78.5</div>
+                    <div class="diagnosis-desc">Hyperlipidemia</div>
+                    <div class="diagnosis-status">Chronic</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Labs Tab Content -->
+<div class="chart-content" id="labs" style="display: none;">
+    <div class="module full">
+        <div class="module-header">Complete Blood Count (CBC) - 01/06/2026 06:45</div>
+        <div class="module-content">
+            <table class="lab-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Result</th>
+                        <th>Reference Range</th>
+                        <th>Status</th>
+                        <th>Units</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>WBC</td>
+                        <td>12.8</td>
+                        <td>4.5-11.0</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>K/μL</td>
+                    </tr>
+                    <tr>
+                        <td>RBC</td>
+                        <td>4.2</td>
+                        <td>4.2-5.4</td>
+                        <td>Normal</td>
+                        <td>M/μL</td>
+                    </tr>
+                    <tr>
+                        <td>Hemoglobin</td>
+                        <td>10.2</td>
+                        <td>12.0-16.0</td>
+                        <td><span class="result-abnormal">Low</span></td>
+                        <td>g/dL</td>
+                    </tr>
+                    <tr>
+                        <td>Hematocrit</td>
+                        <td>32.5</td>
+                        <td>36.0-46.0</td>
+                        <td><span class="result-abnormal">Low</span></td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td>MCV</td>
+                        <td>88</td>
+                        <td>80-100</td>
+                        <td>Normal</td>
+                        <td>fL</td>
+                    </tr>
+                    <tr>
+                        <td>Platelets</td>
+                        <td>245</td>
+                        <td>150-400</td>
+                        <td>Normal</td>
+                        <td>K/μL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="module full">
+        <div class="module-header">Comprehensive Metabolic Panel (CMP) - 01/06/2026 06:45</div>
+        <div class="module-content">
+            <table class="lab-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Result</th>
+                        <th>Reference Range</th>
+                        <th>Status</th>
+                        <th>Units</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Glucose</td>
+                        <td>168</td>
+                        <td>70-100</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>mg/dL</td>
+                    </tr>
+                    <tr>
+                        <td>BUN</td>
+                        <td>28</td>
+                        <td>7-20</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>mg/dL</td>
+                    </tr>
+                    <tr>
+                        <td>Creatinine</td>
+                        <td>1.8</td>
+                        <td>0.6-1.2</td>
+                        <td><span class="result-critical">Critical</span></td>
+                        <td>mg/dL</td>
+                    </tr>
+                    <tr>
+                        <td>eGFR</td>
+                        <td>42</td>
+                        <td>&gt;60</td>
+                        <td><span class="result-abnormal">Low</span></td>
+                        <td>mL/min</td>
+                    </tr>
+                    <tr>
+                        <td>Sodium</td>
+                        <td>138</td>
+                        <td>136-145</td>
+                        <td>Normal</td>
+                        <td>mEq/L</td>
+                    </tr>
+                    <tr>
+                        <td>Potassium</td>
+                        <td>4.2</td>
+                        <td>3.5-5.0</td>
+                        <td>Normal</td>
+                        <td>mEq/L</td>
+                    </tr>
+                    <tr>
+                        <td>Chloride</td>
+                        <td>102</td>
+                        <td>98-107</td>
+                        <td>Normal</td>
+                        <td>mEq/L</td>
+                    </tr>
+                    <tr>
+                        <td>CO2</td>
+                        <td>24</td>
+                        <td>23-29</td>
+                        <td>Normal</td>
+                        <td>mEq/L</td>
+                    </tr>
+                    <tr>
+                        <td>Calcium</td>
+                        <td>9.4</td>
+                        <td>8.5-10.5</td>
+                        <td>Normal</td>
+                        <td>mg/dL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="module full">
+        <div class="module-header">Cardiac Markers - 01/06/2026 06:45</div>
+        <div class="module-content">
+            <table class="lab-table">
+                <thead>
+                    <tr>
+                        <th>Marker</th>
+                        <th>Result</th>
+                        <th>Reference Range</th>
+                        <th>Status</th>
+                        <th>Serial Draw</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Troponin I</td>
+                        <td>0.08</td>
+                        <td>&lt;0.04</td>
+                        <td><span class="result-abnormal">Elevated</span></td>
+                        <td>Due 01/06 12:45</td>
+                    </tr>
+                    <tr>
+                        <td>CK-MB</td>
+                        <td>8.2</td>
+                        <td>&lt;5.0</td>
+                        <td><span class="result-abnormal">Elevated</span></td>
+                        <td>Due 01/06 12:45</td>
+                    </tr>
+                    <tr>
+                        <td>BNP</td>
+                        <td>245</td>
+                        <td>&lt;100</td>
+                        <td><span class="result-abnormal">High</span></td>
+                        <td>N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- History Tab Content -->
+<div class="chart-content" id="history" style="display: none;">
+    <div class="module full">
+        <div class="module-header">Complete Visit History</div>
+        <div class="module-content">
+            <div class="visit-timeline">
+                <div class="visit-entry">
+                    <div class="visit-date">01/05/2026 14:30</div>
+                    <div class="visit-type">Emergency Department Admission - Chest Pain</div>
+                    <div class="visit-provider">Dr. Maria Rodriguez, MD - Emergency Medicine</div>
+                    <div style="margin-top: 8px; font-size: 11px; line-height: 1.5;">
+                        Chief Complaint: Chest pain, pressure-like, radiating to left arm. Duration 2 hours. Associated with diaphoresis and nausea. Patient transported via EMS. Initial assessment shows elevated BP 170/98, HR 88. ECG shows ST depression in lateral leads. Cardiac markers ordered, admitted for rule out MI.
+                    </div>
+                </div>
+
+                <div class="visit-entry">
+                    <div class="visit-date">12/20/2025 09:15</div>
+                    <div class="visit-type">Follow-up Visit - Hypertension Management</div>
+                    <div class="visit-provider">Dr. James Chen, MD - Internal Medicine</div>
+                    <div style="margin-top: 8px; font-size: 11px; line-height: 1.5;">
+                        Blood pressure remains elevated despite current medication regimen. Home monitoring logs show BP averaging 155/92. Discussed medication compliance, diet, and exercise. Increased Lisinopril to 20mg daily. Patient counseled on DASH diet. Follow-up in 6 weeks.
+                    </div>
+                </div>
+
+                <div class="visit-entry">
+                    <div class="visit-date">11/08/2025 10:00</div>
+                    <div class="visit-type">Annual Physical Examination</div>
+                    <div class="visit-provider">Dr. James Chen, MD - Internal Medicine</div>
+                    <div style="margin-top: 8px; font-size: 11px; line-height: 1.5;">
+                        Comprehensive annual exam. Patient reports good overall health. Labs ordered including lipid panel, HbA1c, CMP. Physical exam unremarkable except for 2+ edema bilateral lower extremities. Weight increased 8 lbs since last year. Discussed weight management strategies. Vaccinations updated.
+                    </div>
+                </div>
+
+                <div class="visit-entry">
+                    <div class="visit-date">09/22/2025 14:45</div>
+                    <div class="visit-type">Laboratory - Diabetes Management</div>
+                    <div class="visit-provider">Sarah Peterson, RN - Primary Care</div>
+                    <div style="margin-top: 8px; font-size: 11px; line-height: 1.5;">
+                        Routine diabetic monitoring. HbA1c 7.2%, improved from 7.8% three months ago. Fasting glucose 132 mg/dL. Patient reports better dietary compliance. No hypoglycemic episodes. Continue current Metformin dose. Reinforced importance of regular monitoring.
+                    </div>
+                </div>
+
+                <div class="visit-entry">
+                    <div class="visit-date">07/15/2025 11:30</div>
+                    <div class="visit-type">Cardiology Consultation</div>
+                    <div class="visit-provider">Dr. Robert Kim, MD - Cardiology</div>
+                    <div style="margin-top: 8px; font-size: 11px; line-height: 1.5;">
+                        Referred for evaluation of hypertension and family history of CAD. Stress test ordered showing adequate exercise tolerance, no ischemic changes. Echo shows normal LV function, EF 60%. Started on low-dose Aspirin for cardiovascular protection. Aggressive risk factor modification recommended.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notes Tab Content -->
+<div class="chart-content" id="notes" style="display: none;">
+    <div class="module full">
+        <div class="module-header">Physician Progress Notes</div>
+        <div class="module-content">
+            <div class="notes-list">
+                <div class="note">
+                    <div class="note-header">
+                        <div class="note-author">Dr. Maria Rodriguez, MD - Emergency Medicine</div>
+                        <div class="note-time">01/06/2026 03:15</div>
+                    </div>
+                    <div class="note-text">
+                        <strong>OVERNIGHT PROGRESS NOTE</strong><br><br>
+                        Patient continues to be monitored in ED observation unit. Second set of cardiac markers drawn at 00:45 shows continued elevation of Troponin I (0.12 from 0.08). Cardiology consulted, recommends admission to telemetry floor for continued monitoring and likely cardiac catheterization in AM. Patient remains chest pain free on current medical management. Vital signs stable overnight. BP now 148/88 after IV Metoprolol. Continue ASA, Plavix, Heparin drip. Transfer orders written.
+                    </div>
+                </div>
+
+                <div class="note">
+                    <div class="note-header">
+                        <div class="note-author">Dr. Maria Rodriguez, MD - Emergency Medicine</div>
+                        <div class="note-time">01/05/2026 15:45</div>
+                    </div>
+                    <div class="note-text">
+                        <strong>INITIAL EMERGENCY DEPARTMENT NOTE</strong><br><br>
+                        51yo F presents via EMS with acute onset chest pain beginning approximately 2 hours prior to arrival. Pain described as pressure-like, 8/10 severity, substernal with radiation to left arm and jaw. Associated symptoms include diaphoresis, nausea, and mild dyspnea. Denies prior episodes. <br><br>
+                        PMH: HTN, DM2, Hyperlipidemia. Family Hx: Father MI age 58, Mother stroke age 65.<br><br>
+                        Exam: Diaphoretic, anxious appearing. VS: BP 170/98, HR 88, RR 18, SpO2 98% RA, Temp 98.2F. Cardiac: Regular rate, no murmurs. Lungs: CTAB. No JVD. Trace peripheral edema.<br><br>
+                        ECG: NSR, ST depression lateral leads V5-V6, 0.5mm. <br><br>
+                        Impression: ACS, likely NSTEMI. Initiated ACS protocol. ASA 325mg given, Plavix 600mg loading dose, IV Heparin started. Nitroglycerin SL PRN. Cardiology aware. Serial cardiac markers q6h. Admitted for observation and risk stratification.
+                    </div>
+                </div>
+
+                <div class="note">
+                    <div class="note-header">
+                        <div class="note-author">Dr. James Chen, MD - Internal Medicine</div>
+                        <div class="note-time">12/20/2025 09:30</div>
+                    </div>
+                    <div class="note-text">
+                        <strong>FOLLOW-UP VISIT - HYPERTENSION</strong><br><br>
+                        Patient returns for HTN follow-up. Home BP logs show persistent elevation despite Lisinopril 10mg daily. Average readings 155/92. Patient reports good medication compliance but admits dietary indiscretion over holidays. <br><br>
+                        Today BP 162/94. No headaches, visual changes, or other concerning symptoms. <br><br>
+                        Plan: Increase Lisinopril to 20mg daily. Reinforced DASH diet principles. Consider adding HCTZ if no improvement in 6 weeks. RTC 6 weeks or sooner PRN. Patient educated on stroke risk and importance of BP control.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diagnosis Tab Content -->
+<div class="chart-content" id="diagnosis" style="display: none;">
+    <div class="module half">
+        <div class="module-header">Active Diagnoses</div>
+        <div class="module-content">
+            <div class="diagnosis-grid">
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">I21.9</div>
+                    <div class="diagnosis-desc">Acute Myocardial Infarction, Unspecified</div>
+                    <div class="diagnosis-status">Acute - Rule Out</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">I10</div>
+                    <div class="diagnosis-desc">Essential (Primary) Hypertension</div>
+                    <div class="diagnosis-status">Chronic - Active</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">E11.9</div>
+                    <div class="diagnosis-desc">Type 2 Diabetes Mellitus Without Complications</div>
+                    <div class="diagnosis-status">Chronic - Active</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">E78.5</div>
+                    <div class="diagnosis-desc">Hyperlipidemia, Unspecified</div>
+                    <div class="diagnosis-status">Chronic - Active</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">R07.9</div>
+                    <div class="diagnosis-desc">Chest Pain, Unspecified</div>
+                    <div class="diagnosis-status">Acute - Active</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">D64.9</div>
+                    <div class="diagnosis-desc">Anemia, Unspecified</div>
+                    <div class="diagnosis-status">Acute - New</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="module half">
+        <div class="module-header">Problem List - Inactive</div>
+        <div class="module-content">
+            <div class="diagnosis-grid">
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">J18.9</div>
+                    <div class="diagnosis-desc">Pneumonia, Unspecified Organism</div>
+                    <div class="diagnosis-status">Resolved 09/2024</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">M79.3</div>
+                    <div class="diagnosis-desc">Panniculitis, Unspecified</div>
+                    <div class="diagnosis-status">Resolved 03/2024</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">K21.9</div>
+                    <div class="diagnosis-desc">Gastro-esophageal Reflux Disease</div>
+                    <div class="diagnosis-status">Resolved 11/2023</div>
+                </div>
+                <div class="diagnosis-item">
+                    <div class="diagnosis-code">N39.0</div>
+                    <div class="diagnosis-desc">Urinary Tract Infection</div>
+                    <div class="diagnosis-status">Resolved 08/2023</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="module full">
+        <div class="module-header">Admitting Diagnosis & Working Assessment</div>
+        <div class="module-content">
+            <div style="padding: var(--space-md); border: 2px solid var(--color-border); margin-bottom: var(--space-md);">
+                <div style="font-weight: 700; margin-bottom: var(--space-sm); font-size: 12px;">ADMITTING DIAGNOSIS:</div>
+                <div style="font-size: 11px; line-height: 1.5;">
+                    Acute Coronary Syndrome - Rule Out Non-ST Elevation Myocardial Infarction (NSTEMI)
+                </div>
+            </div>
+
+            <div style="padding: var(--space-md); border: 2px solid var(--color-border);">
+                <div style="font-weight: 700; margin-bottom: var(--space-sm); font-size: 12px;">ASSESSMENT & PLAN:</div>
+                <div style="font-size: 11px; line-height: 1.6;">
+                    <strong>1. Acute Coronary Syndrome (I21.9)</strong><br>
+                    - Serial cardiac markers showing uptrending Troponin I<br>
+                    - ECG changes consistent with ischemia<br>
+                    - Continue ASA, Plavix, Heparin drip<br>
+                    - Cardiology consulted, cardiac cath planned for AM<br>
+                    - Telemetry monitoring<br><br>
+
+                    <strong>2. Hypertension, Uncontrolled (I10)</strong><br>
+                    - Home medications inadequate for BP control<br>
+                    - IV Metoprolol with improvement<br>
+                    - Will adjust outpatient regimen based on cardiac workup<br><br>
+
+                    <strong>3. Type 2 Diabetes Mellitus (E11.9)</strong><br>
+                    - Glucose elevated, stress response vs. poor control<br>
+                    - Hold Metformin peri-procedure<br>
+                    - Sliding scale insulin while NPO<br><br>
+
+                    <strong>4. Anemia (D64.9)</strong><br>
+                    - New finding, Hgb 10.2, likely chronic disease vs. GI loss<br>
+                    - Monitor, transfuse if &lt;8.0 or symptomatic<br>
+                    - Guaiac stools<br>
+                    - Consider iron studies when stable
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching functionality
+function showTab(tabName) {
+    // Hide all content sections
+    const sections = ['overview', 'labs', 'history', 'notes', 'diagnosis'];
+    sections.forEach(section => {
+        document.getElementById(section).style.display = 'none';
+    });
+
+    // Remove active class from all tabs
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Show selected content
+    document.getElementById(tabName).style.display = 'grid';
+
+    // Add active class to clicked tab
+    event.target.classList.add('active');
+}
+
+// Navigation script
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 49;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

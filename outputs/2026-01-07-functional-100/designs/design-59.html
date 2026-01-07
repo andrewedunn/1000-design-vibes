@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ori Coral - Password Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;600;900&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Ori Coral (#59)
+        ABOUTME: Pop art-inspired password generator with bold primary colors and graphic split screen layout
+        ABOUTME: Features comic book aesthetics, halftone patterns, and high-contrast flat design
+
+        AESTHETIC PRINCIPLES:
+        - Pop Art era: Bold, graphic, commercial irony with comic book influences
+        - Flat UI: No shadows, solid colors, crisp edges
+        - Primary color palette: Pure red, yellow, blue with black and white
+        - Split screen: Generator on left, visual feedback on right
+        - Halftone patterns and Ben-Day dots for texture
+        - Typography as art: Bold display fonts, varying scales
+
+        KEY TOKENS:
+        --color-primary: #FF0000 (Pure red)
+        --color-secondary: #FFD700 (Pure yellow)
+        --color-accent: #0000FF (Pure blue)
+        --space-unit: 24px
+        --radius-default: 0px (sharp corners)
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Primary Pop Art palette */
+            --color-primary: #FF0000;
+            --color-secondary: #FFD700;
+            --color-accent: #0000FF;
+            --color-background: #FFFFFF;
+            --color-surface: #000000;
+            --color-text: #000000;
+            --color-text-muted: #666666;
+            --color-text-inverse: #FFFFFF;
+
+            /* Typography */
+            --font-heading: 'Bebas Neue', sans-serif;
+            --font-body: 'Archivo', sans-serif;
+
+            /* Spacing */
+            --space-unit: 24px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: calc(var(--space-unit) * 0.75);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2);
+            --space-2xl: calc(var(--space-unit) * 3);
+
+            /* Shapes */
+            --radius-default: 0px;
+            --shadow-default: none;
+            --border-width: 4px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #000000;
+                --color-surface: #FFFFFF;
+                --color-text: #FFFFFF;
+                --color-text-inverse: #000000;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* Left Panel - Generator */
+        .generator-panel {
+            background: var(--color-background);
+            padding: var(--space-2xl);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Right Panel - Visual Display */
+        .visual-panel {
+            background: var(--color-primary);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Halftone Pattern */
+        .halftone-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image:
+                radial-gradient(circle, var(--color-surface) 2px, transparent 2px);
+            background-size: 16px 16px;
+        }
+
+        .header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .title {
+            font-family: var(--font-heading);
+            font-size: 72px;
+            line-height: 0.9;
+            letter-spacing: 0.02em;
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        /* Password Display */
+        .password-display {
+            background: var(--color-secondary);
+            border: var(--border-width) solid var(--color-surface);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+
+        .password-label {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-surface);
+            margin-bottom: var(--space-xs);
+        }
+
+        .password-text {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-surface);
+            word-break: break-all;
+            min-height: 32px;
+            user-select: all;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-primary);
+            color: var(--color-text-inverse);
+            border: none;
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            transition: transform 0.1s;
+        }
+
+        .copy-button:hover {
+            transform: translate(2px, 2px);
+        }
+
+        .copy-button:active {
+            transform: translate(4px, 4px);
+        }
+
+        .copy-button:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .control-label {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text);
+        }
+
+        /* Length Slider */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            background: var(--color-accent);
+            border: var(--border-width) solid var(--color-surface);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-surface);
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-surface);
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .slider:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .slider-value {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            color: var(--color-primary);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* Character Type Toggles */
+        .toggles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-surface);
+            cursor: pointer;
+            min-height: 56px;
+            transition: background-color 0.1s;
+        }
+
+        .toggle-item:hover {
+            background: var(--color-secondary);
+        }
+
+        .toggle-item.active {
+            background: var(--color-accent);
+        }
+
+        .toggle-item.active .toggle-label {
+            color: var(--color-text-inverse);
+        }
+
+        .checkbox {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            border: var(--border-width) solid var(--color-surface);
+            background: var(--color-background);
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .checkbox:checked {
+            background: var(--color-primary);
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--color-text-inverse);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .checkbox:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .toggle-label {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+        /* Strength Indicator */
+        .strength-indicator {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            border: var(--border-width) solid var(--color-surface);
+        }
+
+        .strength-label {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .strength-bar {
+            height: 16px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-fill.weak {
+            background: var(--color-primary);
+            width: 33%;
+        }
+
+        .strength-fill.medium {
+            background: var(--color-secondary);
+            width: 66%;
+        }
+
+        .strength-fill.strong {
+            background: #00FF00;
+            width: 100%;
+        }
+
+        .strength-text {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text);
+            margin-top: var(--space-xs);
+        }
+
+        /* Generate Button */
+        .generate-button {
+            background: var(--color-primary);
+            color: var(--color-text-inverse);
+            border: var(--border-width) solid var(--color-surface);
+            padding: var(--space-lg) var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            margin-top: var(--space-xl);
+            min-height: 72px;
+            transition: transform 0.1s;
+        }
+
+        .generate-button:hover {
+            transform: translate(4px, 4px);
+        }
+
+        .generate-button:active {
+            transform: translate(8px, 8px);
+        }
+
+        .generate-button:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Visual Display */
+        .visual-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: var(--space-2xl);
+        }
+
+        .visual-title {
+            font-family: var(--font-heading);
+            font-size: 120px;
+            line-height: 0.9;
+            color: var(--color-text-inverse);
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+            text-shadow: 6px 6px 0 var(--color-surface);
+        }
+
+        .visual-subtitle {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--color-text-inverse);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            background: var(--color-surface);
+            padding: var(--space-sm) var(--space-md);
+            display: inline-block;
+        }
+
+        .comic-burst {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--color-secondary);
+            clip-path: polygon(
+                50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+                50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+            );
+            top: 20%;
+            right: 10%;
+            opacity: 0.8;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Hidden Scroll Navigation */
+        .scroll-hint {
+            position: fixed;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-muted);
+            background: var(--color-background);
+            padding: var(--space-xs) var(--space-md);
+            border: 2px solid var(--color-surface);
+            z-index: 100;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out 1s;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+
+            .visual-panel {
+                min-height: 400px;
+            }
+
+            .title {
+                font-size: 56px;
+            }
+
+            .visual-title {
+                font-size: 80px;
+            }
+
+            .comic-burst {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .generator-panel {
+                padding: var(--space-lg);
+            }
+
+            .title {
+                font-size: 40px;
+            }
+
+            .toggles {
+                grid-template-columns: 1fr;
+            }
+
+            .password-text {
+                font-size: 18px;
+            }
+
+            .visual-title {
+                font-size: 56px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Panel: Password Generator -->
+        <div class="generator-panel">
+            <header class="header">
+                <h1 class="title">Ori Coral</h1>
+                <p class="subtitle">Password Generator</p>
+            </header>
+
+            <div class="password-display">
+                <div class="password-label">Your Password</div>
+                <div class="password-text" id="passwordOutput">Click Generate!</div>
+                <button class="copy-button" id="copyBtn" aria-label="Copy password to clipboard">COPY</button>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="lengthSlider" class="control-label">Password Length</label>
+                    <div class="slider-container">
+                        <input
+                            type="range"
+                            id="lengthSlider"
+                            class="slider"
+                            min="8"
+                            max="64"
+                            value="16"
+                            aria-label="Password length"
+                        >
+                        <span class="slider-value" id="lengthValue">16</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <span class="control-label">Character Types</span>
+                    <div class="toggles">
+                        <label class="toggle-item active">
+                            <input type="checkbox" class="checkbox" id="uppercaseCheck" checked aria-label="Include uppercase letters">
+                            <span class="toggle-label">Uppercase</span>
+                        </label>
+                        <label class="toggle-item active">
+                            <input type="checkbox" class="checkbox" id="lowercaseCheck" checked aria-label="Include lowercase letters">
+                            <span class="toggle-label">Lowercase</span>
+                        </label>
+                        <label class="toggle-item active">
+                            <input type="checkbox" class="checkbox" id="numbersCheck" checked aria-label="Include numbers">
+                            <span class="toggle-label">Numbers</span>
+                        </label>
+                        <label class="toggle-item active">
+                            <input type="checkbox" class="checkbox" id="symbolsCheck" checked aria-label="Include symbols">
+                            <span class="toggle-label">Symbols</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="strength-indicator">
+                    <div class="strength-label">Password Strength</div>
+                    <div class="strength-bar">
+                        <div class="strength-fill medium" id="strengthBar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">Medium</div>
+                </div>
+
+                <button class="generate-button" id="generateBtn">Generate</button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visual Display -->
+        <div class="visual-panel">
+            <div class="halftone-bg"></div>
+            <div class="comic-burst"></div>
+            <div class="visual-content">
+                <div class="visual-title">POW!</div>
+                <div class="visual-subtitle">Secure Passwords</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-hint">← → Use arrow keys to navigate</div>
+
+    <script>
+        // Password Generator Logic
+        const passwordOutput = document.getElementById('passwordOutput');
+        const lengthSlider = document.getElementById('lengthSlider');
+        const lengthValue = document.getElementById('lengthValue');
+        const uppercaseCheck = document.getElementById('uppercaseCheck');
+        const lowercaseCheck = document.getElementById('lowercaseCheck');
+        const numbersCheck = document.getElementById('numbersCheck');
+        const symbolsCheck = document.getElementById('symbolsCheck');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        const charSets = {
+            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lowercase: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        };
+
+        // Update length display
+        lengthSlider.addEventListener('input', () => {
+            lengthValue.textContent = lengthSlider.value;
+        });
+
+        // Toggle active state for toggle items
+        document.querySelectorAll('.toggle-item').forEach(item => {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+
+        // Generate password
+        function generatePassword() {
+            const length = parseInt(lengthSlider.value);
+            let chars = '';
+
+            if (uppercaseCheck.checked) chars += charSets.uppercase;
+            if (lowercaseCheck.checked) chars += charSets.lowercase;
+            if (numbersCheck.checked) chars += charSets.numbers;
+            if (symbolsCheck.checked) chars += charSets.symbols;
+
+            if (chars === '') {
+                passwordOutput.textContent = 'Select at least one character type!';
+                return;
+            }
+
+            let password = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+
+            for (let i = 0; i < length; i++) {
+                password += chars[array[i] % chars.length];
+            }
+
+            passwordOutput.textContent = password;
+            updateStrength(password);
+        }
+
+        // Update strength indicator
+        function updateStrength(password) {
+            let strength = 0;
+
+            if (password.length >= 12) strength++;
+            if (password.length >= 16) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            strengthBar.classList.remove('weak', 'medium', 'strong');
+
+            if (strength <= 2) {
+                strengthBar.classList.add('weak');
+                strengthText.textContent = 'Weak';
+            } else if (strength <= 4) {
+                strengthBar.classList.add('medium');
+                strengthText.textContent = 'Medium';
+            } else {
+                strengthBar.classList.add('strong');
+                strengthText.textContent = 'Strong';
+            }
+        }
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', async () => {
+            const text = passwordOutput.textContent;
+            if (text && text !== 'Click Generate!' && text !== 'Select at least one character type!') {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    copyBtn.textContent = 'COPIED!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'COPY';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                }
+            }
+        });
+
+        generateBtn.addEventListener('click', generatePassword);
+
+        // Generate initial password
+        generatePassword();
+    </script>
+
+    <script>
+        // Navigation Script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 59;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

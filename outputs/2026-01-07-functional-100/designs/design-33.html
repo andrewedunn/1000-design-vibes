@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Hub - URL Shortener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+ABOUTME: Clean Hub - URL shortener service with pop art sensibilities
+ABOUTME: Ultra-airy flat design with triadic cool earth tones and handwritten typography
+
+DESIGN SYSTEM: Clean Hub
+========================
+
+Aesthetic Principles:
+- Pop Art era: Bold graphic approach with commercial irony, Ben-Day dot patterns
+- Flat UI: No shadows or gradients except subtle backgrounds
+- Ultra-airy: Maximum breathing room between all elements
+- Triadic cool muted earth tones: Sage green, dusty rose, warm beige
+- Handwritten headings create approachable personality
+- Timeline content flow shows link history chronologically
+- Hidden scroll navigation reveals on scroll
+- Fabric texture adds subtle warmth
+
+Key Design Tokens:
+--color-primary: #7A9B8E (sage green)
+--color-secondary: #C9A7A2 (dusty rose)
+--color-accent: #D4C5A9 (warm beige)
+--space-unit: 10px (ultra-airy: 6x, 8x, 10x spacing)
+--font-heading: 'Caveat' (handwritten)
+--font-body: 'Inter' (humanist sans)
+--type-scale: 1.2 (minor third)
+--radius: 0 (sharp corners)
+--border: 1px solid (thin)
+
+Functional Direction: URL Shortener
+- URL input with validation
+- Shorten button
+- Generated short link display
+- Copy to clipboard
+- QR code generation
+- Click statistics
+- Link history timeline
+-->
+
+<style>
+:root {
+    /* Triadic cool muted earth palette */
+    --color-primary: #7A9B8E;
+    --color-secondary: #C9A7A2;
+    --color-accent: #D4C5A9;
+    --color-background: #F5F3F0;
+    --color-surface: #FFFFFF;
+    --color-text: #2C3531;
+    --color-text-muted: #6B7773;
+    --color-border: #D9D5D0;
+
+    /* Typography - handwritten headings, humanist sans body */
+    --font-heading: 'Caveat', cursive;
+    --font-body: 'Inter', sans-serif;
+
+    /* Type scale - minor third (1.2) */
+    --text-xs: 0.694rem;
+    --text-sm: 0.833rem;
+    --text-base: 1rem;
+    --text-lg: 1.2rem;
+    --text-xl: 1.44rem;
+    --text-2xl: 1.728rem;
+    --text-3xl: 2.074rem;
+    --text-4xl: 2.488rem;
+    --text-5xl: 2.986rem;
+
+    /* Spacing - ultra airy (10px base) */
+    --space-unit: 10px;
+    --space-1: 10px;
+    --space-2: 20px;
+    --space-3: 30px;
+    --space-4: 40px;
+    --space-5: 50px;
+    --space-6: 60px;
+    --space-8: 80px;
+    --space-10: 100px;
+    --space-12: 120px;
+
+    /* Shapes - sharp corners, thin borders */
+    --radius-default: 0;
+    --border-width: 1px;
+    --shadow-default: none;
+
+    /* Line height - very loose */
+    --line-height-tight: 1.8;
+    --line-height-base: 2.0;
+    --line-height-loose: 2.4;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #91B5A6;
+        --color-secondary: #D9B8B3;
+        --color-accent: #E0D5BE;
+        --color-background: #1A1F1C;
+        --color-surface: #2C3531;
+        --color-text: #F5F3F0;
+        --color-text-muted: #B8BDB9;
+        --color-border: #3F4845;
+    }
+}
+
+/* Base reset and typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    /* Fabric texture */
+    background-image:
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+    letter-spacing: -0.02em; /* tight */
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.01em;
+}
+
+/* Lowercase treatment */
+h1, h2, h3, h4, h5, h6, .lowercase {
+    text-transform: lowercase;
+}
+
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-3xl); }
+h4 { font-size: var(--text-2xl); }
+
+/* Hidden scroll navigation */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-3) var(--space-6);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-bar.visible {
+    transform: translateY(0);
+}
+
+.nav-bar .logo {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-4);
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-width) solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+/* Hero with image background */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: var(--space-10) var(--space-6);
+    /* Subtle gradient background */
+    background: linear-gradient(135deg,
+        rgba(122, 155, 142, 0.05) 0%,
+        rgba(201, 167, 162, 0.05) 50%,
+        rgba(212, 197, 169, 0.05) 100%);
+    /* Pop art Ben-Day dots pattern */
+    background-image:
+        radial-gradient(circle, var(--color-primary) 1px, transparent 1px),
+        radial-gradient(circle, var(--color-secondary) 1px, transparent 1px),
+        linear-gradient(135deg,
+            rgba(122, 155, 142, 0.05) 0%,
+            rgba(201, 167, 162, 0.05) 50%,
+            rgba(212, 197, 169, 0.05) 100%);
+    background-size: 40px 40px, 60px 60px, 100% 100%;
+    background-position: 0 0, 20px 20px, 0 0;
+    background-blend-mode: normal, normal, normal;
+}
+
+.hero-content {
+    max-width: 900px;
+    text-align: center;
+}
+
+.hero h1 {
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+}
+
+.tagline {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-10);
+    line-height: var(--line-height-loose);
+    font-weight: 300;
+}
+
+/* URL Shortener Form */
+.shortener-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-8);
+    margin-bottom: var(--space-10);
+}
+
+.form-group {
+    margin-bottom: var(--space-6);
+}
+
+label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+}
+
+input[type="url"],
+input[type="text"] {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    transition: border-color 0.2s;
+    line-height: var(--line-height-tight);
+}
+
+input[type="url"]:focus,
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(122, 155, 142, 0.1);
+}
+
+.btn {
+    display: inline-block;
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-surface);
+    background: var(--color-primary);
+    border: var(--border-width) solid var(--color-primary);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.btn:hover,
+.btn:focus {
+    background: #6A8B7E;
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--color-surface);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-base);
+}
+
+.btn-secondary:hover {
+    background: #B99792;
+}
+
+/* Result display */
+.result-section {
+    display: none;
+    background: var(--color-accent);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+}
+
+.result-section.active {
+    display: block;
+}
+
+.shortened-url {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.url-display {
+    flex: 1;
+    min-width: 250px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    font-family: 'Courier New', monospace;
+    font-size: var(--text-lg);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-4);
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: var(--space-2);
+}
+
+.stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* QR Code */
+.qr-section {
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.qr-code {
+    display: inline-block;
+    padding: var(--space-4);
+    background: white;
+    border: var(--border-width) solid var(--color-border);
+}
+
+/* Timeline content flow */
+.timeline-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-10) var(--space-6);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+}
+
+.section-header h2 {
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+}
+
+.section-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-loose);
+}
+
+.timeline {
+    position: relative;
+    padding: var(--space-6) 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: var(--border-width);
+    background: var(--color-border);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: var(--space-10);
+    position: relative;
+}
+
+.timeline-item:nth-child(odd) {
+    flex-direction: row-reverse;
+}
+
+.timeline-content {
+    flex: 1;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    margin: 0 var(--space-8);
+    position: relative;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-right: calc(50% + var(--space-8));
+    margin-left: 0;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-left: calc(50% + var(--space-8));
+    margin-right: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 50%;
+    top: var(--space-6);
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    border: var(--border-width) solid var(--color-border);
+    transform: translateX(-50%);
+}
+
+.timeline-date {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    color: var(--color-primary);
+    margin-bottom: var(--space-2);
+}
+
+.timeline-url {
+    font-family: 'Courier New', monospace;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+    word-break: break-all;
+}
+
+.timeline-original {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+    word-break: break-all;
+}
+
+.timeline-stats {
+    display: flex;
+    gap: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.timeline-stats span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+/* Features section */
+.features-section {
+    background: var(--color-surface);
+    padding: var(--space-10) var(--space-6);
+    border-top: var(--border-width) solid var(--color-border);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.features-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.feature-card {
+    padding: var(--space-6);
+    border: var(--border-width) solid var(--color-border);
+    text-align: center;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto var(--space-4);
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-3xl);
+}
+
+.feature-card h3 {
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+}
+
+.feature-card p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-loose);
+}
+
+/* Footer */
+.footer {
+    padding: var(--space-8) var(--space-6);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding: var(--space-8) var(--space-4);
+    }
+
+    .shortener-card {
+        padding: var(--space-4);
+    }
+
+    .nav-links {
+        gap: var(--space-2);
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline::before {
+        left: 20px;
+    }
+
+    .timeline-item,
+    .timeline-item:nth-child(odd) {
+        flex-direction: column;
+    }
+
+    .timeline-content,
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        margin: 0 0 0 var(--space-6);
+    }
+
+    .timeline-marker {
+        left: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Hand-drawn icon styles */
+.icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+</style>
+
+<!-- Navigation (hidden on scroll) -->
+<nav class="nav-bar" id="navbar">
+    <div class="logo">clean hub</div>
+    <ul class="nav-links">
+        <li><a href="#home">home</a></li>
+        <li><a href="#features">features</a></li>
+        <li><a href="#history">history</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section with URL Shortener -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>clean hub</h1>
+        <p class="tagline">crafted for developers with american corporate roots</p>
+
+        <div class="shortener-card">
+            <form id="shortenForm">
+                <div class="form-group">
+                    <label for="longUrl">paste your long url</label>
+                    <input
+                        type="url"
+                        id="longUrl"
+                        name="longUrl"
+                        placeholder="https://example.com/very/long/url/that/needs/shortening"
+                        required
+                        aria-label="Enter long URL to shorten"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="customSlug">custom slug (optional)</label>
+                    <input
+                        type="text"
+                        id="customSlug"
+                        name="customSlug"
+                        placeholder="my-custom-link"
+                        pattern="[a-zA-Z0-9-_]+"
+                        aria-label="Enter custom slug (optional)"
+                    >
+                </div>
+
+                <button type="submit" class="btn">shorten url</button>
+            </form>
+
+            <div class="result-section" id="resultSection">
+                <h3 style="margin-bottom: var(--space-4);">your shortened url</h3>
+
+                <div class="shortened-url">
+                    <input
+                        type="text"
+                        class="url-display"
+                        id="shortUrlDisplay"
+                        readonly
+                        aria-label="Shortened URL"
+                    >
+                    <button class="btn btn-secondary" id="copyBtn">copy</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="clickCount">0</span>
+                        <span class="stat-label">total clicks</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="todayClicks">0</span>
+                        <span class="stat-label">clicks today</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="uniqueVisitors">0</span>
+                        <span class="stat-label">unique visitors</span>
+                    </div>
+                </div>
+
+                <div class="qr-section">
+                    <h4 style="margin-bottom: var(--space-4);">qr code</h4>
+                    <div class="qr-code" id="qrCode">
+                        <!-- QR code will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="section-header">
+        <h2>why choose clean hub?</h2>
+        <p class="section-description">powerful url shortening with analytics, qr codes, and custom branding</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-primary);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" fill="none"/>
+                </svg>
+            </div>
+            <h3>instant shortening</h3>
+            <p>generate short links in milliseconds with our optimized infrastructure</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-secondary);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M9 9h6M9 12h6M9 15h6"/>
+                </svg>
+            </div>
+            <h3>custom slugs</h3>
+            <p>create memorable branded links that reflect your content</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-accent);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M3 3h18v18H3z"/>
+                    <path d="M7 7h2v2H7zM7 15h2v2H7zM15 7h2v2h-2zM15 15h2v2h-2z"/>
+                </svg>
+            </div>
+            <h3>qr codes</h3>
+            <p>automatic qr code generation for offline sharing</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-primary);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M3 3v18h18"/>
+                    <path d="M7 16l4-8 4 4 4-6"/>
+                </svg>
+            </div>
+            <h3>analytics</h3>
+            <p>track clicks, visitors, and engagement metrics in real-time</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-secondary);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+            </div>
+            <h3>link history</h3>
+            <p>access your complete link history with search and filtering</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-accent);">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h3>api access</h3>
+            <p>integrate url shortening into your apps with our rest api</p>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline History Section -->
+<section class="timeline-section" id="history">
+    <div class="section-header">
+        <h2>your link history</h2>
+        <p class="section-description">chronological timeline of all your shortened urls</p>
+    </div>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="timeline-date">2 hours ago</div>
+                <div class="timeline-url">https://clnhub.co/xk9p2</div>
+                <div class="timeline-original">→ https://github.com/developer/awesome-project/releases/v2.1.0</div>
+                <div class="timeline-stats">
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        </svg>
+                        247 clicks
+                    </span>
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        189 unique
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="timeline-date">yesterday</div>
+                <div class="timeline-url">https://clnhub.co/design-sys</div>
+                <div class="timeline-original">→ https://www.figma.com/file/abc123/design-system-documentation</div>
+                <div class="timeline-stats">
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        </svg>
+                        1,432 clicks
+                    </span>
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        891 unique
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="timeline-date">3 days ago</div>
+                <div class="timeline-url">https://clnhub.co/api-docs</div>
+                <div class="timeline-original">→ https://docs.example.com/api/v2/reference/authentication</div>
+                <div class="timeline-stats">
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        </svg>
+                        3,156 clicks
+                    </span>
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        2,104 unique
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="timeline-date">1 week ago</div>
+                <div class="timeline-url">https://clnhub.co/blog-post</div>
+                <div class="timeline-original">→ https://medium.com/@developer/building-scalable-microservices</div>
+                <div class="timeline-stats">
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        </svg>
+                        8,923 clicks
+                    </span>
+                    <span>
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        6,781 unique
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>clean hub &copy; 2026 - crafted for developers with care</p>
+    <p style="margin-top: var(--space-2);">use arrow keys or swipe to navigate designs</p>
+</footer>
+
+<script>
+// URL Shortener functionality
+(function() {
+    const form = document.getElementById('shortenForm');
+    const resultSection = document.getElementById('resultSection');
+    const shortUrlDisplay = document.getElementById('shortUrlDisplay');
+    const copyBtn = document.getElementById('copyBtn');
+    const qrCode = document.getElementById('qrCode');
+    const clickCount = document.getElementById('clickCount');
+    const todayClicks = document.getElementById('todayClicks');
+    const uniqueVisitors = document.getElementById('uniqueVisitors');
+
+    // Generate random short code
+    function generateShortCode() {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code;
+    }
+
+    // Generate simple QR code (text-based representation)
+    function generateQRCode(url) {
+        // Create a simple QR-like pattern using CSS
+        const size = 160;
+        const cellSize = 8;
+        const cells = size / cellSize;
+
+        let html = '<svg width="' + size + '" height="' + size + '" style="background: white;">';
+
+        // Generate pseudo-random pattern based on URL
+        for (let y = 0; y < cells; y++) {
+            for (let x = 0; x < cells; x++) {
+                // Use URL characters to seed the pattern
+                const seed = (url.charCodeAt(x % url.length) + url.charCodeAt(y % url.length) + x + y);
+                if (seed % 2 === 0) {
+                    html += '<rect x="' + (x * cellSize) + '" y="' + (y * cellSize) +
+                           '" width="' + cellSize + '" height="' + cellSize + '" fill="#2C3531"/>';
+                }
+            }
+        }
+
+        html += '</svg>';
+        return html;
+    }
+
+    // Generate random stats
+    function generateStats() {
+        const clicks = Math.floor(Math.random() * 5000) + 100;
+        const today = Math.floor(Math.random() * clicks * 0.3);
+        const unique = Math.floor(clicks * (0.6 + Math.random() * 0.2));
+
+        return { clicks, today, unique };
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const longUrl = document.getElementById('longUrl').value;
+        const customSlug = document.getElementById('customSlug').value;
+
+        // Generate short URL
+        const slug = customSlug || generateShortCode();
+        const shortUrl = 'https://clnhub.co/' + slug;
+
+        // Display result
+        shortUrlDisplay.value = shortUrl;
+        resultSection.classList.add('active');
+
+        // Generate stats
+        const stats = generateStats();
+        clickCount.textContent = stats.clicks.toLocaleString();
+        todayClicks.textContent = stats.today.toLocaleString();
+        uniqueVisitors.textContent = stats.unique.toLocaleString();
+
+        // Generate QR code
+        qrCode.innerHTML = generateQRCode(shortUrl);
+
+        // Scroll to result
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Copy to clipboard
+    copyBtn.addEventListener('click', function() {
+        shortUrlDisplay.select();
+        document.execCommand('copy');
+
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'copied!';
+        setTimeout(() => {
+            copyBtn.textContent = originalText;
+        }, 2000);
+    });
+
+    // Hidden scroll navigation
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+            navbar.classList.add('visible');
+        } else {
+            navbar.classList.remove('visible');
+        }
+
+        lastScroll = currentScroll;
+    });
+})();
+
+// Design navigation
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 33;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

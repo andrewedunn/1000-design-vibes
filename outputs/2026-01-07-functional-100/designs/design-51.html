@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Blue - Textbook Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Global Blue - Digital Textbook Reader
+        Design #51: Glassmorphic Art Nouveau textbook interface with natural earth tones
+
+        AESTHETIC PRINCIPLES:
+        - Glassmorphic panels with subtle blur and transparency
+        - Art Nouveau organic curves, botanical motifs, and flowing lines
+        - Natural earth palette: blues, greens, warm browns
+        - Compact density for efficient reading
+        - Both light and dark modes supported
+        - Fullscreen slide-based chapter navigation
+        - Masonry content flow for varied content types
+
+        FUNCTIONAL DIRECTION: textbook_reader
+        Required components: chapter navigation, TOC sidebar, reading area,
+        highlights/notes, bookmarks, font controls, search, progress indicator
+
+        CSS VARIABLES:
+        --color-primary: Deep teal blue
+        --color-background: Soft cream/charcoal
+        --color-surface: Frosted glass panels
+        --color-text: Rich brown/soft white
+        --font-heading: Marcellus (Art Nouveau inspired)
+        --font-body: Cormorant (elegant serif)
+        --space-unit: 8px (compact)
+        --radius-default: 16px (organic curves)
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Mode Colors - Natural Earth Tones */
+            --color-primary: #2d6a5f;
+            --color-primary-light: #4a9d8c;
+            --color-secondary: #8b6f47;
+            --color-accent: #b4926f;
+            --color-background: #f5f1e8;
+            --color-background-alt: #e8e3d6;
+            --color-surface: rgba(255, 255, 255, 0.65);
+            --color-surface-solid: #ffffff;
+            --color-text: #3a3028;
+            --color-text-muted: #6b6158;
+            --color-border: rgba(45, 106, 95, 0.15);
+            --color-highlight: rgba(180, 146, 111, 0.25);
+            --color-bookmark: #d4a574;
+
+            /* Typography */
+            --font-heading: 'Marcellus', serif;
+            --font-body: 'Cormorant', serif;
+            --font-size-base: 18px;
+            --scale-ratio: 1.25;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 16px;
+            --radius-small: 8px;
+            --radius-large: 24px;
+            --shadow-default: 0 8px 32px rgba(45, 106, 95, 0.12);
+            --shadow-subtle: 0 2px 8px rgba(45, 106, 95, 0.08);
+
+            /* Glass effect */
+            --glass-blur: 12px;
+            --glass-opacity: 0.65;
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #5aa191;
+            --color-primary-light: #7cc4b3;
+            --color-secondary: #c4a57b;
+            --color-accent: #d4b896;
+            --color-background: #1a1612;
+            --color-background-alt: #252018;
+            --color-surface: rgba(40, 35, 28, 0.75);
+            --color-surface-solid: #2a2520;
+            --color-text: #e8dfd0;
+            --color-text-muted: #a8998a;
+            --color-border: rgba(90, 161, 145, 0.25);
+            --color-highlight: rgba(212, 184, 150, 0.2);
+            --color-bookmark: #c4a57b;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.7;
+            color: var(--color-text);
+            background: var(--color-background);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(45, 106, 95, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 111, 71, 0.06) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+
+        /* Art Nouveau decorative background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q 35 15 30 25 Q 25 15 30 5 M30 35 Q 35 45 30 55 Q 25 45 30 35' stroke='%232d6a5f' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        [data-theme="dark"] body::before {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q 35 15 30 25 Q 25 15 30 5 M30 35 Q 35 45 30 55 Q 25 45 30 35' stroke='%235aa191' stroke-width='0.5' fill='none' opacity='0.15'/%3E%3C/svg%3E");
+        }
+
+        /* Top Fixed Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-md);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .top-nav::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--color-primary) 20%,
+                var(--color-primary) 80%,
+                transparent);
+            opacity: 0.3;
+        }
+
+        .book-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--color-primary);
+            font-weight: normal;
+            letter-spacing: 0.5px;
+            flex: 1;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: none;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-icon:hover {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-icon:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-icon:active {
+            transform: translateY(0);
+        }
+
+        /* Font size controls */
+        .font-controls {
+            display: flex;
+            gap: 4px;
+            background: var(--color-surface-solid);
+            border-radius: var(--radius-small);
+            padding: 4px;
+            border: 1px solid var(--color-border);
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            margin-top: 60px;
+            display: flex;
+            height: calc(100vh - 60px);
+            z-index: 1;
+        }
+
+        /* TOC Sidebar */
+        .toc-sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-right: 1px solid var(--color-border);
+            overflow-y: auto;
+            padding: var(--space-md);
+            transition: transform 0.3s ease;
+        }
+
+        .toc-sidebar.hidden {
+            transform: translateX(-100%);
+        }
+
+        .toc-header {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--color-border);
+            position: relative;
+        }
+
+        .toc-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-chapter {
+            margin-bottom: var(--space-sm);
+        }
+
+        .toc-chapter-title {
+            display: flex;
+            align-items: center;
+            padding: var(--space-xs) var(--space-sm);
+            color: var(--color-text);
+            text-decoration: none;
+            border-radius: var(--radius-small);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .toc-chapter-title:hover {
+            background: var(--color-highlight);
+            padding-left: calc(var(--space-sm) + 8px);
+        }
+
+        .toc-chapter-title:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .toc-chapter-title.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .toc-chapter-title.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 70%;
+            background: var(--color-accent);
+            border-radius: 2px;
+        }
+
+        .toc-sections {
+            list-style: none;
+            margin-left: var(--space-md);
+            margin-top: var(--space-xs);
+        }
+
+        .toc-section {
+            padding: 4px var(--space-sm);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: var(--radius-small);
+            transition: all 0.2s ease;
+        }
+
+        .toc-section:hover {
+            color: var(--color-primary);
+            background: var(--color-highlight);
+        }
+
+        /* Main content area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Reading panel - glassmorphic */
+        .reading-panel {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+            min-height: 100%;
+        }
+
+        /* Chapter slide */
+        .chapter-slide {
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-primary),
+                var(--color-primary-light),
+                var(--color-accent));
+            opacity: 0.6;
+        }
+
+        /* Art Nouveau decorative corner */
+        .chapter-slide::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 0 Q 40 0 40 40 Q 40 0 80 0' stroke='%232d6a5f' stroke-width='1' fill='none' opacity='0.2'/%3E%3Cpath d='M 0 0 Q 0 40 40 40 Q 0 40 0 80' stroke='%232d6a5f' stroke-width='1' fill='none' opacity='0.2'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%232d6a5f' opacity='0.3'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .chapter-number {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .chapter-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            color: var(--color-text);
+            margin-bottom: var(--space-lg);
+            line-height: 1.3;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Art Nouveau underline flourish */
+        .chapter-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                var(--color-primary) 0%,
+                var(--color-accent) 50%,
+                transparent 100%);
+        }
+
+        /* Content in masonry-like flow */
+        .content-block {
+            margin-bottom: var(--space-lg);
+        }
+
+        .content-block p {
+            margin-bottom: var(--space-md);
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .content-block h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: var(--color-primary);
+            margin-top: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Highlighted text */
+        .highlight {
+            background: var(--color-highlight);
+            padding: 2px 4px;
+            border-radius: 4px;
+            border-bottom: 2px solid var(--color-accent);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .highlight:hover::after {
+            content: attr(data-note);
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--color-surface-solid);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-small);
+            border: 1px solid var(--color-border);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            box-shadow: var(--shadow-default);
+            z-index: 10;
+        }
+
+        /* Key term box */
+        .key-term {
+            background: var(--color-surface-solid);
+            border-left: 4px solid var(--color-primary);
+            border-radius: var(--radius-small);
+            padding: var(--space-md);
+            margin: var(--space-lg) 0;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .key-term-title {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Example box - varied height for masonry effect */
+        .example-box {
+            background: linear-gradient(135deg,
+                var(--color-surface-solid) 0%,
+                var(--color-background-alt) 100%);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin: var(--space-lg) 0;
+            border: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .example-box::before {
+            content: 'Example';
+            position: absolute;
+            top: -10px;
+            left: var(--space-md);
+            background: var(--color-primary);
+            color: white;
+            padding: 4px var(--space-sm);
+            border-radius: var(--radius-small);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Image with caption */
+        .figure {
+            margin: var(--space-xl) 0;
+            text-align: center;
+        }
+
+        .figure-image {
+            width: 100%;
+            height: 300px;
+            background: var(--color-background-alt);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            font-style: italic;
+            border: 1px solid var(--color-border);
+        }
+
+        .figure-caption {
+            margin-top: var(--space-sm);
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Bookmark indicator */
+        .bookmark {
+            position: absolute;
+            top: 0;
+            right: 40px;
+            width: 30px;
+            height: 50px;
+            background: var(--color-bookmark);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .bookmark:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--color-background-alt);
+            z-index: 999;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                var(--color-primary),
+                var(--color-primary-light));
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(180, 146, 111, 0.6);
+        }
+
+        /* Search panel - slides down from top */
+        .search-panel {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120%);
+            width: 90%;
+            max-width: 600px;
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-border);
+            z-index: 1001;
+            transition: transform 0.3s ease;
+        }
+
+        .search-panel.active {
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-small);
+            background: var(--color-surface-solid);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .search-results {
+            margin-top: var(--space-sm);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: var(--space-sm);
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background: var(--color-highlight);
+        }
+
+        .search-result-chapter {
+            font-size: 0.85rem;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .search-result-text {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: var(--color-surface-solid);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-small);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--color-primary);
+            transform: rotate(15deg);
+        }
+
+        /* Sidebar tools panel */
+        .tools-sidebar {
+            width: 60px;
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-left: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-md) var(--space-xs);
+            gap: var(--space-sm);
+        }
+
+        .tool-btn {
+            width: 44px;
+            height: 44px;
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-small);
+            color: var(--color-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tool-btn:hover {
+            background: var(--color-primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tool-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .tool-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 100%;
+            margin-right: var(--space-sm);
+            background: var(--color-surface-solid);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-small);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            border: 1px solid var(--color-border);
+        }
+
+        .tool-btn:hover::after {
+            opacity: 1;
+        }
+
+        /* Notes panel - slides in from right */
+        .notes-panel {
+            position: fixed;
+            right: 0;
+            top: 60px;
+            width: 320px;
+            height: calc(100vh - 60px);
+            background: var(--color-surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-left: 1px solid var(--color-border);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: var(--space-md);
+        }
+
+        .notes-panel.active {
+            transform: translateX(0);
+        }
+
+        .notes-header {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .note-item {
+            background: var(--color-surface-solid);
+            padding: var(--space-sm);
+            border-radius: var(--radius-small);
+            margin-bottom: var(--space-sm);
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .note-reference {
+            font-size: 0.8rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .note-text {
+            font-size: 0.9rem;
+            color: var(--color-text);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .toc-sidebar {
+                position: fixed;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .toc-sidebar.active {
+                transform: translateX(0);
+            }
+
+            .tools-sidebar {
+                display: none;
+            }
+
+            .reading-panel {
+                padding: var(--space-md);
+            }
+
+            .chapter-slide {
+                padding: var(--space-md);
+            }
+        }
+
+        /* Scrollbar styling */
+        .content-area::-webkit-scrollbar,
+        .toc-sidebar::-webkit-scrollbar,
+        .notes-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-area::-webkit-scrollbar-track,
+        .toc-sidebar::-webkit-scrollbar-track,
+        .notes-panel::-webkit-scrollbar-track {
+            background: var(--color-background-alt);
+        }
+
+        .content-area::-webkit-scrollbar-thumb,
+        .toc-sidebar::-webkit-scrollbar-thumb,
+        .notes-panel::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+
+        .content-area::-webkit-scrollbar-thumb:hover,
+        .toc-sidebar::-webkit-scrollbar-thumb:hover,
+        .notes-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <button class="btn-icon" id="toggleToc" aria-label="Toggle table of contents">
+            <span>☰</span>
+        </button>
+        <h1 class="book-title">Marine Biology: An Introduction</h1>
+        <div class="nav-controls">
+            <button class="btn-icon" id="searchBtn" aria-label="Search">
+                <span>🔍</span>
+            </button>
+            <div class="font-controls">
+                <button class="btn-icon" id="fontDecrease" aria-label="Decrease font size">
+                    <span style="font-size: 0.9rem">A</span>
+                </button>
+                <button class="btn-icon" id="fontIncrease" aria-label="Increase font size">
+                    <span style="font-size: 1.2rem">A</span>
+                </button>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Search Panel -->
+    <div class="search-panel" id="searchPanel">
+        <input type="text" class="search-input" placeholder="Search the textbook..." id="searchInput" aria-label="Search textbook">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Table of Contents Sidebar -->
+        <aside class="toc-sidebar" id="tocSidebar">
+            <h2 class="toc-header">Table of Contents</h2>
+            <ul class="toc-list">
+                <li class="toc-chapter">
+                    <a href="#ch1" class="toc-chapter-title active">Chapter 1: Ocean Ecosystems</a>
+                    <ul class="toc-sections">
+                        <li class="toc-section">1.1 Introduction</li>
+                        <li class="toc-section">1.2 Marine Zones</li>
+                        <li class="toc-section">1.3 Biodiversity</li>
+                    </ul>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#ch2" class="toc-chapter-title">Chapter 2: Coral Reefs</a>
+                    <ul class="toc-sections">
+                        <li class="toc-section">2.1 Formation</li>
+                        <li class="toc-section">2.2 Symbiosis</li>
+                        <li class="toc-section">2.3 Conservation</li>
+                    </ul>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#ch3" class="toc-chapter-title">Chapter 3: Deep Sea Life</a>
+                    <ul class="toc-sections">
+                        <li class="toc-section">3.1 Adaptations</li>
+                        <li class="toc-section">3.2 Bioluminescence</li>
+                        <li class="toc-section">3.3 Pressure</li>
+                    </ul>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#ch4" class="toc-chapter-title">Chapter 4: Marine Mammals</a>
+                    <ul class="toc-sections">
+                        <li class="toc-section">4.1 Cetaceans</li>
+                        <li class="toc-section">4.2 Pinnipeds</li>
+                        <li class="toc-section">4.3 Behavior</li>
+                    </ul>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#ch5" class="toc-chapter-title">Chapter 5: Ocean Conservation</a>
+                    <ul class="toc-sections">
+                        <li class="toc-section">5.1 Threats</li>
+                        <li class="toc-section">5.2 Solutions</li>
+                        <li class="toc-section">5.3 Future</li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area" id="contentArea">
+            <div class="reading-panel">
+                <!-- Chapter 1 -->
+                <article class="chapter-slide" id="ch1">
+                    <div class="bookmark" data-chapter="1" aria-label="Bookmark Chapter 1"></div>
+                    <div class="chapter-number">Chapter One</div>
+                    <h2 class="chapter-title">Ocean Ecosystems</h2>
+
+                    <div class="content-block">
+                        <h3>1.1 Introduction to Marine Environments</h3>
+                        <p>The ocean covers approximately 71% of Earth's surface and contains 97% of our planet's water. These vast waters support an incredible diversity of life, from microscopic <span class="highlight" data-note="Single-celled organisms">phytoplankton</span> to the largest animals ever known to exist. Understanding ocean ecosystems is crucial for comprehending the health of our planet and the interconnected nature of all life on Earth.</p>
+
+                        <p>Marine ecosystems are characterized by their salinity, depth, temperature, and the organisms that inhabit them. Unlike terrestrial environments, ocean ecosystems are three-dimensional, with life existing from the sunlit surface waters down to the deepest trenches, creating vertical layers of distinct communities.</p>
+                    </div>
+
+                    <div class="key-term">
+                        <div class="key-term-title">Key Term: Ecosystem</div>
+                        <p>A biological community of interacting organisms and their physical environment, functioning as a unit through nutrient cycles and energy flows.</p>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>1.2 Marine Zones and Habitats</h3>
+                        <p>The ocean is divided into distinct zones based on depth and distance from shore. The <span class="highlight" data-note="Extends to continental shelf edge">neritic zone</span> includes shallow coastal waters, while the oceanic zone encompasses the deep open ocean. Vertically, we recognize the epipelagic (sunlight), mesopelagic (twilight), bathypelagic (midnight), abyssopelagic, and hadopelagic zones.</p>
+
+                        <p>Each zone presents unique environmental conditions that shape the organisms living there. The epipelagic zone, rich in sunlight and nutrients, supports the majority of marine life through photosynthesis. In contrast, deeper zones rely on organic matter falling from above, creating a fundamentally different ecosystem structure.</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-image">
+                            <span>Figure 1.1: Ocean Zones Diagram</span>
+                        </div>
+                        <p class="figure-caption">The vertical stratification of ocean zones showing light penetration and pressure gradients</p>
+                    </div>
+
+                    <div class="example-box">
+                        <p><strong>Case Study:</strong> The Monterey Bay ecosystem demonstrates remarkable biodiversity across multiple zones. From kelp forests in shallow waters to the submarine canyon reaching depths of 3,600 meters, this region showcases the full spectrum of marine habitats within a relatively small geographic area.</p>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>1.3 Biodiversity and Ecological Relationships</h3>
+                        <p>Marine biodiversity encompasses an estimated 250,000 known species, with potentially millions more awaiting discovery. This diversity exists not merely as a collection of individual organisms, but as complex networks of ecological relationships including predation, competition, mutualism, and parasitism.</p>
+
+                        <p>The concept of <span class="highlight" data-note="Organism's role in ecosystem">ecological niche</span> is fundamental to understanding how so many species coexist. Each organism occupies a specific niche defined by its feeding habits, habitat preferences, and interactions with other species. This specialization allows for remarkable efficiency in resource utilization throughout the ecosystem.</p>
+
+                        <p>Primary productivity in marine ecosystems primarily occurs through photosynthetic phytoplankton, which form the base of most ocean food webs. These microscopic organisms convert solar energy into chemical energy, supporting the entire marine food chain from zooplankton to apex predators like sharks and orcas.</p>
+                    </div>
+                </article>
+
+                <!-- Chapter 2 Preview -->
+                <article class="chapter-slide" id="ch2">
+                    <div class="bookmark" data-chapter="2" aria-label="Bookmark Chapter 2"></div>
+                    <div class="chapter-number">Chapter Two</div>
+                    <h2 class="chapter-title">Coral Reefs: Rainforests of the Sea</h2>
+
+                    <div class="content-block">
+                        <h3>2.1 Reef Formation and Structure</h3>
+                        <p>Coral reefs are among Earth's most diverse and productive ecosystems, built by countless individual coral polyps over thousands of years. These tiny animals, related to jellyfish and anemones, secrete calcium carbonate skeletons that accumulate into massive reef structures. The Great Barrier Reef, visible from space, exemplifies the scale these colonial organisms can achieve.</p>
+
+                        <p>Reef formation requires specific environmental conditions: warm water temperatures (20-30°C), clear water for light penetration, moderate wave action, and appropriate salinity. These constraints limit reef development to tropical and subtropical waters, primarily between 30°N and 30°S latitude.</p>
+                    </div>
+
+                    <div class="key-term">
+                        <div class="key-term-title">Key Term: Coral Polyp</div>
+                        <p>A small, soft-bodied organism related to sea anemones that forms the building block of coral colonies. Each polyp secretes a calcium carbonate skeleton and houses symbiotic algae called zooxanthellae.</p>
+                    </div>
+
+                    <div class="content-block">
+                        <h3>2.2 Symbiotic Relationships</h3>
+                        <p>The relationship between coral polyps and <span class="highlight" data-note="Photosynthetic algae">zooxanthellae</span> represents one of nature's most important mutualisms. These microscopic algae live within coral tissue, providing up to 90% of the coral's energy through photosynthesis. In return, the coral provides protection and nutrients derived from its waste products.</p>
+
+                        <p>This delicate partnership explains both the productivity and vulnerability of coral reefs. When stressed by elevated water temperatures or other environmental changes, corals expel their zooxanthellae in a process called coral bleaching, potentially leading to coral death if conditions don't improve.</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-image">
+                            <span>Figure 2.1: Coral Anatomy Cross-section</span>
+                        </div>
+                        <p class="figure-caption">Internal structure showing polyp tissue and zooxanthellae distribution</p>
+                    </div>
+                </article>
+
+                <!-- Chapter 3 Preview -->
+                <article class="chapter-slide" id="ch3">
+                    <div class="bookmark" data-chapter="3" aria-label="Bookmark Chapter 3"></div>
+                    <div class="chapter-number">Chapter Three</div>
+                    <h2 class="chapter-title">Deep Sea Life and Adaptations</h2>
+
+                    <div class="content-block">
+                        <h3>3.1 Extreme Adaptations</h3>
+                        <p>Life in the deep sea faces extraordinary challenges: complete darkness below 1,000 meters, crushing pressures exceeding 1,000 atmospheres, near-freezing temperatures, and scarce food resources. Despite these harsh conditions, the deep ocean harbors remarkable biodiversity with unique adaptations found nowhere else on Earth.</p>
+
+                        <p>Deep-sea organisms have evolved specialized features including bioluminescence for communication and prey attraction, enlarged eyes or complete blindness depending on depth, pressure-resistant proteins, and extremely efficient metabolisms to survive on limited food.</p>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <!-- Tools Sidebar -->
+        <aside class="tools-sidebar">
+            <button class="tool-btn" data-tooltip="Highlights" aria-label="View highlights">
+                <span>✏️</span>
+            </button>
+            <button class="tool-btn" id="notesBtn" data-tooltip="Notes" aria-label="View notes">
+                <span>📝</span>
+            </button>
+            <button class="tool-btn" data-tooltip="Bookmarks" aria-label="View bookmarks">
+                <span>🔖</span>
+            </button>
+            <button class="tool-btn" data-tooltip="Print" aria-label="Print chapter">
+                <span>🖨️</span>
+            </button>
+        </aside>
+    </div>
+
+    <!-- Notes Panel -->
+    <div class="notes-panel" id="notesPanel">
+        <h3 class="notes-header">My Notes</h3>
+        <div class="note-item">
+            <div class="note-reference">Chapter 1.1 - Page 3</div>
+            <div class="note-text">Remember: Phytoplankton are the foundation of the marine food web. They produce about 50% of Earth's oxygen!</div>
+        </div>
+        <div class="note-item">
+            <div class="note-reference">Chapter 1.2 - Page 5</div>
+            <div class="note-text">The hadopelagic zone includes trenches like Mariana - deepest known point on Earth. Review pressure calculations for exam.</div>
+        </div>
+        <div class="note-item">
+            <div class="note-reference">Chapter 2.1 - Page 12</div>
+            <div class="note-text">Coral reefs cover less than 1% of ocean floor but support 25% of marine species. Important statistic for conservation discussion.</div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 15%"></div>
+    </div>
+
+    <script>
+        // Navigation between designs
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 51;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // TOC toggle
+        const toggleToc = document.getElementById('toggleToc');
+        const tocSidebar = document.getElementById('tocSidebar');
+
+        toggleToc.addEventListener('click', () => {
+            tocSidebar.classList.toggle('active');
+        });
+
+        // Font size controls
+        const fontDecrease = document.getElementById('fontDecrease');
+        const fontIncrease = document.getElementById('fontIncrease');
+        let currentFontSize = 18;
+
+        fontDecrease.addEventListener('click', () => {
+            if (currentFontSize > 14) {
+                currentFontSize -= 2;
+                document.documentElement.style.setProperty('--font-size-base', currentFontSize + 'px');
+            }
+        });
+
+        fontIncrease.addEventListener('click', () => {
+            if (currentFontSize < 24) {
+                currentFontSize += 2;
+                document.documentElement.style.setProperty('--font-size-base', currentFontSize + 'px');
+            }
+        });
+
+        // Search functionality
+        const searchBtn = document.getElementById('searchBtn');
+        const searchPanel = document.getElementById('searchPanel');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchBtn.addEventListener('click', () => {
+            searchPanel.classList.toggle('active');
+            if (searchPanel.classList.contains('active')) {
+                searchInput.focus();
+            }
+        });
+
+        // Mock search data
+        const searchData = [
+            { chapter: 'Chapter 1', text: 'Ocean covers 71% of Earth\'s surface' },
+            { chapter: 'Chapter 1', text: 'Phytoplankton form base of food web' },
+            { chapter: 'Chapter 2', text: 'Coral reefs are biodiversity hotspots' },
+            { chapter: 'Chapter 2', text: 'Zooxanthellae provide energy to corals' },
+            { chapter: 'Chapter 3', text: 'Deep sea organisms use bioluminescence' }
+        ];
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 2) {
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            const results = searchData.filter(item =>
+                item.text.toLowerCase().includes(query) ||
+                item.chapter.toLowerCase().includes(query)
+            );
+
+            searchResults.innerHTML = results.map(result => `
+                <div class="search-result-item">
+                    <div class="search-result-chapter">${result.chapter}</div>
+                    <div class="search-result-text">${result.text}</div>
+                </div>
+            `).join('');
+        });
+
+        // Notes panel toggle
+        const notesBtn = document.getElementById('notesBtn');
+        const notesPanel = document.getElementById('notesPanel');
+
+        notesBtn.addEventListener('click', () => {
+            notesPanel.classList.toggle('active');
+        });
+
+        // Progress tracking
+        const contentArea = document.getElementById('contentArea');
+        const progressFill = document.getElementById('progressFill');
+
+        contentArea.addEventListener('scroll', () => {
+            const scrollHeight = contentArea.scrollHeight - contentArea.clientHeight;
+            const scrolled = contentArea.scrollTop;
+            const progress = (scrolled / scrollHeight) * 100;
+            progressFill.style.width = progress + '%';
+        });
+
+        // TOC active chapter tracking
+        const chapterSlides = document.querySelectorAll('.chapter-slide');
+        const tocLinks = document.querySelectorAll('.toc-chapter-title');
+
+        contentArea.addEventListener('scroll', () => {
+            let currentChapter = null;
+
+            chapterSlides.forEach((slide) => {
+                const rect = slide.getBoundingClientRect();
+                if (rect.top < 200 && rect.bottom > 200) {
+                    currentChapter = slide.id;
+                }
+            });
+
+            if (currentChapter) {
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + currentChapter) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+
+        // TOC navigation
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    contentArea.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Bookmark functionality
+        const bookmarks = document.querySelectorAll('.bookmark');
+        bookmarks.forEach(bookmark => {
+            bookmark.addEventListener('click', function() {
+                this.style.background = this.style.background === 'var(--color-primary)'
+                    ? 'var(--color-bookmark)'
+                    : 'var(--color-primary)';
+            });
+        });
+
+        // Close search panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchPanel.contains(e.target) && e.target !== searchBtn) {
+                searchPanel.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

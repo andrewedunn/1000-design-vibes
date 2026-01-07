@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<!--
+ABOUTME: Design #83 "Legacy Nordic" - Email Client Interface
+ABOUTME: Dark metallic material design with Web 2.0 glossy aesthetics, split-screen layout, and African-inspired bold patterns
+
+DESIGN SYSTEM DOCUMENTATION
+===========================
+
+Design Name: Legacy Nordic
+Tagline: Metallic vibes for real estate
+Functional Direction: Email Client (PRIMARY)
+
+Aesthetic Principles:
+- Dark metallic color palette with extreme contrast (cool vivid metallics)
+- Material design with layered surfaces and elevation
+- Web 2.0 glossy finish with subtle reflective effects
+- African-inspired bold organic patterns for texture
+- Split-screen layout: inbox list on left, message preview on right
+- Compact density for information-rich email management
+- Golden ratio typography scale for clear hierarchy
+- Uppercase headings with tight line-height for authority
+- Nostalgic emotional tone with modern functionality
+
+Key Design Tokens:
+--color-primary: #4FC3F7 (Metallic cyan - primary accent)
+--color-secondary: #26A69A (Metallic teal - secondary accent)
+--color-tertiary: #80DEEA (Light metallic cyan)
+--color-background: #121518 (Deep metallic dark)
+--color-surface: #1E2226 (Elevated surface)
+--color-surface-elevated: #2A2F34 (Higher elevation)
+--color-text: #E0E6ED (Cool light text)
+--color-text-muted: #8B95A1 (Muted metallic)
+--color-unread: #F44336 (Vivid red for unread indicators)
+--color-border: #3A4149 (Subtle border)
+
+--font-heading: 'Inter', sans-serif (Humanist sans)
+--font-body: 'Crimson Text', serif (Old style serif)
+--type-scale: 1.618 (Golden ratio)
+
+--space-unit: 10px (Compact base)
+--radius-default: 4px (Subtle rounded)
+--border-style: dashed
+
+Component Architecture:
+- Sidebar folders navigation (Inbox, Sent, Drafts, Trash, Labels)
+- Email list with sender avatars, subject preview, timestamps, unread badges
+- Message preview pane with full email content
+- Compose button (floating action button - material design)
+- Search bar with filters
+- Top bar with account switcher and settings
+- Material elevation shadows throughout
+- Organic pattern texture overlay
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Nordic - Email Client</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Colors - Dark Metallic Palette */
+            --color-primary: #4FC3F7;
+            --color-secondary: #26A69A;
+            --color-tertiary: #80DEEA;
+            --color-background: #121518;
+            --color-surface: #1E2226;
+            --color-surface-elevated: #2A2F34;
+            --color-surface-hover: #343A41;
+            --color-text: #E0E6ED;
+            --color-text-muted: #8B95A1;
+            --color-unread: #F44336;
+            --color-star: #FFC107;
+            --color-border: #3A4149;
+            --color-success: #66BB6A;
+            --color-warning: #FFA726;
+
+            /* Typography */
+            --font-heading: 'Inter', sans-serif;
+            --font-body: 'Crimson Text', serif;
+            --type-ratio: 1.618;
+            --type-base: 14px;
+            --type-sm: calc(var(--type-base) / var(--type-ratio));
+            --type-md: var(--type-base);
+            --type-lg: calc(var(--type-base) * var(--type-ratio));
+            --type-xl: calc(var(--type-lg) * var(--type-ratio));
+            --type-xxl: calc(var(--type-xl) * var(--type-ratio));
+
+            /* Spacing - Compact */
+            --space-unit: 10px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 1.5);
+            --space-lg: calc(var(--space-unit) * 2);
+            --space-xl: calc(var(--space-unit) * 3);
+            --space-xxl: calc(var(--space-unit) * 4);
+
+            /* Shapes */
+            --radius-default: 4px;
+            --radius-small: 2px;
+            --radius-large: 8px;
+            --radius-circle: 50%;
+
+            /* Material Elevation */
+            --elevation-1: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+            --elevation-2: 0 3px 6px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.45);
+            --elevation-3: 0 6px 12px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.5);
+            --elevation-4: 0 12px 24px rgba(0,0,0,0.45), 0 8px 16px rgba(0,0,0,0.55);
+
+            /* Border */
+            --border-width: 1px;
+            --border-style: dashed;
+
+            /* Transitions */
+            --transition-fast: 150ms ease-in-out;
+            --transition-base: 250ms ease-in-out;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--type-md);
+            line-height: 1.3;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Organic pattern texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(79, 195, 247, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(38, 166, 154, 0.03) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(79, 195, 247, 0.02) 35px, rgba(79, 195, 247, 0.02) 70px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .email-app {
+            display: flex;
+            height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            width: 240px;
+            background: var(--color-surface);
+            border-right: var(--border-width) var(--border-style) var(--color-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--elevation-2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: var(--space-lg) var(--space-md);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-primary);
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
+        }
+
+        .compose-btn {
+            margin: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--type-md);
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--elevation-2);
+            transition: all var(--transition-base);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compose-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left var(--transition-base);
+        }
+
+        .compose-btn:hover {
+            box-shadow: var(--elevation-3);
+            transform: translateY(-1px);
+        }
+
+        .compose-btn:hover::before {
+            left: 100%;
+        }
+
+        .compose-btn:active {
+            transform: translateY(0);
+        }
+
+        .compose-btn:focus {
+            outline: 2px solid var(--color-tertiary);
+            outline-offset: 2px;
+        }
+
+        /* Folders Navigation */
+        .folders {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-sm) 0;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .folder-item:hover {
+            background: var(--color-surface-hover);
+            color: var(--color-text);
+        }
+
+        .folder-item.active {
+            background: var(--color-surface-elevated);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.1);
+        }
+
+        .folder-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .folder-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        .folder-count {
+            margin-left: auto;
+            background: var(--color-unread);
+            color: var(--color-text);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .folder-label-section {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .folder-label-header {
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            opacity: 0.5;
+        }
+
+        .folder-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .label-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-circle);
+        }
+
+        /* ==================== SPLIT SCREEN ==================== */
+        .email-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ==================== EMAIL LIST ==================== */
+        .email-list-panel {
+            width: 420px;
+            background: var(--color-surface);
+            border-right: var(--border-width) var(--border-style) var(--color-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--elevation-1);
+        }
+
+        .list-header {
+            padding: var(--space-md);
+            background: var(--color-surface-elevated);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .list-title {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--color-background);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-xs) var(--space-sm);
+            margin-top: var(--space-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            outline: none;
+            padding: var(--space-xs);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .filter-btn {
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-small);
+            color: var(--color-text-muted);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-surface-hover);
+            color: var(--color-text);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .filter-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Email Items */
+        .email-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .email-item {
+            display: flex;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--color-surface);
+            position: relative;
+        }
+
+        .email-item:hover {
+            background: var(--color-surface-hover);
+        }
+
+        .email-item.active {
+            background: var(--color-surface-elevated);
+            border-left: 3px solid var(--color-primary);
+            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.1);
+        }
+
+        .email-item.unread {
+            background: linear-gradient(90deg, rgba(79, 195, 247, 0.05) 0%, var(--color-surface) 100%);
+        }
+
+        .email-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--color-unread);
+            border-radius: var(--radius-circle);
+        }
+
+        .email-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .email-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-circle);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--type-md);
+            color: var(--color-background);
+            flex-shrink: 0;
+            box-shadow: var(--elevation-1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+        }
+
+        .email-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .email-sender {
+            font-family: var(--font-heading);
+            font-size: var(--type-md);
+            font-weight: 600;
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-item.unread .email-sender {
+            color: var(--color-primary);
+        }
+
+        .email-time {
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .email-subject {
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-preview {
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-style: italic;
+        }
+
+        .email-meta {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-xs);
+        }
+
+        .email-badge {
+            padding: 2px 6px;
+            background: var(--color-surface-elevated);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-small);
+            font-family: var(--font-heading);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--color-text-muted);
+        }
+
+        .email-badge.attachment {
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .email-actions {
+            display: flex;
+            gap: var(--space-xs);
+            flex-shrink: 0;
+        }
+
+        .email-action-btn {
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            opacity: 0.6;
+        }
+
+        .email-action-btn:hover {
+            background: var(--color-surface-elevated);
+            opacity: 1;
+        }
+
+        .email-action-btn.starred {
+            opacity: 1;
+            color: var(--color-star);
+        }
+
+        .email-action-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ==================== MESSAGE PREVIEW PANE ==================== */
+        .message-panel {
+            flex: 1;
+            background: var(--color-background);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .message-header {
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--color-surface);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            box-shadow: var(--elevation-1);
+        }
+
+        .message-subject {
+            font-family: var(--font-heading);
+            font-size: var(--type-xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+
+        .message-sender-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .message-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-circle);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--type-lg);
+            color: var(--color-background);
+            box-shadow: var(--elevation-2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+        }
+
+        .message-details {
+            flex: 1;
+        }
+
+        .message-from {
+            font-family: var(--font-heading);
+            font-size: var(--type-md);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 2px;
+        }
+
+        .message-email {
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-xs);
+        }
+
+        .message-timestamp {
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+        }
+
+        .message-actions-bar {
+            display: flex;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            background: var(--color-surface-elevated);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .message-action {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .message-action:hover {
+            background: var(--color-surface-hover);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            box-shadow: var(--elevation-1);
+        }
+
+        .message-action:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .message-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-xl);
+        }
+
+        .message-content {
+            font-family: var(--font-body);
+            font-size: var(--type-md);
+            line-height: 1.6;
+            color: var(--color-text);
+            max-width: 800px;
+        }
+
+        .message-content p {
+            margin-bottom: var(--space-md);
+        }
+
+        .message-attachments {
+            margin-top: var(--space-xl);
+            padding-top: var(--space-xl);
+            border-top: var(--border-width) var(--border-style) var(--color-border);
+        }
+
+        .attachments-header {
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-sm);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .attachment-item:hover {
+            background: var(--color-surface-hover);
+            border-color: var(--color-primary);
+            box-shadow: var(--elevation-1);
+        }
+
+        .attachment-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+            border-radius: var(--radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-background);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 700;
+        }
+
+        .attachment-info {
+            flex: 1;
+        }
+
+        .attachment-name {
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .attachment-size {
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: var(--space-xl);
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-md);
+            opacity: 0.3;
+        }
+
+        .empty-state-text {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: var(--radius-default);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-muted);
+        }
+
+        /* ==================== ACCESSIBILITY ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .email-list-panel {
+                width: 360px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: -240px;
+                z-index: 100;
+                transition: left var(--transition-base);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .email-list-panel {
+                width: 100%;
+            }
+
+            .message-panel {
+                position: absolute;
+                left: 100%;
+                width: 100%;
+                transition: left var(--transition-base);
+            }
+
+            .message-panel.open {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-app">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">NORDIC MAIL</div>
+            </div>
+
+            <button class="compose-btn" tabindex="0">
+                ✦ Compose
+            </button>
+
+            <nav class="folders">
+                <div class="folder-item active" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                    <span>Inbox</span>
+                    <span class="folder-count">24</span>
+                </div>
+
+                <div class="folder-item" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                    <span>Starred</span>
+                    <span class="folder-count">7</span>
+                </div>
+
+                <div class="folder-item" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <span>Sent</span>
+                </div>
+
+                <div class="folder-item" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Drafts</span>
+                    <span class="folder-count">3</span>
+                </div>
+
+                <div class="folder-item" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Spam</span>
+                </div>
+
+                <div class="folder-item" tabindex="0">
+                    <svg class="folder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    <span>Trash</span>
+                </div>
+
+                <div class="folder-label-section">
+                    <div class="folder-label-header">Labels</div>
+
+                    <div class="folder-item folder-label" tabindex="0">
+                        <span class="label-dot" style="background: #4FC3F7;"></span>
+                        <span>Properties</span>
+                        <span class="folder-count">8</span>
+                    </div>
+
+                    <div class="folder-item folder-label" tabindex="0">
+                        <span class="label-dot" style="background: #26A69A;"></span>
+                        <span>Clients</span>
+                        <span class="folder-count">12</span>
+                    </div>
+
+                    <div class="folder-item folder-label" tabindex="0">
+                        <span class="label-dot" style="background: #FFC107;"></span>
+                        <span>Urgent</span>
+                        <span class="folder-count">2</span>
+                    </div>
+
+                    <div class="folder-item folder-label" tabindex="0">
+                        <span class="label-dot" style="background: #66BB6A;"></span>
+                        <span>Personal</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="email-main">
+            <!-- Email List Panel -->
+            <section class="email-list-panel">
+                <div class="list-header">
+                    <h1 class="list-title">Inbox</h1>
+                    <div class="search-bar">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.5;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="search" class="search-input" placeholder="Search messages..." />
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <button class="filter-btn active" tabindex="0">All</button>
+                    <button class="filter-btn" tabindex="0">Unread</button>
+                    <button class="filter-btn" tabindex="0">Starred</button>
+                    <button class="filter-btn" tabindex="0">Attachments</button>
+                </div>
+
+                <div class="email-list">
+                    <!-- Email Item 1 - Unread -->
+                    <div class="email-item unread active" tabindex="0">
+                        <div class="email-avatar">SK</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Sarah Kimani</div>
+                                <div class="email-time">9:42 AM</div>
+                            </div>
+                            <div class="email-subject">Waterfront Property Viewing Request</div>
+                            <div class="email-preview">Hi, I'm interested in scheduling a viewing for the waterfront property listed at...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Properties</span>
+                                <span class="email-badge attachment">📎 2</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn starred" aria-label="Star" tabindex="0">★</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 2 - Unread -->
+                    <div class="email-item unread" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #26A69A, #80DEEA);">MN</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Marcus Nguyen</div>
+                                <div class="email-time">8:15 AM</div>
+                            </div>
+                            <div class="email-subject">Q4 Market Analysis Report</div>
+                            <div class="email-preview">Please find attached the comprehensive market analysis for Q4. Key highlights include...</div>
+                            <div class="email-meta">
+                                <span class="email-badge attachment">📎 1</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 3 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #FFC107, #FFA726);">AJ</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Amara Johnson</div>
+                                <div class="email-time">Yesterday</div>
+                            </div>
+                            <div class="email-subject">Contract Ready for Signature</div>
+                            <div class="email-preview">The purchase agreement has been finalized and is ready for your review and signature...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Clients</span>
+                                <span class="email-badge">Urgent</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn starred" aria-label="Star" tabindex="0">★</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 4 - Unread -->
+                    <div class="email-item unread" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #66BB6A, #4FC3F7);">TP</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Thabo Pretorius</div>
+                                <div class="email-time">Yesterday</div>
+                            </div>
+                            <div class="email-subject">New Listing: Downtown Loft</div>
+                            <div class="email-preview">Exciting new listing just came on the market! Modern loft in the heart of downtown...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Properties</span>
+                                <span class="email-badge attachment">📎 5</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 5 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #4FC3F7, #26A69A);">LM</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Lisa Martinez</div>
+                                <div class="email-time">2 days ago</div>
+                            </div>
+                            <div class="email-subject">Inspection Report - 123 Oak Street</div>
+                            <div class="email-preview">Home inspection completed. Overall condition is good with minor recommendations...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Clients</span>
+                                <span class="email-badge attachment">📎 1</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 6 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #80DEEA, #4FC3F7);">KO</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Kwame Osei</div>
+                                <div class="email-time">3 days ago</div>
+                            </div>
+                            <div class="email-subject">Closing Date Confirmed</div>
+                            <div class="email-preview">Great news! The closing date has been confirmed for March 15th at 2:00 PM...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Clients</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn starred" aria-label="Star" tabindex="0">★</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 7 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #26A69A, #66BB6A);">ZA</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Zainab Ahmed</div>
+                                <div class="email-time">3 days ago</div>
+                            </div>
+                            <div class="email-subject">RE: Property Valuation Inquiry</div>
+                            <div class="email-preview">Thank you for your inquiry. Based on current market conditions, the estimated value...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Properties</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 8 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #FFA726, #FFC107);">DN</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">David Nkrumah</div>
+                                <div class="email-time">4 days ago</div>
+                            </div>
+                            <div class="email-subject">Open House Schedule - This Weekend</div>
+                            <div class="email-preview">Reminder: We have three open houses scheduled for this weekend. Please see details...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Properties</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 9 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #4FC3F7, #80DEEA);">EB</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Elena Banda</div>
+                                <div class="email-time">5 days ago</div>
+                            </div>
+                            <div class="email-subject">Mortgage Pre-Approval Documents</div>
+                            <div class="email-preview">Congratulations! Your clients have been pre-approved for financing. Attached are...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Clients</span>
+                                <span class="email-badge attachment">📎 3</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn starred" aria-label="Star" tabindex="0">★</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 10 -->
+                    <div class="email-item" tabindex="0">
+                        <div class="email-avatar" style="background: linear-gradient(135deg, #66BB6A, #26A69A);">JM</div>
+                        <div class="email-content">
+                            <div class="email-header">
+                                <div class="email-sender">Joseph Mensah</div>
+                                <div class="email-time">5 days ago</div>
+                            </div>
+                            <div class="email-subject">Quarterly Performance Review</div>
+                            <div class="email-preview">Your Q1 performance has been outstanding! Let's schedule a meeting to discuss...</div>
+                            <div class="email-meta">
+                                <span class="email-badge">Personal</span>
+                            </div>
+                        </div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" aria-label="Star" tabindex="0">☆</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Message Preview Panel -->
+            <section class="message-panel">
+                <div class="message-header">
+                    <h2 class="message-subject">Waterfront Property Viewing Request</h2>
+                    <div class="message-sender-info">
+                        <div class="message-avatar">SK</div>
+                        <div class="message-details">
+                            <div class="message-from">Sarah Kimani</div>
+                            <div class="message-email">sarah.kimani@example.co.za</div>
+                            <div class="message-timestamp">Today at 9:42 AM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-actions-bar">
+                    <button class="message-action" tabindex="0">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                        </svg>
+                        Reply
+                    </button>
+                    <button class="message-action" tabindex="0">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        Forward
+                    </button>
+                    <button class="message-action" tabindex="0">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        Archive
+                    </button>
+                    <button class="message-action" tabindex="0" style="margin-left: auto; color: var(--color-unread); border-color: var(--color-unread);">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete
+                    </button>
+                </div>
+
+                <div class="message-body">
+                    <div class="message-content">
+                        <p>Hi there,</p>
+
+                        <p>I hope this email finds you well. I'm writing to express my strong interest in the stunning waterfront property you have listed at 456 Marina Boulevard. The photos and description online are absolutely captivating, and I would love to schedule a viewing at your earliest convenience.</p>
+
+                        <p>I'm particularly drawn to the property's modern architectural design and the panoramic ocean views. The open-plan living space and the integration with the outdoor entertainment area seem perfect for my lifestyle. I'm also impressed by the sustainable features mentioned in the listing, including the solar panels and rainwater harvesting system.</p>
+
+                        <p>My preferred viewing times would be:</p>
+                        <p>• This Saturday afternoon (any time after 2:00 PM)<br>
+                        • Sunday morning (between 10:00 AM and 12:00 PM)<br>
+                        • Weekday evenings after 5:30 PM</p>
+
+                        <p>I'm a pre-qualified buyer working with First National Bank, and I've attached my pre-approval letter for your reference. I'm prepared to move quickly on the right property, and this waterfront location checks all the boxes for me.</p>
+
+                        <p>Could you please let me know your availability? I'm also curious about the community amenities and whether there are any upcoming developments in the area that might affect the property value.</p>
+
+                        <p>Looking forward to hearing from you soon.</p>
+
+                        <p>Best regards,<br>
+                        Sarah Kimani<br>
+                        +27 82 555 1234</p>
+
+                        <div class="message-attachments">
+                            <div class="attachments-header">📎 2 Attachments</div>
+
+                            <div class="attachment-item" tabindex="0">
+                                <div class="attachment-icon">PDF</div>
+                                <div class="attachment-info">
+                                    <div class="attachment-name">Pre-Approval-Letter.pdf</div>
+                                    <div class="attachment-size">245 KB</div>
+                                </div>
+                            </div>
+
+                            <div class="attachment-item" tabindex="0">
+                                <div class="attachment-icon">DOC</div>
+                                <div class="attachment-info">
+                                    <div class="attachment-name">Financial-Statement.docx</div>
+                                    <div class="attachment-size">128 KB</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 83;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

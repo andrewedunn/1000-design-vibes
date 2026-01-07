@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilded Core - Restaurant Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Gilded Core - Restaurant Finder
+        ABOUTME: Bauhaus-inspired neumorphic restaurant discovery with French luxury for Gen Z
+
+        DESIGN SYSTEM OVERVIEW
+        ======================
+        Design Name: Gilded Core
+        Tagline: Bauhaus-inspired design for gen z
+
+        AESTHETIC PRINCIPLES
+        -------------------
+        - Neumorphic soft shadows on dark background with geometric Bauhaus structure
+        - Neon accent (electric purple) against neutral dark palette for luxury tech feel
+        - Pill-shaped elements throughout for smooth, approachable interface
+        - Geometric patterns add subtle texture to surfaces
+        - Old-style serif body text contrasts with bold display headings for French elegance
+        - App shell structure with persistent filters and list-detail restaurant browsing
+
+        KEY DESIGN TOKENS
+        ----------------
+        Primary: #A855F7 (electric purple neon)
+        Background: #1a1a1a (deep charcoal)
+        Surface: #242424 (slightly lighter charcoal)
+        Text: #e5e5e5 (soft white)
+        Scale: 1.125 (major second)
+        Spacing: 4px base unit
+        Corners: Full pill (9999px)
+        Shadows: Dramatic neumorphic (inset + outset)
+        */
+
+        :root {
+            /* Colors - Neutral with Neon Accent, Dark Mode */
+            --color-primary: #A855F7;
+            --color-primary-dim: #9333EA;
+            --color-background: #1a1a1a;
+            --color-surface: #242424;
+            --color-surface-raised: #2a2a2a;
+            --color-text: #e5e5e5;
+            --color-text-muted: #a0a0a0;
+            --color-border: #333333;
+            --color-accent-glow: rgba(168, 85, 247, 0.3);
+
+            /* Typography - Display + Old Style Serif */
+            --font-heading: 'Abril Fatface', display;
+            --font-body: 'Libre Baskerville', serif;
+
+            /* Type Scale - Major Second (1.125) */
+            --text-xs: 0.79rem;
+            --text-sm: 0.889rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.266rem;
+            --text-2xl: 1.424rem;
+            --text-3xl: 1.602rem;
+            --text-4xl: 1.802rem;
+
+            /* Spacing - 4px base */
+            --space-unit: 4px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+
+            /* Shapes - Pill corners */
+            --radius-default: 9999px;
+            --radius-card: 32px;
+
+            /* Shadows - Dramatic Neumorphic */
+            --shadow-neumorphic-out: 8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.03);
+            --shadow-neumorphic-in: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.03);
+            --shadow-glow: 0 0 20px var(--color-accent-glow), 0 0 40px var(--color-accent-glow);
+            --shadow-default: var(--shadow-neumorphic-out);
+
+            /* Borders - Hairline */
+            --border-width: 1px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: 0.05em;
+            overflow-x: hidden;
+        }
+
+        /* Geometric pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(168, 85, 247, 0.02) 35px, rgba(168, 85, 247, 0.02) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(168, 85, 247, 0.02) 35px, rgba(168, 85, 247, 0.02) 70px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+        }
+
+        /* App Shell Structure */
+        .app-shell {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header with search and filters */
+        .app-header {
+            background: var(--color-surface);
+            padding: var(--space-4) var(--space-6);
+            box-shadow: var(--shadow-neumorphic-out);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .logo {
+            font-size: var(--text-2xl);
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            text-shadow: var(--shadow-glow);
+        }
+
+        .search-bar {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-6);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            box-shadow: var(--shadow-neumorphic-in);
+            letter-spacing: 0.05em;
+        }
+
+        .search-input:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .location-btn {
+            padding: var(--space-3) var(--space-5);
+            background: var(--color-surface-raised);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            box-shadow: var(--shadow-neumorphic-out);
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            background: var(--color-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .location-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: var(--space-3);
+            overflow-x: auto;
+            padding-bottom: var(--space-2);
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) var(--color-surface);
+        }
+
+        .filter-chip {
+            padding: var(--space-2) var(--space-5);
+            background: var(--color-surface-raised);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: var(--shadow-neumorphic-out);
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-chip:hover {
+            background: var(--color-primary-dim);
+            color: var(--color-text);
+        }
+
+        .filter-chip.active {
+            background: var(--color-primary);
+            color: var(--color-text);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .filter-chip:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main content - List + Detail layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: var(--space-6);
+            padding: var(--space-6);
+            flex: 1;
+            position: relative;
+        }
+
+        /* Restaurant List */
+        .restaurant-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            overflow-y: auto;
+            max-height: calc(100vh - 180px);
+            padding-right: var(--space-2);
+        }
+
+        .restaurant-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-card);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-neumorphic-out);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .restaurant-card:hover {
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .restaurant-card.active {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .restaurant-card:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, var(--color-surface-raised), var(--color-background));
+            border-radius: var(--radius-card);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            font-size: var(--text-xs);
+            box-shadow: var(--shadow-neumorphic-in);
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-2);
+        }
+
+        .card-title {
+            font-size: var(--text-lg);
+            font-family: var(--font-heading);
+            margin-bottom: var(--space-1);
+        }
+
+        .card-cuisine {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            background: var(--color-primary);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-default);
+            font-size: var(--text-xs);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-info {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .price-range {
+            color: var(--color-primary);
+        }
+
+        .open-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-default);
+            font-size: var(--text-xs);
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            background: var(--color-surface);
+            border-radius: var(--radius-card);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-width) solid var(--color-border);
+            overflow-y: auto;
+            max-height: calc(100vh - 180px);
+        }
+
+        .detail-header {
+            margin-bottom: var(--space-6);
+        }
+
+        .detail-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--color-primary-dim), var(--color-primary));
+            border-radius: var(--radius-card);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            font-size: var(--text-sm);
+            box-shadow: var(--shadow-neumorphic-in);
+        }
+
+        .detail-title {
+            font-size: var(--text-4xl);
+            font-family: var(--font-heading);
+            margin-bottom: var(--space-2);
+            text-shadow: var(--shadow-glow);
+        }
+
+        .detail-subtitle {
+            font-size: var(--text-base);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-3);
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+
+        .meta-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+        }
+
+        .meta-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .meta-value {
+            font-size: var(--text-lg);
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: var(--space-6);
+        }
+
+        .section-title {
+            font-size: var(--text-xl);
+            font-family: var(--font-heading);
+            margin-bottom: var(--space-3);
+        }
+
+        .section-content {
+            font-size: var(--text-sm);
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 200px;
+            background: var(--color-background);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-neumorphic-in);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-4);
+        }
+
+        .hours-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-2) var(--space-4);
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            font-size: var(--text-sm);
+        }
+
+        .hours-item.today {
+            background: var(--color-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .btn {
+            flex: 1;
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            font-weight: bold;
+            cursor: pointer;
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-neumorphic-out);
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary-dim);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-panel {
+                display: none;
+            }
+
+            .detail-panel.mobile-visible {
+                display: block;
+            }
+
+            .restaurant-list {
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .filters {
+                gap: var(--space-2);
+            }
+
+            .header-top {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- App Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="logo">Gilded Core</div>
+                <div class="search-bar">
+                    <input
+                        type="search"
+                        class="search-input"
+                        placeholder="Search restaurants, cuisines..."
+                        aria-label="Search restaurants"
+                    />
+                </div>
+                <button class="location-btn">📍 Manhattan</button>
+            </div>
+
+            <div class="filters">
+                <button class="filter-chip active">All</button>
+                <button class="filter-chip">Italian</button>
+                <button class="filter-chip">French</button>
+                <button class="filter-chip">Japanese</button>
+                <button class="filter-chip">Mexican</button>
+                <button class="filter-chip">$$</button>
+                <button class="filter-chip">$$$</button>
+                <button class="filter-chip">$$$$</button>
+                <button class="filter-chip">Open Now</button>
+                <button class="filter-chip">Reservations</button>
+            </div>
+        </header>
+
+        <!-- Main Content: List + Detail -->
+        <main class="main-content">
+            <!-- Restaurant List -->
+            <section class="restaurant-list" role="list">
+                <article class="restaurant-card active" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Le Jardin Doré</h2>
+                            <p class="card-cuisine">Contemporary French</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.8
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$$$</span>
+                        <span class="info-item">📍 0.4 mi</span>
+                        <span class="open-badge">Open Now</span>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Sakura Omakase</h2>
+                            <p class="card-cuisine">Japanese Omakase</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.9
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$$$</span>
+                        <span class="info-item">📍 0.6 mi</span>
+                        <span class="open-badge">Open Now</span>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Trattoria Bella</h2>
+                            <p class="card-cuisine">Traditional Italian</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.6
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$$</span>
+                        <span class="info-item">📍 0.8 mi</span>
+                        <span class="info-item" style="color: #ef4444;">Closes 9PM</span>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Casa Mexicana</h2>
+                            <p class="card-cuisine">Modern Mexican</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.7
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$</span>
+                        <span class="info-item">📍 1.2 mi</span>
+                        <span class="open-badge">Open Now</span>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">The Golden Spoon</h2>
+                            <p class="card-cuisine">New American</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.5
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$$</span>
+                        <span class="info-item">📍 1.5 mi</span>
+                        <span class="open-badge">Open Now</span>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" tabindex="0" role="listitem">
+                    <div class="card-image">Restaurant Image</div>
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Bistro Lumière</h2>
+                            <p class="card-cuisine">French Bistro</p>
+                        </div>
+                        <div class="card-rating">
+                            ★ 4.4
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="info-item price-range">$$</span>
+                        <span class="info-item">📍 1.7 mi</span>
+                        <span class="open-badge">Open Now</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Detail Panel -->
+            <aside class="detail-panel">
+                <div class="detail-header">
+                    <div class="detail-image">Featured Restaurant Image</div>
+                    <h1 class="detail-title">Le Jardin Doré</h1>
+                    <p class="detail-subtitle">Contemporary French with seasonal ingredients</p>
+
+                    <div class="detail-meta">
+                        <div class="meta-group">
+                            <span class="meta-label">Rating</span>
+                            <span class="meta-value">★ 4.8</span>
+                        </div>
+                        <div class="meta-group">
+                            <span class="meta-label">Price</span>
+                            <span class="meta-value">$$$$</span>
+                        </div>
+                        <div class="meta-group">
+                            <span class="meta-label">Distance</span>
+                            <span class="meta-value">0.4 mi</span>
+                        </div>
+                        <div class="meta-group">
+                            <span class="meta-label">Status</span>
+                            <span class="meta-value" style="color: #22c55e;">Open</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">About</h3>
+                    <p class="section-content">
+                        Experience the pinnacle of contemporary French cuisine in an intimate setting. Chef Marie Laurent creates seasonal menus showcasing the finest local ingredients with classic French technique. The golden-hued dining room offers an elegant yet welcoming atmosphere, perfect for special occasions or refined casual dining.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Location</h3>
+                    <div class="map-placeholder">
+                        🗺️ Map View - 123 Park Avenue, Manhattan
+                    </div>
+                    <p class="section-content" style="font-size: var(--text-xs);">
+                        123 Park Avenue, Manhattan, NY 10016<br>
+                        Between 5th and Madison Avenue
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Hours</h3>
+                    <div class="hours-list">
+                        <div class="hours-item">
+                            <span>Monday</span>
+                            <span>5:30 PM - 10:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Tuesday</span>
+                            <span>5:30 PM - 10:00 PM</span>
+                        </div>
+                        <div class="hours-item today">
+                            <span><strong>Wednesday</strong></span>
+                            <span><strong>5:30 PM - 10:00 PM</strong></span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Thursday</span>
+                            <span>5:30 PM - 11:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Friday</span>
+                            <span>5:30 PM - 11:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Saturday</span>
+                            <span>5:00 PM - 11:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Sunday</span>
+                            <span>5:00 PM - 9:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Reserve Table</button>
+                    <button class="btn btn-secondary">Get Directions</button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 69;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Restaurant card interaction
+        const cards = document.querySelectorAll('.restaurant-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
+
+        // Filter chip interaction
+        const chips = document.querySelectorAll('.filter-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

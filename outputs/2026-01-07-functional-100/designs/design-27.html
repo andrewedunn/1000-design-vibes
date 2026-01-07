@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Neon - Font Browser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Modern Neon - A claymorphic font browser with punk attitude
+ABOUTME: Soft puffy surfaces meet edgy British traditional typography and dramatic triadic neon colors
+
+DESIGN SYSTEM TOKENS:
+- UI Paradigm: Claymorphic (soft, puffy, playful depth)
+- Design Era: Punk (DIY, chaotic, anti-establishment)
+- Cultural Influence: British Traditional (refined typography, classic sensibility)
+- Color: Triadic scheme with balanced saturation and mixed temperature
+- Typography: Humanist sans (Public Sans) with very loose letter-spacing, uppercase headings
+- Density: Airy (generous breathing room)
+- Borders: Double borders for that classic British touch
+- Shadows: Dramatic claymorphic depth
+- Corners: Pill-shaped (fully rounded ends)
+- Surface: Fabric texture overlay
+- Gradient: Duotone gradients for depth
+- Icons: Outlined style
+- Spacing: 4px base unit
+
+AESTHETIC PRINCIPLES:
+1. Soft puffy claymorphic cards float against gradient backgrounds
+2. Punk energy through asymmetric panels and hidden scroll navigation
+3. British refinement via double borders and proper typography hierarchy
+4. Dramatic shadows create depth without harshness
+5. Triadic neon colors (cyan, magenta, yellow) balanced for sophistication
+6. Very loose letter-spacing creates editorial luxury
+7. Timeline content flow for font discovery journey
+
+FUNCTIONAL DIRECTION: Font Browser
+Required elements:
+- Font specimen cards with preview text
+- Size/weight controls
+- Font category filters (serif/sans/display/monospace)
+- Preview text input
+- Font pairing suggestions
+- Download/favorite actions
+- Character set display
+-->
+
+<style>
+:root {
+    /* Triadic Color Palette - Neon balanced */
+    --color-primary: #00D9FF; /* Cyan */
+    --color-secondary: #FF0080; /* Magenta */
+    --color-tertiary: #FFD600; /* Yellow */
+    --color-background: #F5F5FA;
+    --color-surface: #FFFFFF;
+    --color-surface-alt: #FAFAFE;
+    --color-text: #1A1A2E;
+    --color-text-muted: #6B6B8C;
+    --color-border: #E0E0F0;
+
+    /* Typography */
+    --font-heading: 'Public Sans', system-ui, sans-serif;
+    --font-body: 'Public Sans', system-ui, sans-serif;
+    --type-scale: 1.067; /* Minor second */
+
+    /* Spacing (4px base) */
+    --space-unit: 4px;
+    --space-xs: calc(var(--space-unit) * 2); /* 8px */
+    --space-sm: calc(var(--space-unit) * 3); /* 12px */
+    --space-md: calc(var(--space-unit) * 4); /* 16px */
+    --space-lg: calc(var(--space-unit) * 6); /* 24px */
+    --space-xl: calc(var(--space-unit) * 8); /* 32px */
+    --space-2xl: calc(var(--space-unit) * 12); /* 48px */
+    --space-3xl: calc(var(--space-unit) * 16); /* 64px */
+
+    /* Shapes */
+    --radius-default: 999px; /* Pill */
+    --radius-card: 32px;
+
+    /* Claymorphic Shadows - Dramatic */
+    --shadow-clay-sm:
+        8px 8px 20px rgba(26, 26, 46, 0.08),
+        -8px -8px 20px rgba(255, 255, 255, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    --shadow-clay-md:
+        12px 12px 30px rgba(26, 26, 46, 0.12),
+        -12px -12px 30px rgba(255, 255, 255, 0.9),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+    --shadow-clay-lg:
+        16px 16px 40px rgba(26, 26, 46, 0.15),
+        -16px -16px 40px rgba(255, 255, 255, 1),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+    --shadow-clay-inset:
+        inset 6px 6px 15px rgba(26, 26, 46, 0.05),
+        inset -6px -6px 15px rgba(255, 255, 255, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.4; /* Tight line height */
+    color: var(--color-text);
+    background: linear-gradient(135deg,
+        #F5F5FA 0%,
+        #E8E8F5 50%,
+        #F5F5FA 100%
+    );
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    /* Fabric texture */
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.01) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.01) 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.01) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.01) 3px
+        );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em; /* Very loose */
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: calc(14px * 1.067 * 1.067 * 1.067 * 1.067 * 1.067); /* ~19px */
+}
+
+h2 {
+    font-size: calc(14px * 1.067 * 1.067 * 1.067 * 1.067); /* ~18px */
+}
+
+h3 {
+    font-size: calc(14px * 1.067 * 1.067 * 1.067); /* ~17px */
+}
+
+p {
+    letter-spacing: 0.02em;
+}
+
+/* Layout - Asymmetric Panels */
+.container {
+    position: relative;
+    z-index: 2;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-lg);
+}
+
+/* Hidden Scroll Navigation */
+.nav-indicator {
+    position: fixed;
+    right: var(--space-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.nav-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    box-shadow: var(--shadow-clay-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-dot.active {
+    background: var(--color-primary);
+    transform: scale(1.3);
+}
+
+/* Hero - Gradient Background */
+.hero {
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 100%
+    );
+    border-radius: var(--radius-card);
+    padding: var(--space-3xl);
+    margin-bottom: var(--space-2xl);
+    box-shadow: var(--shadow-clay-lg);
+    border: 4px double rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+}
+
+.hero h1 {
+    color: white;
+    font-size: calc(14px * 1.067 * 1.067 * 1.067 * 1.067 * 1.067 * 1.067); /* ~21px */
+    margin-bottom: var(--space-md);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    margin-bottom: var(--space-xl);
+    letter-spacing: 0.05em;
+}
+
+/* Preview Input - Claymorphic */
+.preview-input-group {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-default);
+    padding: var(--space-xs);
+    border: 4px double rgba(255, 255, 255, 0.5);
+    box-shadow: var(--shadow-clay-md);
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.preview-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 16px;
+    padding: var(--space-md) var(--space-lg);
+    letter-spacing: 0.05em;
+    outline: none;
+}
+
+.preview-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.05em;
+}
+
+.btn {
+    background: white;
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--radius-default);
+    padding: var(--space-md) var(--space-xl);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    box-shadow: var(--shadow-clay-sm);
+    transition: all 0.3s ease;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-clay-md);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+/* Controls Panel */
+.controls-panel {
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    box-shadow: var(--shadow-clay-lg);
+    border: 4px double var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.control-group label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+}
+
+.control-input {
+    background: var(--color-surface-alt);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    box-shadow: var(--shadow-clay-inset);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.control-input:focus {
+    border-color: var(--color-primary);
+    box-shadow:
+        var(--shadow-clay-inset),
+        0 0 0 3px rgba(0, 217, 255, 0.2);
+}
+
+/* Category Filters */
+.filter-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-2xl);
+}
+
+.filter-tab {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md) var(--space-xl);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    box-shadow: var(--shadow-clay-sm);
+    transition: all 0.3s ease;
+    min-height: 44px;
+}
+
+.filter-tab:hover {
+    background: var(--color-surface-alt);
+    transform: translateY(-2px);
+}
+
+.filter-tab.active {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border-color: transparent;
+    box-shadow: var(--shadow-clay-md);
+}
+
+.filter-tab:focus-visible {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+/* Timeline Layout */
+.timeline {
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 50%,
+        var(--color-tertiary) 100%
+    );
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-clay-sm);
+}
+
+/* Font Specimen Cards - Asymmetric */
+.font-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    box-shadow: var(--shadow-clay-lg);
+    border: 4px double var(--color-border);
+    position: relative;
+    width: calc(50% - var(--space-2xl));
+}
+
+.font-card:nth-child(odd) {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.font-card:nth-child(even) {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.font-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-lg);
+    gap: var(--space-md);
+}
+
+.font-name {
+    flex: 1;
+}
+
+.font-name h2 {
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.font-category {
+    display: inline-block;
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    border: 2px double var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-xs) var(--space-md);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    box-shadow: var(--shadow-clay-sm);
+}
+
+.font-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    background: var(--color-surface-alt);
+    border: 4px double var(--color-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-clay-sm);
+    transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.icon-btn:focus-visible {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+.icon-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Font Preview */
+.font-preview {
+    background: var(--color-surface-alt);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-clay-inset);
+}
+
+.preview-text-large {
+    font-size: 48px;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    word-break: break-word;
+}
+
+.preview-text-medium {
+    font-size: 24px;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+}
+
+.preview-text-small {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+}
+
+/* Character Set */
+.character-set {
+    background: var(--color-surface-alt);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-clay-inset);
+}
+
+.character-set-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.characters {
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--color-text);
+    word-wrap: break-word;
+    letter-spacing: 0.1em;
+}
+
+/* Font Pairing Suggestions */
+.pairing-section {
+    background: linear-gradient(135deg,
+        rgba(0, 217, 255, 0.1) 0%,
+        rgba(255, 0, 128, 0.1) 100%
+    );
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-clay-md);
+}
+
+.pairing-title {
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    text-align: center;
+}
+
+.pairing-example {
+    background: var(--color-surface);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-clay-sm);
+}
+
+.pairing-combo {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.pairing-demo-heading {
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+}
+
+.pairing-demo-body {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+}
+
+/* Weight/Style Grid */
+.weight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.weight-sample {
+    background: var(--color-surface-alt);
+    border: 4px double var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-clay-inset);
+    text-align: center;
+}
+
+.weight-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.weight-display {
+    font-size: 24px;
+    color: var(--color-text);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .hero {
+        padding: var(--space-xl);
+    }
+
+    .controls-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline::before {
+        left: var(--space-lg);
+    }
+
+    .font-card,
+    .font-card:nth-child(odd),
+    .font-card:nth-child(even) {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .preview-text-large {
+        font-size: 32px;
+    }
+
+    .preview-text-medium {
+        font-size: 18px;
+    }
+
+    .nav-indicator {
+        display: none;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+</style>
+
+<div class="nav-indicator">
+    <div class="nav-dot active"></div>
+    <div class="nav-dot"></div>
+    <div class="nav-dot"></div>
+    <div class="nav-dot"></div>
+</div>
+
+<div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Modern Neon Font Browser</h1>
+            <p>Discover typography that breaks boundaries. Claymorphic softness meets punk rebellion in a curated collection of fonts for the bold and refined.</p>
+
+            <div class="preview-input-group">
+                <input
+                    type="text"
+                    class="preview-input"
+                    placeholder="TYPE YOUR PREVIEW TEXT HERE..."
+                    value="The Quick Brown Fox"
+                    id="globalPreview"
+                >
+                <button class="btn">Apply</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Controls Panel -->
+    <section class="controls-panel">
+        <div class="control-group">
+            <label for="fontSize">Font Size</label>
+            <select id="fontSize" class="control-input">
+                <option>12px</option>
+                <option>16px</option>
+                <option>24px</option>
+                <option>32px</option>
+                <option selected>48px</option>
+                <option>64px</option>
+                <option>96px</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="lineHeight">Line Height</label>
+            <select id="lineHeight" class="control-input">
+                <option>1.0</option>
+                <option selected>1.2</option>
+                <option>1.4</option>
+                <option>1.6</option>
+                <option>1.8</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="letterSpacing">Letter Spacing</label>
+            <select id="letterSpacing" class="control-input">
+                <option>-0.05em</option>
+                <option selected>0em</option>
+                <option>0.05em</option>
+                <option>0.1em</option>
+                <option>0.15em</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="alignment">Alignment</label>
+            <select id="alignment" class="control-input">
+                <option selected>Left</option>
+                <option>Center</option>
+                <option>Right</option>
+                <option>Justify</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <div class="filter-tabs">
+        <button class="filter-tab active">All Fonts</button>
+        <button class="filter-tab">Humanist Sans</button>
+        <button class="filter-tab">Geometric Sans</button>
+        <button class="filter-tab">Serif</button>
+        <button class="filter-tab">Display</button>
+        <button class="filter-tab">Monospace</button>
+    </div>
+
+    <!-- Timeline with Font Cards -->
+    <div class="timeline">
+        <!-- Font Card 1 -->
+        <article class="font-card">
+            <div class="font-card-header">
+                <div class="font-name">
+                    <h2>Helvetica Now</h2>
+                    <span class="font-category">Humanist Sans</span>
+                </div>
+                <div class="font-actions">
+                    <button class="icon-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" aria-label="Download font">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="font-preview">
+                <div class="preview-text-large" style="font-family: 'Public Sans', sans-serif;">
+                    The Quick Brown Fox
+                </div>
+                <div class="preview-text-medium" style="font-family: 'Public Sans', sans-serif;">
+                    Typography is the craft of endowing human language with a durable visual form.
+                </div>
+                <div class="preview-text-small" style="font-family: 'Public Sans', sans-serif;">
+                    The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump!
+                </div>
+            </div>
+
+            <div class="weight-grid">
+                <div class="weight-sample">
+                    <div class="weight-label">Light</div>
+                    <div class="weight-display" style="font-weight: 300; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Regular</div>
+                    <div class="weight-display" style="font-weight: 400; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Bold</div>
+                    <div class="weight-display" style="font-weight: 700; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Black</div>
+                    <div class="weight-display" style="font-weight: 900; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+            </div>
+
+            <div class="character-set">
+                <div class="character-set-title">Character Set</div>
+                <div class="characters" style="font-family: 'Public Sans', sans-serif;">
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                    abcdefghijklmnopqrstuvwxyz<br>
+                    0123456789 !@#$%^&*()
+                </div>
+            </div>
+        </article>
+
+        <!-- Font Card 2 -->
+        <article class="font-card">
+            <div class="font-card-header">
+                <div class="font-name">
+                    <h2>Futura PT</h2>
+                    <span class="font-category">Geometric Sans</span>
+                </div>
+                <div class="font-actions">
+                    <button class="icon-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" aria-label="Download font">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="font-preview">
+                <div class="preview-text-large" style="font-family: 'Public Sans', sans-serif; font-weight: 600;">
+                    The Quick Brown Fox
+                </div>
+                <div class="preview-text-medium" style="font-family: 'Public Sans', sans-serif; font-weight: 400;">
+                    Geometric precision meets modernist ideals in perfect circular forms.
+                </div>
+                <div class="preview-text-small" style="font-family: 'Public Sans', sans-serif; font-weight: 400;">
+                    Perfect circles and clean lines define this quintessential geometric sans-serif, born from Bauhaus principles.
+                </div>
+            </div>
+
+            <div class="weight-grid">
+                <div class="weight-sample">
+                    <div class="weight-label">Light</div>
+                    <div class="weight-display" style="font-weight: 300; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Book</div>
+                    <div class="weight-display" style="font-weight: 400; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Medium</div>
+                    <div class="weight-display" style="font-weight: 600; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Bold</div>
+                    <div class="weight-display" style="font-weight: 800; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+            </div>
+
+            <div class="character-set">
+                <div class="character-set-title">Character Set</div>
+                <div class="characters" style="font-family: 'Public Sans', sans-serif;">
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                    abcdefghijklmnopqrstuvwxyz<br>
+                    0123456789 !@#$%^&*()
+                </div>
+            </div>
+        </article>
+
+        <!-- Font Card 3 with Pairing -->
+        <article class="font-card">
+            <div class="font-card-header">
+                <div class="font-name">
+                    <h2>Caslon Pro</h2>
+                    <span class="font-category">Serif</span>
+                </div>
+                <div class="font-actions">
+                    <button class="icon-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" aria-label="Download font">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="font-preview">
+                <div class="preview-text-large" style="font-family: Georgia, serif;">
+                    The Quick Brown Fox
+                </div>
+                <div class="preview-text-medium" style="font-family: Georgia, serif;">
+                    British elegance in letterform, a cornerstone of traditional typography.
+                </div>
+                <div class="preview-text-small" style="font-family: Georgia, serif;">
+                    William Caslon's masterwork remains the epitome of refined British type design, beloved for its warmth and readability.
+                </div>
+            </div>
+
+            <div class="pairing-section">
+                <h3 class="pairing-title">Suggested Pairing</h3>
+
+                <div class="pairing-example">
+                    <div class="pairing-combo">Caslon Pro + Futura PT</div>
+                    <div class="pairing-demo-heading" style="font-family: Georgia, serif; font-weight: 600;">
+                        Classic Meets Modern
+                    </div>
+                    <div class="pairing-demo-body" style="font-family: 'Public Sans', sans-serif; font-weight: 400;">
+                        The timeless elegance of Caslon paired with geometric precision creates sophisticated contrast perfect for editorial design.
+                    </div>
+                </div>
+
+                <div class="pairing-example">
+                    <div class="pairing-combo">Caslon Pro + Helvetica Now</div>
+                    <div class="pairing-demo-heading" style="font-family: Georgia, serif; font-weight: 600;">
+                        Traditional Authority
+                    </div>
+                    <div class="pairing-demo-body" style="font-family: 'Public Sans', sans-serif; font-weight: 400;">
+                        Caslon's British heritage with Swiss neutrality delivers understated confidence for corporate communications.
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-set">
+                <div class="character-set-title">Character Set</div>
+                <div class="characters" style="font-family: Georgia, serif;">
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                    abcdefghijklmnopqrstuvwxyz<br>
+                    0123456789 !@#$%^&*()
+                </div>
+            </div>
+        </article>
+
+        <!-- Font Card 4 -->
+        <article class="font-card">
+            <div class="font-card-header">
+                <div class="font-name">
+                    <h2>Druk Wide</h2>
+                    <span class="font-category">Display</span>
+                </div>
+                <div class="font-actions">
+                    <button class="icon-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" aria-label="Download font">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="font-preview">
+                <div class="preview-text-large" style="font-family: 'Public Sans', sans-serif; font-weight: 800; letter-spacing: 0.1em;">
+                    BOLD IMPACT
+                </div>
+                <div class="preview-text-medium" style="font-family: 'Public Sans', sans-serif; font-weight: 800; letter-spacing: 0.05em;">
+                    PUNK ATTITUDE IN TYPE
+                </div>
+                <div class="preview-text-small" style="font-family: 'Public Sans', sans-serif; font-weight: 600;">
+                    Maximum impact display type for headlines that demand attention. Extra wide proportions dominate the page.
+                </div>
+            </div>
+
+            <div class="weight-grid">
+                <div class="weight-sample">
+                    <div class="weight-label">Medium</div>
+                    <div class="weight-display" style="font-weight: 600; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Bold</div>
+                    <div class="weight-display" style="font-weight: 700; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Heavy</div>
+                    <div class="weight-display" style="font-weight: 800; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+                <div class="weight-sample">
+                    <div class="weight-label">Super</div>
+                    <div class="weight-display" style="font-weight: 900; font-family: 'Public Sans', sans-serif;">Aa</div>
+                </div>
+            </div>
+
+            <div class="character-set">
+                <div class="character-set-title">Character Set</div>
+                <div class="characters" style="font-family: 'Public Sans', sans-serif; font-weight: 800;">
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                    abcdefghijklmnopqrstuvwxyz<br>
+                    0123456789 !@#$%^&*()
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 27;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Interactive controls
+    const globalPreview = document.getElementById('globalPreview');
+    const fontSize = document.getElementById('fontSize');
+    const lineHeight = document.getElementById('lineHeight');
+    const letterSpacing = document.getElementById('letterSpacing');
+    const alignment = document.getElementById('alignment');
+
+    function updatePreviews() {
+        const text = globalPreview.value;
+        const size = fontSize.value;
+        const lh = lineHeight.value;
+        const ls = letterSpacing.value;
+        const align = alignment.value.toLowerCase();
+
+        document.querySelectorAll('.preview-text-large').forEach(el => {
+            el.textContent = text;
+            el.style.fontSize = size;
+            el.style.lineHeight = lh;
+            el.style.letterSpacing = ls;
+            el.style.textAlign = align;
+        });
+    }
+
+    globalPreview.addEventListener('input', updatePreviews);
+    fontSize.addEventListener('change', updatePreviews);
+    lineHeight.addEventListener('change', updatePreviews);
+    letterSpacing.addEventListener('change', updatePreviews);
+    alignment.addEventListener('change', updatePreviews);
+
+    // Filter tabs
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            filterTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Nav dots scroll indicator
+    const sections = document.querySelectorAll('.font-card');
+    const navDots = document.querySelectorAll('.nav-dot');
+
+    window.addEventListener('scroll', () => {
+        let current = 0;
+        sections.forEach((section, index) => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                current = index;
+            }
+        });
+
+        navDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === current);
+        });
+    });
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            if (sections[index]) {
+                sections[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    });
+
+    // Icon button interactions
+    document.querySelectorAll('.icon-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const label = this.getAttribute('aria-label');
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

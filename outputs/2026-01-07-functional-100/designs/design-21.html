@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakura Frost - Sleep Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN #21: SAKURA FROST
+        ABOUTME: A claymorphic sleep tracker with cool, desaturated natural tones
+        ABOUTME: Japanese-inspired calmness meets soft, puffy Web2 glossy aesthetics
+
+        DESIGN SYSTEM TOKENS:
+        - UI Paradigm: Claymorphic (soft, puffy forms with gentle shadows)
+        - Design Era: Web2 Glossy (subtle gradients, soft highlights)
+        - Color: Split complementary, cool, desaturated, natural mood, dark mode
+        - Typography: Slab serif headings (Zilla Slab), old-style serif body (Crimson Text)
+        - Scale: Golden ratio (1.618), lowercase only, very loose letter-spacing
+        - Spacing: 10px base, very rounded corners
+        - Density: Dense layout
+        - Surface: Fabric texture overlay
+        - Layout: Split screen, asymmetric grid, right-aligned, position-based hierarchy
+        - Cultural: Japanese calm and minimalism
+        - Functional: Sleep tracker with stages, quality, trends
+
+        AESTHETIC PRINCIPLES:
+        1. Soft, pillowy claymorphic forms evoke clouds and sleep
+        2. Cool blues and teals with natural desaturation for nighttime calm
+        3. Japanese-inspired asymmetry and intentional negative space
+        4. Very loose letter-spacing creates breathing room
+        5. Fabric texture adds warmth to the cool palette
+        6. Dense information presented with calm hierarchy
+        */
+
+        :root {
+            /* Color Palette - Cool, desaturated, natural, split complementary */
+            --color-bg-dark: #1a2228;
+            --color-bg-medium: #242c34;
+            --color-surface-main: #2d3740;
+            --color-surface-raised: #3a4450;
+
+            --color-primary: #6b9eb0;      /* Cool teal */
+            --color-secondary: #8fa68d;    /* Natural sage */
+            --color-accent: #a88f91;       /* Muted mauve (split complement) */
+
+            --color-text: #d4dce0;
+            --color-text-muted: #8b9ba6;
+            --color-text-subtle: #5d6b76;
+
+            /* Typography */
+            --font-heading: 'Zilla Slab', serif;
+            --font-body: 'Crimson Text', serif;
+
+            /* Spacing - 10px base */
+            --space-unit: 10px;
+            --space-xs: calc(var(--space-unit) * 0.5);   /* 5px */
+            --space-sm: var(--space-unit);                /* 10px */
+            --space-md: calc(var(--space-unit) * 1.618);  /* 16px */
+            --space-lg: calc(var(--space-unit) * 2.618);  /* 26px */
+            --space-xl: calc(var(--space-unit) * 4.236);  /* 42px */
+            --space-2xl: calc(var(--space-unit) * 6.854); /* 69px */
+
+            /* Typography Scale - Golden Ratio */
+            --text-xs: 0.618rem;
+            --text-sm: 0.786rem;
+            --text-base: 1rem;
+            --text-md: 1.272rem;
+            --text-lg: 1.618rem;
+            --text-xl: 2.058rem;
+            --text-2xl: 3.272rem;
+
+            /* Shape */
+            --radius-default: 24px;
+            --radius-large: 36px;
+            --radius-pill: 999px;
+
+            /* Shadows - Claymorphic soft shadows */
+            --shadow-clay-1:
+                6px 6px 12px rgba(0, 0, 0, 0.3),
+                -3px -3px 8px rgba(255, 255, 255, 0.03);
+            --shadow-clay-2:
+                10px 10px 20px rgba(0, 0, 0, 0.4),
+                -5px -5px 12px rgba(255, 255, 255, 0.04);
+            --shadow-inset:
+                inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+                inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.4;
+            color: var(--color-text);
+            background: var(--color-bg-dark);
+            overflow-x: hidden;
+            letter-spacing: 0.08em;
+        }
+
+        /* Fabric texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.02) 3px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.02) 3px);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.3;
+        }
+
+        /* Split Screen Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1.618fr;
+            min-height: 100vh;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
+        }
+
+        /* Side Panel - Collapsible Navigation */
+        .side-panel {
+            background: var(--color-surface-main);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-clay-2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .nav-header {
+            text-align: right;
+            border-bottom: 1px solid rgba(107, 158, 176, 0.2);
+            padding-bottom: var(--space-md);
+        }
+
+        .app-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .app-subtitle {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            text-align: right;
+        }
+
+        .nav-item {
+            background: var(--color-surface-raised);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: lowercase;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-clay-1);
+            border: none;
+            width: 100%;
+            text-align: right;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--color-primary);
+            color: var(--color-bg-dark);
+            box-shadow: var(--shadow-clay-2);
+            transform: translateY(-2px);
+        }
+
+        .nav-item:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 3px;
+        }
+
+        /* Sleep Summary Card */
+        .sleep-summary {
+            background: linear-gradient(135deg, var(--color-surface-raised) 0%, var(--color-surface-main) 100%);
+            padding: var(--space-xl);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-clay-2);
+            text-align: right;
+        }
+
+        .sleep-quality-score {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-primary);
+            text-transform: lowercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        .quality-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-subtle);
+            text-transform: lowercase;
+        }
+
+        .sleep-duration {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid rgba(107, 158, 176, 0.2);
+        }
+
+        .duration-value {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-secondary);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        /* Hero Section - Full Viewport Feel */
+        .hero-section {
+            background: var(--color-surface-main);
+            border-radius: var(--radius-large);
+            padding: var(--space-2xl) var(--space-xl);
+            box-shadow: var(--shadow-clay-2);
+            text-align: right;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hero-greeting {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+            margin-bottom: var(--space-md);
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            text-transform: lowercase;
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+        }
+
+        .time-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        .time-card {
+            background: var(--color-bg-medium);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-inset);
+            text-align: right;
+        }
+
+        .time-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-subtle);
+            text-transform: lowercase;
+            margin-bottom: var(--space-xs);
+        }
+
+        .time-value {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-text);
+        }
+
+        /* Sleep Stages Visualization */
+        .sleep-stages-section {
+            background: var(--color-surface-main);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-md);
+            color: var(--color-text);
+            text-transform: lowercase;
+            margin-bottom: var(--space-lg);
+            text-align: right;
+        }
+
+        .stages-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: var(--space-xs);
+            height: 180px;
+            margin-bottom: var(--space-lg);
+            direction: rtl;
+        }
+
+        .stage-bar {
+            flex: 1;
+            background: var(--color-bg-medium);
+            border-radius: var(--radius-default) var(--radius-default) 0 0;
+            position: relative;
+            box-shadow: var(--shadow-clay-1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 0;
+        }
+
+        .stage-bar:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .stage-bar.deep {
+            background: linear-gradient(to top, var(--color-primary), rgba(107, 158, 176, 0.6));
+        }
+
+        .stage-bar.light {
+            background: linear-gradient(to top, var(--color-secondary), rgba(143, 166, 141, 0.6));
+        }
+
+        .stage-bar.rem {
+            background: linear-gradient(to top, var(--color-accent), rgba(168, 143, 145, 0.6));
+        }
+
+        .stage-bar.awake {
+            background: linear-gradient(to top, var(--color-text-subtle), rgba(93, 107, 118, 0.4));
+        }
+
+        .stage-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            justify-content: flex-end;
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-clay-1);
+        }
+
+        .legend-dot.deep { background: var(--color-primary); }
+        .legend-dot.light { background: var(--color-secondary); }
+        .legend-dot.rem { background: var(--color-accent); }
+        .legend-dot.awake { background: var(--color-text-subtle); }
+
+        /* Weekly Trends */
+        .trends-section {
+            background: var(--color-surface-main);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .day-card {
+            background: var(--color-bg-medium);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            text-align: center;
+            box-shadow: var(--shadow-inset);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .day-card:hover {
+            background: var(--color-surface-raised);
+            box-shadow: var(--shadow-clay-1);
+            transform: translateY(-2px);
+        }
+
+        .day-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-subtle);
+            text-transform: lowercase;
+            margin-bottom: var(--space-xs);
+        }
+
+        .day-hours {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+        }
+
+        .day-quality {
+            width: 32px;
+            height: 4px;
+            background: var(--color-primary);
+            border-radius: var(--radius-pill);
+            margin: var(--space-xs) auto 0;
+            opacity: 0.6;
+        }
+
+        .day-card.excellent .day-quality {
+            background: var(--color-primary);
+            opacity: 1;
+        }
+
+        .day-card.good .day-quality {
+            background: var(--color-secondary);
+            opacity: 0.8;
+        }
+
+        .day-card.fair .day-quality {
+            background: var(--color-accent);
+            opacity: 0.6;
+        }
+
+        /* Sleep Goal Settings */
+        .goal-section {
+            background: linear-gradient(135deg, var(--color-surface-main) 0%, var(--color-surface-raised) 100%);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .goal-controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .goal-input-group {
+            text-align: right;
+        }
+
+        .goal-input-label {
+            display: block;
+            font-size: var(--text-xs);
+            color: var(--color-text-subtle);
+            text-transform: lowercase;
+            margin-bottom: var(--space-xs);
+        }
+
+        .goal-input {
+            width: 100%;
+            background: var(--color-bg-medium);
+            border: none;
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            font-family: var(--font-heading);
+            font-size: var(--text-md);
+            color: var(--color-text);
+            box-shadow: var(--shadow-inset);
+            text-align: right;
+            letter-spacing: 0.08em;
+        }
+
+        .goal-input:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .goal-button {
+            background: var(--color-primary);
+            color: var(--color-bg-dark);
+            border: none;
+            border-radius: var(--radius-default);
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: lowercase;
+            cursor: pointer;
+            box-shadow: var(--shadow-clay-2);
+            transition: all 0.3s ease;
+            align-self: end;
+            min-height: 44px;
+        }
+
+        .goal-button:hover {
+            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow:
+                12px 12px 24px rgba(0, 0, 0, 0.5),
+                -6px -6px 14px rgba(255, 255, 255, 0.05);
+        }
+
+        .goal-button:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 3px;
+        }
+
+        .goal-button:active {
+            transform: translateY(0);
+        }
+
+        /* Insights Panel */
+        .insights-panel {
+            background: var(--color-bg-medium);
+            border-radius: var(--radius-large);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-inset);
+            margin-top: var(--space-md);
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            direction: rtl;
+            text-align: right;
+        }
+
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--color-surface-raised);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-clay-1);
+            font-size: var(--text-md);
+        }
+
+        .insight-text {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .time-display {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .trend-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .app-container {
+                padding: var(--space-sm);
+                gap: var(--space-md);
+            }
+
+            .side-panel,
+            .hero-section,
+            .sleep-stages-section,
+            .trends-section,
+            .goal-section {
+                padding: var(--space-lg);
+            }
+
+            .hero-title {
+                font-size: var(--text-xl);
+            }
+
+            .stage-legend {
+                grid-template-columns: 1fr;
+            }
+
+            .trend-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Side Panel with Navigation -->
+        <aside class="side-panel">
+            <div class="nav-header">
+                <h1 class="app-title">sakura frost</h1>
+                <p class="app-subtitle">sleep well, live well</p>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active">tonight's sleep</button>
+                <button class="nav-item">weekly overview</button>
+                <button class="nav-item">sleep patterns</button>
+                <button class="nav-item">goals & habits</button>
+                <button class="nav-item">insights</button>
+                <button class="nav-item">settings</button>
+            </nav>
+
+            <div class="sleep-summary">
+                <div class="sleep-quality-score">87/100</div>
+                <div class="quality-label">sleep quality score</div>
+
+                <div class="sleep-duration">
+                    <div class="duration-value">7h 42m</div>
+                    <div class="quality-label">total sleep time</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div>
+                    <p class="hero-greeting">good morning, alex</p>
+                    <h2 class="hero-title">you slept better<br>than 78% of users<br>last night</h2>
+                </div>
+
+                <div class="time-display">
+                    <div class="time-card">
+                        <div class="time-label">bedtime</div>
+                        <div class="time-value">23:15</div>
+                    </div>
+                    <div class="time-card">
+                        <div class="time-label">wake time</div>
+                        <div class="time-value">07:03</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sleep Stages Visualization -->
+            <section class="sleep-stages-section">
+                <h3 class="section-title">sleep stages through the night</h3>
+
+                <div class="stages-chart">
+                    <div class="stage-bar awake" style="height: 12%;"></div>
+                    <div class="stage-bar light" style="height: 45%;"></div>
+                    <div class="stage-bar rem" style="height: 68%;"></div>
+                    <div class="stage-bar deep" style="height: 85%;"></div>
+                    <div class="stage-bar light" style="height: 52%;"></div>
+                    <div class="stage-bar rem" style="height: 73%;"></div>
+                    <div class="stage-bar deep" style="height: 92%;"></div>
+                    <div class="stage-bar light" style="height: 48%;"></div>
+                    <div class="stage-bar rem" style="height: 65%;"></div>
+                    <div class="stage-bar light" style="height: 38%;"></div>
+                    <div class="stage-bar deep" style="height: 78%;"></div>
+                    <div class="stage-bar rem" style="height: 58%;"></div>
+                    <div class="stage-bar light" style="height: 42%;"></div>
+                    <div class="stage-bar rem" style="height: 55%;"></div>
+                    <div class="stage-bar light" style="height: 35%;"></div>
+                    <div class="stage-bar awake" style="height: 18%;"></div>
+                    <div class="stage-bar light" style="height: 28%;"></div>
+                    <div class="stage-bar awake" style="height: 8%;"></div>
+                </div>
+
+                <div class="stage-legend">
+                    <div class="legend-item">
+                        <span>deep sleep (2h 15m)</span>
+                        <div class="legend-dot deep"></div>
+                    </div>
+                    <div class="legend-item">
+                        <span>light sleep (3h 48m)</span>
+                        <div class="legend-dot light"></div>
+                    </div>
+                    <div class="legend-item">
+                        <span>rem sleep (1h 32m)</span>
+                        <div class="legend-dot rem"></div>
+                    </div>
+                    <div class="legend-item">
+                        <span>awake (7m)</span>
+                        <div class="legend-dot awake"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weekly Trends -->
+            <section class="trends-section">
+                <h3 class="section-title">this week's sleep pattern</h3>
+
+                <div class="trend-grid">
+                    <div class="day-card good">
+                        <div class="day-label">mon</div>
+                        <div class="day-hours">7h 12m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card excellent">
+                        <div class="day-label">tue</div>
+                        <div class="day-hours">8h 05m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card fair">
+                        <div class="day-label">wed</div>
+                        <div class="day-hours">6h 48m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card good">
+                        <div class="day-label">thu</div>
+                        <div class="day-hours">7h 33m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card fair">
+                        <div class="day-label">fri</div>
+                        <div class="day-hours">6h 22m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card excellent">
+                        <div class="day-label">sat</div>
+                        <div class="day-hours">8h 18m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                    <div class="day-card excellent">
+                        <div class="day-label">sun</div>
+                        <div class="day-hours">7h 42m</div>
+                        <div class="day-quality"></div>
+                    </div>
+                </div>
+
+                <div class="insights-panel">
+                    <div class="insight-item">
+                        <div class="insight-text">your average sleep time increased by 23 minutes this week compared to last week</div>
+                        <div class="insight-icon">📈</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-text">you're most consistent on weekends, with less than 15 minutes variation in wake time</div>
+                        <div class="insight-icon">🎯</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-text">deep sleep peaks on thursday nights - consider maintaining similar evening routines</div>
+                        <div class="insight-icon">💤</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sleep Goal Settings -->
+            <section class="goal-section">
+                <h3 class="section-title">adjust your sleep goals</h3>
+
+                <div class="goal-controls">
+                    <div class="goal-input-group">
+                        <label class="goal-input-label">target sleep duration</label>
+                        <input type="text" class="goal-input" value="8 hours" />
+                    </div>
+                    <button class="goal-button">update goal</button>
+                </div>
+
+                <div class="goal-controls">
+                    <div class="goal-input-group">
+                        <label class="goal-input-label">ideal bedtime</label>
+                        <input type="text" class="goal-input" value="23:00" />
+                    </div>
+                    <button class="goal-button">save</button>
+                </div>
+
+                <div class="goal-controls">
+                    <div class="goal-input-group">
+                        <label class="goal-input-label">wake up time</label>
+                        <input type="text" class="goal-input" value="07:00" />
+                    </div>
+                    <button class="goal-button">save</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 21;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

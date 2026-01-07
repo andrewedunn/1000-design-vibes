@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian Rose - Tutorial Walkthrough</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Obsidian Rose - Tutorial Walkthrough
+        A neo-brutalist fashion industry tutorial interface with neon split-complementary colors,
+        ultra-dense layout, double borders, and interactive product tour functionality.
+
+        DESIGN SYSTEM QUICK START:
+        - Primary: #FF0080 (hot pink/magenta)
+        - Secondary: #00FF7F (spring green)
+        - Accent: #FF6B00 (orange)
+        - Background: #FFFBF5 (warm off-white)
+        - Surface: #FFFFFF
+        - Text: #1A1A1A
+
+        AESTHETIC PRINCIPLES:
+        - Neo-brutalist with harsh double borders and raw structure
+        - Neon split-complementary colors (pink/green/orange)
+        - Ultra-dense spacing for maximum information density
+        - Monospace headers with small caps treatment
+        - Fabric texture overlays for tactile fashion feel
+        - Glassmorphic gradients for depth
+        - Tutorial overlays with animated tooltips and pointers
+
+        KEY TOKENS:
+        - Space unit: 12px (ultra-dense)
+        - Border: 4px double
+        - Corner radius: 12px (rounded)
+        - Type scale: 1.25 (major third)
+        - Letter spacing: 0.08em (loose)
+        */
+
+        :root {
+            /* Colors - Split Complementary: Pink (primary), Green (180° + 30°), Orange (180° - 30°) */
+            --color-primary: #FF0080;
+            --color-secondary: #00FF7F;
+            --color-accent: #FF6B00;
+            --color-background: #FFFBF5;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-overlay: rgba(26, 26, 26, 0.85);
+            --color-highlight: rgba(255, 0, 128, 0.15);
+
+            /* Typography */
+            --font-heading: 'Space Mono', monospace;
+            --font-body: 'Libre Baskerville', serif;
+
+            /* Spacing - Ultra Dense */
+            --space-unit: 12px;
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 18px;
+            --space-lg: 24px;
+            --space-xl: 36px;
+
+            /* Shapes */
+            --radius-default: 12px;
+            --border-default: 4px double var(--color-text);
+            --shadow-default: none;
+
+            /* Type Scale - Major Third (1.25) */
+            --text-xs: 0.64rem;
+            --text-sm: 0.8rem;
+            --text-base: 1rem;
+            --text-lg: 1.25rem;
+            --text-xl: 1.563rem;
+            --text-2xl: 1.953rem;
+            --text-3xl: 2.441rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.3;
+            letter-spacing: 0.08em;
+            position: relative;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* Fabric Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main Content Container */
+        .app-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        /* Headers */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.3;
+        }
+
+        h1 {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        h2 {
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        h3 {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg,
+                rgba(255, 0, 128, 0.1) 0%,
+                rgba(0, 255, 127, 0.1) 50%,
+                rgba(255, 107, 0, 0.1) 100%);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Tutorial Sections */
+        .tutorial-section {
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+
+        .section-number {
+            position: absolute;
+            top: -12px;
+            left: var(--space-md);
+            background: var(--color-secondary);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--text-lg);
+            padding: var(--space-xs) var(--space-sm);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+        }
+
+        .tutorial-content {
+            margin-top: var(--space-sm);
+        }
+
+        .tutorial-content p {
+            margin-bottom: var(--space-sm);
+            font-size: var(--text-base);
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .feature-card {
+            background: var(--color-background);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--color-primary);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-xs);
+        }
+
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            margin-bottom: var(--space-xs);
+        }
+
+        .feature-desc {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-surface);
+            border-top: var(--border-default);
+            padding: var(--space-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            gap: var(--space-sm);
+        }
+
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+                rgba(255, 0, 128, 0.05),
+                rgba(0, 255, 127, 0.05));
+            pointer-events: none;
+        }
+
+        .nav-group {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-size: var(--text-sm);
+            padding: var(--space-xs) var(--space-md);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            background: var(--color-surface);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-skip {
+            background: transparent;
+            color: var(--color-text-muted);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .progress-label {
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--color-background);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                var(--color-primary),
+                var(--color-accent));
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 8px,
+                rgba(255, 255, 255, 0.2) 8px,
+                rgba(255, 255, 255, 0.2) 16px
+            );
+        }
+
+        /* Tutorial Overlay */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-overlay);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+
+        .tutorial-overlay.active {
+            display: flex;
+        }
+
+        /* Tooltip Pointer */
+        .tooltip-pointer {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--color-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2001;
+            animation: pulse-pointer 2s infinite;
+        }
+
+        .tooltip-pointer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--color-primary);
+            border-radius: 50%;
+        }
+
+        @keyframes pulse-pointer {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        /* Tooltip Card */
+        .tooltip-card {
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            max-width: 500px;
+            position: relative;
+            animation: tooltip-appear 0.3s ease;
+        }
+
+        @keyframes tooltip-appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tooltip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .tooltip-step {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-primary);
+            text-transform: uppercase;
+        }
+
+        .tooltip-close {
+            background: transparent;
+            border: none;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            color: var(--color-text-muted);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        .tooltip-title {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        .tooltip-body {
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            gap: var(--space-xs);
+            justify-content: flex-end;
+        }
+
+        /* Step Indicators */
+        .step-indicators {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+        }
+
+        .step-indicator.completed {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .step-indicator.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+            transform: scale(1.1);
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            text-align: center;
+            padding: var(--space-xl);
+        }
+
+        .completion-screen.active {
+            display: block;
+        }
+
+        .completion-icon {
+            width: 120px;
+            height: 120px;
+            background: var(--color-secondary);
+            border: var(--border-default);
+            border-radius: 50%;
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            animation: completion-pop 0.5s ease;
+        }
+
+        @keyframes completion-pop {
+            0% {
+                transform: scale(0);
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .completion-title {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-sm);
+            color: var(--color-primary);
+        }
+
+        .completion-message {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text-muted);
+        }
+
+        /* Highlight Overlay */
+        .highlight-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1999;
+            display: none;
+        }
+
+        .highlight-overlay.active {
+            display: block;
+            background: var(--color-highlight);
+            border: 4px solid var(--color-primary);
+            border-radius: var(--radius-default);
+            animation: highlight-pulse 1.5s infinite;
+        }
+
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 var(--color-primary);
+            }
+            50% {
+                box-shadow: 0 0 0 12px transparent;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .bottom-nav {
+                flex-wrap: wrap;
+            }
+
+            .progress-container {
+                order: -1;
+                width: 100%;
+                max-width: none;
+                margin-bottom: var(--space-xs);
+            }
+
+            .nav-group {
+                flex: 1;
+                justify-content: space-between;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                font-size: var(--text-xs);
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">Fashion Tutorial</div>
+            <h1>Welcome to Obsidian Rose</h1>
+            <p>Master our platform in 6 simple steps. Learn how to create stunning fashion collections, manage your inventory, and launch your brand to the world.</p>
+        </section>
+
+        <!-- Step Indicators -->
+        <div class="step-indicators">
+            <div class="step-indicator active" data-step="1">1</div>
+            <div class="step-indicator" data-step="2">2</div>
+            <div class="step-indicator" data-step="3">3</div>
+            <div class="step-indicator" data-step="4">4</div>
+            <div class="step-indicator" data-step="5">5</div>
+            <div class="step-indicator" data-step="6">6</div>
+        </div>
+
+        <!-- Tutorial Section 1 -->
+        <section class="tutorial-section" id="step-1">
+            <div class="section-number">01</div>
+            <h2>Create Your Collection</h2>
+            <div class="tutorial-content">
+                <p>Start by creating your first fashion collection. Organize your designs by season, theme, or occasion. Collections help you manage multiple products and present them cohesively to your customers.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📁</div>
+                        <div class="feature-title">Organize</div>
+                        <div class="feature-desc">Group products by theme</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-title">Customize</div>
+                        <div class="feature-desc">Brand your collections</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Track</div>
+                        <div class="feature-desc">Monitor performance</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section 2 -->
+        <section class="tutorial-section" id="step-2">
+            <div class="section-number">02</div>
+            <h2>Upload Product Photos</h2>
+            <div class="tutorial-content">
+                <p>High-quality imagery is essential for fashion e-commerce. Upload multiple angles, detail shots, and lifestyle images. Our smart cropping tool ensures your photos look perfect across all devices.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <div class="feature-title">Multi-Upload</div>
+                        <div class="feature-desc">Batch upload images</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✂️</div>
+                        <div class="feature-title">Auto-Crop</div>
+                        <div class="feature-desc">Smart image sizing</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🖼️</div>
+                        <div class="feature-title">Gallery</div>
+                        <div class="feature-desc">Organize your media</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section 3 -->
+        <section class="tutorial-section" id="step-3">
+            <div class="section-number">03</div>
+            <h2>Set Pricing & Variants</h2>
+            <div class="tutorial-content">
+                <p>Configure your product variants (sizes, colors, materials) and set competitive pricing. Our dynamic pricing engine helps you optimize for profit while staying market-competitive.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-title">Dynamic Pricing</div>
+                        <div class="feature-desc">Smart price suggestions</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📏</div>
+                        <div class="feature-title">Size Matrix</div>
+                        <div class="feature-desc">Manage all variants</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏷️</div>
+                        <div class="feature-title">Discounts</div>
+                        <div class="feature-desc">Promotional pricing</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section 4 -->
+        <section class="tutorial-section" id="step-4">
+            <div class="section-number">04</div>
+            <h2>Manage Inventory</h2>
+            <div class="tutorial-content">
+                <p>Track stock levels across all variants and locations. Set low-stock alerts, manage reorders, and synchronize with your suppliers. Never oversell or run out of your best-sellers.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📦</div>
+                        <div class="feature-title">Stock Tracking</div>
+                        <div class="feature-desc">Real-time inventory</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔔</div>
+                        <div class="feature-title">Alerts</div>
+                        <div class="feature-desc">Low stock warnings</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-title">Auto-Reorder</div>
+                        <div class="feature-desc">Supplier integration</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section 5 -->
+        <section class="tutorial-section" id="step-5">
+            <div class="section-number">05</div>
+            <h2>Launch Your Storefront</h2>
+            <div class="tutorial-content">
+                <p>Publish your collection to your custom storefront. Choose from premium templates, customize your brand colors, and configure payment processing. Your store can be live in minutes.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎭</div>
+                        <div class="feature-title">Templates</div>
+                        <div class="feature-desc">Beautiful designs</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💳</div>
+                        <div class="feature-title">Payments</div>
+                        <div class="feature-desc">Secure checkout</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-title">One-Click</div>
+                        <div class="feature-desc">Instant publishing</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section 6 -->
+        <section class="tutorial-section" id="step-6">
+            <div class="section-number">06</div>
+            <h2>Analyze & Grow</h2>
+            <div class="tutorial-content">
+                <p>Monitor your sales, customer behavior, and marketing performance. Use actionable insights to optimize your collections, pricing, and promotional strategies for maximum growth.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">Analytics</div>
+                        <div class="feature-desc">Sales insights</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <div class="feature-title">Customers</div>
+                        <div class="feature-desc">Behavior tracking</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <div class="feature-title">Insights</div>
+                        <div class="feature-desc">AI recommendations</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Completion Screen -->
+        <section class="completion-screen" id="completion">
+            <div class="completion-icon">✓</div>
+            <h2 class="completion-title">Tutorial Complete!</h2>
+            <p class="completion-message">You're ready to build your fashion empire. Start creating your first collection now.</p>
+            <button class="btn btn-primary" onclick="restartTutorial()">Restart Tutorial</button>
+        </section>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <div class="nav-group">
+            <button class="btn btn-skip" id="btn-skip">Skip Tutorial</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Progress</span>
+                <span id="progress-text">Step 1 of 6</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 16.67%"></div>
+            </div>
+        </div>
+
+        <div class="nav-group">
+            <button class="btn" id="btn-back" disabled>← Back</button>
+            <button class="btn btn-primary" id="btn-next">Next →</button>
+        </div>
+    </nav>
+
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorial-overlay">
+        <div class="tooltip-card" id="tooltip-card">
+            <div class="tooltip-header">
+                <span class="tooltip-step" id="tooltip-step">Step 1 of 6</span>
+                <button class="tooltip-close" id="tooltip-close" aria-label="Close tooltip">×</button>
+            </div>
+            <h3 class="tooltip-title" id="tooltip-title">Welcome to Obsidian Rose</h3>
+            <div class="tooltip-body" id="tooltip-body">
+                <p>This interactive tutorial will guide you through all the features you need to launch your fashion brand. Click "Start Tutorial" to begin, or skip to explore on your own.</p>
+            </div>
+            <div class="tooltip-actions">
+                <button class="btn btn-skip" onclick="skipTutorial()">Skip</button>
+                <button class="btn btn-primary" onclick="startTutorial()">Start Tutorial</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Highlight Overlay -->
+    <div class="highlight-overlay" id="highlight-overlay"></div>
+
+    <!-- Tooltip Pointer -->
+    <div class="tooltip-pointer" id="tooltip-pointer" style="display: none;"></div>
+
+    <script>
+        // Tutorial State
+        let currentStep = 0;
+        let totalSteps = 6;
+        let tutorialActive = false;
+
+        // Tutorial Content
+        const tutorialSteps = [
+            {
+                title: "Welcome to Obsidian Rose",
+                body: "This interactive tutorial will guide you through all the features you need to launch your fashion brand. Click 'Start Tutorial' to begin, or skip to explore on your own.",
+                target: null
+            },
+            {
+                title: "Create Your Collection",
+                body: "Start by organizing your products into collections. This section shows you how to group items by theme, season, or occasion for better customer browsing.",
+                target: "step-1"
+            },
+            {
+                title: "Upload Product Photos",
+                body: "Great product photography is crucial. Learn how to upload multiple images, use our smart cropping tools, and create stunning product galleries.",
+                target: "step-2"
+            },
+            {
+                title: "Set Pricing & Variants",
+                body: "Configure sizes, colors, and other variants. Our dynamic pricing engine helps you stay competitive while maximizing your profit margins.",
+                target: "step-3"
+            },
+            {
+                title: "Manage Inventory",
+                body: "Track stock levels in real-time across all your variants. Set up automatic alerts and reorder points to never miss a sale.",
+                target: "step-4"
+            },
+            {
+                title: "Launch Your Storefront",
+                body: "Publish your collection with beautiful templates and secure payment processing. Your store can be live in just a few minutes.",
+                target: "step-5"
+            },
+            {
+                title: "Analyze & Grow",
+                body: "Use powerful analytics to understand your customers and optimize your business. Get AI-powered insights to drive growth.",
+                target: "step-6"
+            }
+        ];
+
+        // Elements
+        const overlay = document.getElementById('tutorial-overlay');
+        const tooltipCard = document.getElementById('tooltip-card');
+        const tooltipStep = document.getElementById('tooltip-step');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipBody = document.getElementById('tooltip-body');
+        const tooltipClose = document.getElementById('tooltip-close');
+        const highlightOverlay = document.getElementById('highlight-overlay');
+        const tooltipPointer = document.getElementById('tooltip-pointer');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const btnSkip = document.getElementById('btn-skip');
+        const completionScreen = document.getElementById('completion');
+
+        // Show initial overlay on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                showTutorialOverlay();
+            }, 500);
+        });
+
+        function showTutorialOverlay() {
+            overlay.classList.add('active');
+            updateTooltipContent(0);
+        }
+
+        function startTutorial() {
+            tutorialActive = true;
+            currentStep = 1;
+            overlay.classList.remove('active');
+            updateProgress();
+            updateStepIndicators();
+            highlightCurrentStep();
+        }
+
+        function skipTutorial() {
+            tutorialActive = false;
+            overlay.classList.remove('active');
+            highlightOverlay.classList.remove('active');
+            tooltipPointer.style.display = 'none';
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateProgress();
+                updateStepIndicators();
+                if (tutorialActive) {
+                    highlightCurrentStep();
+                    showStepTooltip();
+                }
+            } else {
+                showCompletion();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgress();
+                updateStepIndicators();
+                if (tutorialActive) {
+                    highlightCurrentStep();
+                    showStepTooltip();
+                }
+            }
+        }
+
+        function updateProgress() {
+            const percentage = (currentStep / totalSteps) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Step ${currentStep} of ${totalSteps}`;
+
+            // Update buttons
+            btnBack.disabled = currentStep === 1;
+            if (currentStep === totalSteps) {
+                btnNext.textContent = 'Complete →';
+            } else {
+                btnNext.textContent = 'Next →';
+            }
+        }
+
+        function updateStepIndicators() {
+            const indicators = document.querySelectorAll('.step-indicator');
+            indicators.forEach((indicator, index) => {
+                const stepNum = index + 1;
+                indicator.classList.remove('active', 'completed');
+
+                if (stepNum < currentStep) {
+                    indicator.classList.add('completed');
+                    indicator.textContent = '✓';
+                } else if (stepNum === currentStep) {
+                    indicator.classList.add('active');
+                    indicator.textContent = stepNum;
+                } else {
+                    indicator.textContent = stepNum;
+                }
+            });
+        }
+
+        function highlightCurrentStep() {
+            const step = tutorialSteps[currentStep];
+            if (step.target) {
+                const targetElement = document.getElementById(step.target);
+                if (targetElement) {
+                    const rect = targetElement.getBoundingClientRect();
+                    highlightOverlay.style.top = (rect.top + window.scrollY) + 'px';
+                    highlightOverlay.style.left = rect.left + 'px';
+                    highlightOverlay.style.width = rect.width + 'px';
+                    highlightOverlay.style.height = rect.height + 'px';
+                    highlightOverlay.classList.add('active');
+
+                    // Scroll to element
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                highlightOverlay.classList.remove('active');
+            }
+        }
+
+        function showStepTooltip() {
+            updateTooltipContent(currentStep);
+            overlay.classList.add('active');
+        }
+
+        function updateTooltipContent(stepIndex) {
+            const step = tutorialSteps[stepIndex];
+            tooltipStep.textContent = stepIndex === 0 ? 'Welcome' : `Step ${stepIndex} of ${totalSteps}`;
+            tooltipTitle.textContent = step.title;
+            tooltipBody.innerHTML = `<p>${step.body}</p>`;
+
+            // Update actions based on step
+            const actions = tooltipCard.querySelector('.tooltip-actions');
+            if (stepIndex === 0) {
+                actions.innerHTML = `
+                    <button class="btn btn-skip" onclick="skipTutorial()">Skip</button>
+                    <button class="btn btn-primary" onclick="startTutorial()">Start Tutorial</button>
+                `;
+            } else {
+                actions.innerHTML = `
+                    <button class="btn" onclick="overlay.classList.remove('active')">Got it</button>
+                `;
+            }
+        }
+
+        function showCompletion() {
+            document.querySelector('.app-container').style.display = 'none';
+            completionScreen.classList.add('active');
+            highlightOverlay.classList.remove('active');
+
+            // Update bottom nav for completion
+            btnNext.style.display = 'none';
+            btnBack.style.display = 'none';
+            progressText.textContent = 'Complete!';
+            progressFill.style.width = '100%';
+        }
+
+        function restartTutorial() {
+            currentStep = 0;
+            tutorialActive = false;
+            completionScreen.classList.remove('active');
+            document.querySelector('.app-container').style.display = 'block';
+            btnNext.style.display = 'inline-block';
+            btnBack.style.display = 'inline-block';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Show initial overlay again
+            setTimeout(() => {
+                showTutorialOverlay();
+            }, 300);
+        }
+
+        // Event Listeners
+        btnNext.addEventListener('click', nextStep);
+        btnBack.addEventListener('click', prevStep);
+        btnSkip.addEventListener('click', skipTutorial);
+        tooltipClose.addEventListener('click', () => {
+            overlay.classList.remove('active');
+        });
+
+        // Close overlay on background click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+
+        // Update highlight position on resize/scroll
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (tutorialActive && currentStep > 0) {
+                    highlightCurrentStep();
+                }
+            }, 100);
+        });
+
+        window.addEventListener('scroll', () => {
+            if (tutorialActive && currentStep > 0) {
+                const step = tutorialSteps[currentStep];
+                if (step.target) {
+                    const targetElement = document.getElementById(step.target);
+                    if (targetElement) {
+                        const rect = targetElement.getBoundingClientRect();
+                        highlightOverlay.style.top = (rect.top + window.scrollY) + 'px';
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 77;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

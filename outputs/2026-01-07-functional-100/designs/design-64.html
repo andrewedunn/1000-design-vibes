@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Pillar - Wiki Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN NAME: Modern Pillar
+        ABOUTME: A wiki interface combining skeuomorphic elements with pop art aesthetics
+        ABOUTME: Features hyper-saturated cyber colors with extreme contrast for enterprise healthcare
+
+        AESTHETIC PRINCIPLES:
+        - Skeuomorphic textures and paper-like surfaces
+        - Pop art bold colors and graphic treatments
+        - Sharp corners and thick borders for definition
+        - Hard shadows creating depth and tactility
+        - Organic patterns inspired by African bold motifs
+        - Compact density with clear modular grid structure
+
+        KEY TOKENS:
+        - Primary: Cyan (#00FFFF)
+        - Background: Pure White (#FFFFFF)
+        - Surface: Textured paper white with patterns
+        - Text: Deep Black (#000000)
+        - Accent: Magenta (#FF00FF)
+        - Base Unit: 12px
+        - Typography Scale: 1.125 (major second)
+        - Corners: 0px (sharp)
+        - Shadows: Hard offset shadows
+        */
+
+        :root {
+            /* Colors - Hyper-saturated cyber monochromatic */
+            --color-primary: #00FFFF;
+            --color-secondary: #0099FF;
+            --color-accent: #FF00FF;
+            --color-background: #FFFFFF;
+            --color-surface: #F8F8F8;
+            --color-surface-alt: #E8E8E8;
+            --color-text: #000000;
+            --color-text-muted: #333333;
+            --color-border: #000000;
+            --color-hover: #00CCCC;
+
+            /* Typography */
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Libre Baskerville', serif;
+
+            /* Spacing - 12px base */
+            --space-unit: 12px;
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 24px;
+            --space-lg: 36px;
+            --space-xl: 48px;
+
+            /* Typography Scale - Major Second (1.125) */
+            --text-xs: 0.79rem;
+            --text-sm: 0.889rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.266rem;
+            --text-2xl: 1.424rem;
+            --text-3xl: 1.602rem;
+            --text-4xl: 1.802rem;
+
+            /* Shapes */
+            --radius-default: 0px;
+            --border-width: 4px;
+            --shadow-default: 8px 8px 0 rgba(0, 0, 0, 1);
+            --shadow-hover: 4px 4px 0 rgba(0, 0, 0, 1);
+
+            /* Line heights */
+            --line-height-tight: 1.2;
+            --line-height-base: 1.75;
+            --line-height-loose: 2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: var(--line-height-base);
+            color: var(--color-text);
+            background: var(--color-background);
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0, 255, 255, 0.03) 35px, rgba(0, 255, 255, 0.03) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 0, 255, 0.03) 35px, rgba(255, 0, 255, 0.03) 70px);
+            min-height: 100vh;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        *:focus {
+            outline: 4px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            line-height: var(--line-height-tight);
+            letter-spacing: -0.02em;
+            font-variant: small-caps;
+            text-align: right;
+        }
+
+        h1 { font-size: var(--text-4xl); margin-bottom: var(--space-md); }
+        h2 { font-size: var(--text-3xl); margin: var(--space-lg) 0 var(--space-md); }
+        h3 { font-size: var(--text-2xl); margin: var(--space-md) 0 var(--space-sm); }
+        h4 { font-size: var(--text-xl); margin: var(--space-md) 0 var(--space-sm); }
+
+        p {
+            margin-bottom: var(--space-md);
+        }
+
+        a {
+            color: var(--color-secondary);
+            text-decoration: underline;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-primary);
+            border-top: var(--border-width) solid var(--color-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: var(--space-sm);
+            z-index: 1000;
+            box-shadow: 0 -8px 0 rgba(0, 0, 0, 1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--space-xs);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-border);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-variant: small-caps;
+            font-weight: 600;
+            min-width: 44px;
+            min-height: 44px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .nav-item:active {
+            transform: translateY(0);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--color-primary);
+        }
+
+        /* Main Layout */
+        .wiki-container {
+            display: grid;
+            grid-template-columns: 1fr 300px 800px 1fr;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            padding-bottom: 80px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Table of Contents Sidebar */
+        .toc-sidebar {
+            grid-column: 2;
+            position: sticky;
+            top: var(--space-md);
+            height: fit-content;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-md);
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .toc-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-variant: small-caps;
+            font-weight: 800;
+            margin-bottom: var(--space-sm);
+            padding-bottom: var(--space-xs);
+            border-bottom: var(--border-width) solid var(--color-border);
+            text-align: right;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .toc-item a {
+            text-decoration: none;
+            font-size: var(--text-sm);
+            display: block;
+            padding: 4px 0;
+            text-align: right;
+        }
+
+        .toc-item.level-2 {
+            padding-right: var(--space-sm);
+        }
+
+        .toc-item.level-3 {
+            padding-right: var(--space-md);
+            font-size: var(--text-xs);
+        }
+
+        /* Main Article Content */
+        .article-main {
+            grid-column: 3;
+        }
+
+        /* Article Header */
+        .article-header {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            background-image:
+                linear-gradient(135deg, transparent 0%, rgba(0, 255, 255, 0.1) 100%);
+        }
+
+        .article-title {
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-sm);
+            text-align: right;
+            color: var(--color-text);
+        }
+
+        .article-subtitle {
+            font-size: var(--text-lg);
+            color: var(--color-text-muted);
+            font-style: italic;
+            text-align: right;
+            margin-bottom: var(--space-md);
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .meta-button {
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meta-button:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translate(4px, 4px);
+        }
+
+        .meta-button.secondary {
+            background: var(--color-surface-alt);
+        }
+
+        /* Infobox */
+        .infobox {
+            float: right;
+            width: 300px;
+            margin: 0 0 var(--space-md) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.02) 2px, rgba(0, 0, 0, 0.02) 4px);
+        }
+
+        .infobox-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .infobox-content {
+            padding: var(--space-md);
+        }
+
+        .infobox-title {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-sm);
+            text-align: right;
+        }
+
+        .infobox-table {
+            width: 100%;
+            font-size: var(--text-sm);
+        }
+
+        .infobox-table tr {
+            border-bottom: 2px solid var(--color-surface-alt);
+        }
+
+        .infobox-table th {
+            text-align: right;
+            padding: var(--space-xs);
+            font-family: var(--font-heading);
+            font-variant: small-caps;
+            font-weight: 600;
+            background: var(--color-surface-alt);
+            width: 40%;
+        }
+
+        .infobox-table td {
+            text-align: right;
+            padding: var(--space-xs);
+        }
+
+        /* Article Content */
+        .article-content {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-lg);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.01) 2px, rgba(0, 0, 0, 0.01) 4px);
+        }
+
+        .article-content h2 {
+            border-bottom: var(--border-width) solid var(--color-primary);
+            padding-bottom: var(--space-xs);
+        }
+
+        .article-content h3 {
+            color: var(--color-secondary);
+        }
+
+        /* Reference List */
+        .references {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .ref-list {
+            list-style: none;
+            counter-reset: ref-counter;
+        }
+
+        .ref-item {
+            counter-increment: ref-counter;
+            margin-bottom: var(--space-sm);
+            padding-right: var(--space-md);
+            position: relative;
+            font-size: var(--text-sm);
+        }
+
+        .ref-item::before {
+            content: "[" counter(ref-counter) "]";
+            position: absolute;
+            right: 0;
+            font-weight: 700;
+            color: var(--color-secondary);
+        }
+
+        /* Categories and Related Articles */
+        .article-footer {
+            margin-top: var(--space-md);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .footer-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-md);
+        }
+
+        .footer-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-sm);
+            text-align: right;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+            justify-content: flex-end;
+        }
+
+        .tag {
+            padding: 4px var(--space-sm);
+            background: var(--color-accent);
+            color: var(--color-background);
+            border: 2px solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-variant: small-caps;
+            font-weight: 600;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        .related-list {
+            list-style: none;
+        }
+
+        .related-item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .related-item a {
+            display: block;
+            padding: var(--space-xs);
+            background: var(--color-surface-alt);
+            border: 2px solid var(--color-border);
+            text-decoration: none;
+            transition: all 0.2s;
+            text-align: right;
+        }
+
+        .related-item a:hover {
+            background: var(--color-primary);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        /* Revision History Panel */
+        .revision-panel {
+            margin-top: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-md);
+        }
+
+        .revision-title {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-md);
+            text-align: right;
+        }
+
+        .revision-list {
+            list-style: none;
+        }
+
+        .revision-item {
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .revision-info {
+            text-align: right;
+        }
+
+        .revision-date {
+            font-family: var(--font-heading);
+            font-variant: small-caps;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            color: var(--color-secondary);
+        }
+
+        .revision-author {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .revision-action {
+            padding: 4px var(--space-sm);
+            background: var(--color-surface-alt);
+            border: 2px solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-variant: small-caps;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .revision-action:hover {
+            background: var(--color-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .wiki-container {
+                grid-template-columns: 250px 1fr;
+                padding: var(--space-sm);
+            }
+
+            .article-main {
+                grid-column: 2;
+            }
+
+            .toc-sidebar {
+                grid-column: 1;
+            }
+
+            .infobox {
+                float: none;
+                width: 100%;
+                margin: 0 0 var(--space-md) 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .wiki-container {
+                grid-template-columns: 1fr;
+            }
+
+            .toc-sidebar {
+                position: relative;
+                grid-column: 1;
+            }
+
+            .article-main {
+                grid-column: 1;
+            }
+
+            .article-footer {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button class="nav-item">
+            <span class="nav-icon">◉</span>
+            <span>Read</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">✎</span>
+            <span>Edit</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">◷</span>
+            <span>History</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">☆</span>
+            <span>Watch</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>Tools</span>
+        </button>
+    </nav>
+
+    <div class="wiki-container">
+        <!-- Table of Contents Sidebar -->
+        <aside class="toc-sidebar">
+            <h2 class="toc-title">Contents</h2>
+            <ul class="toc-list">
+                <li class="toc-item level-1"><a href="#overview">Overview</a></li>
+                <li class="toc-item level-1"><a href="#history">History</a></li>
+                <li class="toc-item level-2"><a href="#early-development">Early Development</a></li>
+                <li class="toc-item level-2"><a href="#modern-era">Modern Era</a></li>
+                <li class="toc-item level-1"><a href="#applications">Applications</a></li>
+                <li class="toc-item level-2"><a href="#healthcare">Healthcare</a></li>
+                <li class="toc-item level-2"><a href="#enterprise">Enterprise</a></li>
+                <li class="toc-item level-3"><a href="#implementation">Implementation</a></li>
+                <li class="toc-item level-1"><a href="#technical-specs">Technical Specifications</a></li>
+                <li class="toc-item level-1"><a href="#references">References</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Article Content -->
+        <main class="article-main">
+            <!-- Article Header -->
+            <header class="article-header">
+                <h1 class="article-title">Design Systems Architecture</h1>
+                <p class="article-subtitle">Comprehensive framework for modern interface development</p>
+                <div class="article-meta">
+                    <button class="meta-button">✎ Edit</button>
+                    <button class="meta-button secondary">◷ View History</button>
+                    <button class="meta-button secondary">⚡ Related Changes</button>
+                    <button class="meta-button secondary">🔗 Permanent Link</button>
+                </div>
+            </header>
+
+            <!-- Article Content with Infobox -->
+            <article class="article-content">
+                <!-- Infobox -->
+                <aside class="infobox">
+                    <div class="infobox-image">🏛️</div>
+                    <div class="infobox-content">
+                        <h3 class="infobox-title">Quick Facts</h3>
+                        <table class="infobox-table">
+                            <tr>
+                                <th>Type</th>
+                                <td>Framework</td>
+                            </tr>
+                            <tr>
+                                <th>Industry</th>
+                                <td>Healthcare Tech</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <th>Version</th>
+                                <td>4.5.2</td>
+                            </tr>
+                            <tr>
+                                <th>Released</th>
+                                <td>2026-01-07</td>
+                            </tr>
+                            <tr>
+                                <th>License</th>
+                                <td>Open Source</td>
+                            </tr>
+                        </table>
+                    </div>
+                </aside>
+
+                <section id="overview">
+                    <h2>Overview</h2>
+                    <p>A design system is a comprehensive collection of reusable components, guided by clear standards, that can be assembled to build applications and experiences. Modern design systems combine visual design principles with functional architecture to create cohesive digital products that scale effectively across enterprise environments.</p>
+
+                    <p>The architecture of contemporary design systems emphasizes accessibility, consistency, and maintainability. These frameworks provide organizations with the tools necessary to maintain brand coherence while enabling rapid development cycles. In healthcare and enterprise contexts, design systems play a crucial role in ensuring regulatory compliance and user safety.</p>
+
+                    <p>Key components include typography scales, color palettes, spacing systems, component libraries, and comprehensive documentation. The integration of these elements creates a unified language that designers, developers, and stakeholders can reference throughout the product lifecycle.</p>
+                </section>
+
+                <section id="history">
+                    <h2>History</h2>
+
+                    <h3 id="early-development">Early Development</h3>
+                    <p>The concept of systematized design emerged in the early 2000s as web applications grew in complexity. Organizations recognized the need for standardized components to maintain consistency across expanding digital ecosystems. Early examples included style guides from major technology companies that documented visual standards and interaction patterns.</p>
+
+                    <p>These initial frameworks primarily focused on visual consistency, providing designers with color codes, typography specifications, and basic layout guidelines. However, they lacked the comprehensive component libraries and tooling that characterize modern systems.</p>
+
+                    <h3 id="modern-era">Modern Era</h3>
+                    <p>Contemporary design systems evolved significantly with the rise of component-based frameworks and design tools. The introduction of atomic design principles by Brad Frost in 2013 provided a methodology for building interface design systems in a more systematic way. This approach breaks interfaces down into fundamental building blocks that can be combined to create complex experiences.</p>
+
+                    <p>Today's design systems integrate advanced accessibility features, dark mode support, responsive design patterns, and sophisticated theming capabilities. They serve as the foundation for design operations in organizations ranging from startups to Fortune 500 enterprises.</p>
+                </section>
+
+                <section id="applications">
+                    <h2>Applications</h2>
+
+                    <h3 id="healthcare">Healthcare</h3>
+                    <p>In healthcare settings, design systems must prioritize accessibility and compliance with regulations such as HIPAA and WCAG AA standards. Medical interfaces require exceptional clarity, as users often operate under high-stress conditions where errors can have serious consequences. Design systems in this domain emphasize high contrast ratios, clear hierarchy, and foolproof interaction patterns.</p>
+
+                    <p>Healthcare design systems typically include specialized components for patient data display, medication management, appointment scheduling, and clinical decision support. Color coding must be carefully considered to avoid confusion in critical scenarios, and text must maintain readability under various lighting conditions.</p>
+
+                    <h3 id="enterprise">Enterprise</h3>
+                    <p>Enterprise design systems serve large-scale organizations with complex workflows and diverse user bases. These systems must accommodate multiple brands, support extensive customization, and integrate with existing technology stacks. The focus shifts toward productivity, efficiency, and reducing cognitive load for users who spend significant time within these interfaces.</p>
+
+                    <h4 id="implementation">Implementation</h4>
+                    <p>Implementing an enterprise design system requires careful planning and stakeholder alignment. Organizations typically establish design system teams responsible for governance, documentation, and evolution of the system. These teams work cross-functionally with product teams to ensure adoption and gather feedback for continuous improvement.</p>
+
+                    <p>Technical implementation often involves creating component libraries in frameworks like React, Vue, or Angular, accompanied by comprehensive documentation sites. Version control, automated testing, and clear deprecation policies ensure system stability as it evolves over time.</p>
+                </section>
+
+                <section id="technical-specs">
+                    <h2>Technical Specifications</h2>
+                    <p>Modern design systems are built on foundational specifications that ensure consistency and scalability. Typography systems typically employ modular scales based on mathematical ratios such as the major second (1.125) or golden ratio (1.618). These scales create harmonious size relationships that improve visual hierarchy and readability.</p>
+
+                    <p>Spacing systems use base units (commonly 4px, 8px, or 12px) multiplied to create predictable intervals. This approach maintains visual rhythm and simplifies responsive design. Color systems organize palettes into functional categories: primary colors for brand identity and key actions, secondary colors for supporting elements, and semantic colors for states like success, warning, and error.</p>
+
+                    <p>Component specifications define behavior, appearance, and accessibility requirements. Each component includes states (default, hover, active, disabled, focus), responsive breakpoints, and ARIA attributes. Documentation provides implementation guidelines, usage examples, and common pitfalls to avoid.</p>
+                </section>
+
+                <!-- References Section -->
+                <section class="references" id="references">
+                    <h2>References</h2>
+                    <ol class="ref-list">
+                        <li class="ref-item">Frost, Brad. "Atomic Design Methodology". Bradfrost.com. Retrieved 2026-01-07.</li>
+                        <li class="ref-item">Curtis, Jina Anne. "Design Systems Handbook". DesignBetter.co. InVision. 2022.</li>
+                        <li class="ref-item">Nielsen Norman Group. "Design Systems: What They Are and Why They Matter". NN/g Research. 2023.</li>
+                        <li class="ref-item">World Wide Web Consortium. "Web Content Accessibility Guidelines (WCAG) 2.1". W3C Recommendation. 2018.</li>
+                        <li class="ref-item">Suarez, Marco; Silverman, Kat. "Building Design Systems". Smashing Magazine. 2024.</li>
+                        <li class="ref-item">Google Material Design Team. "Material Design System". Google Design. 2025.</li>
+                    </ol>
+                </section>
+            </article>
+
+            <!-- Article Footer with Categories and Related Articles -->
+            <div class="article-footer">
+                <div class="footer-section">
+                    <h3 class="footer-title">Categories</h3>
+                    <div class="tag-list">
+                        <span class="tag">Design Systems</span>
+                        <span class="tag">User Interface</span>
+                        <span class="tag">Healthcare Technology</span>
+                        <span class="tag">Enterprise Software</span>
+                        <span class="tag">Accessibility</span>
+                        <span class="tag">Web Development</span>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Related Articles</h3>
+                    <ul class="related-list">
+                        <li class="related-item"><a href="#">Atomic Design Principles</a></li>
+                        <li class="related-item"><a href="#">Component Libraries</a></li>
+                        <li class="related-item"><a href="#">Design Tokens</a></li>
+                        <li class="related-item"><a href="#">WCAG Accessibility Standards</a></li>
+                        <li class="related-item"><a href="#">Enterprise UX Patterns</a></li>
+                        <li class="related-item"><a href="#">Healthcare Interface Design</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Revision History Panel -->
+            <div class="revision-panel">
+                <h3 class="revision-title">Recent Revisions</h3>
+                <ul class="revision-list">
+                    <li class="revision-item">
+                        <div class="revision-info">
+                            <div class="revision-date">2026-01-07 14:32</div>
+                            <div class="revision-author">Contributed by DesignSystemExpert</div>
+                        </div>
+                        <button class="revision-action">View</button>
+                    </li>
+                    <li class="revision-item">
+                        <div class="revision-info">
+                            <div class="revision-date">2026-01-06 09:15</div>
+                            <div class="revision-author">Contributed by HealthcareUI</div>
+                        </div>
+                        <button class="revision-action">View</button>
+                    </li>
+                    <li class="revision-item">
+                        <div class="revision-info">
+                            <div class="revision-date">2026-01-05 16:48</div>
+                            <div class="revision-author">Contributed by AccessibilityAdvocate</div>
+                        </div>
+                        <button class="revision-action">View</button>
+                    </li>
+                    <li class="revision-item">
+                        <div class="revision-info">
+                            <div class="revision-date">2026-01-04 11:22</div>
+                            <div class="revision-author">Contributed by EnterpriseArchitect</div>
+                        </div>
+                        <button class="revision-action">View</button>
+                    </li>
+                    <li class="revision-item">
+                        <div class="revision-info">
+                            <div class="revision-date">2026-01-03 13:56</div>
+                            <div class="revision-author">Contributed by UIFrameworks</div>
+                        </div>
+                        <button class="revision-action">View</button>
+                    </li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 64;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

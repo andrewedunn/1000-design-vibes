@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Winter - Appointment Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Matrix Winter - Appointment Booking System
+        ABOUTME: A skeuomorphic appointment booking interface with Web 2.0 glossy surfaces,
+        ABOUTME: featuring organic forms, natural colors, and German industrial precision.
+
+        AESTHETIC PRINCIPLES:
+        - Skeuomorphic realism with glossy, reflective surfaces reminiscent of Web 2.0
+        - Natural color palette with cool tones and split-complementary harmony
+        - Organic, flowing shapes with tactile depth
+        - German industrial influence: precise, functional, reliable
+        - Layered shadows create physical depth and material quality
+        - Subtle gradients add dimension without overwhelming
+
+        KEY TOKENS:
+        --color-primary: #5B8FA3 (cool teal-blue)
+        --color-secondary: #C97B63 (warm terracotta - split complement)
+        --color-accent: #8AAF87 (natural sage green)
+        --space-unit: 8px (airy, spacious rhythm)
+        --radius-organic: fluid border-radius for soft, natural forms
+        --shadow-layered: multiple shadows for depth and realism
+        */
+
+        :root {
+            /* Colors - Natural, Cool, Split-Complementary */
+            --color-primary: #5B8FA3;
+            --color-primary-light: #7BA8BA;
+            --color-primary-dark: #4A7388;
+            --color-secondary: #C97B63;
+            --color-secondary-light: #D99685;
+            --color-accent: #8AAF87;
+            --color-accent-light: #A4C4A1;
+
+            --color-background: #F5F7F6;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FEFEFE;
+            --color-border: #D4DEDA;
+            --color-text: #2C3A3A;
+            --color-text-muted: #6B7878;
+            --color-text-inverse: #FFFFFF;
+
+            /* Typography */
+            --font-heading: 'Space Mono', monospace;
+            --font-body: 'Jost', sans-serif;
+            --type-scale: 1.067; /* Minor second */
+
+            /* Spacing - Airy */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+            --space-3xl: calc(var(--space-unit) * 12);
+
+            /* Shapes - Organic */
+            --radius-sm: 12px 8px 10px 14px;
+            --radius-md: 18px 14px 16px 20px;
+            --radius-lg: 24px 18px 22px 26px;
+            --radius-xl: 32px 24px 28px 36px;
+
+            /* Shadows - Layered for skeuomorphic depth */
+            --shadow-subtle:
+                0 1px 2px rgba(0, 0, 0, 0.05),
+                0 2px 4px rgba(91, 143, 163, 0.08);
+            --shadow-default:
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                0 4px 8px rgba(91, 143, 163, 0.1),
+                0 8px 16px rgba(91, 143, 163, 0.08);
+            --shadow-elevated:
+                0 4px 8px rgba(0, 0, 0, 0.08),
+                0 8px 16px rgba(91, 143, 163, 0.12),
+                0 16px 32px rgba(91, 143, 163, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            --shadow-inset:
+                inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                inset 0 4px 8px rgba(91, 143, 163, 0.08);
+
+            /* Borders - Medium */
+            --border-width: 2px;
+            --border-style: solid;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--color-text);
+            background: linear-gradient(135deg, #F5F7F6 0%, #EBF0ED 100%);
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        h1 { font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale) * var(--type-scale)); }
+        h2 { font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale)); }
+        h3 { font-size: calc(15px * var(--type-scale) * var(--type-scale)); }
+        h4 { font-size: calc(15px * var(--type-scale)); }
+
+        /* Navigation - Top Fixed */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            box-shadow: var(--shadow-default);
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-md) var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: calc(15px * var(--type-scale) * var(--type-scale));
+            text-transform: uppercase;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Hero - Full Viewport */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3xl) var(--space-lg);
+            padding-top: calc(var(--space-3xl) + 80px);
+            text-align: center;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(138, 175, 135, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(91, 143, 163, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, #F5F7F6 0%, #EBF0ED 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            color: var(--color-primary-dark);
+            margin-bottom: var(--space-lg);
+            font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale) * var(--type-scale) * var(--type-scale));
+        }
+
+        .hero-subtitle {
+            font-size: calc(15px * var(--type-scale) * var(--type-scale));
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2xl);
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: var(--space-md) var(--space-xl);
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            color: var(--color-text-inverse);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: calc(15px * var(--type-scale));
+            border-radius: var(--radius-md);
+            border: var(--border-width) var(--border-style) var(--color-primary-dark);
+            box-shadow: var(--shadow-elevated);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.1),
+                0 12px 24px rgba(91, 143, 163, 0.15),
+                0 24px 48px rgba(91, 143, 163, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-lg);
+        }
+
+        /* Modular Blocks Layout */
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-3xl);
+        }
+
+        @media (max-width: 968px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Component - Skeuomorphic */
+        .card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-elevated);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-secondary));
+            opacity: 0.6;
+        }
+
+        .card-header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .card-title {
+            color: var(--color-primary-dark);
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-description {
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+
+        /* Calendar Picker */
+        .calendar {
+            display: grid;
+            gap: var(--space-sm);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding: var(--space-sm);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-sm);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .calendar-month {
+            font-family: var(--font-heading);
+            font-size: calc(15px * var(--type-scale));
+            text-transform: uppercase;
+            color: var(--color-primary);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .calendar-nav button {
+            width: 36px;
+            height: 36px;
+            border: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--color-text);
+            font-weight: 600;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+        }
+
+        .calendar-nav button:hover {
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            color: var(--color-text-inverse);
+            border-color: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+            margin-bottom: var(--space-sm);
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            padding: var(--space-xs);
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-text);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+
+        .calendar-day:hover {
+            background: linear-gradient(180deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+            color: var(--color-text-inverse);
+        }
+
+        .calendar-day.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .calendar-day.selected {
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border-color: var(--color-primary-dark);
+            color: var(--color-text-inverse);
+            box-shadow: var(--shadow-elevated);
+            font-weight: 700;
+        }
+
+        .calendar-day.today {
+            border-color: var(--color-secondary);
+            border-width: 3px;
+        }
+
+        /* Time Slot Grid */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: var(--space-sm);
+        }
+
+        .time-slot {
+            padding: var(--space-md) var(--space-sm);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-text);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .time-slot:hover {
+            background: linear-gradient(180deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+            border-color: var(--color-accent);
+            color: var(--color-text-inverse);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .time-slot.selected {
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border-color: var(--color-primary-dark);
+            color: var(--color-text-inverse);
+            box-shadow: var(--shadow-elevated);
+            font-weight: 700;
+        }
+
+        .time-slot.unavailable {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Service Selection */
+        .service-list {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .service-item {
+            padding: var(--space-md);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 44px;
+        }
+
+        .service-item:hover {
+            background: linear-gradient(180deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .service-item.selected {
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .service-item.selected .service-info,
+        .service-item.selected .service-meta {
+            color: var(--color-text-inverse);
+        }
+
+        .service-info h4 {
+            font-size: calc(15px * var(--type-scale));
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-description {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .service-item.selected .service-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .service-meta {
+            text-align: right;
+        }
+
+        .service-duration {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-price {
+            font-family: var(--font-heading);
+            font-size: calc(15px * var(--type-scale));
+            color: var(--color-secondary);
+            font-weight: 700;
+        }
+
+        .service-item.selected .service-price {
+            color: var(--color-text-inverse);
+        }
+
+        /* Provider Selection */
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .provider-card {
+            padding: var(--space-md);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            background: linear-gradient(180deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+            text-align: center;
+            min-height: 44px;
+        }
+
+        .provider-card:hover {
+            background: linear-gradient(180deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .provider-card.selected {
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .provider-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: calc(15px * var(--type-scale) * var(--type-scale));
+            color: var(--color-text-inverse);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            box-shadow: var(--shadow-default);
+        }
+
+        .provider-name {
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            font-size: calc(15px * var(--type-scale));
+        }
+
+        .provider-title {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .provider-card.selected .provider-name,
+        .provider-card.selected .provider-title {
+            color: var(--color-text-inverse);
+        }
+
+        /* Confirmation Form */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: var(--space-md);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--color-text);
+            background: var(--color-surface);
+            box-shadow: var(--shadow-inset);
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow:
+                var(--shadow-inset),
+                0 0 0 3px rgba(91, 143, 163, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Booking Summary */
+        .summary-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border: var(--border-width) var(--border-style) var(--color-primary-dark);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            color: var(--color-text-inverse);
+            box-shadow: var(--shadow-elevated);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .summary-card .card-title {
+            color: var(--color-text-inverse);
+            position: relative;
+        }
+
+        .summary-item {
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            font-family: var(--font-heading);
+        }
+
+        .summary-total {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: calc(15px * var(--type-scale) * var(--type-scale));
+            font-weight: 700;
+            position: relative;
+        }
+
+        .confirm-button {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(180deg, var(--color-secondary-light) 0%, var(--color-secondary) 100%);
+            color: var(--color-text-inverse);
+            border: var(--border-width) var(--border-style) rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            font-family: var(--font-heading);
+            font-size: calc(15px * var(--type-scale));
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-elevated);
+            transition: all 0.2s;
+            margin-top: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+        }
+
+        .confirm-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .confirm-button:hover::before {
+            left: 100%;
+        }
+
+        .confirm-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.15),
+                0 12px 24px rgba(201, 123, 99, 0.2),
+                0 24px 48px rgba(201, 123, 99, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .confirm-button:active {
+            transform: translateY(0);
+        }
+
+        /* Full Width Section */
+        .full-width-section {
+            grid-column: 1 / -1;
+        }
+
+        /* Accessibility */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale));
+            }
+
+            .provider-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="logo">Matrix Winter</div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#providers">Providers</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Book Your Appointment</h1>
+            <p class="hero-subtitle">Experience precision scheduling with a touch of elegance. Select your service, choose your stylist, and reserve your time.</p>
+            <a href="#booking" class="cta-button">Start Booking</a>
+        </div>
+    </section>
+
+    <!-- Booking Interface -->
+    <main class="container" id="booking">
+        <div class="booking-grid">
+            <!-- Calendar Picker -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Select Date</h3>
+                    <p class="card-description">Choose your preferred appointment date</p>
+                </div>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-month">January 2026</div>
+                        <div class="calendar-nav">
+                            <button aria-label="Previous month">&lt;</button>
+                            <button aria-label="Next month">&gt;</button>
+                        </div>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">Sun</div>
+                        <div class="calendar-weekday">Mon</div>
+                        <div class="calendar-weekday">Tue</div>
+                        <div class="calendar-weekday">Wed</div>
+                        <div class="calendar-weekday">Thu</div>
+                        <div class="calendar-weekday">Fri</div>
+                        <div class="calendar-weekday">Sat</div>
+                    </div>
+                    <div class="calendar-days">
+                        <div class="calendar-day disabled">29</div>
+                        <div class="calendar-day disabled">30</div>
+                        <div class="calendar-day disabled">31</div>
+                        <div class="calendar-day disabled">1</div>
+                        <div class="calendar-day disabled">2</div>
+                        <div class="calendar-day disabled">3</div>
+                        <div class="calendar-day disabled">4</div>
+                        <div class="calendar-day disabled">5</div>
+                        <div class="calendar-day disabled">6</div>
+                        <div class="calendar-day today">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day selected">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Slot Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Select Time</h3>
+                    <p class="card-description">Available time slots for January 15, 2026</p>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot unavailable">9:00</div>
+                    <div class="time-slot unavailable">9:30</div>
+                    <div class="time-slot">10:00</div>
+                    <div class="time-slot">10:30</div>
+                    <div class="time-slot">11:00</div>
+                    <div class="time-slot">11:30</div>
+                    <div class="time-slot unavailable">12:00</div>
+                    <div class="time-slot unavailable">12:30</div>
+                    <div class="time-slot">13:00</div>
+                    <div class="time-slot">13:30</div>
+                    <div class="time-slot selected">14:00</div>
+                    <div class="time-slot">14:30</div>
+                    <div class="time-slot">15:00</div>
+                    <div class="time-slot">15:30</div>
+                    <div class="time-slot">16:00</div>
+                    <div class="time-slot">16:30</div>
+                    <div class="time-slot">17:00</div>
+                    <div class="time-slot unavailable">17:30</div>
+                </div>
+            </div>
+
+            <!-- Service Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Select Service</h3>
+                    <p class="card-description">Choose from our premium fashion services</p>
+                </div>
+                <div class="service-list">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Consultation</h4>
+                            <p class="service-description">Style assessment and personalized recommendations</p>
+                        </div>
+                        <div class="service-meta">
+                            <div class="service-duration">30 min</div>
+                            <div class="service-price">$50</div>
+                        </div>
+                    </div>
+                    <div class="service-item selected">
+                        <div class="service-info">
+                            <h4>Personal Styling</h4>
+                            <p class="service-description">Complete wardrobe curation and styling session</p>
+                        </div>
+                        <div class="service-meta">
+                            <div class="service-duration">90 min</div>
+                            <div class="service-price">$180</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Wardrobe Edit</h4>
+                            <p class="service-description">Declutter and organize your existing wardrobe</p>
+                        </div>
+                        <div class="service-meta">
+                            <div class="service-duration">60 min</div>
+                            <div class="service-price">$120</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Event Styling</h4>
+                            <p class="service-description">Special occasion outfit planning and coordination</p>
+                        </div>
+                        <div class="service-meta">
+                            <div class="service-duration">120 min</div>
+                            <div class="service-price">$250</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Provider Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Select Stylist</h3>
+                    <p class="card-description">Choose your preferred fashion professional</p>
+                </div>
+                <div class="provider-grid">
+                    <div class="provider-card selected">
+                        <div class="provider-avatar">AK</div>
+                        <div class="provider-name">ALEX KELLER</div>
+                        <div class="provider-title">Senior Stylist</div>
+                    </div>
+                    <div class="provider-card">
+                        <div class="provider-avatar">MR</div>
+                        <div class="provider-name">MIRA ROSEN</div>
+                        <div class="provider-title">Style Director</div>
+                    </div>
+                    <div class="provider-card">
+                        <div class="provider-avatar">JC</div>
+                        <div class="provider-name">JORDAN CHEN</div>
+                        <div class="provider-title">Lead Consultant</div>
+                    </div>
+                    <div class="provider-card">
+                        <div class="provider-avatar">ST</div>
+                        <div class="provider-name">SAM TORRES</div>
+                        <div class="provider-title">Wardrobe Expert</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation Form -->
+            <div class="card full-width-section">
+                <div class="card-header">
+                    <h3 class="card-title">Contact Information</h3>
+                    <p class="card-description">Please provide your details to confirm the appointment</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+                    <div style="display: grid; gap: var(--space-lg);">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Full Name *</label>
+                            <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address *</label>
+                            <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="notes">Special Requests (Optional)</label>
+                            <textarea id="notes" class="form-textarea" placeholder="Any specific requirements or preferences..."></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="summary-card">
+                            <h3 class="card-title">Booking Summary</h3>
+                            <div class="summary-item">
+                                <span class="summary-label">Service</span>
+                                <span class="summary-value">Personal Styling</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Stylist</span>
+                                <span class="summary-value">Alex Keller</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Date</span>
+                                <span class="summary-value">January 15, 2026</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Time</span>
+                                <span class="summary-value">14:00 - 15:30</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Duration</span>
+                                <span class="summary-value">90 minutes</span>
+                            </div>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span>$180</span>
+                            </div>
+                            <button class="confirm-button">Confirm Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 66;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

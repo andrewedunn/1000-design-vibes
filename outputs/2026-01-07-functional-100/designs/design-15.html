@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Hub - The Neumorphic Way to Nonprofit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com?family=Anton:wght@400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+/*
+ABOUTME: Design #15 - Shape Hub
+A Windows 95-inspired nonprofit interface with neumorphic softness, grunge texture, and Latin vibrant cultural energy.
+
+DESIGN SYSTEM:
+- UI Paradigm: Neumorphic (soft extruded shadows) + Windows 95 beveled chrome
+- Era: Grunge (distressed textures, worn edges, authentic feel)
+- Colors: High-contrast desaturated neutrals with vibrant accent
+- Typography: Display headings (Anton), Neo-grotesque body (Roboto)
+- Functional: Authentic Windows 95 desktop with taskbar, windows, icons
+- Cultural: Latin vibrant energy through color pops and decorative elements
+- Content: Fullscreen slides with tabs/panels for nonprofit programs
+
+KEY TOKENS:
+--color-win95-gray: #c0c0c0 (classic system gray)
+--color-win95-blue: #000080 (title bar blue)
+--space-unit: 8px
+--shadow-neumorphic: inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.8)
+--shadow-raised: 2px 2px 0 rgba(0,0,0,0.8), -1px -1px 0 rgba(255,255,255,0.9)
+--radius: 0 (sharp corners for Win95 authenticity)
+*/
+
+:root {
+    /* Windows 95 Colors */
+    --color-win95-gray: #c0c0c0;
+    --color-win95-dark: #808080;
+    --color-win95-light: #dfdfdf;
+    --color-win95-blue: #000080;
+    --color-win95-blue-light: #0000aa;
+    --color-desktop: #008080;
+
+    /* Brand Colors - Desaturated with High Contrast Accent */
+    --color-primary: #d4145a; /* vibrant magenta accent */
+    --color-background: #c0c0c0;
+    --color-surface: #c0c0c0;
+    --color-text: #000000;
+    --color-text-muted: #505050;
+    --color-text-inverse: #ffffff;
+
+    /* Typography */
+    --font-heading: 'Anton', sans-serif;
+    --font-body: 'Roboto', 'MS Sans Serif', sans-serif;
+    --scale: 1.067;
+    --size-base: 14px;
+    --size-sm: 13px;
+    --size-lg: calc(var(--size-base) * var(--scale));
+    --size-xl: calc(var(--size-lg) * var(--scale));
+    --size-2xl: calc(var(--size-xl) * var(--scale));
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+
+    /* Shapes */
+    --radius-default: 0;
+    --border-thin: 2px;
+
+    /* Shadows - Neumorphic + Win95 Bevels */
+    --shadow-neumorphic: inset -2px -2px 4px rgba(0,0,0,0.15), inset 2px 2px 4px rgba(255,255,255,0.7);
+    --shadow-raised: 2px 2px 0 rgba(0,0,0,0.8), -1px -1px 0 rgba(255,255,255,0.9);
+    --shadow-inset: inset 1px 1px 0 rgba(0,0,0,0.5), inset -1px -1px 0 rgba(255,255,255,0.9);
+    --shadow-colored: 4px 4px 0 rgba(212, 20, 90, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-desktop: #1a1a1a;
+        --color-win95-gray: #3c3c3c;
+        --color-win95-dark: #282828;
+        --color-win95-light: #505050;
+        --color-text: #ffffff;
+        --color-text-muted: #a0a0a0;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--size-base);
+    line-height: 1.7;
+    color: var(--color-text);
+    background: var(--color-desktop);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+    letter-spacing: 0.01em;
+}
+
+/* Grunge Texture Overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.3;
+}
+
+/* Desktop Icons */
+.desktop {
+    position: absolute;
+    top: var(--space-md);
+    left: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    z-index: 1;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: 2px;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus {
+    background: rgba(0, 0, 128, 0.3);
+    outline: 1px dotted rgba(255, 255, 255, 0.8);
+}
+
+.desktop-icon-image {
+    width: 48px;
+    height: 48px;
+    background: var(--color-win95-gray);
+    border: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: var(--space-xs);
+    box-shadow: var(--shadow-neumorphic);
+}
+
+.desktop-icon-label {
+    font-size: var(--size-sm);
+    color: var(--color-text-inverse);
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+}
+
+/* Window Container */
+.window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85vw;
+    max-width: 900px;
+    height: 80vh;
+    max-height: 600px;
+    background: var(--color-win95-gray);
+    border: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+    box-shadow: var(--shadow-raised), var(--shadow-colored);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+/* Title Bar */
+.title-bar {
+    background: linear-gradient(90deg, var(--color-win95-blue) 0%, var(--color-win95-blue-light) 100%);
+    color: var(--color-text-inverse);
+    padding: var(--space-xs) var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid;
+    border-color: var(--color-win95-dark);
+}
+
+.title-bar-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-weight: 700;
+    font-size: var(--size-sm);
+    letter-spacing: 0.5px;
+}
+
+.title-bar-icon {
+    width: 16px;
+    height: 16px;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-neumorphic);
+}
+
+.title-bar-controls {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.title-bar-button {
+    width: 18px;
+    height: 18px;
+    background: var(--color-win95-gray);
+    border: 1px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+}
+
+.title-bar-button:hover {
+    background: var(--color-win95-light);
+}
+
+.title-bar-button:active {
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    box-shadow: var(--shadow-inset);
+}
+
+/* Window Content */
+.window-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+    padding: var(--space-sm) var(--space-sm) 0 var(--space-sm);
+    background: var(--color-win95-gray);
+}
+
+.tab {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-win95-dark);
+    color: var(--color-text-muted);
+    border: 2px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-gray) var(--color-win95-dark);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: var(--size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: none;
+}
+
+.tab:hover {
+    background: var(--color-win95-gray);
+}
+
+.tab.active {
+    background: var(--color-win95-gray);
+    color: var(--color-text);
+    border-color: var(--color-win95-light) var(--color-win95-light) var(--color-win95-gray) var(--color-win95-light);
+    border-bottom-color: var(--color-win95-gray);
+    position: relative;
+    z-index: 2;
+}
+
+/* Tab Panels */
+.tab-panels {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--color-win95-gray);
+    border-top: 2px solid var(--color-win95-dark);
+}
+
+.tab-panel {
+    display: none;
+    padding: var(--space-lg);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* Scrollbar Styling */
+.tab-panel::-webkit-scrollbar {
+    width: 16px;
+}
+
+.tab-panel::-webkit-scrollbar-track {
+    background: var(--color-win95-gray);
+    border: 1px solid var(--color-win95-dark);
+}
+
+.tab-panel::-webkit-scrollbar-thumb {
+    background: var(--color-win95-dark);
+    border: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: var(--size-2xl);
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: var(--size-xl);
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+}
+
+h3 {
+    font-size: var(--size-lg);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+/* Cards - Neumorphic Style */
+.card {
+    background: var(--color-win95-gray);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border: 2px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    box-shadow: var(--shadow-neumorphic);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-neumorphic);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--color-text-inverse);
+}
+
+/* Button */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-win95-gray);
+    color: var(--color-text);
+    border: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--size-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-height: 44px;
+    transition: none;
+}
+
+.button:hover {
+    background: var(--color-win95-light);
+}
+
+.button:active,
+.button:focus {
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    box-shadow: var(--shadow-inset);
+    outline: 1px dotted var(--color-text);
+    outline-offset: -4px;
+}
+
+.button-primary {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: #f0367a #b01048 #b01048 #f0367a;
+}
+
+.button-primary:hover {
+    background: #e81660;
+}
+
+/* Taskbar */
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: var(--color-win95-gray);
+    border-top: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-gray) var(--color-win95-gray) var(--color-win95-gray);
+    display: flex;
+    align-items: center;
+    padding: var(--space-xs);
+    gap: var(--space-xs);
+    z-index: 100;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.start-button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-win95-gray);
+    border: 2px solid;
+    border-color: var(--color-win95-light) var(--color-win95-dark) var(--color-win95-dark) var(--color-win95-light);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: var(--size-base);
+    min-height: 36px;
+}
+
+.start-button:hover {
+    background: var(--color-win95-light);
+}
+
+.start-button:active {
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    box-shadow: var(--shadow-inset);
+}
+
+.start-icon {
+    width: 24px;
+    height: 24px;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-neumorphic);
+}
+
+.taskbar-separator {
+    width: 2px;
+    height: 32px;
+    background: var(--color-win95-dark);
+    box-shadow: 1px 0 0 var(--color-win95-light);
+}
+
+.taskbar-item {
+    flex: 0 0 auto;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-win95-gray);
+    border: 2px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    font-size: var(--size-sm);
+    font-weight: 700;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-inset);
+}
+
+.taskbar-clock {
+    margin-left: auto;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    font-size: var(--size-sm);
+    box-shadow: var(--shadow-inset);
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Program Grid */
+.program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.stat-box {
+    background: var(--color-win95-gray);
+    padding: var(--space-md);
+    border: 2px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    box-shadow: var(--shadow-neumorphic);
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--size-2xl);
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+    font-size: var(--size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Contact Form */
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: var(--size-sm);
+    letter-spacing: 0.05em;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    background: var(--color-text-inverse);
+    border: 2px solid;
+    border-color: var(--color-win95-dark) var(--color-win95-light) var(--color-win95-light) var(--color-win95-dark);
+    font-family: var(--font-body);
+    font-size: var(--size-base);
+    color: var(--color-text);
+    box-shadow: var(--shadow-inset);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .window {
+        width: 95vw;
+        height: 85vh;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .program-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Desktop Icons -->
+    <div class="desktop">
+        <div class="desktop-icon" tabindex="0">
+            <div class="desktop-icon-image">🏠</div>
+            <div class="desktop-icon-label">My Programs</div>
+        </div>
+        <div class="desktop-icon" tabindex="0">
+            <div class="desktop-icon-image">💝</div>
+            <div class="desktop-icon-label">Donate</div>
+        </div>
+        <div class="desktop-icon" tabindex="0">
+            <div class="desktop-icon-image">📊</div>
+            <div class="desktop-icon-label">Impact Report</div>
+        </div>
+    </div>
+
+    <!-- Main Window -->
+    <div class="window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <div class="title-bar-text">
+                <div class="title-bar-icon"></div>
+                Shape Hub - The Neumorphic Way to Nonprofit
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" aria-label="Minimize">_</button>
+                <button class="title-bar-button" aria-label="Maximize">□</button>
+                <button class="title-bar-button" aria-label="Close">×</button>
+            </div>
+        </div>
+
+        <!-- Window Content -->
+        <div class="window-content">
+            <!-- Tabs -->
+            <div class="tabs" role="tablist">
+                <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="panel-programs" id="tab-programs">Programs</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="panel-impact" id="tab-impact">Impact</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
+            </div>
+
+            <!-- Tab Panels -->
+            <div class="tab-panels">
+                <!-- Home Panel -->
+                <div class="tab-panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+                    <h1>SHAPE HUB</h1>
+                    <h2>Building Communities, One Connection at a Time</h2>
+                    <p>Welcome to Shape Hub, where technology meets compassion. We're revolutionizing nonprofit engagement through innovative community programs designed specifically for seniors and their families.</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-value">12,500+</span>
+                            <span class="stat-label">Seniors Served</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">48</span>
+                            <span class="stat-label">Active Programs</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">95%</span>
+                            <span class="stat-label">Satisfaction Rate</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">$2.4M</span>
+                            <span class="stat-label">Community Impact</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">✨</div>
+                            <h3>Our Mission</h3>
+                        </div>
+                        <p>Shape Hub believes that every senior deserves access to enriching experiences, meaningful connections, and the support they need to thrive. Our programs are designed with dignity, respect, and joy at their core.</p>
+                        <button class="button button-primary">Learn More About Us</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <h3>What Makes Us Different</h3>
+                        </div>
+                        <p>We combine cutting-edge neumorphic design principles with timeless values of community care. Our approach is grounded in research, driven by empathy, and executed with excellence.</p>
+                    </div>
+                </div>
+
+                <!-- Programs Panel -->
+                <div class="tab-panel" id="panel-programs" role="tabpanel" aria-labelledby="tab-programs">
+                    <h1>OUR PROGRAMS</h1>
+                    <p>Discover our comprehensive suite of services designed to enrich lives and strengthen communities.</p>
+
+                    <div class="program-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🎨</div>
+                                <h3>Creative Arts</h3>
+                            </div>
+                            <p>Weekly art classes, music therapy sessions, and creative workshops that celebrate self-expression and cultural heritage.</p>
+                            <button class="button">View Schedule</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🏃</div>
+                                <h3>Wellness & Fitness</h3>
+                            </div>
+                            <p>Gentle exercise programs, yoga classes, and wellness workshops tailored for senior mobility and health needs.</p>
+                            <button class="button">Join Classes</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">💻</div>
+                                <h3>Digital Literacy</h3>
+                            </div>
+                            <p>One-on-one tech tutoring and group classes to help seniors navigate the digital world with confidence.</p>
+                            <button class="button">Sign Up</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🍳</div>
+                                <h3>Nutrition & Meals</h3>
+                            </div>
+                            <p>Community dining, cooking classes, and nutritious meal delivery services that bring people together.</p>
+                            <button class="button">View Menu</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🚐</div>
+                                <h3>Transportation</h3>
+                            </div>
+                            <p>Reliable transportation services for medical appointments, shopping, and social activities throughout the community.</p>
+                            <button class="button">Request Ride</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🌻</div>
+                                <h3>Social Connection</h3>
+                            </div>
+                            <p>Book clubs, game nights, cultural celebrations, and social events that foster lasting friendships.</p>
+                            <button class="button">See Events</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Panel -->
+                <div class="tab-panel" id="panel-impact" role="tabpanel" aria-labelledby="tab-impact">
+                    <h1>COMMUNITY IMPACT</h1>
+                    <p>See how Shape Hub is transforming lives and strengthening our community every day.</p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <h3>By The Numbers</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span class="stat-value">24,000</span>
+                                <span class="stat-label">Volunteer Hours</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-value">850</span>
+                                <span class="stat-label">Weekly Participants</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-value">15</span>
+                                <span class="stat-label">Community Partners</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Would Recommend</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">💬</div>
+                            <h3>Success Stories</h3>
+                        </div>
+                        <p><strong>Maria, 72:</strong> "Shape Hub gave me my confidence back. The digital literacy program helped me video chat with my grandchildren in Colombia. Now we talk every week!"</p>
+                        <p><strong>Robert, 68:</strong> "After my wife passed, I felt isolated. The social connection programs introduced me to wonderful friends who've become like family."</p>
+                        <p><strong>Elena, 79:</strong> "The art classes reignited my passion for painting. I've even sold a few pieces at the community gallery!"</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <h3>Looking Forward</h3>
+                        </div>
+                        <p>We're expanding our reach with three new community centers opening in 2026, doubling our program capacity and serving an additional 8,000 seniors annually.</p>
+                        <button class="button button-primary">Support Our Growth</button>
+                    </div>
+                </div>
+
+                <!-- Contact Panel -->
+                <div class="tab-panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">
+                    <h1>GET IN TOUCH</h1>
+                    <p>Have questions? Want to volunteer? Ready to make a difference? We'd love to hear from you.</p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📧</div>
+                            <h3>Send Us A Message</h3>
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label" for="name">Name</label>
+                                <input type="text" id="name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" id="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Phone</label>
+                                <input type="tel" id="phone" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="message">Message</label>
+                                <textarea id="message" class="form-textarea" required></textarea>
+                            </div>
+                            <button type="submit" class="button button-primary">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📍</div>
+                            <h3>Visit Us</h3>
+                        </div>
+                        <p><strong>Shape Hub Community Center</strong><br>
+                        1248 Heritage Avenue<br>
+                        San Antonio, TX 78205</p>
+                        <p><strong>Hours:</strong><br>
+                        Monday - Friday: 8:00 AM - 6:00 PM<br>
+                        Saturday: 9:00 AM - 3:00 PM<br>
+                        Sunday: Closed</p>
+                        <p><strong>Phone:</strong> (210) 555-SHAPE<br>
+                        <strong>Email:</strong> hello@shapehub.org</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">💝</div>
+                            <h3>Ways To Help</h3>
+                        </div>
+                        <p>Your support makes everything possible. Whether through donations, volunteering, or spreading the word, every contribution helps us serve more seniors.</p>
+                        <button class="button button-primary">Donate Now</button>
+                        <button class="button">Volunteer Info</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <button class="start-button">
+            <div class="start-icon"></div>
+            <span>Start</span>
+        </button>
+        <div class="taskbar-separator"></div>
+        <div class="taskbar-item">Shape Hub - Window 1</div>
+        <div class="taskbar-clock" id="clock">12:00 PM</div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        const tabs = document.querySelectorAll('.tab');
+        const panels = document.querySelectorAll('.tab-panel');
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // Remove active states
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                panels.forEach(p => p.classList.remove('active'));
+
+                // Add active state
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                panels[index].classList.add('active');
+            });
+        });
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            document.getElementById('clock').textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+        updateClock();
+        setInterval(updateClock, 60000);
+
+        // Desktop Icon Interactions
+        const desktopIcons = document.querySelectorAll('.desktop-icon');
+        desktopIcons.forEach((icon, index) => {
+            icon.addEventListener('click', () => {
+                tabs[index + 1]?.click();
+            });
+            icon.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    tabs[index + 1]?.click();
+                }
+            });
+        });
+
+        // Window Controls (simulated)
+        const closeBtn = document.querySelector('.title-bar-button[aria-label="Close"]');
+        closeBtn?.addEventListener('click', () => {
+            alert('Thanks for visiting Shape Hub! Press OK to continue exploring.');
+        });
+
+        // Navigation Script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 15;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

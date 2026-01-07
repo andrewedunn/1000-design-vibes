@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vine Imperial - Ticket Booking</title>
+
+    <!--
+    ABOUTME: Vine Imperial - Material Design meets Art Nouveau ticket booking interface
+    ABOUTME: Features flowing organic ornamental elements with layered material surfaces and candy-colored dark theme
+
+    DESIGN SYSTEM TOKENS:
+
+    Color Palette (Candy Dark Mode):
+    - Primary: Bright pink (#FF69B4) - Main accent and CTAs
+    - Secondary: Soft lavender (#E6B3FF) - Supporting elements
+    - Tertiary: Mint green (#98FFB3) - Success states
+    - Surface: Deep purple (#1A0D2E) - Cards and elevated surfaces
+    - Background: Dark plum (#0F0820) - Base background
+    - Text: Soft white (#F5E6FF) - Primary text
+    - Text Muted: Lavender gray (#B399CC) - Secondary text
+
+    Typography:
+    - Headings: Playfair Display (Old Style Serif with Art Nouveau elegance)
+    - Body: Nunito (Humanist Sans for readability)
+    - Scale: 1.333 (Perfect Fourth)
+
+    Spatial System:
+    - Base Unit: 8px
+    - Density: Airy (generous spacing, 24px-48px between sections)
+    - Corners: Organic (Art Nouveau flowing curves, 16px-24px)
+    - Shadows: Layered material elevation (0-24px blur with colored shadows)
+
+    Art Nouveau Aesthetic:
+    - Flowing vine-like decorative borders
+    - Organic curved lines and flourishes
+    - Nature-inspired ornamental details
+    - Asymmetric balance with elegant curves
+    - Whiplash curves in decorative elements
+
+    Material Design Elements:
+    - Elevated surfaces with depth
+    - Responsive elevation changes on interaction
+    - Layered components with clear hierarchy
+    - Smooth transitions and animations
+
+    Functional Direction: Ticket Booking
+    - Event selection with rich imagery
+    - Interactive seat map visualization
+    - Date/time picker with availability
+    - Ticket quantity selector
+    - Dynamic price breakdown
+    - Prominent checkout button
+    - Booking confirmation flow
+    -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Candy Dark Palette */
+            --color-primary: #FF69B4;
+            --color-secondary: #E6B3FF;
+            --color-tertiary: #98FFB3;
+            --color-background: #0F0820;
+            --color-surface: #1A0D2E;
+            --color-surface-elevated: #2A1D3E;
+            --color-text: #F5E6FF;
+            --color-text-muted: #B399CC;
+            --color-accent-1: #FFB3E6;
+            --color-accent-2: #B3D9FF;
+            --color-border: #3D2B5C;
+
+            /* Typography */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+            --scale: 1.333;
+
+            /* Spacing - Airy */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1.5);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-xxl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 20px;
+            --radius-large: 32px;
+            --radius-small: 12px;
+
+            /* Shadows - Material Layered */
+            --shadow-low: 0 2px 8px rgba(255, 105, 180, 0.15),
+                          0 1px 4px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(255, 105, 180, 0.2),
+                            0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-high: 0 8px 24px rgba(255, 105, 180, 0.25),
+                          0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-default: var(--shadow-medium);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* Art Nouveau Decorative Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255, 105, 180, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(230, 179, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(152, 255, 179, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Side Persistent Navigation */
+        .sidebar-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--color-surface);
+            border-right: 2px solid var(--color-border);
+            padding: var(--space-xl) var(--space-md);
+            z-index: 100;
+            box-shadow: var(--shadow-medium);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Art Nouveau Decorative Border */
+        .sidebar-nav::before {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                var(--color-primary) 0%,
+                var(--color-secondary) 25%,
+                var(--color-tertiary) 50%,
+                var(--color-accent-2) 75%,
+                var(--color-primary) 100%
+            );
+            opacity: 0.4;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale));
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            position: relative;
+        }
+
+        /* Art Nouveau Flourish */
+        .logo::after {
+            content: '❦';
+            display: block;
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-top: var(--space-xs);
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            border-radius: var(--radius-default);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--color-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+            box-shadow: var(--shadow-low);
+        }
+
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-icon {
+            margin-right: var(--space-sm);
+            font-size: 1.2rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fullscreen Slides */
+        .slide {
+            min-height: 100vh;
+            padding: var(--space-xxl) var(--space-xl);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Contained Hero */
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: var(--space-xl);
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-high);
+            border: 2px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Art Nouveau Decorative Corner */
+        .hero-section::before,
+        .hero-section::after {
+            content: '✿';
+            position: absolute;
+            font-size: 3rem;
+            color: var(--color-secondary);
+            opacity: 0.2;
+        }
+
+        .hero-section::before {
+            top: var(--space-md);
+            left: var(--space-md);
+        }
+
+        .hero-section::after {
+            bottom: var(--space-md);
+            right: var(--space-md);
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale) * var(--scale) * var(--scale));
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: calc(1rem * var(--scale));
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Event Selection - Timeline Flow */
+        .timeline-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(
+                to bottom,
+                var(--color-primary),
+                var(--color-secondary),
+                var(--color-tertiary)
+            );
+            opacity: 0.3;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xxl);
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: var(--space-lg);
+            width: 24px;
+            height: 24px;
+            background: var(--color-surface);
+            border: 4px solid var(--color-primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 0 8px var(--color-background),
+                        var(--shadow-medium);
+            z-index: 2;
+        }
+
+        /* Event Card - Material Elevation */
+        .event-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-medium);
+            border: 2px solid var(--color-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-high);
+            border-color: var(--color-primary);
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-surface-elevated), var(--color-surface));
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.2));
+        }
+
+        .event-title {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale));
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+        }
+
+        .event-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .event-price {
+            font-size: calc(1rem * var(--scale) * var(--scale));
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-top: var(--space-sm);
+        }
+
+        /* Seat Map Section */
+        .seat-map-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-high);
+            border: 2px solid var(--color-border);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale) * var(--scale));
+            font-weight: 700;
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            color: var(--color-text);
+            position: relative;
+            padding-bottom: var(--space-md);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+            border-radius: 2px;
+        }
+
+        .stage {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-xl);
+            font-weight: 600;
+            color: var(--color-secondary);
+            box-shadow: var(--shadow-low);
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: var(--space-sm);
+            max-width: 800px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            border-radius: var(--radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .seat.available {
+            background: var(--color-surface-elevated);
+            color: var(--color-text-muted);
+            border-color: var(--color-border);
+        }
+
+        .seat.available:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-low);
+        }
+
+        .seat.selected {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-accent-1);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .seat.taken {
+            background: var(--color-surface);
+            color: var(--color-text-muted);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.9rem;
+        }
+
+        .legend-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-small);
+            border: 2px solid var(--color-border);
+        }
+
+        /* Booking Form - Material Cards */
+        .booking-form {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        .form-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-medium);
+            border: 2px solid var(--color-border);
+        }
+
+        .form-title {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale));
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--color-text);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface-elevated);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.2);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .quantity-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--color-surface-elevated);
+            border: 2px solid var(--color-border);
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .quantity-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .quantity-display {
+            font-size: calc(1rem * var(--scale) * var(--scale));
+            font-weight: 700;
+            color: var(--color-text);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Price Breakdown */
+        .price-breakdown {
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-top: var(--space-md);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text-muted);
+        }
+
+        .price-row.total {
+            border-top: 2px solid var(--color-border);
+            padding-top: var(--space-md);
+            margin-top: var(--space-md);
+            font-size: calc(1rem * var(--scale));
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .price-amount {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* Checkout Button */
+        .btn-primary {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border: none;
+            border-radius: var(--radius-large);
+            color: var(--color-background);
+            font-family: var(--font-body);
+            font-size: calc(1rem * var(--scale));
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-high);
+        }
+
+        .btn-primary:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Confirmation Section */
+        .confirmation-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            padding: var(--space-xxl);
+            box-shadow: var(--shadow-high);
+            border: 2px solid var(--color-tertiary);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirmation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg,
+                var(--color-primary),
+                var(--color-secondary),
+                var(--color-tertiary));
+        }
+
+        .confirmation-icon {
+            font-size: 5rem;
+            color: var(--color-tertiary);
+            margin-bottom: var(--space-md);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confirmation-title {
+            font-family: var(--font-heading);
+            font-size: calc(1rem * var(--scale) * var(--scale) * var(--scale));
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .confirmation-message {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xl);
+            line-height: 1.8;
+        }
+
+        .ticket-details {
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            text-align: left;
+        }
+
+        .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .ticket-row:last-child {
+            border-bottom: none;
+        }
+
+        .ticket-label {
+            color: var(--color-text-muted);
+        }
+
+        .ticket-value {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Art Nouveau Decorative Elements */
+        .flourish {
+            text-align: center;
+            color: var(--color-secondary);
+            font-size: 2rem;
+            margin: var(--space-xl) 0;
+            opacity: 0.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar-nav {
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+                width: calc(100% - 240px);
+            }
+
+            .timeline-line {
+                display: none;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+            }
+
+            .timeline-marker {
+                left: var(--space-md);
+                transform: translateX(0);
+            }
+
+            .timeline-content {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-nav {
+                width: 200px;
+                padding: var(--space-md);
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .slide {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .hero-title {
+                font-size: calc(1rem * var(--scale) * var(--scale) * var(--scale));
+            }
+
+            .seat-grid {
+                gap: var(--space-xs);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Styles */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        .btn-primary:focus-visible {
+            outline: 3px solid var(--color-tertiary);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Side Persistent Navigation -->
+    <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+        <div class="logo">Vine Imperial</div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#events" class="nav-link active">
+                    <span class="nav-icon">🎭</span>
+                    <span>Browse Events</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#seats" class="nav-link">
+                    <span class="nav-icon">🎫</span>
+                    <span>Select Seats</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#booking" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Book Tickets</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#confirmation" class="nav-link">
+                    <span class="nav-icon">✓</span>
+                    <span>Confirmation</span>
+                </a>
+            </li>
+        </ul>
+
+        <div style="margin-top: auto; padding-top: var(--space-lg); border-top: 2px solid var(--color-border); text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">
+            <div style="margin-bottom: var(--space-xs);">Design #54</div>
+            <div style="opacity: 0.6;">Use ← → to navigate</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section (Contained) -->
+        <section class="slide" id="hero">
+            <div class="hero-section">
+                <h1 class="hero-title">Experience the Extraordinary</h1>
+                <p class="hero-subtitle">Discover and book unforgettable events with elegance and ease</p>
+                <button class="btn-primary" onclick="document.getElementById('events').scrollIntoView({behavior: 'smooth'})">
+                    Explore Events
+                </button>
+            </div>
+        </section>
+
+        <!-- Event Selection - Timeline Flow -->
+        <section class="slide" id="events">
+            <div class="timeline-container">
+                <h2 class="section-title">Upcoming Events</h2>
+
+                <div class="timeline-line" aria-hidden="true"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <article class="event-card" onclick="selectEvent(1)">
+                            <div class="event-image">🎭</div>
+                            <h3 class="event-title">The Phantom's Masquerade</h3>
+                            <div class="event-details">
+                                <span class="event-detail">📅 March 15, 2026</span>
+                                <span class="event-detail">🕐 7:30 PM</span>
+                                <span class="event-detail">📍 Royal Opera House</span>
+                            </div>
+                            <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+                                A breathtaking theatrical experience combining classic opera with modern staging
+                            </p>
+                            <div class="event-price">From $75</div>
+                        </article>
+                    </div>
+                    <div style="flex: 1;"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker" aria-hidden="true"></div>
+                    <div style="flex: 1;"></div>
+                    <div class="timeline-content">
+                        <article class="event-card" onclick="selectEvent(2)">
+                            <div class="event-image">🎵</div>
+                            <h3 class="event-title">Symphony Under Stars</h3>
+                            <div class="event-details">
+                                <span class="event-detail">📅 April 2, 2026</span>
+                                <span class="event-detail">🕐 8:00 PM</span>
+                                <span class="event-detail">📍 Garden Amphitheater</span>
+                            </div>
+                            <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+                                An enchanting outdoor concert featuring classical masterpieces
+                            </p>
+                            <div class="event-price">From $60</div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <article class="event-card" onclick="selectEvent(3)">
+                            <div class="event-image">🩰</div>
+                            <h3 class="event-title">Swan Lake Reimagined</h3>
+                            <div class="event-details">
+                                <span class="event-detail">📅 April 20, 2026</span>
+                                <span class="event-detail">🕐 6:30 PM</span>
+                                <span class="event-detail">📍 Grand Theater</span>
+                            </div>
+                            <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+                                A contemporary interpretation of Tchaikovsky's timeless ballet
+                            </p>
+                            <div class="event-price">From $85</div>
+                        </article>
+                    </div>
+                    <div style="flex: 1;"></div>
+                </div>
+            </div>
+
+            <div class="flourish">❦</div>
+        </section>
+
+        <!-- Seat Selection Map -->
+        <section class="slide" id="seats">
+            <div class="seat-map-container">
+                <h2 class="section-title">Select Your Seats</h2>
+
+                <div class="stage">STAGE</div>
+
+                <div class="seat-grid" role="grid" aria-label="Seat selection">
+                    <!-- Seat rows generated by JavaScript -->
+                </div>
+
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-indicator" style="background: var(--color-surface-elevated); border-color: var(--color-border);"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-indicator" style="background: var(--color-primary);"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-indicator" style="background: var(--color-surface); opacity: 0.4;"></div>
+                        <span>Taken</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flourish">❦</div>
+        </section>
+
+        <!-- Booking Form -->
+        <section class="slide" id="booking">
+            <form class="booking-form">
+                <div class="form-card">
+                    <h2 class="form-title">Event Details</h2>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event-select">Selected Event</label>
+                        <select class="form-select" id="event-select">
+                            <option>The Phantom's Masquerade - March 15, 2026</option>
+                            <option>Symphony Under Stars - April 2, 2026</option>
+                            <option>Swan Lake Reimagined - April 20, 2026</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="date-input">Performance Date</label>
+                        <input type="date" class="form-input" id="date-input" value="2026-03-15">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="time-input">Show Time</label>
+                        <select class="form-select" id="time-input">
+                            <option>7:30 PM</option>
+                            <option>8:00 PM</option>
+                            <option>2:00 PM (Matinee)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2 class="form-title">Ticket Quantity</h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Number of Tickets</label>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(-1)" aria-label="Decrease quantity">−</button>
+                            <div class="quantity-display" id="ticket-quantity">2</div>
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(1)" aria-label="Increase quantity">+</button>
+                        </div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Ticket Price (×<span id="qty-1">2</span>)</span>
+                            <span class="price-amount" id="ticket-total">$150.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Service Fee</span>
+                            <span class="price-amount">$12.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Processing Fee</span>
+                            <span class="price-amount">$5.00</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total Amount</span>
+                            <span class="price-amount" id="total-amount">$167.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2 class="form-title">Contact Information</h2>
+
+                    <div class="form-group">
+                        <label class="form-label" for="name-input">Full Name</label>
+                        <input type="text" class="form-input" id="name-input" placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email-input">Email Address</label>
+                        <input type="email" class="form-input" id="email-input" placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone-input">Phone Number</label>
+                        <input type="tel" class="form-input" id="phone-input" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="completeBooking()">
+                    Complete Booking
+                </button>
+            </form>
+
+            <div class="flourish">❦</div>
+        </section>
+
+        <!-- Confirmation -->
+        <section class="slide" id="confirmation" style="display: none;">
+            <div class="confirmation-card">
+                <div class="confirmation-icon">✓</div>
+                <h2 class="confirmation-title">Booking Confirmed!</h2>
+                <p class="confirmation-message">
+                    Your tickets have been successfully booked. A confirmation email has been sent to your address.
+                </p>
+
+                <div class="ticket-details">
+                    <div class="ticket-row">
+                        <span class="ticket-label">Confirmation Code</span>
+                        <span class="ticket-value">VP-2026-5432</span>
+                    </div>
+                    <div class="ticket-row">
+                        <span class="ticket-label">Event</span>
+                        <span class="ticket-value">The Phantom's Masquerade</span>
+                    </div>
+                    <div class="ticket-row">
+                        <span class="ticket-label">Date & Time</span>
+                        <span class="ticket-value">March 15, 2026 at 7:30 PM</span>
+                    </div>
+                    <div class="ticket-row">
+                        <span class="ticket-label">Seats</span>
+                        <span class="ticket-value">A12, A13</span>
+                    </div>
+                    <div class="ticket-row">
+                        <span class="ticket-label">Total Paid</span>
+                        <span class="ticket-value">$167.00</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="window.location.reload()">
+                    Book Another Event
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Generate seat map
+        function generateSeats() {
+            const seatGrid = document.querySelector('.seat-grid');
+            const rows = 8;
+            const seatsPerRow = 12;
+            const takenSeats = new Set(['3-5', '3-6', '4-7', '5-4', '5-5', '6-8', '7-3']);
+
+            for (let row = 1; row <= rows; row++) {
+                for (let seat = 1; seat <= seatsPerRow; seat++) {
+                    const seatId = `${row}-${seat}`;
+                    const seatEl = document.createElement('button');
+                    seatEl.type = 'button';
+                    seatEl.className = 'seat';
+                    seatEl.textContent = `${String.fromCharCode(64 + row)}${seat}`;
+                    seatEl.setAttribute('aria-label', `Seat ${String.fromCharCode(64 + row)}${seat}`);
+
+                    if (takenSeats.has(seatId)) {
+                        seatEl.classList.add('taken');
+                        seatEl.disabled = true;
+                        seatEl.setAttribute('aria-disabled', 'true');
+                    } else {
+                        seatEl.classList.add('available');
+                        seatEl.onclick = () => toggleSeat(seatEl);
+                    }
+
+                    seatGrid.appendChild(seatEl);
+                }
+            }
+        }
+
+        let selectedSeats = new Set();
+
+        function toggleSeat(seatEl) {
+            if (seatEl.classList.contains('selected')) {
+                seatEl.classList.remove('selected');
+                seatEl.classList.add('available');
+                selectedSeats.delete(seatEl.textContent);
+            } else if (selectedSeats.size < 4) {
+                seatEl.classList.remove('available');
+                seatEl.classList.add('selected');
+                selectedSeats.add(seatEl.textContent);
+            }
+        }
+
+        // Update ticket quantity
+        let quantity = 2;
+        const ticketPrice = 75;
+
+        function updateQuantity(delta) {
+            quantity = Math.max(1, Math.min(8, quantity + delta));
+            document.getElementById('ticket-quantity').textContent = quantity;
+            document.getElementById('qty-1').textContent = quantity;
+
+            const ticketTotal = quantity * ticketPrice;
+            const total = ticketTotal + 12 + 5;
+
+            document.getElementById('ticket-total').textContent = `$${ticketTotal.toFixed(2)}`;
+            document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Event selection
+        function selectEvent(eventId) {
+            document.getElementById('seats').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Complete booking
+        function completeBooking() {
+            const name = document.getElementById('name-input').value;
+            const email = document.getElementById('email-input').value;
+
+            if (!name || !email) {
+                alert('Please fill in your contact information');
+                return;
+            }
+
+            document.getElementById('booking').style.display = 'none';
+            document.getElementById('confirmation').style.display = 'flex';
+            document.getElementById('confirmation').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Navigation highlighting
+        const sections = document.querySelectorAll('.slide');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function updateActiveNav() {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+
+        // Smooth scroll for navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Initialize
+        generateSeats();
+    </script>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 54;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

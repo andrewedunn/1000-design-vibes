@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<!--
+ABOUTME: Design #90 - Live Chat Widget Interface
+ABOUTME: Embeddable customer support chat with bubble trigger, messages, typing indicator, and quick replies
+
+DESIGN SYSTEM TOKENS:
+--color-primary: #6366F1 (Indigo chat brand)
+--color-background: #F9FAFB (Light neutral)
+--color-surface: #FFFFFF (Pure white)
+--color-text: #111827 (Deep gray)
+--color-text-muted: #6B7280 (Medium gray)
+
+AESTHETIC PRINCIPLES:
+- Modern chat interface with floating bubble launcher
+- Clean message bubbles with distinct user/agent styling
+- Smooth animations and transitions for chat interactions
+- Accessible color contrast and touch-friendly targets
+- Professional customer service aesthetic
+
+FUNCTIONAL DIRECTION: live_chat_widget
+Required elements: chat bubble trigger, message list, typing indicator, agent avatar, quick replies, file upload, minimize button
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design #90 - Live Chat Widget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --color-primary: #6366F1;
+            --color-primary-dark: #4F46E5;
+            --color-primary-light: #818CF8;
+            --color-background: #F9FAFB;
+            --color-surface: #FFFFFF;
+            --color-text: #111827;
+            --color-text-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-agent-bubble: #F3F4F6;
+            --color-user-bubble: #6366F1;
+            --color-success: #10B981;
+            --color-online: #34D399;
+
+            /* Typography */
+            --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+
+            /* Spacing */
+            --space-unit: 1rem;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: calc(var(--space-unit) * 0.75);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2);
+
+            /* Shapes */
+            --radius-default: 0.75rem;
+            --radius-sm: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-full: 9999px;
+            --shadow-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+
+        /* Demo container to show widget in context */
+        .demo-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-content {
+            text-align: center;
+            color: white;
+            padding: var(--space-xl);
+        }
+
+        .demo-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+        }
+
+        .demo-content p {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+        }
+
+        /* Chat Widget Container */
+        .chat-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        /* Chat Bubble Trigger */
+        .chat-bubble {
+            width: 64px;
+            height: 64px;
+            background: var(--color-primary);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+        }
+
+        .chat-bubble:hover {
+            background: var(--color-primary-dark);
+            transform: scale(1.05);
+        }
+
+        .chat-bubble:focus {
+            outline: 3px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        .chat-bubble svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        .chat-bubble.active {
+            display: none;
+        }
+
+        /* Online indicator */
+        .online-indicator {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-online);
+            border: 3px solid white;
+            border-radius: var(--radius-full);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            display: none;
+            flex-direction: column;
+            width: 380px;
+            height: 600px;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .chat-window.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--color-primary);
+            position: relative;
+        }
+
+        .agent-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--color-online);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-full);
+        }
+
+        .agent-info h3 {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .agent-info p {
+            font-size: var(--font-size-xs);
+            opacity: 0.9;
+        }
+
+        .minimize-button {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-xs);
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .minimize-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .minimize-button:focus {
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+
+        .minimize-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Message List */
+        .message-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            background: #FAFAFA;
+        }
+
+        .message {
+            display: flex;
+            gap: var(--space-xs);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--color-border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+
+        .message.agent .message-avatar {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--color-text-muted);
+            color: white;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+        }
+
+        .message.agent .message-bubble {
+            background: var(--color-agent-bubble);
+            color: var(--color-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--color-user-bubble);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-top: 4px;
+            padding: 0 var(--space-xs);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .typing-bubble {
+            background: var(--color-agent-bubble);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            border-bottom-left-radius: 4px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-text-muted);
+            border-radius: var(--radius-full);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .quick-reply-button {
+            background: white;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .quick-reply-button:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .quick-reply-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: flex-end;
+        }
+
+        .file-upload-button {
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            padding: var(--space-xs);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .file-upload-button:hover {
+            background: var(--color-background);
+            color: var(--color-primary);
+        }
+
+        .file-upload-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .file-upload-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .message-input {
+            flex: 1;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-sm);
+            font-family: var(--font-body);
+            resize: none;
+            max-height: 100px;
+            min-height: 40px;
+        }
+
+        .message-input:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 0;
+            border-color: var(--color-primary);
+        }
+
+        .send-button {
+            background: var(--color-primary);
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-default);
+            transition: all 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .send-button:focus {
+            outline: 2px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Scrollbar styling */
+        .message-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .message-list::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: var(--radius-full);
+        }
+
+        .message-list::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-muted);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .chat-window {
+                width: calc(100vw - 32px);
+                height: calc(100vh - 100px);
+            }
+
+            .demo-container {
+                height: 400px;
+            }
+
+            .demo-content h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo website background -->
+    <div class="demo-container">
+        <div class="demo-content">
+            <h1>Welcome</h1>
+            <p>Chat with us anytime - we're here to help!</p>
+        </div>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div class="chat-widget">
+        <!-- Chat Bubble Trigger -->
+        <button class="chat-bubble" id="chatBubble" aria-label="Open chat">
+            <span class="online-indicator" aria-label="Support team online"></span>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                <path d="M7 9h10v2H7zm0-3h10v2H7zm0 6h7v2H7z"/>
+            </svg>
+        </button>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="agent-avatar">SA</div>
+                    <div class="agent-info">
+                        <h3>Sarah Anderson</h3>
+                        <p>Typically replies instantly</p>
+                    </div>
+                </div>
+                <button class="minimize-button" id="minimizeButton" aria-label="Minimize chat">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Message List -->
+            <div class="message-list" id="messageList">
+                <!-- Agent welcome message -->
+                <div class="message agent">
+                    <div class="message-avatar">SA</div>
+                    <div>
+                        <div class="message-bubble">
+                            Hi there! 👋 Welcome to our support chat. How can I help you today?
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- User message example -->
+                <div class="message user">
+                    <div class="message-avatar">You</div>
+                    <div>
+                        <div class="message-bubble">
+                            Hi! I have a question about my recent order.
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- Agent response -->
+                <div class="message agent">
+                    <div class="message-avatar">SA</div>
+                    <div>
+                        <div class="message-bubble">
+                            I'd be happy to help with that! Could you provide me with your order number?
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div class="typing-indicator">
+                    <div class="message-avatar">SA</div>
+                    <div class="typing-bubble">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Replies -->
+            <div class="quick-replies">
+                <button class="quick-reply-button">Track my order</button>
+                <button class="quick-reply-button">Return an item</button>
+                <button class="quick-reply-button">Pricing info</button>
+                <button class="quick-reply-button">Talk to human</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="input-wrapper">
+                    <button class="file-upload-button" aria-label="Upload file">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
+                        </svg>
+                    </button>
+                    <textarea
+                        class="message-input"
+                        placeholder="Type your message..."
+                        rows="1"
+                        aria-label="Message input"
+                    ></textarea>
+                    <button class="send-button" aria-label="Send message">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat widget functionality
+        const chatBubble = document.getElementById('chatBubble');
+        const chatWindow = document.getElementById('chatWindow');
+        const minimizeButton = document.getElementById('minimizeButton');
+        const messageInput = document.querySelector('.message-input');
+        const sendButton = document.querySelector('.send-button');
+        const messageList = document.getElementById('messageList');
+        const quickReplyButtons = document.querySelectorAll('.quick-reply-button');
+
+        // Toggle chat window
+        chatBubble.addEventListener('click', () => {
+            chatBubble.classList.add('active');
+            chatWindow.classList.add('active');
+            messageInput.focus();
+        });
+
+        minimizeButton.addEventListener('click', () => {
+            chatBubble.classList.remove('active');
+            chatWindow.classList.remove('active');
+        });
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Send message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">You</div>
+                <div>
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+
+            // Remove typing indicator if present
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+
+            messageList.appendChild(messageDiv);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Quick replies
+        quickReplyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                messageInput.value = button.textContent;
+                sendMessage();
+            });
+        });
+
+        // File upload button (demo)
+        document.querySelector('.file-upload-button').addEventListener('click', () => {
+            alert('File upload functionality - would open file picker in production');
+        });
+    </script>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 90;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pillow Azure - Property Listing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Design #87 - Pillow Azure
+        ABOUTME: A property listing with claymorphic softness meets punk rebellion - hyper-saturated monochrome with extreme contrast and fabric texture
+
+        DESIGN SYSTEM TOKENS
+        ====================
+
+        Aesthetic Principles:
+        - Claymorphic UI: Soft, puffy surfaces with subtle depth
+        - Punk Era: DIY energy, bold borders, rebellious structure
+        - Tetradic color with monochrome mood: Four hues in extreme contrast
+        - Fabric texture overlay for tactile warmth
+        - Split-screen layout for property showcase
+        - Floating pill navigation for minimal interference
+
+        Key Decisions:
+        - Primary: Deep charcoal (#1a1a1a) for punk edge
+        - Accent colors: Hyper-saturated tetradic (cyan, magenta, yellow, lime)
+        - Claymorphic shadows: Soft, multi-directional for puffy effect
+        - Fabric texture: Subtle woven pattern overlay
+        - Small caps typography for punk poster aesthetic
+        - 10px spacing base for balanced density
+        */
+
+        :root {
+            /* Tetradic color scheme - hyper saturated with extreme contrast */
+            --color-primary: #00ffff; /* Cyan */
+            --color-secondary: #ff00ff; /* Magenta */
+            --color-tertiary: #ffff00; /* Yellow */
+            --color-quaternary: #00ff00; /* Lime */
+
+            --color-background: #1a1a1a; /* Deep charcoal */
+            --color-surface: #2a2a2a; /* Slightly lighter */
+            --color-surface-raised: #353535; /* For claymorphic lift */
+
+            --color-text: #ffffff;
+            --color-text-muted: #b0b0b0;
+            --color-text-dark: #1a1a1a;
+
+            /* Typography - Humanist Sans (Cabin) */
+            --font-heading: 'Cabin', -apple-system, system-ui, sans-serif;
+            --font-body: 'Cabin', -apple-system, system-ui, sans-serif;
+
+            /* Type scale - Minor third (1.2) */
+            --text-xs: 0.694rem;
+            --text-sm: 0.833rem;
+            --text-base: 1rem;
+            --text-lg: 1.2rem;
+            --text-xl: 1.44rem;
+            --text-2xl: 1.728rem;
+            --text-3xl: 2.074rem;
+            --text-4xl: 2.488rem;
+
+            /* Spacing - 10px base */
+            --space-unit: 10px;
+            --space-xs: calc(var(--space-unit) * 0.5); /* 5px */
+            --space-sm: var(--space-unit); /* 10px */
+            --space-md: calc(var(--space-unit) * 2); /* 20px */
+            --space-lg: calc(var(--space-unit) * 3); /* 30px */
+            --space-xl: calc(var(--space-unit) * 4); /* 40px */
+            --space-2xl: calc(var(--space-unit) * 6); /* 60px */
+
+            /* Shapes - Rounded corners */
+            --radius-default: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            /* Claymorphic shadows - subtle, soft, multi-directional */
+            --shadow-clay:
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(60, 60, 60, 0.15);
+            --shadow-clay-inset:
+                inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+                inset -4px -4px 8px rgba(60, 60, 60, 0.15);
+            --shadow-clay-hover:
+                12px 12px 24px rgba(0, 0, 0, 0.5),
+                -12px -12px 24px rgba(70, 70, 70, 0.2);
+
+            /* Borders - Medium punk style */
+            --border-width: 3px;
+            --border-punk: var(--border-width) solid;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.4; /* Tight line height */
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: 0.08em; /* Loose letter spacing */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fabric texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 1;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+        }
+
+        /* Split-screen container */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Left side - Image gallery */
+        .gallery-side {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 70%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-clay);
+            margin-bottom: var(--space-md);
+            position: relative;
+            border: var(--border-punk) var(--color-primary);
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-badge {
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            background: var(--color-secondary);
+            color: var(--color-text-dark);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-default);
+            font-weight: 700;
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            font-variant: small-caps;
+            letter-spacing: 0.1em;
+            box-shadow: var(--shadow-clay);
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-sm);
+            height: calc(30% - var(--space-md));
+        }
+
+        .thumbnail {
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-tertiary);
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-clay-hover);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Right side - Property details */
+        .details-side {
+            padding: var(--space-2xl) var(--space-xl);
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .property-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .property-price {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            font-variant: small-caps;
+        }
+
+        .property-title {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .property-address {
+            color: var(--color-text-muted);
+            font-size: var(--text-lg);
+        }
+
+        /* Specs grid - claymorphic cards */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .spec-card {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-quaternary);
+        }
+
+        .spec-icon {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-xs);
+        }
+
+        .spec-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-variant: small-caps;
+        }
+
+        .spec-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        /* Description section */
+        .description-section {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-secondary);
+        }
+
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            color: var(--color-tertiary);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .description-text {
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        /* Features list */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+        }
+
+        .feature-item {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-primary);
+        }
+
+        .feature-icon {
+            font-size: var(--text-xl);
+        }
+
+        .feature-text {
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        /* Map section */
+        .map-section {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-tertiary);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: var(--space-md);
+            box-shadow: var(--shadow-clay-inset);
+            border: var(--border-punk) var(--color-quaternary);
+        }
+
+        .map-icon {
+            font-size: var(--text-4xl);
+            opacity: 0.3;
+        }
+
+        /* Agent card */
+        .agent-section {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-quaternary);
+        }
+
+        .agent-card {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            box-shadow: var(--shadow-clay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-3xl);
+            border: var(--border-punk) var(--color-text);
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .agent-role {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-sm);
+            font-variant: small-caps;
+        }
+
+        .agent-contact {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .contact-btn {
+            background: var(--color-primary);
+            color: var(--color-text-dark);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            font-weight: 700;
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            font-variant: small-caps;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-clay);
+            transition: all 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .contact-btn:hover {
+            box-shadow: var(--shadow-clay-hover);
+            transform: translateY(-2px);
+        }
+
+        .contact-btn:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .contact-btn.secondary {
+            background: var(--color-secondary);
+        }
+
+        /* Mortgage calculator */
+        .calculator-section {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-clay);
+            border: var(--border-punk) var(--color-primary);
+        }
+
+        .calc-inputs {
+            display: grid;
+            gap: var(--space-md);
+            margin: var(--space-md) 0;
+        }
+
+        .calc-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .calc-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .calc-input {
+            background: var(--color-background);
+            border: var(--border-punk) var(--color-tertiary);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            box-shadow: var(--shadow-clay-inset);
+            transition: border-color 0.2s;
+            min-height: 44px;
+        }
+
+        .calc-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+        }
+
+        .calc-result {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-text-dark);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            text-align: center;
+            margin-top: var(--space-md);
+            box-shadow: var(--shadow-clay);
+        }
+
+        .calc-result-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .calc-result-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            font-variant: small-caps;
+        }
+
+        /* Similar listings - masonry layout */
+        .similar-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .similar-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-clay);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: var(--border-punk) var(--color-secondary);
+        }
+
+        .similar-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-clay-hover);
+        }
+
+        .similar-card:nth-child(odd) {
+            border-color: var(--color-quaternary);
+        }
+
+        .similar-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .similar-content {
+            padding: var(--space-md);
+        }
+
+        .similar-price {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-variant: small-caps;
+        }
+
+        .similar-title {
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .similar-specs {
+            display: flex;
+            gap: var(--space-md);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .similar-spec {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* Floating pill navigation */
+        .floating-nav {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-surface);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: 100px;
+            box-shadow: var(--shadow-clay);
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            z-index: 1000;
+            border: var(--border-punk) var(--color-primary);
+        }
+
+        .nav-indicator {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            font-variant: small-caps;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-text-muted);
+        }
+
+        .nav-dot.active {
+            background: var(--color-primary);
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-side {
+                position: relative;
+                height: auto;
+            }
+
+            .details-side {
+                max-height: none;
+            }
+
+            .specs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .similar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .thumbnail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .agent-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .agent-contact {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .contact-btn {
+                width: 100%;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left: Image Gallery -->
+        <div class="gallery-side">
+            <div class="main-image">
+                <div class="image-badge">🔥 HOT LISTING</div>
+                <img src="data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff00ff'/%3E%3Cstop offset='100%25' style='stop-color:%2300ffff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='600' fill='url(%23g1)'/%3E%3Crect x='100' y='350' width='600' height='200' fill='%23353535' opacity='0.8'/%3E%3Crect x='150' y='150' width='150' height='180' fill='%2300ff00' opacity='0.3'/%3E%3Crect x='500' y='150' width='150' height='180' fill='%23ffff00' opacity='0.3'/%3E%3Ctext x='400' y='450' font-family='Arial' font-size='36' fill='white' text-anchor='middle' font-weight='bold'%3ESTUDENT HOUSING UNIT%3C/text%3E%3C/svg%3E" alt="Main property view">
+            </div>
+            <div class="thumbnail-grid">
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg width='200' height='150' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='150' fill='%2300ffff'/%3E%3Ccircle cx='100' cy='75' r='40' fill='%23ffff00' opacity='0.7'/%3E%3C/svg%3E" alt="Kitchen">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg width='200' height='150' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='150' fill='%23ff00ff'/%3E%3Crect x='50' y='50' width='100' height='80' fill='%2300ff00' opacity='0.6'/%3E%3C/svg%3E" alt="Living room">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg width='200' height='150' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='150' fill='%23ffff00'/%3E%3Cpolygon points='100,30 150,90 50,90' fill='%23ff00ff' opacity='0.7'/%3E%3C/svg%3E" alt="Bedroom">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg width='200' height='150' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='150' fill='%2300ff00'/%3E%3Cellipse cx='100' cy='75' rx='60' ry='40' fill='%2300ffff' opacity='0.6'/%3E%3C/svg%3E" alt="Bathroom">
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Property Details -->
+        <div class="details-side">
+            <div class="property-header">
+                <div class="property-price">$2,450<span style="font-size: var(--text-xl); color: var(--color-text-muted);">/mo</span></div>
+                <h1 class="property-title">Modern Studio Unit</h1>
+                <div class="property-address">📍 420 Valencia Street, Mission District, SF 94110</div>
+            </div>
+
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <div class="spec-icon">🛏️</div>
+                    <div class="spec-value">1</div>
+                    <div class="spec-label">Bedroom</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-icon">🚿</div>
+                    <div class="spec-value">1</div>
+                    <div class="spec-label">Bathroom</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-icon">📐</div>
+                    <div class="spec-value">650</div>
+                    <div class="spec-label">Sq Ft</div>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h2 class="section-title">🏠 About This Property</h2>
+                <p class="description-text">
+                    Raw industrial charm meets urban comfort in this converted warehouse studio. Exposed brick walls, high ceilings with original beams, and oversized windows flood the space with natural light. Perfect for the creative professional who appreciates character and authenticity in their living space.
+                </p>
+            </div>
+
+            <h2 class="section-title" style="margin-bottom: var(--space-md);">⚡ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🌟</span>
+                    <span class="feature-text">Hardwood Floors</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">❄️</span>
+                    <span class="feature-text">Central AC/Heat</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🧺</span>
+                    <span class="feature-text">In-Unit Laundry</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🅿️</span>
+                    <span class="feature-text">Street Parking</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🐕</span>
+                    <span class="feature-text">Pet Friendly</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📶</span>
+                    <span class="feature-text">Fiber Internet</span>
+                </div>
+            </div>
+
+            <div class="map-section">
+                <h2 class="section-title">📍 Location</h2>
+                <div class="map-placeholder">
+                    <div class="map-icon">🗺️</div>
+                </div>
+            </div>
+
+            <div class="agent-section">
+                <h2 class="section-title" style="margin-bottom: var(--space-md);">👤 Contact Agent</h2>
+                <div class="agent-card">
+                    <div class="agent-avatar">👩‍💼</div>
+                    <div class="agent-info">
+                        <div class="agent-name">Sofia Martinez</div>
+                        <div class="agent-role">Senior Property Specialist</div>
+                        <div class="agent-contact">
+                            <button class="contact-btn">📞 Call</button>
+                            <button class="contact-btn secondary">✉️ Email</button>
+                            <button class="contact-btn" style="background: var(--color-tertiary);">💬 Chat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calculator-section">
+                <h2 class="section-title">💰 Mortgage Calculator</h2>
+                <div class="calc-inputs">
+                    <div class="calc-input-group">
+                        <label class="calc-label">Down Payment (%)</label>
+                        <input type="number" class="calc-input" id="downPayment" value="20" min="0" max="100">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Interest Rate (%)</label>
+                        <input type="number" class="calc-input" id="interestRate" value="6.5" step="0.1" min="0">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Loan Term (years)</label>
+                        <input type="number" class="calc-input" id="loanTerm" value="30" min="1" max="40">
+                    </div>
+                </div>
+                <div class="calc-result">
+                    <div class="calc-result-label">Estimated Monthly Payment</div>
+                    <div class="calc-result-value" id="monthlyPayment">$2,450</div>
+                </div>
+            </div>
+
+            <div class="similar-section">
+                <h2 class="section-title" style="margin-bottom: var(--space-md);">🔍 Similar Listings</h2>
+                <div class="similar-grid">
+                    <div class="similar-card">
+                        <img src="data:image/svg+xml,%3Csvg width='400' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%2300ff00'/%3E%3Cstop offset='100%25' style='stop-color:%2300ffff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='240' fill='url(%23g2)'/%3E%3C/svg%3E" alt="Similar property" class="similar-image">
+                        <div class="similar-content">
+                            <div class="similar-price">$2,200/mo</div>
+                            <div class="similar-title">Loft Studio</div>
+                            <div class="similar-specs">
+                                <span class="similar-spec">🛏️ 1 bed</span>
+                                <span class="similar-spec">🚿 1 bath</span>
+                                <span class="similar-spec">📐 580 sqft</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="similar-card">
+                        <img src="data:image/svg+xml,%3Csvg width='400' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffff00'/%3E%3Cstop offset='100%25' style='stop-color:%23ff00ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='240' fill='url(%23g3)'/%3E%3C/svg%3E" alt="Similar property" class="similar-image">
+                        <div class="similar-content">
+                            <div class="similar-price">$2,650/mo</div>
+                            <div class="similar-title">Modern Flat</div>
+                            <div class="similar-specs">
+                                <span class="similar-spec">🛏️ 1 bed</span>
+                                <span class="similar-spec">🚿 1 bath</span>
+                                <span class="similar-spec">📐 700 sqft</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="similar-card">
+                        <img src="data:image/svg+xml,%3Csvg width='400' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%2300ffff'/%3E%3Cstop offset='100%25' style='stop-color:%23ffff00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='240' fill='url(%23g4)'/%3E%3C/svg%3E" alt="Similar property" class="similar-image">
+                        <div class="similar-content">
+                            <div class="similar-price">$2,350/mo</div>
+                            <div class="similar-title">Urban Den</div>
+                            <div class="similar-specs">
+                                <span class="similar-spec">🛏️ 1 bed</span>
+                                <span class="similar-spec">🚿 1 bath</span>
+                                <span class="similar-spec">📐 620 sqft</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="similar-card">
+                        <img src="data:image/svg+xml,%3Csvg width='400' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g5' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff00ff'/%3E%3Cstop offset='100%25' style='stop-color:%2300ff00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='240' fill='url(%23g5)'/%3E%3C/svg%3E" alt="Similar property" class="similar-image">
+                        <div class="similar-content">
+                            <div class="similar-price">$2,550/mo</div>
+                            <div class="similar-title">City Suite</div>
+                            <div class="similar-specs">
+                                <span class="similar-spec">🛏️ 1 bed</span>
+                                <span class="similar-spec">🚿 1 bath</span>
+                                <span class="similar-spec">📐 680 sqft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating pill navigation -->
+    <div class="floating-nav">
+        <span class="nav-indicator">87 / 100</span>
+        <div class="nav-dot"></div>
+        <div class="nav-dot active"></div>
+        <div class="nav-dot"></div>
+    </div>
+
+    <script>
+    // Navigation
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 87;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+
+    // Mortgage calculator
+    (function() {
+        const pricePerMonth = 2450;
+        const propertyPrice = pricePerMonth * 12 * 30; // Rough estimate for calculation
+
+        function calculateMortgage() {
+            const downPaymentPercent = parseFloat(document.getElementById('downPayment').value) || 20;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 6.5;
+            const loanTerm = parseFloat(document.getElementById('loanTerm').value) || 30;
+
+            const downPaymentAmount = propertyPrice * (downPaymentPercent / 100);
+            const loanAmount = propertyPrice - downPaymentAmount;
+            const monthlyRate = (interestRate / 100) / 12;
+            const numberOfPayments = loanTerm * 12;
+
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                monthlyPayment = loanAmount / numberOfPayments;
+            } else {
+                monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+                                (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            }
+
+            document.getElementById('monthlyPayment').textContent =
+                '$' + Math.round(monthlyPayment).toLocaleString();
+        }
+
+        document.getElementById('downPayment').addEventListener('input', calculateMortgage);
+        document.getElementById('interestRate').addEventListener('input', calculateMortgage);
+        document.getElementById('loanTerm').addEventListener('input', calculateMortgage);
+
+        calculateMortgage();
+    })();
+
+    // Gallery interaction
+    (function() {
+        const mainImage = document.querySelector('.main-image img');
+        const thumbnails = document.querySelectorAll('.thumbnail img');
+
+        thumbnails.forEach((thumb, index) => {
+            thumb.parentElement.addEventListener('click', () => {
+                const tempSrc = mainImage.src;
+                mainImage.src = thumb.src;
+                thumb.src = tempSrc;
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor Minaret - News Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Anchor Minaret - News Reader
+A neumorphic Memphis-style RSS/news reader with Middle Eastern geometric patterns and cool complementary jewel tones in dark mode
+
+DESIGN SYSTEM:
+- UI Paradigm: Neumorphic - soft extruded forms with monochromatic depth
+- Design Era: Memphis - playful geometry, bold patterns, zigzags and dots
+- Colors: Complementary (cool blue-purple vs warm orange), desaturated jewel tones, medium contrast
+- Typography: Geometric sans (Poppins) for headings, Neo-grotesque (IBM Plex Sans) for body
+- Density: Ultra-dense - maximum information per screen
+- Functional: Full RSS/news reader with feed list, article pane, categories, read status
+
+MIDDLE EASTERN INFLUENCE:
+- Geometric patterns inspired by Islamic art (stars, tessellations)
+- Minaret-like vertical elements
+- Anchor motif for stability and grounding
+- Rich jewel tones (sapphire, amber, emerald)
+
+KEY TOKENS:
+--color-primary: #6B8DD6 (cool blue)
+--color-accent: #D69B6B (warm complementary orange)
+--color-background: #1C1E26 (deep charcoal)
+--neumorphic-shadow: soft inset/outset for depth
+--pattern-memphis: zigzags, dots, geometric shapes
+-->
+
+<style>
+:root {
+    /* Colors - Complementary Cool Jewel Tones */
+    --color-primary: #6B8DD6;
+    --color-primary-dark: #4A6BB5;
+    --color-accent: #D69B6B;
+    --color-accent-dark: #B8794A;
+    --color-background: #1C1E26;
+    --color-surface: #252830;
+    --color-surface-raised: #2D303A;
+    --color-text: #E4E6EB;
+    --color-text-muted: #9CA3B0;
+    --color-border: #353842;
+    --color-unread: #3D8B94;
+    --color-saved: #8B6B94;
+
+    /* Typography */
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+
+    /* Spacing - Ultra Dense */
+    --space-unit: 6px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+
+    /* Shapes */
+    --radius-default: 12px;
+    --radius-small: 6px;
+
+    /* Neumorphic Shadows */
+    --shadow-neu-out:
+        6px 6px 12px rgba(0, 0, 0, 0.4),
+        -6px -6px 12px rgba(255, 255, 255, 0.03);
+    --shadow-neu-in:
+        inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.03);
+    --shadow-neu-flat:
+        2px 2px 4px rgba(0, 0, 0, 0.3),
+        -2px -2px 4px rgba(255, 255, 255, 0.02);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    font-size: 13px;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+/* Main Layout - News Reader Shell */
+.news-reader {
+    display: grid;
+    grid-template-columns: 200px 340px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Left Sidebar - Feed Sources */
+.feed-sidebar {
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-neu-flat);
+    position: relative;
+}
+
+.feed-sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        transparent 50%),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 8px,
+            rgba(107, 141, 214, 0.1) 8px,
+            rgba(107, 141, 214, 0.1) 16px
+        );
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.feed-header {
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    z-index: 1;
+}
+
+.feed-header h1 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Memphis Pattern Icon */
+.icon-anchor {
+    width: 24px;
+    height: 24px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    box-shadow: var(--shadow-neu-out);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.icon-anchor::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--color-background);
+    border-radius: 50%;
+}
+
+.feed-header .subtitle {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.feed-stats {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.stat {
+    font-size: 11px;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-right: 2px;
+}
+
+.feed-categories {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-sm);
+}
+
+.category-section {
+    margin-bottom: var(--space-md);
+}
+
+.category-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-text-muted);
+    padding: var(--space-sm) var(--space-md);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Memphis geometric accent */
+.category-title::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background:
+        linear-gradient(45deg, var(--color-primary) 50%, transparent 50%),
+        linear-gradient(-45deg, var(--color-accent) 50%, transparent 50%);
+    flex-shrink: 0;
+}
+
+.feed-item {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: 2px;
+    cursor: pointer;
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.feed-item:hover {
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-neu-flat);
+}
+
+.feed-item.active {
+    background: var(--color-surface-raised);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-neu-in);
+}
+
+.feed-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-primary);
+    border-radius: 0 2px 2px 0;
+}
+
+.feed-name {
+    font-weight: 500;
+    font-size: 12px;
+    margin-bottom: 2px;
+    color: var(--color-text);
+}
+
+.feed-count {
+    font-size: 10px;
+    color: var(--color-text-muted);
+}
+
+.feed-count.has-unread {
+    color: var(--color-unread);
+    font-weight: 600;
+}
+
+/* Middle Panel - Article List */
+.article-list {
+    background: var(--color-background);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-neu-in);
+}
+
+.article-list-header {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    position: relative;
+}
+
+.article-list-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--space-lg);
+    right: var(--space-lg);
+    height: 2px;
+    background: linear-gradient(90deg,
+        var(--color-primary) 0%,
+        var(--color-accent) 50%,
+        var(--color-primary) 100%);
+    opacity: 0.3;
+}
+
+.article-list-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.article-filters {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.filter-btn {
+    padding: 4px var(--space-md);
+    border: none;
+    background: var(--color-surface-raised);
+    color: var(--color-text-muted);
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: var(--shadow-neu-out);
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-neu-flat);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: var(--shadow-neu-in);
+}
+
+.filter-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.articles-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-sm);
+}
+
+.article-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-neu-out);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.article-card:hover {
+    border-color: var(--color-border);
+    transform: translateY(-1px);
+}
+
+.article-card.active {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-neu-flat);
+}
+
+.article-card.unread::before {
+    content: '';
+    position: absolute;
+    left: var(--space-md);
+    top: var(--space-md);
+    width: 6px;
+    height: 6px;
+    background: var(--color-unread);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--color-surface);
+}
+
+.article-card.unread .article-title {
+    font-weight: 600;
+    padding-left: var(--space-md);
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+    font-size: 10px;
+    color: var(--color-text-muted);
+}
+
+.article-source {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.article-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Memphis dot separator */
+.article-meta > *:not(:last-child)::after {
+    content: '';
+    width: 3px;
+    height: 3px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: var(--space-sm);
+    vertical-align: middle;
+}
+
+.article-title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+}
+
+.article-excerpt {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.article-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-border);
+}
+
+.article-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 2px 6px;
+    background: var(--color-background);
+    border-radius: 4px;
+    font-size: 9px;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.article-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.action-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: var(--color-background);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-neu-out);
+    transition: all 0.2s ease;
+    color: var(--color-text-muted);
+    font-size: 10px;
+}
+
+.action-btn:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+}
+
+.action-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.action-btn.saved {
+    color: var(--color-saved);
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-neu-in);
+}
+
+/* Right Panel - Reading Pane */
+.reading-pane {
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Memphis pattern background */
+.reading-pane::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background:
+        radial-gradient(circle at 20% 80%, var(--color-accent) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, var(--color-primary) 2px, transparent 2px);
+    background-size: 30px 30px;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+.reading-header {
+    padding: var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-neu-flat);
+}
+
+.reading-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.reading-source {
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reading-estimate {
+    padding: 4px var(--space-sm);
+    background: var(--color-background);
+    border-radius: 12px;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+.reading-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+}
+
+.reading-byline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-background);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-neu-in);
+}
+
+.author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    box-shadow: var(--shadow-neu-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-background);
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.publish-date {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.reading-actions-header {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.reading-action-btn {
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius-small);
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: var(--shadow-neu-out);
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+    font-weight: 500;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.reading-action-btn:hover {
+    background: var(--color-surface-raised);
+    transform: translateY(-1px);
+}
+
+.reading-action-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.reading-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-xl);
+}
+
+.content-image {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    border-radius: var(--radius-default);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-neu-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Memphis geometric pattern overlay */
+.content-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 20px,
+            rgba(0, 0, 0, 0.1) 20px,
+            rgba(0, 0, 0, 0.1) 40px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 20px,
+            rgba(255, 255, 255, 0.05) 20px,
+            rgba(255, 255, 255, 0.05) 40px
+        );
+}
+
+.content-image-placeholder {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 700;
+    z-index: 1;
+}
+
+.content-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+.content-body p {
+    margin-bottom: var(--space-lg);
+}
+
+.content-body p:first-letter {
+    font-size: 2.5em;
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    margin: 8px 8px 0 0;
+    color: var(--color-primary);
+}
+
+.content-body strong {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-surface-raised);
+    border-radius: 4px;
+    box-shadow: var(--shadow-neu-out);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .news-reader {
+        grid-template-columns: 180px 300px 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .news-reader {
+        grid-template-columns: 1fr;
+    }
+
+    .feed-sidebar {
+        display: none;
+    }
+
+    .article-list {
+        border-right: none;
+    }
+}
+</style>
+
+<!-- News Reader Layout -->
+<div class="news-reader">
+    <!-- Left Sidebar: Feed Sources -->
+    <aside class="feed-sidebar">
+        <div class="feed-header">
+            <h1><span class="icon-anchor"></span>Minaret</h1>
+            <div class="subtitle">Your News Anchor</div>
+        </div>
+
+        <div class="feed-stats">
+            <div class="stat">
+                <span class="stat-value">47</span>
+                <span>unread</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">12</span>
+                <span>saved</span>
+            </div>
+        </div>
+
+        <nav class="feed-categories">
+            <div class="category-section">
+                <div class="category-title">Technology</div>
+                <div class="feed-item active">
+                    <div class="feed-name">TechCrunch</div>
+                    <div class="feed-count has-unread">8 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Hacker News</div>
+                    <div class="feed-count has-unread">23 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">The Verge</div>
+                    <div class="feed-count">All read</div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <div class="category-title">Design</div>
+                <div class="feed-item">
+                    <div class="feed-name">Smashing Mag</div>
+                    <div class="feed-count has-unread">5 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">CSS-Tricks</div>
+                    <div class="feed-count has-unread">3 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Codrops</div>
+                    <div class="feed-count">All read</div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <div class="category-title">Business</div>
+                <div class="feed-item">
+                    <div class="feed-name">Bloomberg</div>
+                    <div class="feed-count has-unread">4 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">WSJ Tech</div>
+                    <div class="feed-count has-unread">2 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Stratechery</div>
+                    <div class="feed-count has-unread">2 unread</div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <div class="category-title">Culture</div>
+                <div class="feed-item">
+                    <div class="feed-name">Pitchfork</div>
+                    <div class="feed-count">All read</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">The Atlantic</div>
+                    <div class="feed-count">All read</div>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Middle Panel: Article List -->
+    <section class="article-list">
+        <header class="article-list-header">
+            <h2 class="article-list-title">TechCrunch</h2>
+            <div class="article-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Unread</button>
+                <button class="filter-btn">Saved</button>
+                <button class="filter-btn">Today</button>
+            </div>
+        </header>
+
+        <div class="articles-scroll">
+            <article class="article-card unread active">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">2h ago</span>
+                    <span>5 min read</span>
+                </div>
+                <h3 class="article-title">The Future of AI Design Tools: How Machine Learning is Reshaping Creative Workflows</h3>
+                <p class="article-excerpt">Artificial intelligence is fundamentally changing how designers approach their work, with new tools emerging that blend human creativity with computational power...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Design</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn" title="Save for later" aria-label="Save for later">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card unread">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">4h ago</span>
+                    <span>8 min read</span>
+                </div>
+                <h3 class="article-title">Startup Funding Rounds See Surprising Uptick in Q4 2025</h3>
+                <p class="article-excerpt">Despite economic headwinds, venture capital firms are betting big on emerging technologies, with funding rounds reaching levels not seen since early 2021...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">VC</span>
+                        <span class="tag">Startups</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn saved" title="Saved" aria-label="Saved">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card unread">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">6h ago</span>
+                    <span>6 min read</span>
+                </div>
+                <h3 class="article-title">New Web Framework Promises to Revolutionize Frontend Development</h3>
+                <p class="article-excerpt">A team of engineers from major tech companies has released an open-source framework that aims to simplify component-based architecture while improving performance...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">WebDev</span>
+                        <span class="tag">OSS</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn" title="Save for later" aria-label="Save for later">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">10h ago</span>
+                    <span>4 min read</span>
+                </div>
+                <h3 class="article-title">Privacy Concerns Mount as Social Media Giants Face New Regulations</h3>
+                <p class="article-excerpt">European regulators are preparing comprehensive legislation that could fundamentally alter how tech companies collect and use personal data...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">Privacy</span>
+                        <span class="tag">Policy</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn" title="Save for later" aria-label="Save for later">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card unread">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">12h ago</span>
+                    <span>7 min read</span>
+                </div>
+                <h3 class="article-title">Quantum Computing Breakthrough Announced by Research Team</h3>
+                <p class="article-excerpt">Scientists have achieved a major milestone in quantum error correction, bringing practical quantum computers closer to reality...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">Quantum</span>
+                        <span class="tag">Science</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn" title="Save for later" aria-label="Save for later">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card">
+                <div class="article-meta">
+                    <span class="article-source">TechCrunch</span>
+                    <span class="article-time">1d ago</span>
+                    <span>5 min read</span>
+                </div>
+                <h3 class="article-title">Remote Work Tools Evolve Beyond Video Conferencing</h3>
+                <p class="article-excerpt">As hybrid work becomes the norm, companies are developing innovative solutions that go beyond traditional collaboration platforms...</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        <span class="tag">Remote</span>
+                        <span class="tag">Tools</span>
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn" title="Save for later" aria-label="Save for later">★</button>
+                        <button class="action-btn" title="Share" aria-label="Share">↗</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Right Panel: Reading Pane -->
+    <main class="reading-pane">
+        <header class="reading-header">
+            <div class="reading-meta">
+                <span class="reading-source">TechCrunch</span>
+                <span>•</span>
+                <span>2 hours ago</span>
+                <span class="reading-estimate">5 min read</span>
+            </div>
+
+            <h1 class="reading-title">The Future of AI Design Tools: How Machine Learning is Reshaping Creative Workflows</h1>
+
+            <div class="reading-byline">
+                <div class="author-avatar">SJ</div>
+                <div class="author-info">
+                    <div class="author-name">Sarah Johnson</div>
+                    <div class="publish-date">Published January 7, 2026</div>
+                </div>
+                <div class="reading-actions-header">
+                    <button class="reading-action-btn" title="Mark as read" aria-label="Mark as read">✓</button>
+                    <button class="reading-action-btn" title="Save for later" aria-label="Save for later">★</button>
+                    <button class="reading-action-btn" title="Share article" aria-label="Share article">↗</button>
+                </div>
+            </div>
+        </header>
+
+        <article class="reading-content">
+            <div class="content-image">
+                <div class="content-image-placeholder">AI + DESIGN</div>
+            </div>
+
+            <div class="content-body">
+                <p>Artificial intelligence is fundamentally changing how designers approach their work, with new tools emerging that blend human creativity with computational power in unprecedented ways. The integration of machine learning into design workflows represents not just an incremental improvement, but a paradigm shift in how creative professionals conceptualize and execute their ideas.</p>
+
+                <p>The latest generation of AI-powered design tools goes far beyond simple automation. <strong>These systems learn from millions of design decisions</strong>, understanding not just aesthetic principles but the underlying logic of effective visual communication. They can suggest layouts, generate variations, and even predict user responses to different design choices.</p>
+
+                <p>What makes this transformation particularly significant is the way these tools augment rather than replace human creativity. Designers are finding that AI excels at handling repetitive tasks and generating initial concepts, freeing them to focus on strategic thinking and refinement. The technology serves as a collaborative partner, offering suggestions that designers can accept, modify, or reject based on their expertise and intuition.</p>
+
+                <p>Industry leaders are already seeing dramatic improvements in productivity. Design teams report completing projects in half the time while maintaining or even improving quality. The key is knowing how to effectively collaborate with AI systems, treating them as sophisticated assistants rather than autonomous creators.</p>
+
+                <p>However, this evolution also raises important questions about the nature of creativity and the role of human judgment in design. As AI systems become more capable, the distinction between human-created and AI-assisted work becomes increasingly blurred. The challenge for designers is to maintain their unique creative voice while leveraging the power of these new tools.</p>
+
+                <p>Looking ahead, the integration of AI into design workflows seems inevitable. The designers who thrive will be those who embrace these tools while maintaining their core creative skills and judgment. The future belongs to those who can dance with the machines, using technology to amplify their vision rather than constrain it.</p>
+            </div>
+        </article>
+    </main>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 47;
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        }
+        if (e.key === 'ArrowLeft') {
+            window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Touch navigation
+    let startX;
+    document.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Interactive feed selection
+    document.querySelectorAll('.feed-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.feed-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Interactive article selection
+    document.querySelectorAll('.article-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.article-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            this.classList.remove('unread');
+        });
+    });
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Save/unsave articles
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        if (btn.textContent.includes('★')) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('saved');
+            });
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

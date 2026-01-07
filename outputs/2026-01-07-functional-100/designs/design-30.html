@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastion Blue - The organic way to saas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Design #30 - Bastion Blue
+        ABOUTME: Organic Y2K event discovery platform with flowing blobs, cool triadic pastels, and Japanese-influenced aesthetics
+
+        AESTHETIC PRINCIPLES:
+        - Organic UI: Flowing blob shapes, irregular borders, nature-inspired forms
+        - Y2K Era: Chrome-like gradients, soft glows, tech optimism
+        - Japanese Influence: Clean hierarchy, subtle patterns, zen spacing
+        - Cool Triadic Pastels: Blues, greens, purples in soft harmonious balance
+        - Compact Density: Information-rich but breathing
+        - Trustworthy Tone: Professional yet approachable event platform
+
+        KEY TOKENS:
+        - Primary: #6B9FD1 (pastel blue)
+        - Secondary: #8DD1B8 (mint green)
+        - Accent: #B38DD1 (lavender)
+        - Dark BG: #1A1F2E (deep blue-black)
+        - Type Scale: 1.067 (minor second - compact)
+        - Corners: Pill (100px+)
+        - Borders: Dashed with organic curves
+        - Shadows: Layered depth
+        */
+
+        :root {
+            /* Colors - Cool Triadic Pastels */
+            --color-primary: #6B9FD1;
+            --color-secondary: #8DD1B8;
+            --color-accent: #B38DD1;
+            --color-background: #1A1F2E;
+            --color-surface: #252D42;
+            --color-surface-elevated: #2E3649;
+            --color-text: #E8EDF4;
+            --color-text-muted: #A8B5C9;
+            --color-border: rgba(107, 159, 209, 0.3);
+
+            /* Typography */
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'Inter', sans-serif;
+            --type-scale: 1.067;
+            --type-base: 16px;
+            --type-sm: 15px;
+            --type-lg: 17.072px;
+            --type-xl: 18.213px;
+            --type-2xl: 19.433px;
+            --type-3xl: 20.733px;
+
+            /* Spacing - 4px base */
+            --space-unit: 4px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Shapes */
+            --radius-default: 100px;
+            --radius-blob: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            --shadow-default:
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                0 8px 16px rgba(107, 159, 209, 0.1),
+                0 16px 32px rgba(107, 159, 209, 0.05);
+            --shadow-glow: 0 0 24px rgba(107, 159, 209, 0.3);
+
+            /* Borders */
+            --border-width: 2px;
+            --border-style: dashed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--type-base);
+            line-height: 1.4;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Subtle gradient background */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 10%, rgba(107, 159, 209, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 90%, rgba(141, 209, 184, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(179, 141, 209, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Transparent top navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(26, 31, 46, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            padding: var(--space-md) var(--space-lg);
+        }
+
+        .navbar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-lg);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--type-2xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .logo-blob {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: var(--radius-blob);
+            animation: blob-morph 8s ease-in-out infinite;
+        }
+
+        @keyframes blob-morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 40% 70% 60% 30% / 40% 50% 60% 50%; }
+            75% { border-radius: 70% 30% 40% 60% / 60% 40% 50% 70%; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: var(--type-sm);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a:focus {
+            background: var(--color-surface);
+            color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-cta {
+            padding: var(--space-sm) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: var(--type-sm);
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .nav-cta:hover, .nav-cta:focus {
+            box-shadow: var(--shadow-default), var(--shadow-glow);
+            transform: translateY(-2px);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 80px;
+        }
+
+        /* Split hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+            min-height: 500px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: calc(var(--type-base) * 2.5);
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+            color: var(--color-primary);
+        }
+
+        .hero-content p {
+            font-size: var(--type-lg);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xl);
+            line-height: 1.4;
+        }
+
+        .hero-search {
+            position: relative;
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .hero-search input {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--type-base);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-search input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(107, 159, 209, 0.2);
+        }
+
+        .hero-search button {
+            padding: var(--space-md) var(--space-xl);
+            background: var(--color-accent);
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-default);
+        }
+
+        .hero-search button:hover, .hero-search button:focus {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default), 0 0 20px rgba(179, 141, 209, 0.4);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-blob {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg,
+                rgba(107, 159, 209, 0.2),
+                rgba(141, 209, 184, 0.2),
+                rgba(179, 141, 209, 0.2));
+            border-radius: var(--radius-blob);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            animation: blob-morph 10s ease-in-out infinite;
+            box-shadow: var(--shadow-default);
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) var(--border-style) var(--color-border);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 73px;
+            z-index: 999;
+            backdrop-filter: blur(16px);
+        }
+
+        .filter-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .filter-categories {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: transparent;
+            color: var(--color-text-muted);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .filter-btn:hover, .filter-btn:focus {
+            background: var(--color-surface-elevated);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        .view-toggles {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .view-toggle {
+            width: 44px;
+            height: 44px;
+            background: var(--color-surface-elevated);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle:hover, .view-toggle:focus {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .view-toggle.active {
+            background: var(--color-secondary);
+            color: var(--color-background);
+            border-color: var(--color-secondary);
+        }
+
+        /* Content container */
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        /* Featured carousel */
+        .featured-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: var(--type-2xl);
+            color: var(--color-text);
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .carousel-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover, .carousel-btn:focus {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+
+        /* Event cards */
+        .event-card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--space-xl);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+        }
+
+        .event-card:hover, .event-card:focus-within {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-default), var(--shadow-glow);
+            border-color: var(--color-primary);
+        }
+
+        .event-card.featured {
+            grid-column: span 2;
+            background: linear-gradient(135deg,
+                var(--color-surface),
+                rgba(107, 159, 209, 0.1));
+        }
+
+        .event-date {
+            display: inline-block;
+            background: var(--color-accent);
+            color: var(--color-background);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-default);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        .event-title {
+            font-family: var(--font-heading);
+            font-size: var(--type-xl);
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+            line-height: 1.3;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+            color: var(--color-text-muted);
+            font-size: var(--type-sm);
+        }
+
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .event-meta-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--color-primary);
+        }
+
+        .event-tags {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+
+        .event-tag {
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-surface-elevated);
+            border: 1px var(--border-style) rgba(107, 159, 209, 0.4);
+            border-radius: var(--radius-default);
+            font-size: var(--type-sm);
+            color: var(--color-primary);
+        }
+
+        .event-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px var(--border-style) var(--color-border);
+        }
+
+        .event-price {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            color: var(--color-secondary);
+            font-weight: 700;
+        }
+
+        .event-price.free {
+            color: var(--color-accent);
+        }
+
+        .rsvp-btn {
+            padding: var(--space-sm) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: var(--type-sm);
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(107, 159, 209, 0.3);
+        }
+
+        .rsvp-btn:hover, .rsvp-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(107, 159, 209, 0.4);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Masonry layout for main events */
+        .events-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .events-masonry {
+            column-count: 4;
+            column-gap: var(--space-lg);
+        }
+
+        .events-masonry .event-card {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Calendar quick view */
+        .calendar-section {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--space-xl);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .calendar-header h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xl);
+            color: var(--color-text);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface-elevated);
+            border: 1px var(--border-style) transparent;
+            border-radius: var(--space-md);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day.has-events {
+            border-color: var(--color-primary);
+            color: var(--color-text);
+            background: rgba(107, 159, 209, 0.1);
+        }
+
+        .calendar-day.has-events::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+        }
+
+        .calendar-day:hover, .calendar-day:focus {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Nearby events */
+        .nearby-section {
+            background: linear-gradient(135deg,
+                rgba(107, 159, 209, 0.05),
+                rgba(141, 209, 184, 0.05));
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--space-xl);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .nearby-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .nearby-header h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xl);
+            color: var(--color-text);
+        }
+
+        .location-badge {
+            padding: var(--space-xs) var(--space-md);
+            background: var(--color-secondary);
+            color: var(--color-background);
+            border-radius: var(--radius-default);
+            font-size: var(--type-sm);
+            font-weight: 600;
+        }
+
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+        }
+
+        /* Map view placeholder */
+        .map-section {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--space-xl);
+            padding: var(--space-2xl);
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(141, 209, 184, 0.2), transparent);
+            border-radius: 50%;
+        }
+
+        .map-icon {
+            font-size: 64px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .map-section h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-2xl);
+            color: var(--color-text);
+            position: relative;
+            z-index: 1;
+        }
+
+        .map-btn {
+            padding: var(--space-md) var(--space-xl);
+            background: var(--color-secondary);
+            color: var(--color-background);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-default);
+            position: relative;
+            z-index: 1;
+        }
+
+        .map-btn:hover, .map-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default), 0 0 20px rgba(141, 209, 184, 0.4);
+            outline: 2px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: var(--border-width) var(--border-style) var(--color-border);
+            padding: var(--space-2xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+
+        .footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-xl);
+        }
+
+        .footer-brand h4 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-brand p {
+            color: var(--color-text-muted);
+            font-size: var(--type-sm);
+            line-height: 1.6;
+        }
+
+        .footer-links h5 {
+            font-family: var(--font-heading);
+            font-size: var(--type-base);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: var(--type-sm);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover, .footer-links a:focus {
+            color: var(--color-primary);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        *:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .events-masonry {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .event-card.featured {
+                grid-column: span 1;
+            }
+
+            .events-masonry {
+                column-count: 2;
+            }
+
+            .nearby-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+            }
+
+            .filter-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .events-masonry {
+                column-count: 1;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: var(--space-xs);
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <div class="logo-blob"></div>
+                Bastion Blue
+            </a>
+            <ul class="nav-links">
+                <li><a href="#events">Events</a></li>
+                <li><a href="#calendar">Calendar</a></li>
+                <li><a href="#nearby">Nearby</a></li>
+                <li><a href="#categories">Categories</a></li>
+            </ul>
+            <button class="nav-cta">Sign Up</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover events that move you</h1>
+                <p>The organic way to find concerts, workshops, meetups, and experiences in your city. Powered by community, designed for exploration.</p>
+                <div class="hero-search">
+                    <input type="search" placeholder="Search events, venues, or artists..." aria-label="Search events">
+                    <button type="submit">Search</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-blob">🎭</div>
+            </div>
+        </section>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-inner">
+                <div class="filter-categories">
+                    <button class="filter-btn active">All Events</button>
+                    <button class="filter-btn">Music</button>
+                    <button class="filter-btn">Art</button>
+                    <button class="filter-btn">Tech</button>
+                    <button class="filter-btn">Food</button>
+                    <button class="filter-btn">Sports</button>
+                    <button class="filter-btn">Wellness</button>
+                </div>
+                <div class="view-toggles">
+                    <button class="view-toggle active" aria-label="Grid view" title="Grid view">▦</button>
+                    <button class="view-toggle" aria-label="Map view" title="Map view">🗺</button>
+                    <button class="view-toggle" aria-label="Calendar view" title="Calendar view">📅</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <!-- Featured Events -->
+            <section class="featured-section">
+                <div class="section-header">
+                    <h2>Featured Events</h2>
+                    <div class="carousel-nav">
+                        <button class="carousel-btn" aria-label="Previous">←</button>
+                        <button class="carousel-btn" aria-label="Next">→</button>
+                    </div>
+                </div>
+                <div class="featured-grid">
+                    <article class="event-card featured">
+                        <span class="event-date">FRI, MAR 15</span>
+                        <h3 class="event-title">Midnight Bloom: A Botanical Concert Experience</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Harmony Gardens Amphitheater</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>8:00 PM - 11:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Music</span>
+                            <span class="event-tag">Outdoor</span>
+                            <span class="event-tag">All Ages</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$45.00</span>
+                            <button class="rsvp-btn">Get Tickets</button>
+                        </div>
+                    </article>
+                    <article class="event-card">
+                        <span class="event-date">SAT, MAR 16</span>
+                        <h3 class="event-title">Digital Art Showcase: Neon Dreams</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Pixel Gallery</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>2:00 PM - 6:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Art</span>
+                            <span class="event-tag">Tech</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price free">FREE</span>
+                            <button class="rsvp-btn">RSVP</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Calendar View -->
+            <section class="calendar-section" id="calendar">
+                <div class="calendar-header">
+                    <h3>March 2026</h3>
+                    <div class="carousel-nav">
+                        <button class="carousel-btn" aria-label="Previous month">←</button>
+                        <button class="carousel-btn" aria-label="Next month">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day has-events">3</div>
+                    <div class="calendar-day">4</div>
+                    <div class="calendar-day has-events">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day has-events">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day has-events">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day has-events">11</div>
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day has-events">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day has-events">15</div>
+                    <div class="calendar-day has-events">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day has-events">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day has-events">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day has-events">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day has-events">24</div>
+                    <div class="calendar-day">25</div>
+                    <div class="calendar-day has-events">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day has-events">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day has-events">30</div>
+                    <div class="calendar-day">31</div>
+                </div>
+            </section>
+
+            <!-- Nearby Events -->
+            <section class="nearby-section" id="nearby">
+                <div class="nearby-header">
+                    <h3>Nearby Events</h3>
+                    <span class="location-badge">📍 Within 5 miles</span>
+                </div>
+                <div class="nearby-grid">
+                    <article class="event-card">
+                        <span class="event-date">TODAY</span>
+                        <h3 class="event-title">Sunset Yoga in the Park</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Riverside Park (0.8 mi)</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>6:30 PM - 7:30 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Wellness</span>
+                            <span class="event-tag">Outdoor</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$15.00</span>
+                            <button class="rsvp-btn">RSVP</button>
+                        </div>
+                    </article>
+                    <article class="event-card">
+                        <span class="event-date">TOMORROW</span>
+                        <h3 class="event-title">Coffee & Code: Web3 Meetup</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Zenith Café (1.2 mi)</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>9:00 AM - 11:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Tech</span>
+                            <span class="event-tag">Networking</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price free">FREE</span>
+                            <button class="rsvp-btn">RSVP</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Map View -->
+            <section class="map-section">
+                <div class="map-icon">🗺️</div>
+                <h3>Explore Events on Map</h3>
+                <button class="map-btn">Open Interactive Map</button>
+            </section>
+
+            <!-- All Events - Masonry Layout -->
+            <section class="events-section" id="events">
+                <div class="section-header">
+                    <h2>All Upcoming Events</h2>
+                </div>
+                <div class="events-masonry">
+                    <article class="event-card">
+                        <span class="event-date">SUN, MAR 17</span>
+                        <h3 class="event-title">Craft Beer Festival</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Downtown Brewery District</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>12:00 PM - 8:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Food & Drink</span>
+                            <span class="event-tag">21+</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$35.00</span>
+                            <button class="rsvp-btn">Get Tickets</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">MON, MAR 18</span>
+                        <h3 class="event-title">Introduction to Pottery Workshop</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Clay & Creation Studio</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>6:00 PM - 9:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Workshop</span>
+                            <span class="event-tag">Art</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$65.00</span>
+                            <button class="rsvp-btn">Register</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">TUE, MAR 19</span>
+                        <h3 class="event-title">Jazz Night: The Blue Note Trio</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Velvet Lounge</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>8:00 PM - 11:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Music</span>
+                            <span class="event-tag">Live Performance</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$25.00</span>
+                            <button class="rsvp-btn">Buy Tickets</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">WED, MAR 20</span>
+                        <h3 class="event-title">Startup Pitch Night</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Innovation Hub</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>6:30 PM - 9:30 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Tech</span>
+                            <span class="event-tag">Business</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price free">FREE</span>
+                            <button class="rsvp-btn">RSVP</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">THU, MAR 21</span>
+                        <h3 class="event-title">Film Screening: Modern Classics</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Regal Cinema House</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>7:00 PM - 10:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Film</span>
+                            <span class="event-tag">Culture</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$12.00</span>
+                            <button class="rsvp-btn">Get Tickets</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">FRI, MAR 22</span>
+                        <h3 class="event-title">Street Food Market</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Central Plaza</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>5:00 PM - 10:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Food</span>
+                            <span class="event-tag">Community</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price free">FREE</span>
+                            <button class="rsvp-btn">More Info</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">SAT, MAR 23</span>
+                        <h3 class="event-title">Marathon Training Session</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Lakefront Trail Start</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>7:00 AM - 9:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Sports</span>
+                            <span class="event-tag">Fitness</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price free">FREE</span>
+                            <button class="rsvp-btn">Join Us</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <span class="event-date">SUN, MAR 24</span>
+                        <h3 class="event-title">Zen Garden Meditation</h3>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span>Tranquility Garden</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">⏰</span>
+                                <span>8:00 AM - 9:30 AM</span>
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">Wellness</span>
+                            <span class="event-tag">Mindfulness</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">$20.00</span>
+                            <button class="rsvp-btn">Reserve Spot</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h4>Bastion Blue</h4>
+                <p>The organic way to discover meaningful experiences. Connect with your community through events that inspire, educate, and bring people together.</p>
+            </div>
+            <div class="footer-links">
+                <h5>Discover</h5>
+                <ul>
+                    <li><a href="#music">Music</a></li>
+                    <li><a href="#art">Art & Culture</a></li>
+                    <li><a href="#food">Food & Drink</a></li>
+                    <li><a href="#tech">Tech</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h5>Company</h5>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#organizers">For Organizers</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#press">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h5>Support</h5>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy</a></li>
+                    <li><a href="#terms">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 30;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

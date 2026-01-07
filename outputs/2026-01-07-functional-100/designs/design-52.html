@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Kyo - QR Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Soft Kyo QR Generator
+        ABOUTME: Claymorphic pop art QR code generator with puffy cyber aesthetics and collapsible navigation
+
+        DESIGN SYSTEM:
+        - UI Paradigm: Claymorphic (soft, puffy, playful depth with extruded forms)
+        - Design Era: Pop Art (bold, graphic, high contrast, commercial aesthetic)
+        - Density: Airy (generous whitespace, breathable layout)
+        - Color Palette: Cyber (electric blues, neon magentas, digital greens)
+        - Layout: App shell with side collapsible navigation
+        - Hero: Gradient background with soft clay texture
+
+        AESTHETIC PRINCIPLES:
+        1. Soft puffy clay-like buttons and surfaces
+        2. Bold pop art graphics with halftone patterns
+        3. High contrast cyber colors (electric blue, neon magenta, digital cyan)
+        4. Generous spacing for airy feel
+        5. Playful depth with multiple soft shadows
+        6. Collapsible sidebar with smooth transitions
+
+        KEY TOKENS:
+        --color-primary: #00F0FF (electric cyan)
+        --color-secondary: #FF00FF (neon magenta)
+        --color-tertiary: #00FF88 (digital green)
+        --space-unit: 24px (airy spacing)
+        --radius-clay: 32px (soft puffy corners)
+        --shadow-clay: Multiple layered soft shadows for depth
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cyber Color Palette */
+            --color-primary: #00F0FF;
+            --color-secondary: #FF00FF;
+            --color-tertiary: #00FF88;
+            --color-accent: #FFD700;
+
+            --color-background: #F5F5FF;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FAFAFF;
+            --color-text: #1A1A2E;
+            --color-text-muted: #6B6B8E;
+
+            /* Cyber gradients */
+            --gradient-cyber: linear-gradient(135deg, #00F0FF 0%, #FF00FF 50%, #00FF88 100%);
+            --gradient-hero: linear-gradient(165deg, #E0E0FF 0%, #FFE0FF 50%, #E0FFF0 100%);
+
+            /* Typography */
+            --font-heading: 'Archivo Black', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --scale: 1.25;
+
+            /* Spacing - Airy */
+            --space-unit: 24px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: calc(var(--space-unit) * 0.75);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2);
+            --space-2xl: calc(var(--space-unit) * 3);
+            --space-3xl: calc(var(--space-unit) * 4);
+
+            /* Claymorphic shapes */
+            --radius-clay: 32px;
+            --radius-soft: 24px;
+            --radius-medium: 16px;
+            --radius-small: 12px;
+
+            /* Claymorphic shadows - soft and layered */
+            --shadow-clay-1:
+                0 4px 8px rgba(0, 240, 255, 0.15),
+                0 8px 16px rgba(255, 0, 255, 0.1),
+                0 16px 32px rgba(0, 255, 136, 0.08);
+            --shadow-clay-2:
+                0 8px 16px rgba(0, 240, 255, 0.2),
+                0 16px 32px rgba(255, 0, 255, 0.15),
+                0 32px 64px rgba(0, 255, 136, 0.1);
+            --shadow-inset:
+                inset 0 2px 8px rgba(0, 0, 0, 0.08),
+                inset 0 -2px 8px rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--gradient-hero);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* App Shell Layout */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Collapsible Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--color-surface);
+            box-shadow: var(--shadow-clay-2);
+            padding: var(--space-xl);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            border-radius: 0 var(--radius-clay) var(--radius-clay) 0;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 101;
+            width: 56px;
+            height: 56px;
+            background: var(--color-surface);
+            border: none;
+            border-radius: var(--radius-soft);
+            box-shadow: var(--shadow-clay-1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 24px;
+        }
+
+        .sidebar.collapsed + .sidebar-toggle {
+            left: 20px;
+        }
+
+        .sidebar:not(.collapsed) + .sidebar-toggle {
+            left: 300px;
+        }
+
+        .sidebar-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .sidebar-toggle:active {
+            transform: scale(0.98);
+        }
+
+        .sidebar-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .sidebar-logo {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 500;
+            border-radius: var(--radius-medium);
+            transition: all 0.2s ease;
+            gap: var(--space-sm);
+        }
+
+        .nav-link:hover {
+            background: var(--color-surface-elevated);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: var(--gradient-cyber);
+            color: white;
+            box-shadow: var(--shadow-clay-1);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: var(--space-xl);
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar:not(.collapsed) ~ .main-content-wrapper .main-content {
+            margin-left: 280px;
+        }
+
+        .main-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section with Gradient */
+        .hero {
+            background: var(--gradient-hero);
+            padding: var(--space-3xl) var(--space-xl);
+            border-radius: var(--radius-clay);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.2), transparent);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.15), transparent);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 72px;
+            line-height: 1;
+            margin-bottom: var(--space-md);
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        /* QR Generator Container - Accordion Style */
+        .generator-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        /* Accordion Panels */
+        .accordion-panel {
+            background: var(--color-surface);
+            border-radius: var(--radius-clay);
+            box-shadow: var(--shadow-clay-1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header {
+            padding: var(--space-lg) var(--space-xl);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--color-surface-elevated);
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 255, 0.1));
+        }
+
+        .accordion-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .accordion-icon {
+            font-size: 32px;
+        }
+
+        .accordion-chevron {
+            font-size: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-panel.active .accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-panel.active .accordion-content {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: var(--space-xl);
+        }
+
+        /* Form Elements - Claymorphic Style */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            border: 3px solid transparent;
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-soft);
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--color-text);
+            box-shadow: var(--shadow-inset);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow:
+                var(--shadow-inset),
+                0 0 0 4px rgba(0, 240, 255, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Claymorphic Buttons */
+        .btn {
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            border-radius: var(--radius-soft);
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-clay-1);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-clay-1);
+        }
+
+        .btn-primary {
+            background: var(--gradient-cyber);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+        }
+
+        .btn-icon {
+            width: 56px;
+            height: 56px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-medium);
+            font-size: 24px;
+        }
+
+        /* QR Display Area */
+        .qr-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-2xl);
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-soft);
+            box-shadow: var(--shadow-inset);
+            min-height: 400px;
+        }
+
+        .qr-placeholder {
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+
+        .qr-placeholder-icon {
+            font-size: 120px;
+            margin-bottom: var(--space-md);
+            opacity: 0.3;
+        }
+
+        .qr-canvas {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-medium);
+            box-shadow: var(--shadow-clay-1);
+        }
+
+        /* Color Picker Grid */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .color-option {
+            aspect-ratio: 1;
+            border-radius: var(--radius-medium);
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-clay-1);
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .color-option.active {
+            border-color: var(--color-text);
+            transform: scale(1.15);
+        }
+
+        .color-option.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Size Options */
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .size-option {
+            padding: var(--space-lg);
+            background: var(--color-surface-elevated);
+            border: 3px solid transparent;
+            border-radius: var(--radius-medium);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-clay-1);
+        }
+
+        .size-option:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-clay-2);
+        }
+
+        .size-option.active {
+            background: var(--gradient-cyber);
+            color: white;
+            border-color: transparent;
+        }
+
+        .size-label {
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: var(--space-xs);
+        }
+
+        .size-value {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        /* Batch Generation */
+        .batch-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-medium);
+            margin-bottom: var(--space-sm);
+        }
+
+        .batch-item input {
+            flex: 1;
+        }
+
+        .batch-item .btn-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+        }
+
+        .add-batch-btn {
+            width: 100%;
+            margin-top: var(--space-md);
+        }
+
+        /* Pop Art Halftone Pattern */
+        .halftone-bg {
+            position: relative;
+        }
+
+        .halftone-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle, var(--color-primary) 1px, transparent 1px);
+            background-size: 8px 8px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* Accessibility */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        *:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+
+            .sidebar:not(.collapsed) + .sidebar-toggle {
+                left: calc(100% - 76px);
+            }
+
+            .main-content {
+                padding: var(--space-md);
+            }
+
+            .accordion-title {
+                font-size: 18px;
+            }
+
+            .size-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Collapsible Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SOFT KYO</div>
+                <div class="sidebar-subtitle">QR Generator</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <span class="nav-icon">📱</span>
+                        <span>Generate</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🎨</span>
+                        <span>Customize</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📦</span>
+                        <span>Batch</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">💾</span>
+                        <span>History</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            ☰
+        </button>
+
+        <div class="main-content-wrapper">
+            <main class="main-content">
+                <!-- Hero Section -->
+                <section class="hero halftone-bg">
+                    <div class="hero-content">
+                        <h1 class="hero-title">QR CODES</h1>
+                        <p class="hero-subtitle">Generate stunning QR codes with pop art cyber aesthetics</p>
+                    </div>
+                </section>
+
+                <!-- QR Generator - Accordion Style -->
+                <div class="generator-container">
+                    <!-- Panel 1: Input & Generate -->
+                    <section class="accordion-panel active">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">✏️</span>
+                                <span>Input Data</span>
+                            </div>
+                            <span class="accordion-chevron">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="form-group">
+                                    <label for="qr-input">Enter Text or URL</label>
+                                    <textarea
+                                        id="qr-input"
+                                        placeholder="https://example.com or any text..."
+                                        aria-label="QR code content"
+                                    >https://softkyoqr.design</textarea>
+                                </div>
+
+                                <button class="btn btn-primary" id="generateBtn">
+                                    <span>⚡</span>
+                                    <span>Generate QR Code</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Panel 2: QR Display -->
+                    <section class="accordion-panel active">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">🎯</span>
+                                <span>QR Code</span>
+                            </div>
+                            <span class="accordion-chevron">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="qr-display" id="qrDisplay">
+                                    <div class="qr-placeholder">
+                                        <div class="qr-placeholder-icon">⬜</div>
+                                        <p>Your QR code will appear here</p>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" id="downloadBtn">
+                                        <span>⬇️</span>
+                                        <span>Download PNG</span>
+                                    </button>
+                                    <button class="btn btn-secondary" id="copyBtn">
+                                        <span>📋</span>
+                                        <span>Copy to Clipboard</span>
+                                    </button>
+                                    <button class="btn btn-secondary" id="downloadSvgBtn">
+                                        <span>🎨</span>
+                                        <span>Download SVG</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Panel 3: Size Options -->
+                    <section class="accordion-panel">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">📏</span>
+                                <span>Size</span>
+                            </div>
+                            <span class="accordion-chevron">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="size-options">
+                                    <div class="size-option" data-size="256">
+                                        <div class="size-label">Small</div>
+                                        <div class="size-value">256 × 256</div>
+                                    </div>
+                                    <div class="size-option active" data-size="512">
+                                        <div class="size-label">Medium</div>
+                                        <div class="size-value">512 × 512</div>
+                                    </div>
+                                    <div class="size-option" data-size="1024">
+                                        <div class="size-label">Large</div>
+                                        <div class="size-value">1024 × 1024</div>
+                                    </div>
+                                    <div class="size-option" data-size="2048">
+                                        <div class="size-label">XL</div>
+                                        <div class="size-value">2048 × 2048</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Panel 4: Color Customization -->
+                    <section class="accordion-panel">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">🎨</span>
+                                <span>Colors</span>
+                            </div>
+                            <span class="accordion-chevron">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="form-group">
+                                    <label>Foreground Color</label>
+                                    <div class="color-grid">
+                                        <div class="color-option active" data-color="#000000" style="background: #000000;"></div>
+                                        <div class="color-option" data-color="#00F0FF" style="background: #00F0FF;"></div>
+                                        <div class="color-option" data-color="#FF00FF" style="background: #FF00FF;"></div>
+                                        <div class="color-option" data-color="#00FF88" style="background: #00FF88;"></div>
+                                        <div class="color-option" data-color="#FFD700" style="background: #FFD700;"></div>
+                                        <div class="color-option" data-color="#FF0080" style="background: #FF0080;"></div>
+                                        <div class="color-option" data-color="#0080FF" style="background: #0080FF;"></div>
+                                        <div class="color-option" data-color="#8000FF" style="background: #8000FF;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Background Color</label>
+                                    <div class="color-grid">
+                                        <div class="color-option active" data-bg-color="#FFFFFF" style="background: #FFFFFF;"></div>
+                                        <div class="color-option" data-bg-color="#F5F5FF" style="background: #F5F5FF;"></div>
+                                        <div class="color-option" data-bg-color="#FFE0FF" style="background: #FFE0FF;"></div>
+                                        <div class="color-option" data-bg-color="#E0FFF0" style="background: #E0FFF0;"></div>
+                                        <div class="color-option" data-bg-color="#FFFACD" style="background: #FFFACD;"></div>
+                                        <div class="color-option" data-bg-color="#FFE4E1" style="background: #FFE4E1;"></div>
+                                        <div class="color-option" data-bg-color="#E0F0FF" style="background: #E0F0FF;"></div>
+                                        <div class="color-option" data-bg-color="#F0E0FF" style="background: #F0E0FF;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Panel 5: Batch Generation -->
+                    <section class="accordion-panel">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">📦</span>
+                                <span>Batch Generate</span>
+                            </div>
+                            <span class="accordion-chevron">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div id="batchContainer">
+                                    <div class="batch-item">
+                                        <input type="text" placeholder="URL or text 1" class="batch-input">
+                                        <button class="btn btn-secondary btn-icon" onclick="this.parentElement.remove()">✕</button>
+                                    </div>
+                                    <div class="batch-item">
+                                        <input type="text" placeholder="URL or text 2" class="batch-input">
+                                        <button class="btn btn-secondary btn-icon" onclick="this.parentElement.remove()">✕</button>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-secondary add-batch-btn" id="addBatchBtn">
+                                    <span>➕</span>
+                                    <span>Add Another</span>
+                                </button>
+
+                                <button class="btn btn-primary" style="margin-top: var(--space-lg); width: 100%;" id="batchGenerateBtn">
+                                    <span>⚡</span>
+                                    <span>Generate All & Download ZIP</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const panel = header.parentElement;
+                panel.classList.toggle('active');
+            });
+        });
+
+        // QR Code generation state
+        let currentQRData = {
+            content: '',
+            size: 512,
+            fgColor: '#000000',
+            bgColor: '#FFFFFF'
+        };
+
+        // Simple QR Code generator (mock implementation)
+        function generateQRCode(content, size, fgColor, bgColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, size, size);
+
+            // Simple QR-like pattern (mock)
+            const moduleSize = size / 25;
+            ctx.fillStyle = fgColor;
+
+            // Create a simple pattern
+            for (let row = 0; row < 25; row++) {
+                for (let col = 0; col < 25; col++) {
+                    // Generate pseudo-random pattern based on content
+                    const hash = (content.charCodeAt(0) || 0) + row * 25 + col;
+                    if (hash % 3 === 0 || row < 7 && col < 7 || row < 7 && col > 17 || row > 17 && col < 7) {
+                        ctx.fillRect(col * moduleSize, row * moduleSize, moduleSize, moduleSize);
+                    }
+                }
+            }
+
+            return canvas;
+        }
+
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const input = document.getElementById('qr-input').value.trim();
+            if (!input) {
+                alert('Please enter some text or a URL');
+                return;
+            }
+
+            currentQRData.content = input;
+            updateQRDisplay();
+        });
+
+        function updateQRDisplay() {
+            const display = document.getElementById('qrDisplay');
+            const canvas = generateQRCode(
+                currentQRData.content,
+                currentQRData.size,
+                currentQRData.fgColor,
+                currentQRData.bgColor
+            );
+
+            canvas.className = 'qr-canvas';
+            display.innerHTML = '';
+            display.appendChild(canvas);
+        }
+
+        // Size selection
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.size-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentQRData.size = parseInt(option.dataset.size);
+                if (currentQRData.content) {
+                    updateQRDisplay();
+                }
+            });
+        });
+
+        // Color selection
+        document.querySelectorAll('[data-color]').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('[data-color]').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentQRData.fgColor = option.dataset.color;
+                if (currentQRData.content) {
+                    updateQRDisplay();
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-bg-color]').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('[data-bg-color]').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentQRData.bgColor = option.dataset.bgColor;
+                if (currentQRData.content) {
+                    updateQRDisplay();
+                }
+            });
+        });
+
+        // Download PNG
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const canvas = document.querySelector('.qr-canvas');
+            if (!canvas) {
+                alert('Please generate a QR code first');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'qr-code.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+
+        // Copy to clipboard
+        document.getElementById('copyBtn').addEventListener('click', async () => {
+            const canvas = document.querySelector('.qr-canvas');
+            if (!canvas) {
+                alert('Please generate a QR code first');
+                return;
+            }
+
+            try {
+                canvas.toBlob(async (blob) => {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                    ]);
+                    alert('QR code copied to clipboard!');
+                });
+            } catch (err) {
+                alert('Failed to copy to clipboard');
+            }
+        });
+
+        // Download SVG (mock)
+        document.getElementById('downloadSvgBtn').addEventListener('click', () => {
+            if (!currentQRData.content) {
+                alert('Please generate a QR code first');
+                return;
+            }
+            alert('SVG download feature coming soon!');
+        });
+
+        // Batch generation
+        document.getElementById('addBatchBtn').addEventListener('click', () => {
+            const container = document.getElementById('batchContainer');
+            const count = container.children.length + 1;
+            const item = document.createElement('div');
+            item.className = 'batch-item';
+            item.innerHTML = `
+                <input type="text" placeholder="URL or text ${count}" class="batch-input">
+                <button class="btn btn-secondary btn-icon" onclick="this.parentElement.remove()">✕</button>
+            `;
+            container.appendChild(item);
+        });
+
+        document.getElementById('batchGenerateBtn').addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.batch-input');
+            const values = Array.from(inputs).map(input => input.value.trim()).filter(v => v);
+
+            if (values.length === 0) {
+                alert('Please enter at least one URL or text');
+                return;
+            }
+
+            alert(`Generating ${values.length} QR codes...\n(Batch download feature coming soon!)`);
+        });
+    </script>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 52;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

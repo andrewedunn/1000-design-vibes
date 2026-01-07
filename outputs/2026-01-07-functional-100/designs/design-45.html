@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starburst Meadow - Design #45</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN #45: Starburst Meadow
+        ABOUTME: A claymorphic code editor with mid-century modern curves and metallic accents
+        ABOUTME: Soft puffy surfaces meet organic shapes in a sophisticated dark IDE experience
+
+        AESTHETIC PRINCIPLES:
+        - Claymorphic UI with soft, extruded surfaces and gentle shadows
+        - Mid-century modern organic curves and optimistic rounded shapes
+        - Metallic color palette: bronze, copper, steel grays with warm accents
+        - Airy spacing despite being a code editor - breathing room between elements
+        - Medium contrast with muted metallic tones
+        - Tree-based content flow for file navigation
+
+        KEY TOKENS:
+        - Primary: Warm bronze (#B8926D)
+        - Surface: Soft charcoal with slight warmth (#2A2828)
+        - Accent: Copper glow (#D4A574)
+        - Background: Deep warm gray (#1E1C1C)
+        - Claymorphic shadows: Multi-layered soft shadows with slight warmth
+        */
+
+        :root {
+            /* Colors - Metallic dark palette */
+            --color-primary: #B8926D;
+            --color-primary-light: #D4A574;
+            --color-primary-dark: #8F7456;
+            --color-background: #1E1C1C;
+            --color-surface: #2A2828;
+            --color-surface-raised: #353333;
+            --color-surface-sunken: #252323;
+            --color-text: #E8E3DC;
+            --color-text-muted: #9A918A;
+            --color-border: #3F3C3C;
+
+            /* Metallic accents */
+            --color-copper: #D4A574;
+            --color-bronze: #B8926D;
+            --color-steel: #A8A4A0;
+            --color-gunmetal: #6B6866;
+
+            /* Syntax highlighting - muted metallic */
+            --syntax-keyword: #D4A574;
+            --syntax-string: #9FC4A6;
+            --syntax-function: #A8B9D4;
+            --syntax-comment: #6B6866;
+            --syntax-number: #D4A589;
+            --syntax-operator: #B8926D;
+
+            /* Typography */
+            --font-heading: 'DM Sans', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Spacing - airy */
+            --space-unit: 12px;
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 24px;
+            --space-lg: 36px;
+            --space-xl: 48px;
+
+            /* Shapes - claymorphic curves */
+            --radius-sm: 8px;
+            --radius-default: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            /* Claymorphic shadows - soft, layered, warm-tinted */
+            --shadow-sm:
+                2px 2px 8px rgba(0, 0, 0, 0.3),
+                -1px -1px 4px rgba(184, 146, 109, 0.05);
+            --shadow-default:
+                4px 4px 16px rgba(0, 0, 0, 0.4),
+                -2px -2px 8px rgba(184, 146, 109, 0.06),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.03);
+            --shadow-lg:
+                8px 8px 24px rgba(0, 0, 0, 0.5),
+                -3px -3px 12px rgba(184, 146, 109, 0.08),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.04);
+            --shadow-inset:
+                inset 3px 3px 8px rgba(0, 0, 0, 0.4),
+                inset -1px -1px 4px rgba(184, 146, 109, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Main IDE Layout */
+        .ide-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 64px 1fr 200px;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            grid-column: 1 / -1;
+            background: var(--color-surface);
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-default);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            margin: 0 var(--space-sm);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--color-primary-light);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            background: var(--color-primary-light);
+            border-radius: 50%;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            box-shadow:
+                0 0 12px rgba(212, 165, 116, 0.4),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--color-surface-raised);
+            border: none;
+            color: var(--color-text-muted);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+            box-shadow: var(--shadow-default);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        .nav-btn.primary {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        /* Sidebar - File Tree */
+        .sidebar {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            margin: var(--space-sm);
+            box-shadow: var(--shadow-default);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .sidebar-header {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+            font-weight: 600;
+        }
+
+        .file-tree {
+            list-style: none;
+        }
+
+        .file-tree-item {
+            padding: var(--space-xs) var(--space-sm);
+            margin-bottom: var(--space-xs);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 14px;
+        }
+
+        .file-tree-item:hover {
+            background: var(--color-surface-raised);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .file-tree-item.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+        }
+
+        .file-tree-item.folder {
+            font-weight: 500;
+            color: var(--color-primary-light);
+            margin-top: var(--space-sm);
+        }
+
+        .file-tree-item.nested {
+            margin-left: var(--space-md);
+        }
+
+        .file-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        /* Main Editor Area */
+        .editor-area {
+            display: flex;
+            flex-direction: column;
+            margin: var(--space-sm) var(--space-sm) 0 0;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-default);
+            overflow: hidden;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            padding: var(--space-sm);
+            background: var(--color-surface-sunken);
+            border-bottom: 1px solid var(--color-border);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            background: var(--color-surface-sunken);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 13px;
+            border: 1px solid transparent;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+        }
+
+        .tab.active {
+            background: var(--color-surface);
+            color: var(--color-text);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--color-border);
+        }
+
+        .tab-close {
+            margin-left: var(--space-xs);
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .tab-close:hover {
+            opacity: 1;
+            color: var(--color-primary-light);
+        }
+
+        /* Editor Toolbar */
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface-sunken);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .toolbar-left,
+        .toolbar-right {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            background: var(--color-surface-raised);
+            border: none;
+            color: var(--color-text-muted);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .toolbar-btn:focus {
+            outline: 2px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        .language-selector {
+            background: var(--color-surface-raised);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            font-family: var(--font-mono);
+        }
+
+        .language-selector:focus {
+            outline: 2px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        /* Code Editor */
+        .code-editor {
+            flex: 1;
+            display: flex;
+            overflow: auto;
+            background: var(--color-background);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .line-numbers {
+            background: var(--color-surface-sunken);
+            padding: var(--space-md) var(--space-sm);
+            text-align: right;
+            color: var(--color-text-muted);
+            user-select: none;
+            border-right: 2px solid var(--color-border);
+            min-width: 60px;
+            box-shadow: var(--shadow-inset);
+        }
+
+        .line-numbers div {
+            height: 1.8em;
+            font-size: 13px;
+        }
+
+        .code-content {
+            flex: 1;
+            padding: var(--space-md) var(--space-md);
+            overflow-x: auto;
+            background: var(--color-background);
+        }
+
+        .code-line {
+            height: 1.8em;
+            white-space: pre;
+        }
+
+        /* Syntax Highlighting */
+        .keyword { color: var(--syntax-keyword); font-weight: 500; }
+        .string { color: var(--syntax-string); }
+        .function { color: var(--syntax-function); font-weight: 500; }
+        .comment { color: var(--syntax-comment); font-style: italic; }
+        .number { color: var(--syntax-number); }
+        .operator { color: var(--syntax-operator); }
+        .variable { color: var(--color-text); }
+        .type { color: var(--color-steel); font-weight: 500; }
+
+        /* Terminal Panel */
+        .terminal-panel {
+            grid-column: 2;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            margin: 0 var(--space-sm) var(--space-sm) 0;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: var(--color-surface-sunken);
+            padding: var(--space-xs) var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .terminal-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .terminal-control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .terminal-control-btn.close { background: #D4A574; }
+        .terminal-control-btn.minimize { background: #D4A589; }
+        .terminal-control-btn.maximize { background: #9FC4A6; }
+
+        .terminal-content {
+            flex: 1;
+            padding: var(--space-md);
+            background: var(--color-background);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-inset);
+        }
+
+        .terminal-line {
+            margin-bottom: var(--space-xs);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .terminal-prompt {
+            color: var(--color-primary-light);
+            font-weight: 500;
+        }
+
+        .terminal-output {
+            color: var(--color-text-muted);
+        }
+
+        .terminal-success {
+            color: #9FC4A6;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--color-primary-light);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+            box-shadow: 0 0 8px rgba(212, 165, 116, 0.5);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface-sunken);
+            border-radius: var(--radius-sm);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary-dark);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--color-primary-light);
+            outline-offset: 2px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .ide-container {
+                grid-template-columns: 220px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ide-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .terminal-panel {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ide-container">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <span>Starburst Meadow</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn">File</button>
+                <button class="nav-btn">Edit</button>
+                <button class="nav-btn">View</button>
+                <button class="nav-btn">Go</button>
+                <button class="nav-btn primary">Run</button>
+            </div>
+        </nav>
+
+        <!-- Sidebar - File Tree -->
+        <aside class="sidebar">
+            <div class="sidebar-header">Explorer</div>
+            <ul class="file-tree">
+                <li class="file-tree-item folder">📁 src</li>
+                <li class="file-tree-item nested active">📄 App.jsx</li>
+                <li class="file-tree-item nested">📄 index.js</li>
+                <li class="file-tree-item nested">📄 utils.js</li>
+
+                <li class="file-tree-item folder">📁 components</li>
+                <li class="file-tree-item nested">📄 Header.jsx</li>
+                <li class="file-tree-item nested">📄 Sidebar.jsx</li>
+                <li class="file-tree-item nested">📄 Button.jsx</li>
+
+                <li class="file-tree-item folder">📁 styles</li>
+                <li class="file-tree-item nested">📄 globals.css</li>
+                <li class="file-tree-item nested">📄 variables.css</li>
+
+                <li class="file-tree-item folder">📁 hooks</li>
+                <li class="file-tree-item nested">📄 useTheme.js</li>
+                <li class="file-tree-item nested">📄 useAuth.js</li>
+
+                <li class="file-tree-item">📄 package.json</li>
+                <li class="file-tree-item">📄 vite.config.js</li>
+                <li class="file-tree-item">📄 README.md</li>
+            </ul>
+        </aside>
+
+        <!-- Main Editor Area -->
+        <main class="editor-area">
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+                <div class="tab active">
+                    App.jsx
+                    <span class="tab-close">×</span>
+                </div>
+                <div class="tab">
+                    utils.js
+                    <span class="tab-close">×</span>
+                </div>
+                <div class="tab">
+                    Button.jsx
+                    <span class="tab-close">×</span>
+                </div>
+            </div>
+
+            <!-- Editor Toolbar -->
+            <div class="editor-toolbar">
+                <div class="toolbar-left">
+                    <button class="toolbar-btn">⌘ S Save</button>
+                    <button class="toolbar-btn">⌘ F Find</button>
+                    <button class="toolbar-btn">⌘ H Replace</button>
+                </div>
+                <div class="toolbar-right">
+                    <select class="language-selector" aria-label="Select programming language">
+                        <option>JavaScript (React)</option>
+                        <option>TypeScript</option>
+                        <option>Python</option>
+                        <option>Rust</option>
+                        <option>Go</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Code Editor with Line Numbers -->
+            <div class="code-editor">
+                <div class="line-numbers">
+                    <div>1</div>
+                    <div>2</div>
+                    <div>3</div>
+                    <div>4</div>
+                    <div>5</div>
+                    <div>6</div>
+                    <div>7</div>
+                    <div>8</div>
+                    <div>9</div>
+                    <div>10</div>
+                    <div>11</div>
+                    <div>12</div>
+                    <div>13</div>
+                    <div>14</div>
+                    <div>15</div>
+                    <div>16</div>
+                    <div>17</div>
+                    <div>18</div>
+                    <div>19</div>
+                    <div>20</div>
+                    <div>21</div>
+                    <div>22</div>
+                    <div>23</div>
+                    <div>24</div>
+                    <div>25</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-line"><span class="keyword">import</span> React<span class="operator">,</span> { <span class="function">useState</span><span class="operator">,</span> <span class="function">useEffect</span> } <span class="keyword">from</span> <span class="string">'react'</span><span class="operator">;</span></div>
+                    <div class="code-line"><span class="keyword">import</span> { Header<span class="operator">,</span> Sidebar<span class="operator">,</span> Button } <span class="keyword">from</span> <span class="string">'./components'</span><span class="operator">;</span></div>
+                    <div class="code-line"><span class="keyword">import</span> { <span class="function">fetchData</span><span class="operator">,</span> <span class="function">processMetrics</span> } <span class="keyword">from</span> <span class="string">'./utils'</span><span class="operator">;</span></div>
+                    <div class="code-line"></div>
+                    <div class="code-line"><span class="comment">// Main application component with claymorphic design system</span></div>
+                    <div class="code-line"><span class="keyword">const</span> <span class="function">App</span> <span class="operator">=</span> () <span class="operator">=></span> {</div>
+                    <div class="code-line">  <span class="keyword">const</span> [<span class="variable">theme</span><span class="operator">,</span> <span class="variable">setTheme</span>] <span class="operator">=</span> <span class="function">useState</span>(<span class="string">'starburst-meadow'</span>)<span class="operator">;</span></div>
+                    <div class="code-line">  <span class="keyword">const</span> [<span class="variable">data</span><span class="operator">,</span> <span class="variable">setData</span>] <span class="operator">=</span> <span class="function">useState</span>(<span class="keyword">null</span>)<span class="operator">;</span></div>
+                    <div class="code-line">  <span class="keyword">const</span> [<span class="variable">isLoading</span><span class="operator">,</span> <span class="variable">setIsLoading</span>] <span class="operator">=</span> <span class="function">useState</span>(<span class="keyword">true</span>)<span class="operator">;</span></div>
+                    <div class="code-line"></div>
+                    <div class="code-line">  <span class="function">useEffect</span>(() <span class="operator">=></span> {</div>
+                    <div class="code-line">    <span class="keyword">const</span> <span class="function">loadData</span> <span class="operator">=</span> <span class="keyword">async</span> () <span class="operator">=></span> {</div>
+                    <div class="code-line">      <span class="keyword">try</span> {</div>
+                    <div class="code-line">        <span class="keyword">const</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">await</span> <span class="function">fetchData</span>(<span class="string">'/api/metrics'</span>)<span class="operator">;</span></div>
+                    <div class="code-line">        <span class="keyword">const</span> <span class="variable">processed</span> <span class="operator">=</span> <span class="function">processMetrics</span>(<span class="variable">result</span>)<span class="operator">;</span></div>
+                    <div class="code-line">        <span class="function">setData</span>(<span class="variable">processed</span>)<span class="operator">;</span></div>
+                    <div class="code-line">      } <span class="keyword">catch</span> (<span class="variable">error</span>) {</div>
+                    <div class="code-line">        <span class="variable">console</span>.<span class="function">error</span>(<span class="string">'Failed to load data:'</span><span class="operator">,</span> <span class="variable">error</span>)<span class="operator">;</span></div>
+                    <div class="code-line">      } <span class="keyword">finally</span> {</div>
+                    <div class="code-line">        <span class="function">setIsLoading</span>(<span class="keyword">false</span>)<span class="operator">;</span></div>
+                    <div class="code-line">      }</div>
+                    <div class="code-line">    }<span class="operator">;</span></div>
+                    <div class="code-line">    <span class="function">loadData</span>()<span class="operator">;</span></div>
+                    <div class="code-line">  }<span class="operator">,</span> [])<span class="operator">;</span></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Terminal Panel -->
+        <section class="terminal-panel">
+            <div class="terminal-header">
+                <span class="terminal-title">Terminal</span>
+                <div class="terminal-controls">
+                    <button class="terminal-control-btn minimize" aria-label="Minimize terminal"></button>
+                    <button class="terminal-control-btn maximize" aria-label="Maximize terminal"></button>
+                    <button class="terminal-control-btn close" aria-label="Close terminal"></button>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">➜</span>
+                    <span class="terminal-output">npm run dev</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-output">  VITE v5.0.8  ready in 342 ms</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-success">  ➜  Local:   http://localhost:5173/</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-success">  ➜  Network: use --host to expose</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-output">  ➜  press h + enter to show help</span>
+                </div>
+                <div class="terminal-line" style="margin-top: 24px;">
+                    <span class="terminal-prompt">➜</span>
+                    <span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 45;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

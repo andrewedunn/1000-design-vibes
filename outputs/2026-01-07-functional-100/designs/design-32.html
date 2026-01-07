@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drift Ice - Live Streaming Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Design #32 - "Drift Ice"
+        ABOUTME: Glassmorphic dark-mode live streaming interface with Japanese-inspired calm, Memphis geometry, and cool monochrome palette
+
+        DESIGN SYSTEM TOKENS:
+        - UI Paradigm: Glassmorphic (frosted glass, blur, transparency)
+        - Design Era: Memphis (playful geometric patterns, bold shapes)
+        - Density: Ultra Dense (compact spacing, information-rich)
+        - Color: Tetradic cool desaturated monochrome, medium contrast, dark mode
+        - Typography: Transitional Serif headings + Display body, Golden Ratio scale (1.618), small caps, very loose letter-spacing, tight line-height
+        - Spacing Base: 12px
+        - Corners: Sharp (0px radius)
+        - Borders: Double
+        - Shadows: Subtle
+        - Container: Open (content bleeds to edges)
+        - Grid: Four column
+        - Alignment: Right
+        - Hierarchy: Weight-based
+        - Surface: Paper texture
+        - Gradient: Subtle background
+        - Icons: Hand-drawn style
+        - Cultural: Japanese minimalism meets Memphis playfulness
+        - Functional: LIVE STREAMING interface (video player, chat, viewer count, donations)
+        - Navigation: Side persistent
+        - Hero: Full viewport video player
+        - Content Flow: Kanban-style organization
+        */
+
+        :root {
+            /* Tetradic cool desaturated monochrome palette */
+            --color-primary: hsl(210, 18%, 45%);        /* Cool slate blue */
+            --color-secondary: hsl(150, 15%, 42%);      /* Cool sage */
+            --color-tertiary: hsl(270, 12%, 40%);       /* Cool mauve */
+            --color-accent: hsl(330, 16%, 48%);         /* Cool rose */
+
+            --color-background: hsl(220, 20%, 8%);      /* Deep cool dark */
+            --color-surface: hsla(220, 20%, 15%, 0.5);  /* Frosted glass surface */
+            --color-surface-solid: hsl(220, 20%, 15%);  /* Solid variant */
+            --color-text: hsl(220, 15%, 85%);           /* Light desaturated */
+            --color-text-muted: hsl(220, 12%, 55%);     /* Muted text */
+            --color-live: hsl(0, 65%, 55%);             /* Live indicator red */
+
+            /* Typography - Transitional Serif + Display */
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'Playfair Display', serif;
+            --font-mono: 'Courier New', monospace;
+
+            /* Golden Ratio Type Scale (1.618) from 12px base */
+            --text-xs: 0.46rem;      /* ~7.4px */
+            --text-sm: 0.75rem;      /* ~12px */
+            --text-base: 1rem;       /* 16px */
+            --text-lg: 1.618rem;     /* ~26px */
+            --text-xl: 2.618rem;     /* ~42px */
+            --text-2xl: 4.236rem;    /* ~68px */
+
+            /* Spacing - 12px base, ultra dense */
+            --space-unit: 12px;
+            --space-xs: 6px;
+            --space-sm: 9px;
+            --space-md: 12px;
+            --space-lg: 18px;
+            --space-xl: 24px;
+
+            /* Sharp corners, double borders, subtle shadows */
+            --radius-default: 0px;
+            --border-width: 2px;
+            --border-style: double;
+            --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-glass: 0 4px 16px rgba(0, 0, 0, 0.2),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+            /* Glassmorphic effects */
+            --glass-bg: hsla(220, 20%, 15%, 0.6);
+            --glass-border: hsla(220, 30%, 40%, 0.3);
+            --blur-amount: 12px;
+
+            /* Paper texture via gradient */
+            --paper-texture: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.01) 2px,
+                rgba(255, 255, 255, 0.01) 4px
+            );
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.2;
+            color: var(--color-text);
+            background: var(--color-background);
+            background-image:
+                radial-gradient(circle at 20% 30%, hsla(210, 25%, 15%, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, hsla(270, 20%, 12%, 0.4) 0%, transparent 50%),
+                var(--paper-texture);
+            overflow-x: hidden;
+            letter-spacing: 0.08em;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: 0.15em;
+            font-variant: small-caps;
+        }
+
+        h1 { font-size: var(--text-2xl); }
+        h2 { font-size: var(--text-xl); }
+        h3 { font-size: var(--text-lg); }
+        h4 { font-size: var(--text-base); }
+
+        /* Glassmorphic surface */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            box-shadow: var(--shadow-glass);
+        }
+
+        /* Layout: Side persistent nav + main content */
+        .app-container {
+            display: grid;
+            grid-template-columns: 180px 1fr 320px;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            background: var(--color-surface-solid);
+            border-right: var(--border-width) var(--border-style) var(--glass-border);
+            padding: var(--space-lg) var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav::before {
+            content: '';
+            position: absolute;
+            top: var(--space-xl);
+            right: var(--space-md);
+            width: 40px;
+            height: 40px;
+            background: var(--color-tertiary);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            opacity: 0.3;
+        }
+
+        .logo {
+            font-size: var(--text-lg);
+            font-family: var(--font-heading);
+            font-variant: small-caps;
+            letter-spacing: 0.2em;
+            margin-bottom: var(--space-lg);
+            color: var(--color-primary);
+            text-align: right;
+        }
+
+        .nav-item {
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            text-align: right;
+            position: relative;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--color-text);
+            border-color: var(--glass-border);
+            background: var(--glass-bg);
+        }
+
+        .nav-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Video Player - Full viewport hero */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: linear-gradient(135deg,
+                hsl(210, 15%, 12%) 0%,
+                hsl(270, 10%, 10%) 50%,
+                hsl(220, 15%, 8%) 100%);
+            border-bottom: var(--border-width) var(--border-style) var(--glass-border);
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Memphis geometric overlays */
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 120px;
+            height: 120px;
+            border: 4px double var(--color-primary);
+            opacity: 0.4;
+            transform: rotate(15deg);
+        }
+
+        .video-placeholder::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            right: 20%;
+            width: 80px;
+            height: 80px;
+            background: var(--color-secondary);
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            opacity: 0.3;
+        }
+
+        .video-icon {
+            font-size: 5rem;
+            color: var(--color-text-muted);
+            opacity: 0.5;
+        }
+
+        /* Live indicator overlay */
+        .live-badge {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            padding: var(--space-xs) var(--space-md);
+            background: var(--color-live);
+            color: white;
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            box-shadow: var(--shadow-default);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Viewer count overlay */
+        .viewer-count {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            text-align: right;
+        }
+
+        .viewer-number {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        /* Video controls overlay */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-md);
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: var(--space-sm);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--color-text);
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--color-surface-solid);
+            border-color: var(--color-primary);
+        }
+
+        .control-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 34%;
+            background: var(--color-primary);
+        }
+
+        /* Stream Info Section */
+        .stream-info {
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--color-surface-solid);
+            border-bottom: var(--border-width) var(--border-style) var(--glass-border);
+        }
+
+        .stream-header {
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: var(--space-md);
+            align-items: start;
+        }
+
+        .streamer-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+            color: white;
+            font-variant: small-caps;
+        }
+
+        .stream-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .stream-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .streamer-name {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .stream-category {
+            font-size: var(--text-xs);
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: flex-start;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--glass-bg);
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn:hover {
+            background: var(--color-surface-solid);
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Kanban Content Area */
+        .content-kanban {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: var(--space-lg);
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .kanban-column {
+            min-width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .column-header {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            text-align: right;
+            position: relative;
+        }
+
+        .column-header::before {
+            content: '';
+            position: absolute;
+            left: var(--space-sm);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--color-secondary);
+            clip-path: circle(40%);
+        }
+
+        .kanban-cards {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .info-card {
+            padding: var(--space-md);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            border: var(--border-width) var(--border-style) var(--glass-border);
+            font-size: var(--text-sm);
+            line-height: 1.3;
+            text-align: right;
+            position: relative;
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: var(--space-sm);
+            left: var(--space-sm);
+            width: 12px;
+            height: 12px;
+            background: var(--color-accent);
+            opacity: 0.5;
+        }
+
+        .card-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-value {
+            font-size: var(--text-base);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+            background: var(--color-surface-solid);
+            border-left: var(--border-width) var(--border-style) var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-header {
+            padding: var(--space-lg) var(--space-md);
+            border-bottom: var(--border-width) var(--border-style) var(--glass-border);
+            font-size: var(--text-base);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            text-align: right;
+            background: var(--glass-bg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            padding: var(--space-sm);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            font-size: var(--text-sm);
+            line-height: 1.3;
+        }
+
+        .chat-user {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .chat-text {
+            color: var(--color-text);
+        }
+
+        .chat-timestamp {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-family: var(--font-mono);
+            text-align: right;
+        }
+
+        /* Donation alert */
+        .donation-alert {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            padding: var(--space-md);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .donation-amount {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: var(--space-md);
+            border-top: var(--border-width) var(--border-style) var(--glass-border);
+            background: var(--color-surface-solid);
+        }
+
+        .chat-input-form {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            letter-spacing: 0.08em;
+            min-height: 44px;
+        }
+
+        .chat-input:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+            border-color: var(--color-primary);
+        }
+
+        .chat-input::placeholder {
+            color: var(--color-text-muted);
+            font-variant: small-caps;
+        }
+
+        .send-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-primary);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            color: white;
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .send-btn:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .send-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Memphis decorative elements */
+        .memphis-shape {
+            position: fixed;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape-1 {
+            top: 20vh;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: var(--color-tertiary);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .shape-2 {
+            bottom: 25vh;
+            left: 65%;
+            width: 80px;
+            height: 80px;
+            border: 3px double var(--color-accent);
+            transform: rotate(25deg);
+        }
+
+        .shape-3 {
+            top: 50%;
+            right: 40%;
+            width: 40px;
+            height: 40px;
+            background: var(--color-secondary);
+            clip-path: circle(50%);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface-solid);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 160px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .sidebar-nav {
+                flex-direction: row;
+                overflow-x: auto;
+                border-right: none;
+                border-bottom: var(--border-width) var(--border-style) var(--glass-border);
+            }
+
+            .chat-sidebar {
+                display: none;
+            }
+
+            .video-container {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Memphis decorative shapes -->
+    <div class="memphis-shape shape-1"></div>
+    <div class="memphis-shape shape-2"></div>
+    <div class="memphis-shape shape-3"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar-nav">
+            <div class="logo">DRIFT ICE</div>
+            <a href="#" class="nav-item active">HOME</a>
+            <a href="#" class="nav-item">FOLLOWING</a>
+            <a href="#" class="nav-item">BROWSE</a>
+            <a href="#" class="nav-item">DISCOVER</a>
+            <a href="#" class="nav-item">CATEGORIES</a>
+            <a href="#" class="nav-item">CLIPS</a>
+            <a href="#" class="nav-item">SCHEDULE</a>
+            <a href="#" class="nav-item">LIBRARY</a>
+            <a href="#" class="nav-item">SETTINGS</a>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Video Player Hero -->
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <div class="video-icon">▶</div>
+                </div>
+
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    LIVE
+                </div>
+
+                <div class="viewer-count">
+                    <div class="viewer-number">12,847</div>
+                    WATCHING
+                </div>
+
+                <div class="video-controls">
+                    <button class="control-btn" aria-label="Play/Pause">▶</button>
+                    <button class="control-btn" aria-label="Mute">🔊</button>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <button class="control-btn" aria-label="Settings">⚙</button>
+                    <button class="control-btn" aria-label="Fullscreen">⛶</button>
+                </div>
+            </div>
+
+            <!-- Stream Info Section -->
+            <div class="stream-info">
+                <div class="stream-header">
+                    <div class="streamer-avatar">YK</div>
+                    <div class="stream-details">
+                        <h2 class="stream-title">Minimalist Design Workshop</h2>
+                        <div class="streamer-name">YukiKawa Creative Studio</div>
+                        <div class="stream-category">DESIGN • CREATIVE</div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">FOLLOW</button>
+                        <button class="btn">SUBSCRIBE</button>
+                        <button class="btn">DONATE</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanban Content Flow -->
+            <div class="content-kanban">
+                <div class="kanban-column">
+                    <div class="column-header">STREAM STATS</div>
+                    <div class="kanban-cards">
+                        <div class="info-card">
+                            <div class="card-label">UPTIME</div>
+                            <div class="card-value">3:42:15</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">PEAK VIEWERS</div>
+                            <div class="card-value">15,203</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">NEW FOLLOWERS</div>
+                            <div class="card-value">+847</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">CHAT MESSAGES</div>
+                            <div class="card-value">24,561</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-column">
+                    <div class="column-header">TODAY'S GOALS</div>
+                    <div class="kanban-cards">
+                        <div class="info-card">
+                            <div class="card-label">GOAL</div>
+                            <div class="card-value">Complete UI mockups</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">PROGRESS</div>
+                            <div class="card-value">4 / 7 screens</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">NEXT</div>
+                            <div class="card-value">Payment flow design</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-column">
+                    <div class="column-header">RECENT ACTIVITY</div>
+                    <div class="kanban-cards">
+                        <div class="info-card">
+                            <div class="card-label">15:42</div>
+                            <div class="card-value">Raid from StudioMinimal</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">15:28</div>
+                            <div class="card-value">100 new subscribers!</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">15:15</div>
+                            <div class="card-value">Completed homepage</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">14:52</div>
+                            <div class="card-value">Q&A session ended</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-column">
+                    <div class="column-header">TOP SUPPORTERS</div>
+                    <div class="kanban-cards">
+                        <div class="info-card">
+                            <div class="card-label">HARUTO_DESIGN</div>
+                            <div class="card-value">¥5,000</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">SAKURA_DEV</div>
+                            <div class="card-value">¥3,500</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">MINIMALIST_AKI</div>
+                            <div class="card-value">¥2,800</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-label">STUDIO_KAZE</div>
+                            <div class="card-value">¥2,200</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Chat Sidebar -->
+        <aside class="chat-sidebar">
+            <div class="chat-header">LIVE CHAT</div>
+
+            <div class="chat-messages">
+                <div class="chat-message donation-alert">
+                    <div class="chat-user">HARUTO_DESIGN</div>
+                    <div class="donation-amount">¥5,000 DONATION!</div>
+                    <div class="chat-text">Amazing work on that layout! Keep it up!</div>
+                    <div class="chat-timestamp">16:23:45</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">MINIMALIST_AKI</div>
+                    <div class="chat-text">What tool are you using for the wireframes?</div>
+                    <div class="chat-timestamp">16:22:18</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">YUKIKAWA</div>
+                    <div class="chat-text">@MINIMALIST_AKI Figma for this project!</div>
+                    <div class="chat-timestamp">16:22:42</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">SAKURA_DEV</div>
+                    <div class="chat-text">The color palette is so calming 🎨</div>
+                    <div class="chat-timestamp">16:23:05</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">STUDIO_KAZE</div>
+                    <div class="chat-text">Can you show the mobile version next?</div>
+                    <div class="chat-timestamp">16:23:28</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">DESIGN_SENSEI</div>
+                    <div class="chat-text">This is exactly what I needed to see today!</div>
+                    <div class="chat-timestamp">16:23:51</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">CREATIVE_HANA</div>
+                    <div class="chat-text">How long have you been streaming?</div>
+                    <div class="chat-timestamp">16:24:12</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">MONO_MASTER</div>
+                    <div class="chat-text">The typography choice is perfect 👌</div>
+                    <div class="chat-timestamp">16:24:35</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">ZEN_PIXEL</div>
+                    <div class="chat-text">Just followed! Great stream!</div>
+                    <div class="chat-timestamp">16:24:58</div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-user">TOKYO_STUDIO</div>
+                    <div class="chat-text">What's your design process like?</div>
+                    <div class="chat-timestamp">16:25:21</div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <form class="chat-input-form">
+                    <input type="text" class="chat-input" placeholder="SEND A MESSAGE..." aria-label="Chat message">
+                    <button type="submit" class="send-btn">SEND</button>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 32;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

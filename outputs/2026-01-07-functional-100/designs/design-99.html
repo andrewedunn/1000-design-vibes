@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design #99 - Live Chat Widget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN #99 - LIVE CHAT WIDGET
+        ABOUTME: An embeddable live chat widget with modern glassmorphic design
+        ABOUTME: Features chat bubble trigger, message history, typing indicators, agent avatars, quick replies, and file upload
+
+        AESTHETIC PRINCIPLES:
+        - Glassmorphic surfaces with subtle blur and transparency
+        - Soft gradient backgrounds for depth
+        - Friendly, approachable color palette (purple and blue)
+        - Smooth animations and micro-interactions
+        - Clear visual hierarchy between user and agent messages
+
+        KEY TOKENS:
+        --color-primary: #7C3AED (vibrant purple)
+        --color-secondary: #3B82F6 (bright blue)
+        --color-agent: #10B981 (emerald green for agent)
+        --radius-default: 16px (friendly, rounded)
+        --shadow-default: soft, layered shadows for depth
+
+        FUNCTIONAL DIRECTION: live_chat_widget
+        Required components: chat bubble trigger, message list, typing indicator,
+        agent avatar, quick replies, file upload button, minimize button
+        */
+
+        :root {
+            /* Colors */
+            --color-primary: #7C3AED;
+            --color-secondary: #3B82F6;
+            --color-agent: #10B981;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-surface-glass: rgba(255, 255, 255, 0.7);
+            --color-text: #1E293B;
+            --color-text-muted: #64748B;
+            --color-user-bubble: #7C3AED;
+            --color-agent-bubble: #F1F5F9;
+            --color-border: #E2E8F0;
+            --color-hover: #F1F5F9;
+
+            /* Typography */
+            --font-heading: 'DM Sans', system-ui, -apple-system, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-sm: 8px;
+            --radius-default: 16px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            --shadow-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+            position: relative;
+        }
+
+        /* Demo container showing the widget in context */
+        .demo-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: var(--color-background);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .demo-content {
+            padding: var(--space-xl);
+            max-width: 600px;
+        }
+
+        .demo-content h1 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .demo-content p {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Chat Widget Container */
+        .chat-widget {
+            position: fixed;
+            bottom: var(--space-md);
+            right: var(--space-md);
+            z-index: 1000;
+        }
+
+        /* Chat Bubble Trigger */
+        .chat-bubble {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .chat-bubble:active {
+            transform: scale(0.95);
+        }
+
+        .chat-bubble svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-bubble.open svg {
+            transform: rotate(180deg);
+        }
+
+        /* Notification badge */
+        .chat-bubble::after {
+            content: '3';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: #EF4444;
+            border-radius: var(--radius-full);
+            color: white;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--color-background);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 600px;
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            padding: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: var(--color-agent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .agent-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #10B981;
+            border-radius: var(--radius-full);
+            border: 2px solid white;
+        }
+
+        .agent-info h3 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .agent-status {
+            font-size: var(--font-size-xs);
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #10B981;
+            border-radius: var(--radius-full);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .chat-action-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            color: white;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Message List */
+        .message-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            background: rgba(248, 250, 252, 0.5);
+        }
+
+        .message-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .message-list::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 3px;
+        }
+
+        /* Message */
+        .message {
+            display: flex;
+            gap: var(--space-sm);
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--color-agent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--color-primary);
+        }
+
+        .message-content {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .message-bubble {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.agent .message-bubble {
+            background: var(--color-agent-bubble);
+            color: var(--color-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--color-user-bubble);
+            color: white;
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+
+        .message-time {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            padding: 0 var(--space-xs);
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-agent-bubble);
+            border-radius: var(--radius-default);
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-text-muted);
+            border-radius: var(--radius-full);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            gap: var(--space-xs);
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .quick-replies::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .quick-replies::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .quick-replies::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 2px;
+        }
+
+        .quick-reply-btn {
+            padding: var(--space-xs) var(--space-md);
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--color-text);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        /* Input Area */
+        .chat-input {
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.8);
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+            display: flex;
+            gap: var(--space-sm);
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .file-upload-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .file-upload-btn:hover {
+            background: var(--color-hover);
+            border-color: var(--color-primary);
+        }
+
+        .file-upload-btn svg {
+            width: 20px;
+            height: 20px;
+            color: var(--color-text-muted);
+        }
+
+        .file-upload-btn input {
+            display: none;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            background: var(--color-surface);
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            transition: border-color 0.2s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .message-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--color-primary);
+            border: none;
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: var(--color-secondary);
+            transform: translateY(-1px);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        /* Powered by footer */
+        .chat-footer {
+            padding: var(--space-xs) var(--space-md);
+            text-align: center;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .chat-footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .chat-widget {
+                bottom: 0;
+                right: 0;
+                left: 0;
+            }
+
+            .chat-window {
+                width: 100%;
+                height: 100vh;
+                bottom: 0;
+                border-radius: 0;
+            }
+
+            .chat-bubble {
+                position: fixed;
+                bottom: var(--space-md);
+                right: var(--space-md);
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states */
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo container showing the widget in a realistic context -->
+    <div class="demo-container">
+        <div class="demo-content">
+            <h1>Welcome to our website</h1>
+            <p>This is a demo page showing the live chat widget in action. The widget appears in the bottom right corner and includes all essential features:</p>
+            <ul style="color: var(--color-text-muted); margin-left: var(--space-lg); margin-bottom: var(--space-sm);">
+                <li>Chat bubble trigger with notification badge</li>
+                <li>Real-time message history</li>
+                <li>Typing indicator animation</li>
+                <li>Agent avatar with online status</li>
+                <li>Quick reply buttons</li>
+                <li>File upload capability</li>
+                <li>Minimize/maximize controls</li>
+            </ul>
+            <p>Click the purple chat bubble in the bottom right to open the widget and explore its features.</p>
+        </div>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div class="chat-widget">
+        <!-- Chat Bubble Trigger -->
+        <div class="chat-bubble" id="chatBubble" role="button" aria-label="Open chat" tabindex="0">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow" role="dialog" aria-label="Chat window">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="agent-avatar" aria-label="Agent Sarah">SA</div>
+                    <div class="agent-info">
+                        <h3>Sarah</h3>
+                        <div class="agent-status">
+                            <span class="status-dot"></span>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" aria-label="Minimize chat" id="minimizeBtn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Message List -->
+            <div class="message-list" id="messageList">
+                <!-- Agent Welcome Message -->
+                <div class="message agent">
+                    <div class="message-avatar">SA</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Hi there! 👋 I'm Sarah. How can I help you today?
+                        </div>
+                        <div class="message-time">2:34 PM</div>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="message user">
+                    <div class="message-avatar">ME</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Hi! I'm interested in learning more about your pricing plans.
+                        </div>
+                        <div class="message-time">2:35 PM</div>
+                    </div>
+                </div>
+
+                <!-- Agent Response -->
+                <div class="message agent">
+                    <div class="message-avatar">SA</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Great! I'd be happy to help with that. We have three main plans: Starter, Professional, and Enterprise. What type of business are you running?
+                        </div>
+                        <div class="message-time">2:35 PM</div>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="message user">
+                    <div class="message-avatar">ME</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            We're a small startup with about 10 team members.
+                        </div>
+                        <div class="message-time">2:36 PM</div>
+                    </div>
+                </div>
+
+                <!-- Agent Response -->
+                <div class="message agent">
+                    <div class="message-avatar">SA</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Perfect! For a team of 10, I'd recommend our Professional plan. It includes all the features you need for collaboration, plus priority support. Would you like me to send you a detailed breakdown?
+                        </div>
+                        <div class="message-time">2:36 PM</div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator">
+                    <div class="message-avatar">SA</div>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Replies -->
+            <div class="quick-replies">
+                <button class="quick-reply-btn">Yes, send details</button>
+                <button class="quick-reply-btn">Show me a demo</button>
+                <button class="quick-reply-btn">Compare plans</button>
+                <button class="quick-reply-btn">Talk to sales</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input">
+                <label class="file-upload-btn" role="button" aria-label="Upload file">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                    </svg>
+                    <input type="file" aria-label="Choose file to upload">
+                </label>
+
+                <div class="input-wrapper">
+                    <textarea
+                        class="message-input"
+                        placeholder="Type your message..."
+                        rows="1"
+                        aria-label="Message input"
+                    ></textarea>
+                </div>
+
+                <button class="send-btn" aria-label="Send message">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="chat-footer">
+                Powered by <a href="#">LiveChat Pro</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat widget functionality
+        const chatBubble = document.getElementById('chatBubble');
+        const chatWindow = document.getElementById('chatWindow');
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        const messageInput = document.querySelector('.message-input');
+        const sendBtn = document.querySelector('.send-btn');
+        const messageList = document.getElementById('messageList');
+        const quickReplyBtns = document.querySelectorAll('.quick-reply-btn');
+
+        // Toggle chat window
+        function toggleChat() {
+            chatWindow.classList.toggle('open');
+            chatBubble.classList.toggle('open');
+            if (chatWindow.classList.contains('open')) {
+                messageInput.focus();
+            }
+        }
+
+        chatBubble.addEventListener('click', toggleChat);
+        chatBubble.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleChat();
+            }
+        });
+
+        minimizeBtn.addEventListener('click', toggleChat);
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text) {
+                addMessage(text, 'user');
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+
+                // Simulate agent response
+                setTimeout(() => {
+                    const responses = [
+                        "Thanks for that information! Let me check on that for you.",
+                        "I understand. Let me help you with that right away.",
+                        "Great question! Here's what I can tell you...",
+                        "I'd be happy to assist you with that."
+                    ];
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(response, 'agent');
+                }, 1500);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const time = new Date().toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+
+            const messageHTML = `
+                <div class="message ${sender}">
+                    <div class="message-avatar">${sender === 'user' ? 'ME' : 'SA'}</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${text}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                </div>
+            `;
+
+            // Remove typing indicator before adding message
+            const typingIndicator = messageList.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+
+            messageList.insertAdjacentHTML('beforeend', messageHTML);
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        // Quick reply buttons
+        quickReplyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.textContent;
+                addMessage(text, 'user');
+
+                // Simulate agent response
+                setTimeout(() => {
+                    addMessage("Perfect! Let me get that ready for you right now.", 'agent');
+                }, 1500);
+            });
+        });
+
+        // File upload simulation
+        const fileInput = document.querySelector('input[type="file"]');
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                addMessage(`📎 Uploaded: ${fileName}`, 'user');
+
+                setTimeout(() => {
+                    addMessage("I've received your file. Let me take a look at it.", 'agent');
+                }, 1000);
+            }
+        });
+    </script>
+
+    <!-- Navigation script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 99;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

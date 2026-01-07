@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Core - Advanced Game Design Masterclass</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Slab:wght@400;500;600;700&display=swap">
+    <style>
+        /*
+        DESIGN: Thesis Core
+        ABOUTME: A neumorphic online course platform with Scandinavian modern aesthetics,
+        ABOUTME: featuring natural split-complementary colors and soft extruded surfaces for an immersive learning experience.
+
+        AESTHETIC PRINCIPLES:
+        - Neumorphic soft shadows create depth through light and shadow play
+        - Scandinavian minimalism meets natural color harmony
+        - Split-complementary palette (teal primary, coral/peach accents) with extreme contrast
+        - Dense information architecture with clear visual hierarchy
+        - Paper texture adds organic warmth to digital interface
+        - Double borders emphasize structure and boundaries
+        - Colored shadows enhance the neumorphic effect
+
+        KEY TOKENS:
+        - Primary: #2A7C7C (deep teal)
+        - Accent 1: #E07856 (coral)
+        - Accent 2: #F4B860 (warm peach)
+        - Background: #E8EBE8 (soft sage)
+        - Surface: #DFE3DF (lighter sage)
+        - Text: #1F2B1F (deep forest)
+        - Spacing: 10px base unit
+        - Corners: 6px subtle radius
+        - Font Scale: 1.2 (minor third)
+        */
+
+        :root {
+            /* Colors - Split Complementary Natural Palette */
+            --color-primary: #2A7C7C;
+            --color-primary-light: #3A9C9C;
+            --color-primary-dark: #1A5C5C;
+            --color-accent-1: #E07856;
+            --color-accent-2: #F4B860;
+            --color-background: #E8EBE8;
+            --color-surface: #DFE3DF;
+            --color-surface-raised: #F2F5F2;
+            --color-surface-inset: #D0D4D0;
+            --color-text: #1F2B1F;
+            --color-text-muted: #5A6A5A;
+            --color-text-light: #8A9A8A;
+            --color-border: #B8C2B8;
+            --color-success: #4A9C6C;
+            --color-progress: #F4B860;
+
+            /* Typography */
+            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Roboto Slab', Georgia, serif;
+            --type-scale: 1.2;
+
+            /* Spacing (dense) */
+            --space-unit: 10px;
+            --space-xs: 5px;
+            --space-sm: 10px;
+            --space-md: 15px;
+            --space-lg: 20px;
+            --space-xl: 30px;
+            --space-xxl: 40px;
+
+            /* Shapes */
+            --radius-default: 6px;
+            --radius-sm: 4px;
+            --radius-lg: 10px;
+
+            /* Neumorphic Shadows - Colored */
+            --shadow-neumorphic-out:
+                6px 6px 12px rgba(47, 92, 92, 0.15),
+                -6px -6px 12px rgba(255, 255, 255, 0.8);
+            --shadow-neumorphic-in:
+                inset 4px 4px 8px rgba(47, 92, 92, 0.12),
+                inset -4px -4px 8px rgba(255, 255, 255, 0.6);
+            --shadow-neumorphic-hover:
+                8px 8px 16px rgba(47, 92, 92, 0.2),
+                -8px -8px 16px rgba(255, 255, 255, 0.9);
+            --shadow-accent:
+                4px 4px 10px rgba(224, 120, 86, 0.25),
+                -2px -2px 6px rgba(255, 255, 255, 0.5);
+
+            /* Double borders */
+            --border-double: 3px double var(--color-border);
+            --border-double-accent: 3px double var(--color-accent-1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: -0.01em;
+            /* Paper texture */
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(47, 92, 92, 0.02) 2px, rgba(47, 92, 92, 0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(47, 92, 92, 0.02) 2px, rgba(47, 92, 92, 0.02) 4px);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale) * var(--type-scale)); }
+        h2 { font-size: calc(15px * var(--type-scale) * var(--type-scale) * var(--type-scale)); }
+        h3 { font-size: calc(15px * var(--type-scale) * var(--type-scale)); }
+        h4 { font-size: calc(15px * var(--type-scale)); }
+
+        /* Hero Section with Illustration */
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            padding: var(--space-xxl) var(--space-lg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: var(--border-double);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(224, 120, 86, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            color: var(--color-surface-raised);
+            font-weight: 800;
+            margin-bottom: var(--space-md);
+            text-shadow: 2px 2px 4px rgba(26, 92, 92, 0.3);
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 18px;
+            margin-bottom: var(--space-lg);
+            font-weight: 500;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            margin-top: var(--space-lg);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-family: var(--font-heading);
+            font-weight: 500;
+        }
+
+        .meta-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-neumorphic-out);
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: var(--border-double);
+        }
+
+        .tab {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 14px;
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-surface);
+            border: none;
+            border-radius: var(--radius-default);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-neumorphic-out);
+            letter-spacing: -0.01em;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .tab:hover {
+            box-shadow: var(--shadow-neumorphic-hover);
+            color: var(--color-primary);
+        }
+
+        .tab:focus {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+
+        .tab.active {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-accent);
+        }
+
+        /* Main Layout - Modular Blocks */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        .course-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        /* Curriculum Sidebar */
+        .curriculum-sidebar {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: var(--border-double);
+        }
+
+        .sidebar-header h3 {
+            font-size: 16px;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .progress-bar {
+            background: var(--color-surface-inset);
+            height: 8px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-neumorphic-in);
+            margin-top: var(--space-sm);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent-2) 100%);
+            width: 68%;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .lesson-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .lesson-item {
+            padding: var(--space-sm);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-neumorphic-out);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            min-height: 44px;
+        }
+
+        .lesson-item:hover {
+            box-shadow: var(--shadow-neumorphic-hover);
+            border-color: var(--color-primary-light);
+        }
+
+        .lesson-item:focus {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+
+        .lesson-item.active {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-accent);
+        }
+
+        .lesson-item.completed {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .lesson-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-surface-inset);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            flex-shrink: 0;
+        }
+
+        .lesson-item.completed .lesson-status {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lesson-item.active .lesson-status {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            margin-bottom: 2px;
+        }
+
+        .lesson-duration {
+            font-size: 11px;
+            opacity: 0.8;
+            font-family: var(--font-heading);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        /* Video Player */
+        .video-player {
+            background: #000;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--color-accent-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(224, 120, 86, 0.4);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(224, 120, 86, 0.6);
+        }
+
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 20px solid white;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .video-timeline {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-progress {
+            height: 100%;
+            background: var(--color-accent-1);
+            width: 35%;
+            border-radius: 10px;
+        }
+
+        .video-time {
+            color: white;
+            font-size: 13px;
+            font-family: var(--font-heading);
+            font-weight: 500;
+        }
+
+        /* Lesson Info Card */
+        .lesson-card {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: var(--border-double);
+        }
+
+        .lesson-header h2 {
+            color: var(--color-text);
+            flex: 1;
+        }
+
+        .completion-badge {
+            background: var(--color-success);
+            color: white;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            box-shadow: var(--shadow-accent);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .lesson-description {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-lg);
+            line-height: 1.7;
+        }
+
+        .lesson-objectives {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-in);
+            margin-top: var(--space-md);
+        }
+
+        .lesson-objectives h4 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            font-size: 14px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .objectives-list li {
+            padding-left: var(--space-lg);
+            position: relative;
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        .objectives-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+
+        /* Lesson Notes */
+        .notes-section {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .notes-header h3 {
+            color: var(--color-text);
+        }
+
+        .add-note-btn {
+            background: var(--color-accent-1);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: var(--shadow-accent);
+            transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(224, 120, 86, 0.4);
+        }
+
+        .add-note-btn:focus {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+
+        .note-editor {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-in);
+            margin-bottom: var(--space-md);
+        }
+
+        .note-input {
+            width: 100%;
+            min-height: 100px;
+            background: var(--color-surface-raised);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text);
+            resize: vertical;
+        }
+
+        .note-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(42, 124, 124, 0.1);
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .note-item {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-out);
+            border-left: 4px solid var(--color-accent-2);
+        }
+
+        .note-timestamp {
+            font-size: 11px;
+            color: var(--color-text-light);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .note-content {
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .quiz-header h3 {
+            margin-bottom: var(--space-xs);
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .quiz-question {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-in);
+            margin-bottom: var(--space-lg);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-family: var(--font-heading);
+            margin-bottom: var(--space-md);
+            color: var(--color-text);
+            font-size: 16px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .quiz-option {
+            background: var(--color-surface-raised);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-neumorphic-out);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            min-height: 44px;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--color-primary-light);
+            box-shadow: var(--shadow-neumorphic-hover);
+        }
+
+        .quiz-option:focus {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+
+        .quiz-option.selected {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-accent);
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            background: var(--color-surface-inset);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.selected .option-letter {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .submit-quiz-btn {
+            width: 100%;
+            background: var(--color-accent-1);
+            color: white;
+            border: none;
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow-accent);
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .submit-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(224, 120, 86, 0.4);
+        }
+
+        .submit-quiz-btn:focus {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+
+        /* Instructor Card */
+        .instructor-card {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+            display: flex;
+            gap: var(--space-lg);
+            align-items: start;
+        }
+
+        .instructor-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-1) 100%);
+            box-shadow: var(--shadow-accent);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            font-family: var(--font-heading);
+        }
+
+        .instructor-info h3 {
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .instructor-title {
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .instructor-bio {
+            color: var(--color-text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: var(--space-md);
+        }
+
+        .instructor-stats {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            font-family: var(--font-heading);
+            font-weight: 500;
+        }
+
+        /* Achievement Badges */
+        .achievements-section {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-out);
+            border: var(--border-double);
+        }
+
+        .achievements-section h3 {
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .badge {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-out);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            box-shadow: var(--shadow-neumorphic-hover);
+            transform: translateY(-2px);
+        }
+
+        .badge.earned {
+            background: linear-gradient(135deg, var(--color-accent-2) 0%, var(--color-accent-1) 100%);
+            color: white;
+            box-shadow: var(--shadow-accent);
+        }
+
+        .badge-icon {
+            font-size: 32px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .badge-name {
+            font-size: 11px;
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .badge.locked {
+            opacity: 0.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .course-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .curriculum-sidebar {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                overflow-x: auto;
+                justify-content: start;
+            }
+
+            .instructor-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .instructor-stats {
+                justify-content: center;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        *:focus-visible {
+            outline: 3px solid var(--color-accent-2);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Advanced Game Design Masterclass</h1>
+            <p>Master the art and science of creating compelling gameplay experiences from industry veterans</p>
+            <div class="course-meta">
+                <div class="meta-item">
+                    <div class="meta-icon">12</div>
+                    <span>Modules</span>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-icon">48</div>
+                    <span>Lessons</span>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-icon">★</div>
+                    <span>4.9 Rating</span>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-icon">∞</div>
+                    <span>Lifetime Access</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <button class="tab active" tabindex="0">Lessons</button>
+        <button class="tab" tabindex="0">Resources</button>
+        <button class="tab" tabindex="0">Discussions</button>
+        <button class="tab" tabindex="0">Assignments</button>
+        <button class="tab" tabindex="0">Certificate</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="course-layout">
+            <!-- Curriculum Sidebar -->
+            <aside class="curriculum-sidebar">
+                <div class="sidebar-header">
+                    <h3>Course Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">34 of 48 lessons completed (68%)</p>
+                </div>
+
+                <div class="lesson-list">
+                    <div class="lesson-item completed" tabindex="0">
+                        <div class="lesson-status">✓</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Introduction to Game Loops</div>
+                            <div class="lesson-duration">12:34</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item completed" tabindex="0">
+                        <div class="lesson-status">✓</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Player Psychology Basics</div>
+                            <div class="lesson-duration">18:22</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item active" tabindex="0">
+                        <div class="lesson-status">▶</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Core Gameplay Mechanics</div>
+                            <div class="lesson-duration">24:15</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item" tabindex="0">
+                        <div class="lesson-status">4</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Difficulty Curves</div>
+                            <div class="lesson-duration">16:48</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item" tabindex="0">
+                        <div class="lesson-status">5</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Reward Systems</div>
+                            <div class="lesson-duration">20:11</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item" tabindex="0">
+                        <div class="lesson-status">6</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Balancing Mechanics</div>
+                            <div class="lesson-duration">22:30</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item" tabindex="0">
+                        <div class="lesson-status">7</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Narrative Integration</div>
+                            <div class="lesson-duration">19:45</div>
+                        </div>
+                    </div>
+                    <div class="lesson-item" tabindex="0">
+                        <div class="lesson-status">8</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Level Design Principles</div>
+                            <div class="lesson-duration">26:12</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Video Player -->
+                <div class="video-player">
+                    <div class="video-placeholder">
+                        <div class="play-button"></div>
+                        <div class="video-controls">
+                            <div class="video-timeline">
+                                <div class="video-progress"></div>
+                            </div>
+                            <div class="video-time">8:32 / 24:15</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Info -->
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <h2>Core Gameplay Mechanics</h2>
+                        <div class="completion-badge">
+                            <span>●</span>
+                            <span>In Progress</span>
+                        </div>
+                    </div>
+                    <p class="lesson-description">
+                        Explore the fundamental building blocks that make games engaging and fun. This lesson covers input handling, feedback loops, verbs and actions, and how to create meaningful player agency. We'll analyze real-world examples from successful titles and break down what makes their core mechanics so satisfying.
+                    </p>
+                    <div class="lesson-objectives">
+                        <h4>Learning Objectives</h4>
+                        <ul class="objectives-list">
+                            <li>Identify the core mechanical loop in any game</li>
+                            <li>Design responsive and satisfying input systems</li>
+                            <li>Understand feedback timing and player perception</li>
+                            <li>Create emergent gameplay from simple mechanics</li>
+                            <li>Balance skill expression with accessibility</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Lesson Notes -->
+                <div class="notes-section">
+                    <div class="notes-header">
+                        <h3>My Notes</h3>
+                        <button class="add-note-btn" tabindex="0">+ Add Note</button>
+                    </div>
+                    <div class="notes-list">
+                        <div class="note-item">
+                            <div class="note-timestamp">8:32 - Just now</div>
+                            <div class="note-content">
+                                Great point about "juice" - the extra visual and audio feedback that makes actions feel satisfying. Need to apply this to my current project's movement system.
+                            </div>
+                        </div>
+                        <div class="note-item">
+                            <div class="note-timestamp">5:14 - 3 minutes ago</div>
+                            <div class="note-content">
+                                The "30 second loop" concept is brilliant. Make sure the core action feels good when repeated hundreds of times. Test: jump around for 30 seconds - is it fun?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="quiz-section">
+                    <div class="quiz-header">
+                        <h3>Knowledge Check</h3>
+                        <p class="quiz-subtitle">Test your understanding of core gameplay mechanics</p>
+                    </div>
+                    <div class="quiz-question">
+                        <p class="question-text">What is the primary purpose of "game feel" in core mechanics?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" tabindex="0">
+                                <div class="option-letter">A</div>
+                                <span>To make the game look visually impressive</span>
+                            </div>
+                            <div class="quiz-option selected" tabindex="0">
+                                <div class="option-letter">B</div>
+                                <span>To provide immediate, satisfying feedback to player actions</span>
+                            </div>
+                            <div class="quiz-option" tabindex="0">
+                                <div class="option-letter">C</div>
+                                <span>To increase the game's difficulty level</span>
+                            </div>
+                            <div class="quiz-option" tabindex="0">
+                                <div class="option-letter">D</div>
+                                <span>To extend the game's playtime</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="submit-quiz-btn" tabindex="0">Check Answer</button>
+                </div>
+
+                <!-- Instructor Info -->
+                <div class="instructor-card">
+                    <div class="instructor-avatar">JM</div>
+                    <div class="instructor-info">
+                        <h3>Jessica Martinez</h3>
+                        <p class="instructor-title">Senior Game Designer at Nexus Studios</p>
+                        <p class="instructor-bio">
+                            With over 15 years in the gaming industry, Jessica has led design on critically acclaimed titles including "Echoes of Tomorrow" and "Starbound Legends". She specializes in systemic design and player psychology.
+                        </p>
+                        <div class="instructor-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Courses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">45K</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">4.9</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">1.2K</div>
+                                <div class="stat-label">Reviews</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="achievements-section">
+                    <h3>Your Achievements</h3>
+                    <div class="badges-grid">
+                        <div class="badge earned">
+                            <div class="badge-icon">🎮</div>
+                            <div class="badge-name">First Steps</div>
+                        </div>
+                        <div class="badge earned">
+                            <div class="badge-icon">📚</div>
+                            <div class="badge-name">Dedicated Learner</div>
+                        </div>
+                        <div class="badge earned">
+                            <div class="badge-icon">⭐</div>
+                            <div class="badge-name">Quiz Master</div>
+                        </div>
+                        <div class="badge earned">
+                            <div class="badge-icon">✏️</div>
+                            <div class="badge-name">Note Taker</div>
+                        </div>
+                        <div class="badge locked">
+                            <div class="badge-icon">🏆</div>
+                            <div class="badge-name">Course Complete</div>
+                        </div>
+                        <div class="badge locked">
+                            <div class="badge-icon">💯</div>
+                            <div class="badge-name">Perfect Score</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 75;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive elements
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        const lessonItems = document.querySelectorAll('.lesson-item');
+        lessonItems.forEach(item => {
+            item.addEventListener('click', () => {
+                lessonItems.forEach(l => l.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        const quizOptions = document.querySelectorAll('.quiz-option');
+        quizOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                quizOptions.forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+
+        const playButton = document.querySelector('.play-button');
+        if (playButton) {
+            playButton.addEventListener('click', () => {
+                alert('Video playback would start here in a real course platform');
+            });
+        }
+
+        const addNoteBtn = document.querySelector('.add-note-btn');
+        if (addNoteBtn) {
+            addNoteBtn.addEventListener('click', () => {
+                alert('Note editor would open here in a real course platform');
+            });
+        }
+
+        const submitQuizBtn = document.querySelector('.submit-quiz-btn');
+        if (submitQuizBtn) {
+            submitQuizBtn.addEventListener('click', () => {
+                const selected = document.querySelector('.quiz-option.selected');
+                if (selected) {
+                    alert('Correct! Game feel provides immediate, satisfying feedback to player actions.');
+                } else {
+                    alert('Please select an answer first.');
+                }
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

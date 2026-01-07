@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Azure - Claymorphic Punk Spreadsheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Kinetic Azure - A claymorphic punk spreadsheet interface
+ABOUTME: Combines soft puffy shadows with DIY chaotic punk aesthetics and earth tone palette
+
+DESIGN SYSTEM TOKENS
+
+Color Palette (Earth + Light):
+--color-primary: #D4865B (terracotta/rust)
+--color-secondary: #8B7355 (dusty brown)
+--color-accent: #5B8B7A (sage green)
+--color-background: #F5F1E8 (warm cream)
+--color-surface: #E8DCC8 (sandy beige)
+--color-text: #3A2E24 (dark earth brown)
+--color-text-muted: #7A6E5C (medium earth)
+--color-grid-line: #D4C4A8 (light tan)
+
+Typography:
+- Headings: Space Grotesk (geometric sans, punk attitude)
+- Body/Data: Courier Prime (monospace for spreadsheet authenticity)
+
+Claymorphic Treatment:
+- Soft, puffy shadows (8-12px blur)
+- Layered depth with multiple shadow colors
+- Rounded corners (8-12px)
+- Slightly inflated appearance
+
+Punk Aesthetic:
+- Hand-drawn feeling accents
+- Asymmetric layouts in toolbar
+- Raw, DIY texture overlays
+- Distressed edges on some elements
+- Energetic, chaotic charm balanced with spreadsheet structure
+
+Spreadsheet Requirements:
+✓ Cell grid with column/row headers
+✓ Formula bar
+✓ Sheet tabs at bottom
+✓ Toolbar with formatting options
+✓ Cell selection states
+✓ Data entry capability
+✓ Timeline content (data represents chronological project milestones)
+-->
+
+<style>
+:root {
+    /* Colors - Earth Tones */
+    --color-primary: #D4865B;
+    --color-secondary: #8B7355;
+    --color-accent: #5B8B7A;
+    --color-background: #F5F1E8;
+    --color-surface: #E8DCC8;
+    --color-text: #3A2E24;
+    --color-text-muted: #7A6E5C;
+    --color-grid-line: #D4C4A8;
+    --color-selected: #F4D8C1;
+    --color-header: #D4C4A8;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Courier Prime', monospace;
+
+    /* Spacing - Compact */
+    --space-unit: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+
+    /* Claymorphic Shapes */
+    --radius-default: 10px;
+    --radius-lg: 16px;
+    --shadow-default:
+        6px 6px 12px rgba(139, 115, 85, 0.2),
+        -2px -2px 8px rgba(255, 255, 255, 0.7),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.5);
+    --shadow-inset:
+        inset 3px 3px 8px rgba(139, 115, 85, 0.15),
+        inset -1px -1px 4px rgba(255, 255, 255, 0.5);
+    --shadow-button:
+        4px 4px 10px rgba(139, 115, 85, 0.25),
+        -2px -2px 6px rgba(255, 255, 255, 0.8);
+
+    /* Layout */
+    --hero-height: 120px;
+    --toolbar-height: 64px;
+    --formula-bar-height: 44px;
+    --bottom-nav-height: 68px;
+    --cell-size: 100px;
+    --header-size: 32px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    overflow-x: hidden;
+    padding-bottom: var(--bottom-nav-height);
+}
+
+/* Hero Section - Image Background with Punk Overlay */
+.hero {
+    height: var(--hero-height);
+    background:
+        linear-gradient(135deg, rgba(212, 134, 91, 0.85), rgba(91, 139, 122, 0.75)),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(58, 46, 36, 0.03) 10px,
+            rgba(58, 46, 36, 0.03) 20px
+        ),
+        linear-gradient(180deg, var(--color-secondary), var(--color-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-bottom: 4px solid var(--color-text);
+    box-shadow: 0 4px 0 rgba(139, 115, 85, 0.3);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence baseFrequency="0.9" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+    pointer-events: none;
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-background);
+    text-shadow:
+        3px 3px 0 var(--color-text),
+        4px 4px 8px rgba(58, 46, 36, 0.4);
+    letter-spacing: -0.02em;
+    transform: rotate(-1deg);
+}
+
+.hero-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-background);
+    margin-top: var(--space-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Toolbar - Claymorphic with Punk Chaos */
+.toolbar {
+    height: var(--toolbar-height);
+    background: var(--color-surface);
+    border-bottom: 3px solid var(--color-secondary);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    gap: var(--space-sm);
+    box-shadow: var(--shadow-default);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-background);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-inset);
+    transform: rotate(0.5deg);
+}
+
+.toolbar-group:nth-child(even) {
+    transform: rotate(-0.5deg);
+}
+
+.toolbar-button {
+    min-width: 36px;
+    height: 36px;
+    border: 2px solid var(--color-text);
+    background: var(--color-surface);
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    box-shadow: var(--shadow-button);
+    transition: transform 0.1s, box-shadow 0.1s;
+    padding: 0 var(--space-sm);
+}
+
+.toolbar-button:hover {
+    transform: translateY(-2px) rotate(1deg);
+    box-shadow:
+        6px 6px 14px rgba(139, 115, 85, 0.3),
+        -2px -2px 8px rgba(255, 255, 255, 0.9);
+}
+
+.toolbar-button:active {
+    transform: translateY(0) rotate(0);
+    box-shadow: var(--shadow-inset);
+}
+
+.toolbar-button.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-text);
+}
+
+.toolbar-separator {
+    width: 2px;
+    height: 32px;
+    background: var(--color-grid-line);
+    margin: 0 var(--space-xs);
+    transform: skewX(-3deg);
+}
+
+/* Formula Bar - Essential Spreadsheet Element */
+.formula-bar {
+    height: var(--formula-bar-height);
+    background: var(--color-background);
+    border-bottom: 2px solid var(--color-secondary);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    gap: var(--space-md);
+    box-shadow: var(--shadow-inset);
+}
+
+.cell-reference {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-surface);
+    border: 2px solid var(--color-text);
+    border-radius: 6px;
+    box-shadow: var(--shadow-button);
+    min-width: 60px;
+    text-align: center;
+}
+
+.formula-input {
+    flex: 1;
+    border: 2px solid var(--color-grid-line);
+    background: white;
+    border-radius: var(--radius-default);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    box-shadow: var(--shadow-inset);
+}
+
+.formula-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow:
+        var(--shadow-inset),
+        0 0 0 2px rgba(212, 134, 91, 0.2);
+}
+
+/* Spreadsheet Grid Container */
+.spreadsheet-container {
+    position: relative;
+    overflow: auto;
+    height: calc(100vh - var(--hero-height) - var(--toolbar-height) - var(--formula-bar-height) - var(--bottom-nav-height) - 40px);
+    margin: var(--space-lg);
+    background: white;
+    border: 3px solid var(--color-text);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-default);
+}
+
+.spreadsheet {
+    display: grid;
+    grid-template-columns: var(--header-size) repeat(12, var(--cell-size));
+    grid-auto-rows: var(--header-size);
+}
+
+/* Column Headers */
+.col-header,
+.row-header,
+.corner-cell {
+    background: var(--color-header);
+    border: 1px solid var(--color-grid-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--color-text);
+    position: sticky;
+    z-index: 10;
+    box-shadow:
+        inset 2px 2px 4px rgba(255, 255, 255, 0.6),
+        inset -1px -1px 3px rgba(139, 115, 85, 0.1);
+}
+
+.corner-cell {
+    top: 0;
+    left: 0;
+    z-index: 20;
+    background: var(--color-secondary);
+    color: var(--color-background);
+}
+
+.col-header {
+    top: 0;
+}
+
+.row-header {
+    left: 0;
+    background: var(--color-header);
+}
+
+/* Spreadsheet Cells - Timeline Data */
+.cell {
+    border: 1px solid var(--color-grid-line);
+    padding: var(--space-xs);
+    font-size: 0.75rem;
+    background: white;
+    cursor: cell;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-height: 32px;
+}
+
+.cell:hover {
+    background: rgba(212, 134, 91, 0.08);
+    border-color: var(--color-primary);
+}
+
+.cell.selected {
+    background: var(--color-selected);
+    border: 2px solid var(--color-primary);
+    box-shadow:
+        inset 0 0 8px rgba(212, 134, 91, 0.2),
+        0 0 0 3px rgba(212, 134, 91, 0.1);
+    z-index: 5;
+}
+
+.cell.header-cell {
+    font-weight: 700;
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+/* Timeline-specific cell styling */
+.cell.milestone {
+    background: linear-gradient(135deg, rgba(212, 134, 91, 0.15), rgba(91, 139, 122, 0.15));
+    font-weight: 700;
+    border-left: 4px solid var(--color-primary);
+}
+
+.cell.date {
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+}
+
+.cell.status {
+    text-align: center;
+    justify-content: center;
+}
+
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid currentColor;
+    display: inline-block;
+}
+
+.status-badge.complete {
+    background: rgba(91, 139, 122, 0.2);
+    color: var(--color-accent);
+}
+
+.status-badge.progress {
+    background: rgba(212, 134, 91, 0.2);
+    color: var(--color-primary);
+}
+
+.status-badge.pending {
+    background: rgba(122, 110, 92, 0.2);
+    color: var(--color-text-muted);
+}
+
+/* Bottom Navigation Bar - Punk Clay Tabs */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--color-surface);
+    border-top: 4px solid var(--color-text);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    gap: var(--space-xs);
+    box-shadow:
+        0 -4px 12px rgba(139, 115, 85, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    z-index: 1000;
+    overflow-x: auto;
+}
+
+.sheet-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-background);
+    border: 2px solid var(--color-text);
+    border-bottom: none;
+    border-radius: var(--radius-default) var(--radius-default) 0 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-button);
+    transform: translateY(2px) rotate(-1deg);
+    position: relative;
+}
+
+.sheet-tab:nth-child(even) {
+    transform: translateY(2px) rotate(1deg);
+}
+
+.sheet-tab:hover {
+    transform: translateY(-2px) rotate(0);
+    box-shadow:
+        6px 6px 14px rgba(139, 115, 85, 0.3),
+        -2px -2px 8px rgba(255, 255, 255, 0.9);
+}
+
+.sheet-tab.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    transform: translateY(-4px) rotate(0);
+    box-shadow:
+        8px 8px 16px rgba(139, 115, 85, 0.4),
+        -3px -3px 10px rgba(255, 255, 255, 1);
+    border-color: var(--color-text);
+}
+
+.nav-controls {
+    margin-left: auto;
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.nav-button {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-text);
+    background: var(--color-background);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--color-text);
+    box-shadow: var(--shadow-button);
+    transition: transform 0.1s;
+}
+
+.nav-button:hover {
+    transform: scale(1.1) rotate(3deg);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+    border: 2px solid var(--color-grid-line);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: 6px;
+    border: 2px solid var(--color-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .toolbar {
+        padding: 0 var(--space-sm);
+    }
+
+    .spreadsheet-container {
+        margin: var(--space-sm);
+    }
+
+    --cell-size: 80px;
+}
+</style>
+
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>KINETIC AZURE</h1>
+        <div class="hero-subtitle">Project Timeline Sheet</div>
+    </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+    <div class="toolbar-group">
+        <button class="toolbar-button">B</button>
+        <button class="toolbar-button">I</button>
+        <button class="toolbar-button">U</button>
+    </div>
+
+    <div class="toolbar-separator"></div>
+
+    <div class="toolbar-group">
+        <button class="toolbar-button">←</button>
+        <button class="toolbar-button">→</button>
+        <button class="toolbar-button">↑</button>
+    </div>
+
+    <div class="toolbar-separator"></div>
+
+    <div class="toolbar-group">
+        <button class="toolbar-button">Σ</button>
+        <button class="toolbar-button">%</button>
+        <button class="toolbar-button">$</button>
+    </div>
+
+    <div class="toolbar-separator"></div>
+
+    <div class="toolbar-group">
+        <button class="toolbar-button">SORT</button>
+        <button class="toolbar-button">FILTER</button>
+        <button class="toolbar-button">CHART</button>
+    </div>
+
+    <div class="toolbar-separator"></div>
+
+    <div class="toolbar-group">
+        <button class="toolbar-button active">MERGE</button>
+        <button class="toolbar-button">WRAP</button>
+    </div>
+</div>
+
+<!-- Formula Bar -->
+<div class="formula-bar">
+    <div class="cell-reference">B3</div>
+    <input type="text" class="formula-input" value="=TIMELINE('Project Kickoff', A3)" readonly>
+</div>
+
+<!-- Spreadsheet Container -->
+<div class="spreadsheet-container">
+    <div class="spreadsheet" id="spreadsheet">
+        <!-- Corner Cell -->
+        <div class="corner-cell"></div>
+
+        <!-- Column Headers -->
+        <div class="col-header">A</div>
+        <div class="col-header">B</div>
+        <div class="col-header">C</div>
+        <div class="col-header">D</div>
+        <div class="col-header">E</div>
+        <div class="col-header">F</div>
+        <div class="col-header">G</div>
+        <div class="col-header">H</div>
+        <div class="col-header">I</div>
+        <div class="col-header">J</div>
+        <div class="col-header">K</div>
+        <div class="col-header">L</div>
+
+        <!-- Row 1 - Headers -->
+        <div class="row-header">1</div>
+        <div class="cell header-cell">DATE</div>
+        <div class="cell header-cell">MILESTONE</div>
+        <div class="cell header-cell">OWNER</div>
+        <div class="cell header-cell">STATUS</div>
+        <div class="cell header-cell">BUDGET</div>
+        <div class="cell header-cell">NOTES</div>
+        <div class="cell header-cell">DEPS</div>
+        <div class="cell header-cell">RISK</div>
+        <div class="cell header-cell">IMPACT</div>
+        <div class="cell header-cell">DELIVERABLE</div>
+        <div class="cell header-cell">REVIEW</div>
+        <div class="cell header-cell">APPROVAL</div>
+
+        <!-- Row 2 -->
+        <div class="row-header">2</div>
+        <div class="cell date">2024-01-15</div>
+        <div class="cell milestone">Project Kickoff</div>
+        <div class="cell">Sarah Chen</div>
+        <div class="cell status"><span class="status-badge complete">DONE</span></div>
+        <div class="cell">$2,500</div>
+        <div class="cell">All teams aligned</div>
+        <div class="cell">None</div>
+        <div class="cell">Low</div>
+        <div class="cell">High</div>
+        <div class="cell">Charter Doc</div>
+        <div class="cell">2024-01-20</div>
+        <div class="cell">Approved</div>
+
+        <!-- Row 3 -->
+        <div class="row-header">3</div>
+        <div class="cell date">2024-02-01</div>
+        <div class="cell milestone">Research Phase</div>
+        <div class="cell">Marcus Webb</div>
+        <div class="cell status"><span class="status-badge complete">DONE</span></div>
+        <div class="cell">$8,400</div>
+        <div class="cell">User interviews x12</div>
+        <div class="cell">M1</div>
+        <div class="cell">Med</div>
+        <div class="cell">High</div>
+        <div class="cell">Research Report</div>
+        <div class="cell">2024-02-10</div>
+        <div class="cell">Approved</div>
+
+        <!-- Row 4 -->
+        <div class="row-header">4</div>
+        <div class="cell date">2024-03-05</div>
+        <div class="cell milestone">Design Sprint</div>
+        <div class="cell">Aisha Patel</div>
+        <div class="cell status"><span class="status-badge progress">WIP</span></div>
+        <div class="cell">$6,200</div>
+        <div class="cell">3 concepts ready</div>
+        <div class="cell">M2</div>
+        <div class="cell">Low</div>
+        <div class="cell">High</div>
+        <div class="cell">Prototypes</div>
+        <div class="cell">2024-03-15</div>
+        <div class="cell">Pending</div>
+
+        <!-- Row 5 -->
+        <div class="row-header">5</div>
+        <div class="cell date">2024-03-20</div>
+        <div class="cell milestone">Usability Testing</div>
+        <div class="cell">Jordan Lee</div>
+        <div class="cell status"><span class="status-badge progress">WIP</span></div>
+        <div class="cell">$4,800</div>
+        <div class="cell">Remote sessions</div>
+        <div class="cell">M3</div>
+        <div class="cell">Med</div>
+        <div class="cell">Med</div>
+        <div class="cell">Test Results</div>
+        <div class="cell">2024-03-28</div>
+        <div class="cell">Scheduled</div>
+
+        <!-- Row 6 -->
+        <div class="row-header">6</div>
+        <div class="cell date">2024-04-10</div>
+        <div class="cell milestone">Dev Kickoff</div>
+        <div class="cell">Devon Clarke</div>
+        <div class="cell status"><span class="status-badge pending">NEXT</span></div>
+        <div class="cell">$15,000</div>
+        <div class="cell">Backend + Frontend</div>
+        <div class="cell">M4</div>
+        <div class="cell">High</div>
+        <div class="cell">Critical</div>
+        <div class="cell">Tech Spec</div>
+        <div class="cell">2024-04-05</div>
+        <div class="cell">Draft</div>
+
+        <!-- Row 7 -->
+        <div class="row-header">7</div>
+        <div class="cell date">2024-05-15</div>
+        <div class="cell milestone">Alpha Release</div>
+        <div class="cell">Team Lead</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$22,000</div>
+        <div class="cell">Internal testing</div>
+        <div class="cell">M5</div>
+        <div class="cell">High</div>
+        <div class="cell">Critical</div>
+        <div class="cell">Alpha Build</div>
+        <div class="cell">2024-05-20</div>
+        <div class="cell">TBD</div>
+
+        <!-- Row 8 -->
+        <div class="row-header">8</div>
+        <div class="cell date">2024-06-01</div>
+        <div class="cell milestone">Beta Testing</div>
+        <div class="cell">QA Team</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$8,500</div>
+        <div class="cell">External users</div>
+        <div class="cell">M6</div>
+        <div class="cell">Med</div>
+        <div class="cell">High</div>
+        <div class="cell">Bug Reports</div>
+        <div class="cell">2024-06-15</div>
+        <div class="cell">TBD</div>
+
+        <!-- Row 9 -->
+        <div class="row-header">9</div>
+        <div class="cell date">2024-06-25</div>
+        <div class="cell milestone">Marketing Prep</div>
+        <div class="cell">Riley Kim</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$12,000</div>
+        <div class="cell">Campaign assets</div>
+        <div class="cell">M6</div>
+        <div class="cell">Low</div>
+        <div class="cell">Med</div>
+        <div class="cell">Launch Kit</div>
+        <div class="cell">2024-06-30</div>
+        <div class="cell">TBD</div>
+
+        <!-- Row 10 -->
+        <div class="row-header">10</div>
+        <div class="cell date">2024-07-15</div>
+        <div class="cell milestone">Public Launch</div>
+        <div class="cell">Full Team</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$35,000</div>
+        <div class="cell">Press + Events</div>
+        <div class="cell">All</div>
+        <div class="cell">High</div>
+        <div class="cell">Critical</div>
+        <div class="cell">v1.0</div>
+        <div class="cell">2024-07-20</div>
+        <div class="cell">TBD</div>
+
+        <!-- Additional rows for timeline continuity -->
+        <div class="row-header">11</div>
+        <div class="cell date">2024-08-01</div>
+        <div class="cell milestone">Post-Launch Review</div>
+        <div class="cell">Leadership</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$3,000</div>
+        <div class="cell">Retrospective</div>
+        <div class="cell">M7</div>
+        <div class="cell">Low</div>
+        <div class="cell">Med</div>
+        <div class="cell">Lessons Doc</div>
+        <div class="cell">2024-08-05</div>
+        <div class="cell">TBD</div>
+
+        <div class="row-header">12</div>
+        <div class="cell date">2024-09-01</div>
+        <div class="cell milestone">Iteration 2</div>
+        <div class="cell">Product Team</div>
+        <div class="cell status"><span class="status-badge pending">PLAN</span></div>
+        <div class="cell">$18,000</div>
+        <div class="cell">User feedback</div>
+        <div class="cell">M7</div>
+        <div class="cell">Med</div>
+        <div class="cell">High</div>
+        <div class="cell">Feature Plan</div>
+        <div class="cell">2024-09-15</div>
+        <div class="cell">TBD</div>
+    </div>
+</div>
+
+<!-- Bottom Navigation Bar - Sheet Tabs -->
+<div class="bottom-nav">
+    <div class="sheet-tab active">Timeline</div>
+    <div class="sheet-tab">Budget</div>
+    <div class="sheet-tab">Resources</div>
+    <div class="sheet-tab">Risks</div>
+    <div class="sheet-tab">Dependencies</div>
+
+    <div class="nav-controls">
+        <button class="nav-button" aria-label="Add sheet">+</button>
+        <button class="nav-button" aria-label="Menu">☰</button>
+    </div>
+</div>
+
+<script>
+// Cell selection functionality
+(function() {
+    const cells = document.querySelectorAll('.cell:not(.header-cell)');
+    const cellRef = document.querySelector('.cell-reference');
+    const formulaInput = document.querySelector('.formula-input');
+    let selectedCell = null;
+
+    cells.forEach((cell, index) => {
+        cell.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Remove previous selection
+            if (selectedCell) {
+                selectedCell.classList.remove('selected');
+            }
+
+            // Add new selection
+            cell.classList.add('selected');
+            selectedCell = cell;
+
+            // Calculate cell reference (simplified)
+            const row = Math.floor(index / 12) + 2; // +2 because row 1 is headers
+            const col = String.fromCharCode(65 + (index % 12)); // A-L
+            cellRef.textContent = col + row;
+
+            // Update formula bar with cell content
+            const cellText = cell.textContent.trim();
+            if (cell.classList.contains('milestone')) {
+                formulaInput.value = `=TIMELINE('${cellText}', ${col}${row})`;
+            } else if (cellText.startsWith('$')) {
+                formulaInput.value = `=${cellText}`;
+            } else {
+                formulaInput.value = cellText;
+            }
+        });
+    });
+
+    // Sheet tab switching
+    const tabs = document.querySelectorAll('.sheet-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+
+    // Toolbar button interactions
+    const toolbarButtons = document.querySelectorAll('.toolbar-button');
+    toolbarButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Toggle active state for stateful buttons
+            if (btn.textContent === 'B' || btn.textContent === 'I' || btn.textContent === 'U' || btn.textContent === 'MERGE') {
+                btn.classList.toggle('active');
+            }
+        });
+    });
+})();
+
+// Navigation script
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 57;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fizz Coral - Floor Plan Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Fizz Coral - Floor Plan Viewer
+        ABOUTME: A skeuomorphic floor plan editor combining Bauhaus geometry with metallic warmth
+        ABOUTME: Features realistic architectural tools with dramatic shadows and gradient mesh textures
+
+        AESTHETIC PRINCIPLES:
+        - Bauhaus functional geometry meets skeuomorphic tactile materials
+        - Warm metallic triadic palette (copper, brass, bronze tones)
+        - Dramatic shadows create depth and realistic tool affordances
+        - Organic corner radius softens geometric precision
+        - Grid-based card mosaic layout for tool organization
+
+        KEY TOKENS:
+        --color-primary: #D97757 (warm copper)
+        --color-secondary: #8B7355 (warm bronze)
+        --color-accent: #C9A86A (brass)
+        --space-unit: 4px
+        --type-scale: 1.125 (major second)
+        --radius: 12px (organic)
+        --shadow: dramatic layered depth
+        */
+
+        :root {
+            /* Triadic warm metallic palette with high contrast */
+            --color-primary: #D97757;
+            --color-secondary: #8B7355;
+            --color-accent: #C9A86A;
+            --color-background: #2A2520;
+            --color-surface: #3D3530;
+            --color-surface-elevated: #4A3F38;
+            --color-text: #F5EDE4;
+            --color-text-muted: #BFB5AA;
+            --color-border: #5A4E45;
+            --color-grid: #4A3F38;
+
+            /* Light mode overrides */
+            --color-bg-light: #F5EDE4;
+            --color-surface-light: #FFFFFF;
+            --color-text-light: #2A2520;
+            --color-text-muted-light: #6B5F54;
+
+            /* Typography - Neo-grotesque + Humanist sans */
+            --font-heading: 'Inter', -apple-system, system-ui, sans-serif;
+            --font-body: 'Open Sans', -apple-system, system-ui, sans-serif;
+            --type-scale: 1.125; /* Major second */
+            --letter-spacing-loose: 0.04em;
+            --line-height-loose: 1.8;
+
+            /* Spacing system (4px base) */
+            --space-unit: 4px;
+            --space-1: calc(var(--space-unit) * 1); /* 4px */
+            --space-2: calc(var(--space-unit) * 2); /* 8px */
+            --space-3: calc(var(--space-unit) * 3); /* 12px */
+            --space-4: calc(var(--space-unit) * 4); /* 16px */
+            --space-5: calc(var(--space-unit) * 5); /* 20px */
+            --space-6: calc(var(--space-unit) * 6); /* 24px */
+            --space-8: calc(var(--space-unit) * 8); /* 32px */
+            --space-10: calc(var(--space-unit) * 10); /* 40px */
+            --space-12: calc(var(--space-unit) * 12); /* 48px */
+
+            /* Organic corner radius */
+            --radius-small: 8px;
+            --radius-default: 12px;
+            --radius-large: 20px;
+            --radius-organic: 18px 12px 16px 14px;
+
+            /* Dramatic shadows with layering */
+            --shadow-subtle: 0 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-default:
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                0 1px 3px rgba(0, 0, 0, 0.2);
+            --shadow-dramatic:
+                0 12px 28px rgba(0, 0, 0, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+
+            /* Medium borders */
+            --border-width: 2px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: var(--line-height-loose);
+            letter-spacing: var(--letter-spacing-loose);
+            color: var(--color-text);
+            background: var(--color-background);
+            /* Gradient mesh background texture */
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(217, 119, 87, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(201, 168, 106, 0.1) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            color: var(--color-text-light);
+            background: var(--color-bg-light);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(217, 119, 87, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(201, 168, 106, 0.05) 0%, transparent 50%);
+        }
+
+        /* Typography scale - major second */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: var(--letter-spacing-loose);
+        }
+
+        h1 { font-size: calc(1rem * var(--type-scale) * var(--type-scale) * var(--type-scale) * var(--type-scale)); } /* ~1.802rem */
+        h2 { font-size: calc(1rem * var(--type-scale) * var(--type-scale) * var(--type-scale)); } /* ~1.602rem */
+        h3 { font-size: calc(1rem * var(--type-scale) * var(--type-scale)); } /* ~1.424rem */
+        h4 { font-size: calc(1rem * var(--type-scale)); } /* ~1.266rem */
+
+        /* Top fixed navigation */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-dramatic);
+            /* Skeuomorphic metallic gradient */
+            background: linear-gradient(180deg,
+                var(--color-surface) 0%,
+                var(--color-surface-elevated) 100%);
+        }
+
+        body.light-mode .nav-header {
+            background: linear-gradient(180deg,
+                var(--color-surface-light) 0%,
+                #F0E8DF 100%);
+            border-bottom-color: #D4C4B0;
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--space-4) var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-6);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--color-primary);
+            border-radius: var(--radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-default);
+            /* Skeuomorphic emboss */
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius-default);
+            border: var(--border-width) solid transparent;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: var(--letter-spacing-loose);
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+            box-shadow: var(--shadow-default);
+            /* Skeuomorphic button texture */
+            background: linear-gradient(180deg,
+                var(--color-surface-elevated) 0%,
+                var(--color-surface) 100%);
+            border-color: var(--color-border);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-dramatic);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-inset);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            color: var(--color-text);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle {
+            padding: var(--space-2);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.light-mode .btn {
+            background: linear-gradient(180deg,
+                #FFFFFF 0%,
+                #F0E8DF 100%);
+            color: var(--color-text-light);
+            border-color: #D4C4B0;
+        }
+
+        /* Main content area */
+        main {
+            margin-top: 76px;
+            padding: var(--space-6);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Half viewport hero */
+        .hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--space-12) var(--space-6);
+            background: var(--color-surface);
+            border-radius: var(--radius-organic);
+            box-shadow: var(--shadow-dramatic);
+            margin-bottom: var(--space-8);
+            position: relative;
+            overflow: hidden;
+            /* Skeuomorphic texture overlay */
+            background:
+                linear-gradient(135deg,
+                    var(--color-surface) 0%,
+                    var(--color-surface-elevated) 50%,
+                    var(--color-surface) 100%);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        body.light-mode .hero {
+            background: linear-gradient(135deg,
+                var(--color-surface-light) 0%,
+                #F8F3ED 50%,
+                var(--color-surface-light) 100%);
+            border-color: #D4C4B0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-4);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-6);
+        }
+
+        body.light-mode .hero p {
+            color: var(--color-text-muted-light);
+        }
+
+        /* Card mosaic layout - bento grid */
+        .mosaic-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-organic);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-dramatic);
+            border: var(--border-width) solid var(--color-border);
+            /* Skeuomorphic raised surface */
+            background: linear-gradient(135deg,
+                var(--color-surface-elevated) 0%,
+                var(--color-surface) 100%);
+        }
+
+        body.light-mode .card {
+            background: linear-gradient(135deg,
+                var(--color-surface-light) 0%,
+                #F8F3ED 100%);
+            border-color: #D4C4B0;
+        }
+
+        /* Floor plan specific layout */
+        .floor-plan-container {
+            grid-column: span 8;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .floor-plan-tools {
+            grid-column: span 4;
+        }
+
+        .floor-plan-legend {
+            grid-column: span 4;
+        }
+
+        .floor-plan-layers {
+            grid-column: span 4;
+        }
+
+        .floor-plan-properties {
+            grid-column: span 4;
+        }
+
+        /* Floor plan canvas */
+        .floor-plan-canvas {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            position: relative;
+            overflow: hidden;
+            /* Grid pattern */
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, var(--color-grid) 39px, var(--color-grid) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, var(--color-grid) 39px, var(--color-grid) 40px);
+            box-shadow: var(--shadow-inset);
+        }
+
+        body.light-mode .floor-plan-canvas {
+            background: #FAFAF8;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, #E8E4DC 39px, #E8E4DC 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, #E8E4DC 39px, #E8E4DC 40px);
+        }
+
+        /* Room shapes */
+        .room {
+            position: absolute;
+            border: 3px solid var(--color-primary);
+            background: rgba(217, 119, 87, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: move;
+            box-shadow: var(--shadow-default);
+        }
+
+        .room.selected {
+            border-color: var(--color-accent);
+            box-shadow:
+                0 0 0 3px rgba(201, 168, 106, 0.3),
+                var(--shadow-dramatic);
+        }
+
+        .room-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--color-text);
+            text-align: center;
+            pointer-events: none;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .room-measurement {
+            position: absolute;
+            font-size: 0.75rem;
+            color: var(--color-accent);
+            font-family: var(--font-body);
+            font-weight: 500;
+            background: rgba(42, 37, 32, 0.9);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-small);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        body.light-mode .room-measurement {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-secondary);
+        }
+
+        .measurement-h {
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .measurement-v {
+            right: -48px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Scale indicator */
+        .scale-indicator {
+            position: absolute;
+            bottom: var(--space-4);
+            left: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: rgba(42, 37, 32, 0.95);
+            padding: var(--space-3);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-dramatic);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        body.light-mode .scale-indicator {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #D4C4B0;
+        }
+
+        .scale-bar {
+            width: 80px;
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .scale-bar::before,
+        .scale-bar::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 12px;
+            background: var(--color-accent);
+            top: -4px;
+        }
+
+        .scale-bar::before { left: 0; }
+        .scale-bar::after { right: 0; }
+
+        .scale-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        body.light-mode .scale-text {
+            color: var(--color-text-light);
+        }
+
+        /* Zoom controls */
+        .zoom-controls {
+            position: absolute;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .zoom-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-default);
+            background: var(--color-surface-elevated);
+            border: var(--border-width) solid var(--color-border);
+            color: var(--color-text);
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-dramatic);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            /* Skeuomorphic button */
+            background: linear-gradient(135deg,
+                var(--color-surface-elevated) 0%,
+                var(--color-surface) 100%);
+        }
+
+        .zoom-btn:hover {
+            transform: scale(1.05);
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.4),
+                0 0 0 2px var(--color-accent);
+        }
+
+        .zoom-btn:active {
+            transform: scale(0.95);
+            box-shadow: var(--shadow-inset);
+        }
+
+        body.light-mode .zoom-btn {
+            background: linear-gradient(135deg,
+                #FFFFFF 0%,
+                #F0E8DF 100%);
+            color: var(--color-text-light);
+            border-color: #D4C4B0;
+        }
+
+        /* Tools panel */
+        .tool-group {
+            margin-bottom: var(--space-6);
+        }
+
+        .tool-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .tool-group h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-4);
+            font-size: 1.125rem;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+        }
+
+        .tool-btn {
+            padding: var(--space-4);
+            border-radius: var(--radius-default);
+            background: var(--color-surface-elevated);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            color: var(--color-text);
+            box-shadow: var(--shadow-default);
+            /* Skeuomorphic raised button */
+            background: linear-gradient(135deg,
+                var(--color-surface-elevated) 0%,
+                var(--color-surface) 100%);
+        }
+
+        .tool-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-dramatic);
+            border-color: var(--color-accent);
+        }
+
+        .tool-btn:active,
+        .tool-btn.active {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            box-shadow: var(--shadow-inset);
+        }
+
+        body.light-mode .tool-btn {
+            background: linear-gradient(135deg,
+                #FFFFFF 0%,
+                #F0E8DF 100%);
+            color: var(--color-text-light);
+            border-color: #D4C4B0;
+        }
+
+        body.light-mode .tool-btn:active,
+        body.light-mode .tool-btn.active {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            color: var(--color-text);
+        }
+
+        .tool-icon {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-2);
+            display: block;
+        }
+
+        /* Legend */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            margin-bottom: var(--space-2);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        body.light-mode .legend-item {
+            background: #FAFAF8;
+            border-color: #E8E4DC;
+        }
+
+        .legend-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-small);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+        }
+
+        .legend-label {
+            flex: 1;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Layer toggles */
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            margin-bottom: var(--space-2);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .layer-item:hover {
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-default);
+        }
+
+        body.light-mode .layer-item {
+            background: #FAFAF8;
+            border-color: #E8E4DC;
+        }
+
+        .layer-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-small);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-inset);
+        }
+
+        .layer-item.active .layer-checkbox {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .layer-checkbox::after {
+            content: '✓';
+            color: var(--color-text);
+            font-weight: 700;
+            opacity: 0;
+        }
+
+        .layer-item.active .layer-checkbox::after {
+            opacity: 1;
+        }
+
+        .layer-label {
+            flex: 1;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Accordion content flow */
+        .accordion {
+            margin-top: var(--space-8);
+        }
+
+        .accordion-item {
+            margin-bottom: var(--space-4);
+            background: var(--color-surface);
+            border-radius: var(--radius-organic);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-dramatic);
+            overflow: hidden;
+        }
+
+        body.light-mode .accordion-item {
+            background: var(--color-surface-light);
+            border-color: #D4C4B0;
+        }
+
+        .accordion-header {
+            padding: var(--space-5) var(--space-6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg,
+                var(--color-surface-elevated) 0%,
+                var(--color-surface) 100%);
+            transition: all 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+        }
+
+        body.light-mode .accordion-header {
+            background: linear-gradient(135deg,
+                #FFFFFF 0%,
+                #F8F3ED 100%);
+        }
+
+        body.light-mode .accordion-header:hover {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            color: var(--color-text);
+        }
+
+        .accordion-title {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--color-primary);
+        }
+
+        .accordion-header:hover .accordion-title {
+            color: var(--color-text);
+        }
+
+        .accordion-icon {
+            font-size: 1.25rem;
+            transition: transform 0.2s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+        }
+
+        .accordion-body {
+            padding: var(--space-6);
+            line-height: 1.8;
+        }
+
+        /* Properties panel */
+        .property-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3);
+            margin-bottom: var(--space-2);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        body.light-mode .property-row {
+            background: #FAFAF8;
+            border-color: #E8E4DC;
+        }
+
+        .property-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .property-value {
+            font-family: var(--font-body);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        body.light-mode .property-value {
+            color: var(--color-text-muted-light);
+        }
+
+        /* Focus states */
+        button:focus-visible,
+        .tool-btn:focus-visible,
+        .zoom-btn:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .floor-plan-container {
+                grid-column: span 12;
+            }
+
+            .floor-plan-tools,
+            .floor-plan-legend,
+            .floor-plan-layers,
+            .floor-plan-properties {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: var(--space-3) var(--space-4);
+            }
+
+            .hero {
+                min-height: 40vh;
+                padding: var(--space-8) var(--space-4);
+            }
+
+            main {
+                padding: var(--space-4);
+            }
+
+            .mosaic-grid {
+                gap: var(--space-4);
+            }
+
+            .floor-plan-tools,
+            .floor-plan-legend,
+            .floor-plan-layers,
+            .floor-plan-properties {
+                grid-column: span 12;
+            }
+
+            .tool-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top fixed navigation -->
+    <header class="nav-header">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                        <rect x="11" y="2" width="7" height="5" stroke="currentColor" stroke-width="2"/>
+                        <rect x="2" y="11" width="5" height="7" stroke="currentColor" stroke-width="2"/>
+                        <rect x="9" y="9" width="9" height="9" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span>Fizz Coral</span>
+            </a>
+            <nav class="nav-actions">
+                <button class="btn">Save Plan</button>
+                <button class="btn">Export</button>
+                <button class="btn btn-primary">Share</button>
+                <button class="btn theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="2" x2="10" y2="4" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="16" x2="10" y2="18" stroke="currentColor" stroke-width="2"/>
+                        <line x1="2" y1="10" x2="4" y2="10" stroke="currentColor" stroke-width="2"/>
+                        <line x1="16" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Half viewport hero -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Professional Floor Plan Editor</h1>
+                    <p>Design and visualize architectural spaces with precision. Create detailed floor plans with measurements, annotations, and customizable layers.</p>
+                    <button class="btn btn-primary">Start New Project</button>
+                </div>
+            </section>
+
+            <!-- Card mosaic layout with floor plan -->
+            <div class="mosaic-grid">
+                <!-- Main floor plan canvas -->
+                <div class="card floor-plan-container">
+                    <div class="floor-plan-canvas">
+                        <!-- Living Room -->
+                        <div class="room selected" style="left: 80px; top: 80px; width: 280px; height: 220px;">
+                            <div class="room-label">Living Room</div>
+                            <div class="room-measurement measurement-h">14'0"</div>
+                            <div class="room-measurement measurement-v">11'0"</div>
+                        </div>
+
+                        <!-- Kitchen -->
+                        <div class="room" style="left: 380px; top: 80px; width: 200px; height: 160px;">
+                            <div class="room-label">Kitchen</div>
+                            <div class="room-measurement measurement-h">10'0"</div>
+                            <div class="room-measurement measurement-v">8'0"</div>
+                        </div>
+
+                        <!-- Bedroom 1 -->
+                        <div class="room" style="left: 80px; top: 320px; width: 200px; height: 180px;">
+                            <div class="room-label">Bedroom</div>
+                            <div class="room-measurement measurement-h">10'0"</div>
+                            <div class="room-measurement measurement-v">9'0"</div>
+                        </div>
+
+                        <!-- Bathroom -->
+                        <div class="room" style="left: 300px; top: 320px; width: 140px; height: 120px;">
+                            <div class="room-label">Bath</div>
+                            <div class="room-measurement measurement-h">7'0"</div>
+                            <div class="room-measurement measurement-v">6'0"</div>
+                        </div>
+
+                        <!-- Dining -->
+                        <div class="room" style="left: 460px; top: 260px; width: 180px; height: 160px;">
+                            <div class="room-label">Dining</div>
+                            <div class="room-measurement measurement-h">9'0"</div>
+                            <div class="room-measurement measurement-v">8'0"</div>
+                        </div>
+
+                        <!-- Scale indicator -->
+                        <div class="scale-indicator">
+                            <div class="scale-bar"></div>
+                            <span class="scale-text">5 ft</span>
+                        </div>
+
+                        <!-- Zoom controls -->
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" aria-label="Zoom in">+</button>
+                            <button class="zoom-btn" aria-label="Zoom out">−</button>
+                            <button class="zoom-btn" aria-label="Reset zoom">⟲</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools panel -->
+                <div class="card floor-plan-tools">
+                    <div class="tool-group">
+                        <h3>Drawing Tools</h3>
+                        <div class="tool-grid">
+                            <button class="tool-btn active">
+                                <span class="tool-icon">▭</span>
+                                Rectangle
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">╱</span>
+                                Wall
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">⌂</span>
+                                Door
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">▯</span>
+                                Window
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tool-group">
+                        <h3>Edit Tools</h3>
+                        <div class="tool-grid">
+                            <button class="tool-btn">
+                                <span class="tool-icon">↖</span>
+                                Select
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">✎</span>
+                                Text
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">↔</span>
+                                Measure
+                            </button>
+                            <button class="tool-btn">
+                                <span class="tool-icon">⊗</span>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="card floor-plan-legend">
+                    <h3>Legend</h3>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background: rgba(217, 119, 87, 0.15); border-color: #D97757;"></div>
+                        <div class="legend-label">Living Space</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background: rgba(139, 115, 85, 0.15); border-color: #8B7355;"></div>
+                        <div class="legend-label">Private Space</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background: rgba(201, 168, 106, 0.15); border-color: #C9A86A;"></div>
+                        <div class="legend-label">Service Space</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background: rgba(90, 78, 69, 0.15); border-color: #5A4E45;"></div>
+                        <div class="legend-label">Circulation</div>
+                    </div>
+                </div>
+
+                <!-- Layer toggles -->
+                <div class="card floor-plan-layers">
+                    <h3>Layers</h3>
+                    <div class="layer-item active">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Walls</div>
+                    </div>
+                    <div class="layer-item active">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Doors & Windows</div>
+                    </div>
+                    <div class="layer-item active">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Measurements</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Furniture</div>
+                    </div>
+                    <div class="layer-item active">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Labels</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-checkbox"></div>
+                        <div class="layer-label">Electrical</div>
+                    </div>
+                </div>
+
+                <!-- Properties panel -->
+                <div class="card floor-plan-properties">
+                    <h3>Properties</h3>
+                    <div class="property-row">
+                        <span class="property-label">Total Area:</span>
+                        <span class="property-value">1,250 sq ft</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Rooms:</span>
+                        <span class="property-value">5</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Scale:</span>
+                        <span class="property-value">1/4" = 1'0"</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Grid Size:</span>
+                        <span class="property-value">1 foot</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Selected:</span>
+                        <span class="property-value">Living Room</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Room Area:</span>
+                        <span class="property-value">154 sq ft</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion content flow -->
+            <section class="accordion">
+                <div class="accordion-item active">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Getting Started</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Begin your floor plan by selecting a drawing tool from the toolbar. Use the Rectangle tool to create room outlines, then add walls, doors, and windows. Click and drag on the canvas to place elements. All measurements are displayed automatically in feet and inches.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Layer Management</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Toggle layers on and off to focus on specific aspects of your design. Hide furniture to work on walls, or turn off measurements for a cleaner presentation view. Each layer can be locked to prevent accidental edits.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Measurements & Scale</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>The current scale is 1/4" = 1'0", with a grid spacing of 1 foot. Use the Measure tool to add custom dimensions between any two points. The scale indicator at the bottom left shows the relationship between screen distance and real-world measurements.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Export Options</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Export your floor plan as PNG, PDF, or DWG format. PDF exports include all layers and maintain vector quality for printing. DWG files are compatible with AutoCAD and other professional CAD software.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        // Tool selection
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Layer toggles
+        document.querySelectorAll('.layer-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
+        // Room selection
+        document.querySelectorAll('.room').forEach(room => {
+            room.addEventListener('click', () => {
+                document.querySelectorAll('.room').forEach(r => r.classList.remove('selected'));
+                room.classList.add('selected');
+            });
+        });
+
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isActive = item.classList.contains('active');
+
+                // Close all items
+                document.querySelectorAll('.accordion-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Navigation script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 65;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design #42 - Bolt Core</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+ABOUTME: Design #42 - Bolt Core
+ABOUTME: A classic newspaper design with warm monochrome palette and mid-century modern elegance
+
+DESIGN SYSTEM: Bolt Core
+Tagline: Warm palette, monochrome spirit
+
+AESTHETIC PRINCIPLES:
+1. Traditional newspaper structure - masthead, columns, hierarchy
+2. Warm monochrome palette with vivid burnt orange accent
+3. Mid-century modern influences in typography and spacing
+4. Ultra-airy density for breathing room between articles
+5. Classic editorial design with modern restraint
+
+KEY TOKENS:
+--color-primary: #D45F1F (Burnt Orange)
+--color-background: #FAF8F5 (Warm Cream)
+--color-surface: #FFFFFF
+--color-text: #2B2621 (Warm Black)
+--space-unit: 24px (Ultra-airy)
+
+FUNCTIONAL DIRECTION: newspaper
+- Masthead with publication info
+- Multi-column article layout
+- Headline hierarchy (h1-h4)
+- Article bylines and datelines
+- Section dividers
+- Pull quotes
+- Photo captions with credit lines
+- Sidebar content areas
+-->
+
+<style>
+:root {
+    /* Colors - Warm Monochrome with Vivid Accent */
+    --color-primary: #D45F1F;
+    --color-primary-dark: #A8491A;
+    --color-background: #FAF8F5;
+    --color-surface: #FFFFFF;
+    --color-text: #2B2621;
+    --color-text-muted: #6B635A;
+    --color-text-lighter: #9A9189;
+    --color-border: #E5DFD8;
+    --color-accent-bg: #FFF5EF;
+
+    /* Typography - Serif for headlines (Playfair), Sans for body (Source Sans) */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Source Sans 3', sans-serif;
+
+    /* Spacing - Ultra Airy (24px base) */
+    --space-unit: 24px;
+    --space-xs: calc(var(--space-unit) * 0.5);    /* 12px */
+    --space-sm: calc(var(--space-unit) * 0.75);   /* 18px */
+    --space-md: var(--space-unit);                /* 24px */
+    --space-lg: calc(var(--space-unit) * 1.5);    /* 36px */
+    --space-xl: calc(var(--space-unit) * 2);      /* 48px */
+    --space-xxl: calc(var(--space-unit) * 3);     /* 72px */
+
+    /* Shapes - Flat design, minimal corners */
+    --radius-default: 2px;
+    --shadow-default: none;
+    --border-thin: 1px solid var(--color-border);
+    --border-medium: 2px solid var(--color-text);
+    --border-accent: 3px solid var(--color-primary);
+
+    /* Typography Scale - Perfect Fourth (1.333) */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.333rem;     /* 21px */
+    --text-2xl: 1.777rem;    /* 28px */
+    --text-3xl: 2.369rem;    /* 38px */
+    --text-4xl: 3.157rem;    /* 50px */
+    --text-5xl: 4.209rem;    /* 67px */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* MASTHEAD */
+.masthead {
+    background-color: var(--color-surface);
+    border-bottom: var(--border-medium);
+    padding: var(--space-lg) var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.masthead-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.newspaper-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-5xl);
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+}
+
+.masthead-tagline {
+    font-size: var(--text-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+}
+
+.masthead-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    border-top: var(--border-thin);
+    padding-top: var(--space-sm);
+}
+
+.issue-number {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* SIDE COLLAPSIBLE NAV */
+.nav-toggle {
+    position: fixed;
+    top: var(--space-md);
+    left: var(--space-md);
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 12px;
+    transition: transform 0.3s ease;
+}
+
+.nav-toggle:hover {
+    transform: scale(1.05);
+}
+
+.nav-toggle:focus {
+    outline: 3px solid var(--color-primary-dark);
+    outline-offset: 2px;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: var(--color-surface);
+    transition: all 0.3s ease;
+}
+
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100vh;
+    background: var(--color-surface);
+    border-right: var(--border-medium);
+    z-index: 999;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    padding: var(--space-xxl) var(--space-md) var(--space-md);
+}
+
+.side-nav.active {
+    left: 0;
+}
+
+.nav-section {
+    margin-bottom: var(--space-lg);
+}
+
+.nav-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+    border-bottom: var(--border-accent);
+    padding-bottom: var(--space-xs);
+}
+
+.nav-links {
+    list-style: none;
+}
+
+.nav-links li {
+    margin-bottom: var(--space-xs);
+}
+
+.nav-links a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    display: block;
+    padding: var(--space-xs);
+    transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: var(--color-primary);
+    padding-left: var(--space-sm);
+}
+
+.nav-links a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* MAIN CONTAINER */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-md) var(--space-xxl);
+}
+
+/* HERO SECTIONS LAYOUT */
+.section {
+    margin-bottom: var(--space-xxl);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.section-label {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-surface);
+    background: var(--color-primary);
+    padding: var(--space-xs) var(--space-sm);
+}
+
+.section-divider {
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+}
+
+/* LEAD STORY - Full Width */
+.lead-story {
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    border: var(--border-thin);
+}
+
+.lead-headline {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.lead-subheadline {
+    font-size: var(--text-xl);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.article-meta {
+    display: flex;
+    gap: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: var(--border-thin);
+}
+
+.byline {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.dateline {
+    font-style: italic;
+}
+
+.article-content {
+    columns: 2;
+    column-gap: var(--space-xl);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+}
+
+.article-content p {
+    margin-bottom: var(--space-md);
+}
+
+.article-content p:first-child::first-letter {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    margin-right: var(--space-xs);
+    margin-top: var(--space-xs);
+    color: var(--color-primary);
+}
+
+/* MULTI-COLUMN LAYOUT */
+.columns-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.columns-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+/* ARTICLE CARD */
+.article-card {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    border: var(--border-thin);
+}
+
+.article-headline {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.article-headline a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.article-headline a:hover {
+    color: var(--color-primary);
+}
+
+.article-headline a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.article-excerpt {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+}
+
+/* PHOTO WITH CAPTION */
+.photo-block {
+    margin-bottom: var(--space-lg);
+}
+
+.photo-placeholder {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #E5DFD8 0%, #C8BFB5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    color: var(--color-text-lighter);
+    margin-bottom: var(--space-sm);
+    border: var(--border-thin);
+}
+
+.photo-caption {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.photo-credit {
+    font-size: var(--text-xs);
+    color: var(--color-text-lighter);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: var(--space-xs);
+}
+
+/* PULL QUOTE */
+.pull-quote {
+    background: var(--color-accent-bg);
+    border-left: var(--border-accent);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+
+.pull-quote-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-text);
+    font-style: italic;
+    margin-bottom: var(--space-sm);
+}
+
+.pull-quote-attribution {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-style: normal;
+}
+
+/* TABS PANEL (Content Flow) */
+.tabs-container {
+    margin-top: var(--space-xl);
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: var(--border-medium);
+    margin-bottom: var(--space-lg);
+}
+
+.tab-button {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: none;
+    padding: var(--space-sm) var(--space-lg);
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+
+.tab-button:hover {
+    color: var(--color-text);
+    background: var(--color-accent-bg);
+}
+
+.tab-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.tab-button.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* SIDEBAR CONTENT */
+.sidebar-box {
+    background: var(--color-surface);
+    border: var(--border-medium);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.sidebar-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+}
+
+.sidebar-list {
+    list-style: none;
+}
+
+.sidebar-list li {
+    padding: var(--space-sm) 0;
+    border-bottom: var(--border-thin);
+    font-size: var(--text-sm);
+}
+
+.sidebar-list li:last-child {
+    border-bottom: none;
+}
+
+.sidebar-list a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.sidebar-list a:hover {
+    color: var(--color-primary);
+}
+
+.sidebar-list a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* FOOTER */
+.newspaper-footer {
+    border-top: var(--border-medium);
+    padding: var(--space-xl) var(--space-md);
+    margin-top: var(--space-xxl);
+    background: var(--color-surface);
+    text-align: center;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.footer-nav a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.footer-nav a:hover {
+    color: var(--color-primary);
+}
+
+.footer-nav a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.footer-copyright {
+    font-size: var(--text-xs);
+    color: var(--color-text-lighter);
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .columns-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .article-content {
+        columns: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .columns-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .newspaper-title {
+        font-size: var(--text-3xl);
+    }
+
+    .lead-headline {
+        font-size: var(--text-2xl);
+    }
+
+    .masthead-meta {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+
+    .lead-story {
+        padding: var(--space-md);
+    }
+
+    .article-card {
+        padding: var(--space-md);
+    }
+}
+
+/* FOCUS STATES */
+a:focus,
+button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* TOUCH TARGETS */
+@media (pointer: coarse) {
+    .nav-links a,
+    .tab-button,
+    .sidebar-list a,
+    .footer-nav a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+}
+</style>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+    <div class="masthead-inner">
+        <h1 class="newspaper-title">The Bolt Core</h1>
+        <p class="masthead-tagline">Warm palette, monochrome spirit</p>
+        <div class="masthead-meta">
+            <span class="issue-number">Vol. XLII • No. 42</span>
+            <span>•</span>
+            <span>Tuesday, January 7, 2026</span>
+            <span>•</span>
+            <span>Design Chronicle Edition</span>
+        </div>
+    </div>
+</header>
+
+<!-- SIDE COLLAPSIBLE NAVIGATION -->
+<button class="nav-toggle" aria-label="Toggle navigation" id="navToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<nav class="side-nav" id="sideNav">
+    <div class="nav-section">
+        <h2 class="nav-section-title">Sections</h2>
+        <ul class="nav-links">
+            <li><a href="#front-page">Front Page</a></li>
+            <li><a href="#world">World News</a></li>
+            <li><a href="#business">Business</a></li>
+            <li><a href="#opinion">Opinion</a></li>
+            <li><a href="#culture">Arts & Culture</a></li>
+        </ul>
+    </div>
+    <div class="nav-section">
+        <h2 class="nav-section-title">Special Features</h2>
+        <ul class="nav-links">
+            <li><a href="#photography">Photo Essay</a></li>
+            <li><a href="#interviews">Interviews</a></li>
+            <li><a href="#archives">Archives</a></li>
+        </ul>
+    </div>
+    <div class="nav-section">
+        <h2 class="nav-section-title">About</h2>
+        <ul class="nav-links">
+            <li><a href="#subscribe">Subscribe</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+            <li><a href="#advertising">Advertising</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="container">
+
+    <!-- FRONT PAGE SECTION -->
+    <section class="section" id="front-page">
+        <div class="section-header">
+            <div class="section-label">Front Page</div>
+            <div class="section-divider"></div>
+        </div>
+
+        <!-- LEAD STORY -->
+        <article class="lead-story">
+            <h2 class="lead-headline">Design Systems Transform Modern Digital Landscape</h2>
+            <p class="lead-subheadline">Mid-century principles meet contemporary innovation in unprecedented fusion of form and function</p>
+
+            <div class="article-meta">
+                <span class="byline">By Margaret Chen, Senior Design Correspondent</span>
+                <span>•</span>
+                <span class="dateline">January 7, 2026</span>
+            </div>
+
+            <div class="article-content">
+                <p>The digital design industry experienced a watershed moment this week as leading practitioners unveiled a comprehensive framework that bridges classical design principles with cutting-edge technological capabilities. Industry experts suggest this development represents the most significant shift in design methodology since the introduction of responsive web design.</p>
+
+                <p>Speaking at the annual Design Innovation Summit, noted design theorist Dr. James Whitmore described the movement as "a necessary reconciliation between the timeless aesthetics of mid-century modernism and the functional demands of contemporary digital experiences." The new framework emphasizes restraint, hierarchy, and purposeful use of color—principles that harken back to the golden age of graphic design while addressing modern accessibility and usability standards.</p>
+
+                <p>Central to this evolution is the concept of "monochrome spirit"—a design philosophy that advocates for limited color palettes anchored by neutral tones with strategic accent colors. "We've moved beyond the maximalist trends of recent years," explains creative director Sarah Rodriguez. "Today's most effective designs speak through subtle variations rather than bold statements."</p>
+
+                <p>The warm palette approach, featuring earth tones and carefully selected accent hues, has gained particular traction among enterprise clients seeking to convey both professionalism and approachability. Market research indicates that 73% of Fortune 500 companies have adopted similar color strategies in their recent rebranding efforts, citing improved user engagement and brand recognition metrics.</p>
+            </div>
+
+            <div class="pull-quote">
+                <p class="pull-quote-text">"We've moved beyond maximalist trends. Today's most effective designs speak through subtle variations."</p>
+                <p class="pull-quote-attribution">— Sarah Rodriguez, Creative Director</p>
+            </div>
+        </article>
+
+        <!-- THREE COLUMN LAYOUT -->
+        <div class="columns-3">
+            <article class="article-card">
+                <div class="photo-block">
+                    <div class="photo-placeholder">Architecture Study</div>
+                    <p class="photo-caption">The intersection of geometric forms and organic curves exemplifies mid-century modern design principles in contemporary architecture.</p>
+                    <p class="photo-credit">Photo: Thomas Anderson / Design Archive</p>
+                </div>
+                <h3 class="article-headline"><a href="#">Geometric Forms Return to Architectural Forefront</a></h3>
+                <div class="article-meta">
+                    <span class="byline">David Park</span>
+                    <span class="dateline">Jan 7, 2026</span>
+                </div>
+                <p class="article-excerpt">Leading architects are rediscovering the power of simple geometric forms, embracing the clarity and purpose that defined the mid-century modern movement. The trend signals a departure from ornamental excess toward functional beauty.</p>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Typography Renaissance Sweeps Design Industry</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Eleanor Wright</span>
+                    <span class="dateline">Jan 7, 2026</span>
+                </div>
+                <p class="article-excerpt">Classical serif typefaces are experiencing an unexpected revival as designers seek to inject warmth and personality into digital interfaces. Industry surveys reveal a 40% increase in serif font adoption over the past eighteen months.</p>
+                <p class="article-excerpt">Font foundries report unprecedented demand for transitional and old-style serifs, with designers citing their ability to convey both authority and accessibility. "Typography is no longer just functional," notes type designer Marcus Lee. "It's the primary vehicle for brand personality."</p>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Minimalism Redefined: Less Is Still More</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Patricia Santos</span>
+                    <span class="dateline">Jan 7, 2026</span>
+                </div>
+                <p class="article-excerpt">The minimalist movement undergoes critical examination as designers balance aesthetic purity with functional requirements. Critics argue that true minimalism must enhance rather than obscure usability.</p>
+                <p class="article-excerpt">Recent studies demonstrate that ultra-minimal interfaces often increase cognitive load, leading practitioners to advocate for "purposeful minimalism" that retains essential visual cues while eliminating unnecessary decoration.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- WORLD NEWS SECTION -->
+    <section class="section" id="world">
+        <div class="section-header">
+            <div class="section-label">World News</div>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="columns-2">
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Global Design Standards Committee Convenes</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Robert Kim</span>
+                    <span class="dateline">Jan 6, 2026</span>
+                </div>
+                <div class="photo-block">
+                    <div class="photo-placeholder">Conference Hall</div>
+                    <p class="photo-caption">Delegates from 47 nations gather to establish universal accessibility standards.</p>
+                    <p class="photo-credit">Photo: International Design Bureau</p>
+                </div>
+                <p class="article-excerpt">Representatives from major design organizations worldwide convened in Geneva to establish baseline accessibility standards for digital interfaces. The landmark agreement mandates WCAG AA compliance across all public-facing digital properties by 2027.</p>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">European Union Introduces Design Ethics Framework</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Francesca Bianchi</span>
+                    <span class="dateline">Jan 6, 2026</span>
+                </div>
+                <p class="article-excerpt">The European Commission unveiled comprehensive guidelines addressing ethical considerations in interface design, focusing on data privacy, attention economy, and user autonomy. The framework introduces penalties for intentionally deceptive design patterns.</p>
+                <p class="article-excerpt">Industry leaders have largely welcomed the regulations, viewing them as necessary safeguards against manipulative practices. "This levels the playing field," explains Amsterdam-based designer Pieter van der Berg. "Companies can no longer compete on who can trick users most effectively."</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- BUSINESS SECTION -->
+    <section class="section" id="business">
+        <div class="section-header">
+            <div class="section-label">Business</div>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="columns-3">
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Design Tool Market Reaches $12 Billion Valuation</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Michael Chang</span>
+                    <span class="dateline">Jan 7, 2026</span>
+                </div>
+                <p class="article-excerpt">The professional design software market continues its remarkable growth trajectory, with analysts projecting 18% year-over-year expansion. Cloud-based collaboration tools dominate recent investment activity.</p>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Startups Embrace Design-First Development</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Jennifer Liu</span>
+                    <span class="dateline">Jan 7, 2026</span>
+                </div>
+                <p class="article-excerpt">Venture capital firms increasingly prioritize design capabilities when evaluating investment opportunities. Industry data shows design-led companies generate 56% higher shareholder returns over five-year periods.</p>
+            </article>
+
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">Market Watch</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#">Design Stock Index: ↑ 3.2%</a></li>
+                    <li><a href="#">Creative Employment: Record High</a></li>
+                    <li><a href="#">Font Licensing Revenue: $847M</a></li>
+                    <li><a href="#">Design Tool Subscriptions: ↑ 22%</a></li>
+                    <li><a href="#">Freelance Designer Rates: ↑ 15%</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPINION SECTION WITH TABS -->
+    <section class="section" id="opinion">
+        <div class="section-header">
+            <div class="section-label">Opinion</div>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-nav" role="tablist">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="editorial-panel" id="editorial-tab">Editorial</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="letters-panel" id="letters-tab">Letters</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="columns-panel" id="columns-tab">Columns</button>
+            </div>
+
+            <div class="tab-panel active" role="tabpanel" id="editorial-panel" aria-labelledby="editorial-tab">
+                <article class="article-card">
+                    <h3 class="article-headline">The Editorial Board: Design as Democratic Practice</h3>
+                    <div class="article-meta">
+                        <span class="byline">The Editorial Board</span>
+                        <span class="dateline">Jan 7, 2026</span>
+                    </div>
+                    <p class="article-excerpt">Good design should not be a luxury reserved for those who can afford premium services. As digital interfaces increasingly mediate essential aspects of daily life—from healthcare to government services—the quality of design becomes a matter of equity and access.</p>
+                    <p class="article-excerpt">We applaud recent initiatives to establish design standards for public services, but more must be done. Every citizen deserves interfaces that respect their time, protect their privacy, and facilitate rather than frustrate their goals. This is not merely an aesthetic concern but a fundamental question of democratic participation in the digital age.</p>
+                </article>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="letters-panel" aria-labelledby="letters-tab">
+                <article class="article-card">
+                    <h3 class="article-headline">Letters to the Editor</h3>
+
+                    <p class="article-excerpt"><strong>On Accessibility:</strong> Your recent coverage of accessibility standards was excellent, but overlooked the lived experience of disabled users. As someone who relies on screen readers daily, I can attest that compliance alone doesn't guarantee usability. — Alex Morrison, Portland</p>
+
+                    <p class="article-excerpt"><strong>Design Education:</strong> The article about design education reform raised important questions but missed the mark on practical solutions. Universities must forge stronger connections with industry. — Prof. Linda Yamamoto, RISD</p>
+
+                    <p class="article-excerpt"><strong>Color Trends:</strong> I was delighted to see coverage of warm monochrome palettes. After years of cold, corporate blue dominating digital spaces, this shift toward warmth and humanity is overdue. — Christopher Bell, Design Director</p>
+                </article>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="columns-panel" aria-labelledby="columns-tab">
+                <article class="article-card">
+                    <h3 class="article-headline">Design Decoded: The Tyranny of Trends</h3>
+                    <div class="article-meta">
+                        <span class="byline">Victoria Chen, Contributing Columnist</span>
+                        <span class="dateline">Jan 7, 2026</span>
+                    </div>
+                    <p class="article-excerpt">Every January brings predictions about the year's design trends, and every January I grow more skeptical of the entire exercise. Trends are descriptive, not prescriptive—they tell us what is happening, not what should happen.</p>
+                    <p class="article-excerpt">The best designers I know pay remarkably little attention to trends. Instead, they focus on understanding their users, solving real problems, and creating work with lasting value. Perhaps this is the trend we should actually follow: the trend of timeless, principled design thinking.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CULTURE SECTION -->
+    <section class="section" id="culture">
+        <div class="section-header">
+            <div class="section-label">Arts & Culture</div>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="columns-2">
+            <article class="article-card">
+                <div class="photo-block">
+                    <div class="photo-placeholder">Exhibition Space</div>
+                    <p class="photo-caption">Visitors examine vintage design posters at the Museum of Contemporary Design's retrospective exhibition.</p>
+                    <p class="photo-credit">Photo: Sofia Martinez / Cultural Archive</p>
+                </div>
+                <h3 class="article-headline"><a href="#">Mid-Century Modern Retrospective Opens to Critical Acclaim</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Amanda Foster</span>
+                    <span class="dateline">Jan 5, 2026</span>
+                </div>
+                <p class="article-excerpt">The Museum of Contemporary Design unveils its most ambitious exhibition to date, tracing the evolution of mid-century modern design from its 1940s origins through its contemporary interpretations. The comprehensive survey features over 300 objects spanning furniture, graphics, and architecture.</p>
+                <p class="article-excerpt">Curator Daniel Rosenberg describes the exhibition as "a meditation on how certain design principles transcend their historical moment to inform generations of practitioners." The show runs through April 2026.</p>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-headline"><a href="#">Typography Biennial Celebrates Print's Enduring Influence</a></h3>
+                <div class="article-meta">
+                    <span class="byline">Richard Thompson</span>
+                    <span class="dateline">Jan 5, 2026</span>
+                </div>
+                <p class="article-excerpt">The International Typography Biennial returned to Munich this week, showcasing experimental work that challenges conventional notions of legibility and function. Despite digital dominance, printmaking techniques remain central to typographic innovation.</p>
+                <p class="article-excerpt">"Digital tools have democratized typography," observes biennial director Klaus Weber, "but the discipline's roots in craftsmanship continue to inform its most compelling expressions." The event features workshops, lectures, and exhibitions through January.</p>
+            </article>
+        </div>
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="newspaper-footer">
+    <nav class="footer-nav">
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+        <a href="#">Advertise</a>
+        <a href="#">Subscribe</a>
+        <a href="#">Archives</a>
+        <a href="#">Careers</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </nav>
+    <p class="footer-copyright">© 2026 The Bolt Core. All rights reserved. Design #42 / 1000 Design Vibes</p>
+</footer>
+
+<script>
+// SIDE NAV TOGGLE
+(function() {
+    const navToggle = document.getElementById('navToggle');
+    const sideNav = document.getElementById('sideNav');
+
+    navToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        sideNav.classList.toggle('active');
+    });
+
+    // Close nav when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!sideNav.contains(e.target) && !navToggle.contains(e.target)) {
+            navToggle.classList.remove('active');
+            sideNav.classList.remove('active');
+        }
+    });
+})();
+
+// TABS FUNCTIONALITY
+(function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active state from all buttons and panels
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+
+            // Add active state to clicked button and corresponding panel
+            this.classList.add('active');
+            this.setAttribute('aria-selected', 'true');
+            const panelId = this.getAttribute('aria-controls');
+            document.getElementById(panelId).classList.add('active');
+        });
+    });
+})();
+
+// NAVIGATION SCRIPT
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 42;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

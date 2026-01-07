@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antique Amber - Pixel Art UI</title>
+
+    <!-- Google Fonts for body text fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ============================================
+        DESIGN: Antique Amber (#92)
+        ABOUTME: A pixel art interface for government content aimed at children
+        ABOUTME: Combines 8-bit retro gaming aesthetics with warm jewel tones
+        ============================================
+
+        AESTHETIC PRINCIPLES:
+        - PRIMARY: Pixel art UI with chunky 8-bit style buttons and borders
+        - Pixelated fonts using custom pixel rendering
+        - Chiptune color palette: warm jewel tones (amber, ruby, emerald)
+        - Retro game aesthetics with pixel-perfect borders and shadows
+        - Skeuomorphic depth through layered pixel shadows
+        - Scandinavian warmth meets nostalgic gaming
+
+        KEY TOKENS:
+        --pixel-size: 4px (base pixel unit)
+        --color-primary: #D4A574 (warm amber)
+        --color-secondary: #8B4513 (saddle brown)
+        --color-accent: #CD853F (peru gold)
+        --font-pixel: Custom pixel font stack
+        --shadow-pixel: Stepped pixel shadow
+        */
+
+        :root {
+            /* Pixel Art Base */
+            --pixel-size: 4px;
+            --pixel-border: calc(var(--pixel-size) * 0.5);
+
+            /* Colors - Warm Jewel Triadic */
+            --color-primary: #D4A574; /* Antique amber */
+            --color-secondary: #8B4513; /* Saddle brown */
+            --color-accent: #CD853F; /* Peru gold */
+            --color-ruby: #9B111E; /* Ruby red */
+            --color-emerald: #50C878; /* Emerald green */
+
+            --color-background: #2C1810; /* Deep brown */
+            --color-surface: #4A3728; /* Medium brown */
+            --color-surface-light: #6B5444; /* Light brown */
+            --color-text: #F5DEB3; /* Wheat */
+            --color-text-muted: #C9A881; /* Tan */
+            --color-border: #1A0F08; /* Almost black */
+
+            /* Typography */
+            --font-heading: 'Crimson Text', 'Georgia', serif;
+            --font-body: 'Libre Baskerville', 'Garamond', serif;
+            --font-pixel: monospace;
+
+            /* Type Scale - Perfect Fourth (1.333) */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.333rem;
+            --text-xl: 1.777rem;
+            --text-2xl: 2.369rem;
+            --text-3xl: 3.157rem;
+
+            /* Spacing - 12px base */
+            --space-unit: 12px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+            --space-2xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 999px; /* pill */
+            --radius-pixel: 0;
+
+            /* Shadows - Layered pixel style */
+            --shadow-pixel:
+                var(--pixel-size) var(--pixel-size) 0 rgba(0,0,0,0.3),
+                calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 2) 0 rgba(0,0,0,0.2),
+                calc(var(--pixel-size) * 3) calc(var(--pixel-size) * 3) 0 rgba(0,0,0,0.1);
+
+            --shadow-pixel-inset:
+                inset var(--pixel-size) var(--pixel-size) 0 rgba(0,0,0,0.4),
+                inset calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 rgba(255,255,255,0.1);
+        }
+
+        /* Pixel Art Font Rendering */
+        @font-face {
+            font-family: 'PixelArt';
+            src: local('Courier New'), local('Courier'), local('Monaco');
+            font-weight: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: -0.02em;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        /* Pixel Grid Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent calc(var(--pixel-size) - 1px), var(--color-border) calc(var(--pixel-size) - 1px), var(--color-border) var(--pixel-size)),
+                repeating-linear-gradient(0deg, transparent, transparent calc(var(--pixel-size) - 1px), var(--color-border) calc(var(--pixel-size) - 1px), var(--color-border) var(--pixel-size));
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Organic Pattern Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(212, 165, 116, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(205, 133, 63, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(155, 17, 30, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-pixel);
+            font-family: var(--font-pixel);
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+        }
+
+        .breadcrumb-item {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--color-primary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .breadcrumb-separator {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* Hero Section with Image Background */
+        .hero {
+            position: relative;
+            padding: var(--space-2xl) var(--space-md);
+            margin-bottom: var(--space-2xl);
+            background: linear-gradient(135deg,
+                var(--color-secondary) 0%,
+                var(--color-surface) 50%,
+                var(--color-primary) 100%);
+            border: calc(var(--pixel-size) * 2) solid var(--color-border);
+            box-shadow: var(--shadow-pixel);
+            overflow: hidden;
+        }
+
+        /* Pixel Art Border Pattern */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--pixel-size) * 3);
+            background:
+                linear-gradient(90deg,
+                    var(--color-primary) 0%,
+                    var(--color-primary) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    var(--color-accent) 50%,
+                    var(--color-accent) 75%,
+                    transparent 75%,
+                    transparent 100%);
+            background-size: calc(var(--pixel-size) * 8) 100%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--pixel-size) * 3);
+            background:
+                linear-gradient(90deg,
+                    var(--color-ruby) 0%,
+                    var(--color-ruby) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    var(--color-emerald) 50%,
+                    var(--color-emerald) 75%,
+                    transparent 75%,
+                    transparent 100%);
+            background-size: calc(var(--pixel-size) * 8) 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            text-shadow:
+                2px 2px 0 var(--color-border),
+                4px 4px 0 rgba(0,0,0,0.3);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-tagline {
+            font-size: var(--text-lg);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Pixel Button */
+        .btn-pixel {
+            display: inline-block;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-primary);
+            color: var(--color-border);
+            font-family: var(--font-pixel);
+            font-size: var(--text-base);
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: calc(var(--pixel-size) * 1) solid var(--color-border);
+            box-shadow: var(--shadow-pixel);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative;
+        }
+
+        .btn-pixel:hover {
+            transform: translate(-2px, -2px);
+            box-shadow:
+                calc(var(--pixel-size) * 1.5) calc(var(--pixel-size) * 1.5) 0 rgba(0,0,0,0.3),
+                calc(var(--pixel-size) * 3) calc(var(--pixel-size) * 3) 0 rgba(0,0,0,0.2),
+                calc(var(--pixel-size) * 4.5) calc(var(--pixel-size) * 4.5) 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-pixel:active {
+            transform: translate(2px, 2px);
+            box-shadow:
+                var(--pixel-size) var(--pixel-size) 0 rgba(0,0,0,0.4);
+        }
+
+        .btn-pixel.btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-pixel.btn-accent {
+            background: var(--color-accent);
+            color: var(--color-border);
+        }
+
+        /* Editorial Content Flow with Tree Structure */
+        .content-tree {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .tree-node {
+            padding-left: var(--space-md);
+            border-left: calc(var(--pixel-size) * 2) solid var(--color-primary);
+            position: relative;
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: calc(var(--pixel-size) * -1.5);
+            top: var(--space-md);
+            width: calc(var(--pixel-size) * 3);
+            height: calc(var(--pixel-size) * 3);
+            background: var(--color-primary);
+            box-shadow:
+                0 0 0 2px var(--color-border),
+                var(--pixel-size) var(--pixel-size) 0 var(--color-border);
+        }
+
+        .tree-node-child {
+            margin-left: var(--space-lg);
+            border-left-color: var(--color-accent);
+        }
+
+        .tree-node-child::before {
+            background: var(--color-accent);
+        }
+
+        .tree-node-grandchild {
+            margin-left: calc(var(--space-lg) * 2);
+            border-left-color: var(--color-emerald);
+        }
+
+        .tree-node-grandchild::before {
+            background: var(--color-emerald);
+        }
+
+        /* Card Components */
+        .card-pixel {
+            background: var(--color-surface);
+            border: calc(var(--pixel-size) * 1.5) solid var(--color-primary);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-pixel);
+            position: relative;
+        }
+
+        .card-pixel::before {
+            content: '';
+            position: absolute;
+            top: calc(var(--pixel-size) * -1);
+            right: calc(var(--pixel-size) * -1);
+            width: calc(var(--pixel-size) * 4);
+            height: calc(var(--pixel-size) * 4);
+            background: var(--color-accent);
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.02em;
+        }
+
+        .card-content {
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        /* Icon Boxes - Isometric Style */
+        .icon-box {
+            width: calc(var(--pixel-size) * 16);
+            height: calc(var(--pixel-size) * 16);
+            background: var(--color-accent);
+            border: calc(var(--pixel-size) * 0.5) solid var(--color-border);
+            position: relative;
+            display: inline-block;
+            margin-right: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            box-shadow: var(--shadow-pixel);
+        }
+
+        .icon-box::before {
+            content: '';
+            position: absolute;
+            top: calc(var(--pixel-size) * -6);
+            left: 0;
+            width: 100%;
+            height: calc(var(--pixel-size) * 6);
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-accent) 100%);
+            transform: skewY(-30deg);
+            transform-origin: bottom left;
+            border: calc(var(--pixel-size) * 0.5) solid var(--color-border);
+            border-bottom: none;
+        }
+
+        .icon-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: calc(var(--pixel-size) * -6);
+            width: calc(var(--pixel-size) * 6);
+            height: 100%;
+            background: linear-gradient(225deg,
+                var(--color-secondary) 0%,
+                var(--color-accent) 100%);
+            transform: skewX(-30deg);
+            transform-origin: top right;
+            border: calc(var(--pixel-size) * 0.5) solid var(--color-border);
+            border-left: none;
+        }
+
+        /* Stat Blocks for Children */
+        .stat-block {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin: var(--space-lg) 0;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--space-md);
+            background: var(--color-surface-light);
+            border: calc(var(--pixel-size) * 1) solid var(--color-primary);
+            text-align: center;
+            box-shadow: var(--shadow-pixel);
+            position: relative;
+        }
+
+        .stat-value {
+            font-family: var(--font-pixel);
+            font-size: var(--text-3xl);
+            font-weight: bold;
+            color: var(--color-primary);
+            text-shadow: 2px 2px 0 var(--color-border);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Health Bar Style Progress */
+        .progress-bar {
+            width: 100%;
+            height: calc(var(--pixel-size) * 6);
+            background: var(--color-surface);
+            border: calc(var(--pixel-size) * 0.5) solid var(--color-border);
+            box-shadow: var(--shadow-pixel-inset);
+            position: relative;
+            margin: var(--space-sm) 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                var(--color-ruby) 0%,
+                var(--color-accent) 50%,
+                var(--color-emerald) 100%);
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.3);
+            position: relative;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(90deg,
+                transparent 0,
+                transparent calc(var(--pixel-size) * 2),
+                rgba(0,0,0,0.1) calc(var(--pixel-size) * 2),
+                rgba(0,0,0,0.1) calc(var(--pixel-size) * 3));
+        }
+
+        /* Info Boxes for Government Content */
+        .info-box {
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            background: var(--color-surface);
+            border: calc(var(--pixel-size) * 1) solid;
+            box-shadow: var(--shadow-pixel);
+            position: relative;
+        }
+
+        .info-box.info {
+            border-color: var(--color-emerald);
+        }
+
+        .info-box.warning {
+            border-color: var(--color-accent);
+        }
+
+        .info-box.important {
+            border-color: var(--color-ruby);
+        }
+
+        .info-box::before {
+            content: '!';
+            position: absolute;
+            top: var(--space-sm);
+            left: var(--space-sm);
+            width: calc(var(--pixel-size) * 8);
+            height: calc(var(--pixel-size) * 8);
+            background: currentColor;
+            color: var(--color-border);
+            font-family: var(--font-pixel);
+            font-size: var(--text-xl);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: calc(var(--pixel-size) * 0.5) solid var(--color-border);
+        }
+
+        .info-box.info::before {
+            background: var(--color-emerald);
+            content: 'i';
+        }
+
+        .info-box.warning::before {
+            background: var(--color-accent);
+            content: '⚠';
+        }
+
+        .info-box.important::before {
+            background: var(--color-ruby);
+            content: '!';
+        }
+
+        .info-box-content {
+            margin-left: calc(var(--pixel-size) * 12);
+        }
+
+        /* Broken Grid System */
+        .grid-broken {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+
+        .grid-broken > *:nth-child(3n + 1) {
+            transform: rotate(-1deg);
+        }
+
+        .grid-broken > *:nth-child(3n + 2) {
+            transform: rotate(1deg);
+        }
+
+        .grid-broken > *:nth-child(3n + 3) {
+            transform: translateY(var(--space-sm));
+        }
+
+        /* Pixel Art Divider */
+        .divider-pixel {
+            height: calc(var(--pixel-size) * 2);
+            margin: var(--space-xl) 0;
+            background:
+                repeating-linear-gradient(90deg,
+                    var(--color-primary) 0,
+                    var(--color-primary) calc(var(--pixel-size) * 4),
+                    var(--color-accent) calc(var(--pixel-size) * 4),
+                    var(--color-accent) calc(var(--pixel-size) * 8),
+                    var(--color-emerald) calc(var(--pixel-size) * 8),
+                    var(--color-emerald) calc(var(--pixel-size) * 12),
+                    var(--color-ruby) calc(var(--pixel-size) * 12),
+                    var(--color-ruby) calc(var(--pixel-size) * 16));
+            box-shadow: 0 var(--pixel-size) 0 var(--color-border);
+        }
+
+        /* Focus States for Accessibility */
+        *:focus {
+            outline: calc(var(--pixel-size) * 1) dashed var(--color-primary);
+            outline-offset: var(--pixel-size);
+        }
+
+        a:focus,
+        button:focus {
+            outline: calc(var(--pixel-size) * 1) solid var(--color-accent);
+            outline-offset: calc(var(--pixel-size) * 0.5);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: var(--space-lg) var(--space-sm);
+            }
+
+            .hero-title {
+                font-size: var(--text-2xl);
+            }
+
+            .stat-item {
+                min-width: 100%;
+            }
+
+            .tree-node-child,
+            .tree-node-grandchild {
+                margin-left: var(--space-md);
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --color-background: #F5DEB3;
+                --color-surface: #E8D5B7;
+                --color-surface-light: #FFF8DC;
+                --color-text: #2C1810;
+                --color-text-muted: #4A3728;
+                --color-border: #1A0F08;
+            }
+
+            body::before {
+                opacity: 0.05;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb" role="navigation" aria-label="Breadcrumb">
+            <a href="#" class="breadcrumb-item">Home</a>
+            <span class="breadcrumb-separator">►</span>
+            <a href="#" class="breadcrumb-item">Kids Corner</a>
+            <span class="breadcrumb-separator">►</span>
+            <span class="breadcrumb-item active">Pixel Quest</span>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Antique Amber</h1>
+                <p class="hero-tagline">Crafted for children with scandinavian roots</p>
+                <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+                    <a href="#start" class="btn-pixel">Start Quest</a>
+                    <a href="#learn" class="btn-pixel btn-secondary">Learn More</a>
+                    <a href="#play" class="btn-pixel btn-accent">Play Game</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stat Blocks -->
+        <div class="stat-block">
+            <div class="stat-item">
+                <span class="stat-value">8-BIT</span>
+                <span class="stat-label">Retro Style</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">★★★★☆</span>
+                <span class="stat-label">Fun Level</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">+999</span>
+                <span class="stat-label">Learning Points</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-pixel"></div>
+
+        <!-- Content Tree Structure -->
+        <section class="content-tree">
+            <div class="tree-node">
+                <div class="card-pixel">
+                    <div style="display: flex; gap: var(--space-md); align-items: flex-start;">
+                        <div class="icon-box"></div>
+                        <div style="flex: 1;">
+                            <h2 class="card-title">Welcome to Nordic Adventures</h2>
+                            <div class="card-content">
+                                <p>In the land of the midnight sun, where fjords meet forests and ancient stories come alive in pixel form, young explorers discover the magic of their Scandinavian heritage through interactive government-approved educational content.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-node tree-node-child">
+                    <div class="card-pixel">
+                        <h3 class="card-title">Chapter 1: The Forest Path</h3>
+                        <div class="card-content">
+                            <p>Navigate through pixelated pine forests where each tree represents a different aspect of Nordic culture. Collect amber gems to unlock stories about traditional crafts, folklore, and the importance of nature in Scandinavian life.</p>
+                        </div>
+
+                        <div class="info-box info">
+                            <div class="info-box-content">
+                                <strong>Did You Know?</strong> The Baltic Sea has been a source of amber for thousands of years, and it was once called "Nordic gold" by ancient traders.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tree-node tree-node-grandchild">
+                        <div class="card-pixel">
+                            <h4 class="card-title">Level 1-1: Amber Collection</h4>
+                            <div class="card-content">
+                                <p>Use arrow keys to move your character. Press SPACE to jump over obstacles. Collect all amber pieces to complete the level.</p>
+
+                                <div style="margin-top: var(--space-md); display: flex; gap: var(--space-sm);">
+                                    <div class="icon-box" style="--color-accent: var(--color-emerald); background: var(--color-emerald);"></div>
+                                    <div class="icon-box" style="--color-accent: var(--color-ruby); background: var(--color-ruby);"></div>
+                                    <div class="icon-box" style="--color-accent: var(--color-primary); background: var(--color-primary);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-node tree-node-child">
+                    <div class="card-pixel">
+                        <h3 class="card-title">Chapter 2: Viking Village</h3>
+                        <div class="card-content">
+                            <p>Visit a reconstructed Viking settlement where historical accuracy meets playful pixel art. Learn about daily life, navigation techniques, and the rich trading networks that connected Scandinavia to the world.</p>
+                        </div>
+
+                        <div class="info-box warning">
+                            <div class="info-box-content">
+                                <strong>Challenge Alert:</strong> This area contains puzzles that require teamwork and critical thinking. Perfect for developing problem-solving skills!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tree-node">
+                <div class="card-pixel">
+                    <div style="display: flex; gap: var(--space-md); align-items: flex-start;">
+                        <div class="icon-box" style="--color-accent: var(--color-emerald); background: var(--color-emerald);"></div>
+                        <div style="flex: 1;">
+                            <h2 class="card-title">Educational Resources</h2>
+                            <div class="card-content">
+                                <p>Government-curated content designed for young learners, combining traditional pedagogical approaches with modern pixel art aesthetics to create an engaging, nostalgic experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-node tree-node-child">
+                    <div class="card-pixel">
+                        <h3 class="card-title">Interactive Library</h3>
+                        <div class="card-content">
+                            <p>Browse through digital archives of Nordic sagas, folk tales, and historical documents, all presented in a child-friendly 8-bit interface that makes learning feel like an adventure.</p>
+
+                            <div class="info-box important">
+                                <div class="info-box-content">
+                                    <strong>Parent Note:</strong> All content is age-appropriate and aligned with national curriculum standards for cultural education.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider-pixel"></div>
+
+        <!-- Broken Grid Gallery -->
+        <section class="grid-broken">
+            <div class="card-pixel">
+                <h3 class="card-title">Art Gallery</h3>
+                <div class="card-content">
+                    <p>Explore pixel interpretations of classic Scandinavian art movements, from Viking Age ornaments to modern design.</p>
+                    <a href="#gallery" class="btn-pixel" style="margin-top: var(--space-sm);">Visit →</a>
+                </div>
+            </div>
+
+            <div class="card-pixel">
+                <h3 class="card-title">Music Corner</h3>
+                <div class="card-content">
+                    <p>Listen to chiptune versions of traditional folk songs and learn about Nordic musical instruments.</p>
+                    <a href="#music" class="btn-pixel btn-secondary" style="margin-top: var(--space-sm);">Listen →</a>
+                </div>
+            </div>
+
+            <div class="card-pixel">
+                <h3 class="card-title">Story Time</h3>
+                <div class="card-content">
+                    <p>Animated tales from the Eddas and Sagas, retold for young audiences with beautiful pixel art illustrations.</p>
+                    <a href="#stories" class="btn-pixel btn-accent" style="margin-top: var(--space-sm);">Read →</a>
+                </div>
+            </div>
+
+            <div class="card-pixel">
+                <h3 class="card-title">Craft Workshop</h3>
+                <div class="card-content">
+                    <p>Learn traditional Nordic crafts through interactive tutorials. From weaving to woodcarving basics.</p>
+                    <a href="#craft" class="btn-pixel" style="margin-top: var(--space-sm);">Create →</a>
+                </div>
+            </div>
+
+            <div class="card-pixel">
+                <h3 class="card-title">Nature Guide</h3>
+                <div class="card-content">
+                    <p>Discover the flora and fauna of Northern Europe through our pixelated encyclopedia of nature.</p>
+                    <a href="#nature" class="btn-pixel btn-secondary" style="margin-top: var(--space-sm);">Explore →</a>
+                </div>
+            </div>
+
+            <div class="card-pixel">
+                <h3 class="card-title">Game Lab</h3>
+                <div class="card-content">
+                    <p>Mini-games that teach history, geography, and cultural awareness through play and exploration.</p>
+                    <a href="#games" class="btn-pixel btn-accent" style="margin-top: var(--space-sm);">Play →</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider-pixel"></div>
+
+        <!-- Final Call to Action -->
+        <section class="card-pixel" style="text-align: center; padding: var(--space-xl);">
+            <h2 class="card-title" style="font-size: var(--text-2xl); margin-bottom: var(--space-md);">Ready to Begin Your Journey?</h2>
+            <p class="card-content" style="max-width: 600px; margin: 0 auto var(--space-lg);">
+                Join thousands of young explorers discovering their heritage through interactive pixel art experiences. Every quest completed brings you closer to becoming a Nordic knowledge champion!
+            </p>
+            <div style="display: flex; gap: var(--space-sm); justify-content: center; flex-wrap: wrap;">
+                <a href="#signup" class="btn-pixel">Create Account</a>
+                <a href="#demo" class="btn-pixel btn-secondary">Try Demo</a>
+                <a href="#help" class="btn-pixel btn-accent">Get Help</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 92;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

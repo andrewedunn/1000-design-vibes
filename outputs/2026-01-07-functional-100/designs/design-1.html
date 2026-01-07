@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-height, initial-scale=1.0">
+    <title>Modern Zigzag - Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Modern Zigzag - Grunge editorial admin panel with pastel monochromatic dark theme
+ABOUTME: Fullscreen slide-based food industry admin interface with dramatic shadows and fabric textures
+
+DESIGN SYSTEM DOCUMENTATION
+===========================
+
+Design Name: Modern Zigzag
+Tagline: Pastel vibes for food
+Functional Direction: admin_panel
+
+AESTHETIC PRINCIPLES
+-------------------
+1. GRUNGE EDITORIAL: Typography-driven layouts with textured, worn surfaces
+2. PASTEL MONOCHROME DARK: Low contrast dark theme with muted purple-grey pastels
+3. DRAMATIC SHADOWS: Deep, layered shadows create depth without brutalism
+4. FABRIC TEXTURE: Subtle linen/canvas patterns throughout
+5. ASYMMETRIC GRID: Broken grid layouts for editorial feel
+6. FULLSCREEN SLIDES: Each admin section is a full viewport slide
+
+COLOR SYSTEM
+-----------
+Monochromatic palette based on desaturated purple-grey:
+- Primary: #8B7BA8 (muted lavender)
+- Background: #1A1520 (deep purple-black)
+- Surface: #2B2535 (dark purple-grey)
+- Surface elevated: #3A3445 (medium purple-grey)
+- Text: #C9C3D4 (light muted purple)
+- Text muted: #7A7585 (mid muted purple)
+- Accent: #A899C2 (slightly brighter lavender)
+- Border: #3F3849 (subtle divider)
+
+TYPOGRAPHY
+---------
+- Headings: Orbitron (geometric sans, all uppercase, loose letter spacing)
+- Body: Playfair Display (display serif for editorial feel)
+- Scale ratio: 1.125 (major second)
+- Line height: 2.0 (very loose for readability)
+- Letter spacing: 0.15em on headings
+
+SPACING
+-------
+- Base unit: 4px
+- Scale: 4, 8, 12, 16, 24, 32, 48, 64, 96px
+
+COMPONENTS
+----------
+- Rounded corners: 12px
+- No borders (border_style: none)
+- Dramatic shadows: 0 8px 32px rgba(0,0,0,0.6), 0 16px 64px rgba(0,0,0,0.4)
+- Filled containers with fabric texture overlay
+- Outlined icons
+- Asymmetric grid layouts
+
+ADMIN PANEL FEATURES
+-------------------
+✓ Top fixed navigation with breadcrumbs
+✓ Data tables with sorting
+✓ CRUD forms with validation states
+✓ Action buttons (primary/secondary)
+✓ Filter controls
+✓ Status badges
+✓ Search functionality
+✓ Pagination
+✓ Fullscreen slide sections
+
+QUICK START
+-----------
+Key CSS variables:
+  --color-primary: #8B7BA8
+  --color-bg: #1A1520
+  --color-surface: #2B2535
+  --color-text: #C9C3D4
+  --space-unit: 4px
+  --radius: 12px
+  --shadow-dramatic: 0 8px 32px rgba(0,0,0,0.6), 0 16px 64px rgba(0,0,0,0.4)
+-->
+
+<style>
+:root {
+    /* Color System - Monochromatic Pastel Dark */
+    --color-primary: #8B7BA8;
+    --color-background: #1A1520;
+    --color-surface: #2B2535;
+    --color-surface-elevated: #3A3445;
+    --color-text: #C9C3D4;
+    --color-text-muted: #7A7585;
+    --color-accent: #A899C2;
+    --color-border: #3F3849;
+    --color-success: #8BA88B;
+    --color-warning: #A8A08B;
+    --color-danger: #A88B8B;
+
+    /* Typography */
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Playfair Display', serif;
+    --type-ratio: 1.125;
+    --type-base: 16px;
+    --type-sm: 14px;
+    --type-lg: 18px;
+    --type-xl: 20px;
+    --type-2xl: 23px;
+    --type-3xl: 26px;
+    --type-4xl: 29px;
+    --type-5xl: 33px;
+
+    /* Spacing */
+    --space-unit: 4px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-24: 96px;
+
+    /* Shape */
+    --radius-default: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+
+    /* Shadow - Dramatic */
+    --shadow-default: 0 8px 32px rgba(0, 0, 0, 0.6), 0 16px 64px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.7), 0 24px 96px rgba(0, 0, 0, 0.5);
+
+    /* Fabric texture */
+    --texture-fabric: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.01) 2px,
+        rgba(255, 255, 255, 0.01) 4px
+    );
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--type-base);
+    line-height: 2.0;
+    color: var(--color-text);
+    background: var(--color-background);
+    overflow-x: hidden;
+}
+
+/* Fabric texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--texture-fabric);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    line-height: 2.0;
+}
+
+h1 { font-size: var(--type-5xl); font-weight: 900; }
+h2 { font-size: var(--type-4xl); }
+h3 { font-size: var(--type-3xl); }
+h4 { font-size: var(--type-2xl); }
+h5 { font-size: var(--type-xl); }
+h6 { font-size: var(--type-lg); }
+
+/* Top Fixed Navigation */
+.nav-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-default);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-8);
+    gap: var(--space-8);
+}
+
+.nav-top::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--texture-fabric);
+    pointer-events: none;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: var(--type-2xl);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-primary);
+    position: relative;
+    z-index: 1;
+}
+
+.breadcrumbs {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.breadcrumbs a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumbs a:hover {
+    color: var(--color-primary);
+}
+
+.breadcrumb-separator {
+    color: var(--color-border);
+}
+
+.nav-actions {
+    display: flex;
+    gap: var(--space-4);
+    position: relative;
+    z-index: 1;
+}
+
+/* Main Content Container */
+.main-content {
+    margin-top: 80px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Fullscreen Slides */
+.slide {
+    min-height: calc(100vh - 80px);
+    padding: var(--space-16) var(--space-8);
+    display: flex;
+    flex-direction: column;
+}
+
+.slide-header {
+    margin-bottom: var(--space-12);
+}
+
+.slide-title {
+    margin-bottom: var(--space-4);
+    color: var(--color-primary);
+}
+
+.slide-subtitle {
+    font-size: var(--type-lg);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* Asymmetric Grid */
+.grid-asymmetric {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-8);
+    flex: 1;
+}
+
+.grid-asymmetric.reverse {
+    grid-template-columns: 1fr 2fr;
+}
+
+/* Surface Container */
+.surface {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.surface::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--texture-fabric);
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.surface-elevated {
+    background: var(--color-surface-elevated);
+}
+
+.surface-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Data Table */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: var(--color-surface-elevated);
+}
+
+th {
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: var(--space-4) var(--space-6);
+    text-align: left;
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+th.sortable:hover {
+    color: var(--color-primary);
+}
+
+th.sortable::after {
+    content: '⌃';
+    margin-left: var(--space-2);
+    opacity: 0.3;
+    display: inline-block;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+th.sortable.sorted::after {
+    opacity: 1;
+}
+
+th.sortable.sorted.desc::after {
+    transform: rotate(180deg);
+}
+
+td {
+    padding: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--type-sm);
+}
+
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background: rgba(139, 123, 168, 0.05);
+}
+
+/* Status Badge */
+.badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--type-sm);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+.badge-success {
+    background: rgba(139, 168, 139, 0.2);
+    color: var(--color-success);
+}
+
+.badge-warning {
+    background: rgba(168, 160, 139, 0.2);
+    color: var(--color-warning);
+}
+
+.badge-danger {
+    background: rgba(168, 139, 139, 0.2);
+    color: var(--color-danger);
+}
+
+.badge-neutral {
+    background: rgba(122, 117, 133, 0.2);
+    color: var(--color-text-muted);
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--color-accent);
+    box-shadow: var(--shadow-default);
+    transform: translateY(-2px);
+}
+
+.btn-primary:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background: var(--color-surface-elevated);
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+    background: var(--color-border);
+    box-shadow: var(--shadow-default);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:focus {
+    outline: 3px solid var(--color-border);
+    outline-offset: 2px;
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: var(--color-background);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-danger:hover {
+    background: #9A7575;
+    box-shadow: var(--shadow-default);
+    transform: translateY(-2px);
+}
+
+.btn-small {
+    padding: var(--space-2) var(--space-4);
+    font-size: 12px;
+}
+
+.btn-icon {
+    padding: var(--space-3);
+    min-width: 44px;
+}
+
+/* Forms */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-6);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+label {
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    font-weight: 700;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+    font-family: var(--font-body);
+    font-size: var(--type-base);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-background);
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--radius-default);
+    min-height: 44px;
+    transition: box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+/* Filter Bar */
+.filter-bar {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: var(--space-8);
+}
+
+.filter-group {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-box input {
+    width: 100%;
+    padding-left: var(--space-12);
+}
+
+.search-icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--space-8);
+}
+
+.page-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-elevated);
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    font-weight: 700;
+    border: none;
+}
+
+.page-btn:hover {
+    background: var(--color-border);
+    transform: translateY(-2px);
+}
+
+.page-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.page-btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+}
+
+.stat-card {
+    background: var(--color-surface-elevated);
+    padding: var(--space-6);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--texture-fabric);
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.stat-card-content {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-label {
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+}
+
+.stat-value {
+    font-size: var(--type-4xl);
+    font-weight: 900;
+    color: var(--color-primary);
+    font-family: var(--font-heading);
+    line-height: 1.2;
+}
+
+.stat-change {
+    font-size: var(--type-sm);
+    margin-top: var(--space-2);
+}
+
+.stat-change.positive {
+    color: var(--color-success);
+}
+
+.stat-change.negative {
+    color: var(--color-danger);
+}
+
+/* Icon (outlined style) */
+.icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+/* Action Menu */
+.action-menu {
+    display: flex;
+    gap: var(--space-2);
+}
+
+/* Gradient Accent */
+.gradient-accent {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible */
+*:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid-asymmetric {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-top {
+        padding: 0 var(--space-4);
+        height: 64px;
+    }
+
+    .main-content {
+        margin-top: 64px;
+    }
+
+    .slide {
+        min-height: calc(100vh - 64px);
+        padding: var(--space-8) var(--space-4);
+    }
+
+    .breadcrumbs {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<!-- Top Fixed Navigation -->
+<nav class="nav-top">
+    <div class="logo">MODERN ZIGZAG</div>
+    <div class="breadcrumbs">
+        <a href="#">Dashboard</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Products</span>
+    </div>
+    <div class="nav-actions">
+        <button class="btn btn-secondary btn-icon" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+        </button>
+        <button class="btn btn-secondary btn-icon" aria-label="User profile">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+
+    <!-- Slide 1: Dashboard Overview -->
+    <section class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">DASHBOARD OVERVIEW</h1>
+            <p class="slide-subtitle">Food inventory and sales analytics</p>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom: var(--space-12);">
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-label">TOTAL PRODUCTS</div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-change positive">↑ 12% from last month</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-label">ACTIVE ORDERS</div>
+                    <div class="stat-value">89</div>
+                    <div class="stat-change positive">↑ 5% from last week</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-label">LOW STOCK ITEMS</div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-change negative">↑ 8 items need restock</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-label">REVENUE (MTD)</div>
+                    <div class="stat-value">$45.2K</div>
+                    <div class="stat-change positive">↑ 18% from last month</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-asymmetric">
+            <div class="surface">
+                <div class="surface-content">
+                    <h3 style="margin-bottom: var(--space-6);">RECENT ACTIVITY</h3>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); background: var(--color-background); border-radius: var(--radius-sm);">
+                            <div>
+                                <div style="font-weight: 700;">New order #4521</div>
+                                <div style="font-size: var(--type-sm); color: var(--color-text-muted);">Customer: Sarah Miller</div>
+                            </div>
+                            <span class="badge badge-success">PROCESSING</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); background: var(--color-background); border-radius: var(--radius-sm);">
+                            <div>
+                                <div style="font-weight: 700;">Stock alert: Organic Honey</div>
+                                <div style="font-size: var(--type-sm); color: var(--color-text-muted);">Only 12 units remaining</div>
+                            </div>
+                            <span class="badge badge-warning">LOW STOCK</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); background: var(--color-background); border-radius: var(--radius-sm);">
+                            <div>
+                                <div style="font-weight: 700;">Order #4518 completed</div>
+                                <div style="font-size: var(--type-sm); color: var(--color-text-muted);">Delivered to John Davis</div>
+                            </div>
+                            <span class="badge badge-success">DELIVERED</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); background: var(--color-background); border-radius: var(--radius-sm);">
+                            <div>
+                                <div style="font-weight: 700;">New product added</div>
+                                <div style="font-size: var(--type-sm); color: var(--color-text-muted);">Artisan Sourdough Bread</div>
+                            </div>
+                            <span class="badge badge-neutral">NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="surface surface-elevated">
+                <div class="surface-content">
+                    <h3 style="margin-bottom: var(--space-6);">QUICK ACTIONS</h3>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <button class="btn btn-primary" style="width: 100%;">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            ADD NEW PRODUCT
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            CREATE ORDER
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            EXPORT REPORT
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            VIEW FINANCES
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: Product Management Table -->
+    <section class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">PRODUCT INVENTORY</h2>
+            <p class="slide-subtitle">Manage your food product catalog</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="search-box">
+                <span class="search-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="search" placeholder="Search products..." aria-label="Search products">
+            </div>
+            <div class="filter-group">
+                <label for="category-filter">CATEGORY</label>
+                <select id="category-filter">
+                    <option value="">All Categories</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="dairy">Dairy</option>
+                    <option value="produce">Produce</option>
+                    <option value="meat">Meat & Fish</option>
+                    <option value="pantry">Pantry</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="status-filter">STATUS</label>
+                <select id="status-filter">
+                    <option value="">All Status</option>
+                    <option value="in-stock">In Stock</option>
+                    <option value="low-stock">Low Stock</option>
+                    <option value="out-of-stock">Out of Stock</option>
+                </select>
+            </div>
+            <button class="btn btn-primary">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                ADD PRODUCT
+            </button>
+        </div>
+
+        <div class="surface">
+            <div class="surface-content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sortable sorted">PRODUCT NAME</th>
+                                <th class="sortable">CATEGORY</th>
+                                <th class="sortable">SKU</th>
+                                <th class="sortable">STOCK</th>
+                                <th class="sortable">PRICE</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Organic Sourdough Loaf</strong></td>
+                                <td>Bakery</td>
+                                <td>BKR-001</td>
+                                <td>156</td>
+                                <td>$8.99</td>
+                                <td><span class="badge badge-success">IN STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Raw Wildflower Honey</strong></td>
+                                <td>Pantry</td>
+                                <td>PNT-045</td>
+                                <td>12</td>
+                                <td>$12.50</td>
+                                <td><span class="badge badge-warning">LOW STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Grass-Fed Butter</strong></td>
+                                <td>Dairy</td>
+                                <td>DRY-023</td>
+                                <td>0</td>
+                                <td>$6.25</td>
+                                <td><span class="badge badge-danger">OUT OF STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Heritage Tomatoes</strong></td>
+                                <td>Produce</td>
+                                <td>PRD-089</td>
+                                <td>245</td>
+                                <td>$4.75</td>
+                                <td><span class="badge badge-success">IN STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wild-Caught Salmon</strong></td>
+                                <td>Meat & Fish</td>
+                                <td>MTF-112</td>
+                                <td>67</td>
+                                <td>$18.99</td>
+                                <td><span class="badge badge-success">IN STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Artisan Pasta Variety</strong></td>
+                                <td>Pantry</td>
+                                <td>PNT-078</td>
+                                <td>198</td>
+                                <td>$9.25</td>
+                                <td><span class="badge badge-success">IN STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Free-Range Eggs (Dozen)</strong></td>
+                                <td>Dairy</td>
+                                <td>DRY-056</td>
+                                <td>23</td>
+                                <td>$7.50</td>
+                                <td><span class="badge badge-warning">LOW STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aged Cheddar Wheel</strong></td>
+                                <td>Dairy</td>
+                                <td>DRY-034</td>
+                                <td>89</td>
+                                <td>$15.99</td>
+                                <td><span class="badge badge-success">IN STOCK</span></td>
+                                <td>
+                                    <div class="action-menu">
+                                        <button class="btn btn-secondary btn-small" aria-label="Edit product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-small" aria-label="Delete product">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="page-btn" aria-label="Previous page">‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn" aria-label="Next page">›</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Add/Edit Product Form -->
+    <section class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">ADD NEW PRODUCT</h2>
+            <p class="slide-subtitle">Enter product details for your food inventory</p>
+        </div>
+
+        <div class="grid-asymmetric reverse">
+            <div class="surface">
+                <div class="surface-content">
+                    <h3 style="margin-bottom: var(--space-6);">PRODUCT INFORMATION</h3>
+
+                    <form>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="product-name">PRODUCT NAME *</label>
+                                <input type="text" id="product-name" placeholder="e.g., Organic Sourdough" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sku">SKU CODE *</label>
+                                <input type="text" id="sku" placeholder="e.g., BKR-001" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">CATEGORY *</label>
+                                <select id="category" required>
+                                    <option value="">Select category</option>
+                                    <option value="bakery">Bakery</option>
+                                    <option value="dairy">Dairy</option>
+                                    <option value="produce">Produce</option>
+                                    <option value="meat">Meat & Fish</option>
+                                    <option value="pantry">Pantry</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="supplier">SUPPLIER</label>
+                                <input type="text" id="supplier" placeholder="Supplier name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price">PRICE ($) *</label>
+                                <input type="number" id="price" placeholder="0.00" step="0.01" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="stock">INITIAL STOCK *</label>
+                                <input type="number" id="stock" placeholder="0" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reorder-point">REORDER POINT</label>
+                                <input type="number" id="reorder-point" placeholder="20" min="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expiry-date">EXPIRY DATE</label>
+                                <input type="date" id="expiry-date">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: var(--space-6);">
+                            <label for="description">DESCRIPTION</label>
+                            <textarea id="description" placeholder="Enter product description, ingredients, or additional details..."></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: var(--space-4); margin-top: var(--space-8);">
+                            <button type="submit" class="btn btn-primary">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                SAVE PRODUCT
+                            </button>
+                            <button type="button" class="btn btn-secondary">CANCEL</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="surface surface-elevated">
+                <div class="surface-content">
+                    <h3 style="margin-bottom: var(--space-6);">FORM GUIDELINES</h3>
+
+                    <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+                        <div>
+                            <h5 style="color: var(--color-primary); margin-bottom: var(--space-2);">REQUIRED FIELDS</h5>
+                            <p style="font-size: var(--type-sm); line-height: 1.6;">Fields marked with * are mandatory. Ensure all required information is provided before saving.</p>
+                        </div>
+
+                        <div>
+                            <h5 style="color: var(--color-primary); margin-bottom: var(--space-2);">SKU FORMAT</h5>
+                            <p style="font-size: var(--type-sm); line-height: 1.6;">Use format: [CATEGORY]-[NUMBER]. Example: BKR-001 for bakery items, DRY-023 for dairy products.</p>
+                        </div>
+
+                        <div>
+                            <h5 style="color: var(--color-primary); margin-bottom: var(--space-2);">PRICING</h5>
+                            <p style="font-size: var(--type-sm); line-height: 1.6;">Enter prices in dollars with up to two decimal places. This will be the base retail price.</p>
+                        </div>
+
+                        <div>
+                            <h5 style="color: var(--color-primary); margin-bottom: var(--space-2);">REORDER POINT</h5>
+                            <p style="font-size: var(--type-sm); line-height: 1.6;">Set a threshold for low stock alerts. You'll be notified when inventory falls below this level.</p>
+                        </div>
+
+                        <div>
+                            <h5 style="color: var(--color-primary); margin-bottom: var(--space-2);">EXPIRY TRACKING</h5>
+                            <p style="font-size: var(--type-sm); line-height: 1.6;">For perishable items, set an expiry date to track freshness and manage inventory rotation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 1;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<!--
+ABOUTME: Design #84 - Global Prism
+ABOUTME: Material + Art Nouveau team chat interface with neon complementary colors, geometric sans headings, modern serif body, and very rounded corners
+
+DESIGN SYSTEM TOKENS:
+--color-primary: #FF00FF (neon magenta)
+--color-secondary: #00FF00 (neon lime - complementary)
+--color-background: #FFFFFF
+--color-surface: #F5F5F5 with noise texture
+--font-heading: 'Outfit' (geometric sans)
+--font-body: 'Lora' (modern serif)
+--radius-default: 24px (very rounded)
+--shadow-default: material elevation 2
+--space-unit: 8px
+
+AESTHETIC PRINCIPLES:
+- Material Design elevation system with art nouveau organic curves
+- Neon complementary color scheme (magenta/lime) with balanced saturation
+- Geometric sans for UI elements, modern serif for message content
+- Organic flowing shapes inspired by art nouveau meets material surfaces
+- Thick borders (4px) with medium material shadows
+- Noise texture on surfaces for depth
+- Emoji icons throughout
+- British traditional cultural influence with nostalgic emotional tone
+
+FUNCTIONAL DIRECTION: team_chat
+Required elements: channel sidebar, message thread, user avatars, reactions, @mentions, file sharing, search, typing indicators, unread badges, status indicators
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Prism - Team Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Neon Complementary Palette */
+            --color-primary: #FF00FF;
+            --color-primary-light: #FF66FF;
+            --color-primary-dark: #CC00CC;
+            --color-secondary: #00FF00;
+            --color-secondary-light: #66FF66;
+            --color-secondary-dark: #00CC00;
+            --color-accent-cyan: #00FFFF;
+            --color-accent-orange: #FF6600;
+
+            --color-background: #FFFFFF;
+            --color-surface: #F5F5F5;
+            --color-surface-elevated: #FFFFFF;
+            --color-border: #E0E0E0;
+
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-text-light: #999999;
+
+            /* Typography */
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Lora', serif;
+            --type-scale: 1.067; /* minor_second */
+
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.067rem;
+            --font-size-xl: 1.138rem;
+            --font-size-2xl: 1.215rem;
+            --font-size-3xl: 1.296rem;
+
+            --line-height-tight: 1.3;
+            --line-height-normal: 1.5;
+
+            /* Spacing - 8px base */
+            --space-unit: 8px;
+            --space-1: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+
+            /* Shapes */
+            --radius-default: 24px;
+            --radius-small: 16px;
+            --radius-large: 32px;
+            --radius-full: 9999px;
+
+            /* Material Shadows */
+            --shadow-default: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.08);
+            --shadow-elevated: 0 4px 8px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.1);
+            --shadow-high: 0 8px 16px rgba(0, 0, 0, 0.14), 0 12px 24px rgba(0, 0, 0, 0.12);
+
+            /* Borders */
+            --border-width: 4px;
+            --border-default: 4px solid var(--color-border);
+        }
+
+        /* Noise Texture */
+        @keyframes noise-anim {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-10%, 5%); }
+            60% { transform: translate(15%, 0); }
+            70% { transform: translate(0, 10%); }
+            80% { transform: translate(-15%, 0); }
+            90% { transform: translate(10%, 5%); }
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow: hidden;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Sidebar - Channel List */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: var(--border-default);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            animation: noise-anim 8s steps(10) infinite;
+        }
+
+        .workspace-header {
+            padding: var(--space-3);
+            border-bottom: var(--border-default);
+            position: relative;
+            z-index: 1;
+        }
+
+        .workspace-name {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-1);
+            line-height: var(--line-height-tight);
+        }
+
+        .workspace-status {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        /* Search Bar */
+        .search-container {
+            padding: var(--space-2) var(--space-3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-2);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+            box-shadow: var(--shadow-default);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-elevated), 0 0 0 4px rgba(255, 0, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-light);
+        }
+
+        /* Channels List */
+        .channels-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-2) 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .channel-section {
+            margin-bottom: var(--space-3);
+        }
+
+        .channel-section-header {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            padding: var(--space-1) var(--space-3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .channel-item {
+            padding: var(--space-1) var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            position: relative;
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+        }
+
+        .channel-item:hover {
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+        .channel-item.active {
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.1) 0%, transparent 100%);
+            border-left: var(--border-width) solid var(--color-primary);
+        }
+
+        .channel-icon {
+            font-size: var(--font-size-lg);
+        }
+
+        .channel-name {
+            flex: 1;
+            color: var(--color-text);
+        }
+
+        .unread-badge {
+            background: var(--color-primary);
+            color: white;
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* User Profile Footer */
+        .user-footer {
+            padding: var(--space-3);
+            border-top: var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-footer:hover {
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            box-shadow: var(--shadow-default);
+            border: var(--border-width) solid var(--color-background);
+            position: relative;
+        }
+
+        .user-status-indicator {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            background: var(--color-secondary);
+            border: 3px solid var(--color-surface);
+            border-radius: 50%;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text);
+            line-height: var(--line-height-tight);
+        }
+
+        .user-status {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--color-background);
+        }
+
+        /* Channel Header */
+        .channel-header {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--color-surface-elevated);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .channel-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .channel-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .channel-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-text);
+            line-height: var(--line-height-tight);
+        }
+
+        .channel-meta {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            margin-left: var(--space-2);
+        }
+
+        .channel-header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-default);
+            border: var(--border-default);
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-action-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .header-action-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Messages Area */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .message-group {
+            display: flex;
+            gap: var(--space-2);
+            align-items: flex-start;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            flex-shrink: 0;
+            box-shadow: var(--shadow-default);
+            border: var(--border-width) solid var(--color-background);
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-2);
+            margin-bottom: var(--space-1);
+        }
+
+        .message-author {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .message-time {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-light);
+        }
+
+        .message-text {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            margin-bottom: var(--space-1);
+        }
+
+        .message-text .mention {
+            background: rgba(255, 0, 255, 0.1);
+            color: var(--color-primary);
+            font-weight: 600;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* File Attachment */
+        .message-attachment {
+            margin-top: var(--space-2);
+            padding: var(--space-2);
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            max-width: 400px;
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-attachment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .attachment-icon {
+            font-size: var(--font-size-3xl);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .attachment-info {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .attachment-name {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attachment-size {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Reactions */
+        .message-reactions {
+            display: flex;
+            gap: var(--space-1);
+            margin-top: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .reaction {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-default);
+        }
+
+        .reaction:hover {
+            background: var(--color-surface-elevated);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .reaction.reacted {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: var(--color-primary);
+        }
+
+        .reaction-emoji {
+            font-size: var(--font-size-base);
+        }
+
+        .reaction-count {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: var(--font-size-xs);
+        }
+
+        /* Thread Indicator */
+        .message-thread {
+            margin-top: var(--space-2);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            color: var(--color-primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .message-thread:hover {
+            color: var(--color-primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            padding: var(--space-2) var(--space-4);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-text-muted);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* Message Input */
+        .message-input-container {
+            padding: var(--space-3) var(--space-4);
+            border-top: var(--border-default);
+            background: var(--color-surface-elevated);
+            box-shadow: var(--shadow-elevated);
+            position: relative;
+        }
+
+        .message-input-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .message-input-wrapper {
+            display: flex;
+            gap: var(--space-2);
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-normal);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            color: var(--color-text);
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+            box-shadow: var(--shadow-default);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .message-input:focus {
+            border-color: var(--color-secondary);
+            box-shadow: var(--shadow-elevated), 0 0 0 4px rgba(0, 255, 0, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .input-action-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-default);
+            border: var(--border-default);
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-default);
+            flex-shrink: 0;
+        }
+
+        .input-action-btn:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .input-action-btn.primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .input-action-btn.primary:hover {
+            background: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+        }
+
+        .input-action-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: var(--radius-small);
+            border: 3px solid var(--color-surface);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-muted);
+        }
+
+        /* Art Nouveau Decorative Element */
+        .art-nouveau-flourish {
+            position: fixed;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            width: 120px;
+            height: 120px;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .art-nouveau-flourish svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--color-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="workspace-header">
+                <h1 class="workspace-name">Fashion Squad</h1>
+                <div class="workspace-status">
+                    <span class="status-dot"></span>
+                    <span>12 members online</span>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <input type="search" class="search-input" placeholder="Search messages..." aria-label="Search messages">
+            </div>
+
+            <div class="channels-container">
+                <div class="channel-section">
+                    <div class="channel-section-header">
+                        <span>▼</span>
+                        <span>Channels</span>
+                    </div>
+                    <div class="channel-item active">
+                        <span class="channel-icon">👗</span>
+                        <span class="channel-name">general</span>
+                        <span class="unread-badge">3</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">✨</span>
+                        <span class="channel-name">design-reviews</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">📸</span>
+                        <span class="channel-name">photoshoot-coord</span>
+                        <span class="unread-badge">7</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">🎨</span>
+                        <span class="channel-name">creative-inspo</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">🛍️</span>
+                        <span class="channel-name">marketplace</span>
+                        <span class="unread-badge">2</span>
+                    </div>
+                </div>
+
+                <div class="channel-section">
+                    <div class="channel-section-header">
+                        <span>▼</span>
+                        <span>Direct Messages</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">💼</span>
+                        <span class="channel-name">Charlotte Webb</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">🌟</span>
+                        <span class="channel-name">Oliver Knight</span>
+                        <span class="unread-badge">1</span>
+                    </div>
+                    <div class="channel-item">
+                        <span class="channel-icon">🎭</span>
+                        <span class="channel-name">Amelia Rose</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-footer">
+                <div class="user-avatar">
+                    🦋
+                    <span class="user-status-indicator"></span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Emma Sterling</div>
+                    <div class="user-status">Available</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="channel-header">
+                <div class="channel-header-left">
+                    <h2 class="channel-title"># general</h2>
+                    <span class="channel-meta">⭐ 47 members</span>
+                </div>
+                <div class="channel-header-right">
+                    <button class="header-action-btn" aria-label="Search in channel">🔍</button>
+                    <button class="header-action-btn" aria-label="Channel members">👥</button>
+                    <button class="header-action-btn" aria-label="Channel settings">⚙️</button>
+                </div>
+            </header>
+
+            <div class="messages-container">
+                <!-- Message 1 -->
+                <div class="message-group">
+                    <div class="message-avatar">👗</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Charlotte Webb</span>
+                            <span class="message-time">9:42 AM</span>
+                        </div>
+                        <div class="message-text">
+                            Morning everyone! Just got the samples from the new supplier. The fabric quality is absolutely stunning ✨
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction reacted">
+                                <span class="reaction-emoji">👏</span>
+                                <span class="reaction-count">8</span>
+                            </div>
+                            <div class="reaction">
+                                <span class="reaction-emoji">❤️</span>
+                                <span class="reaction-count">5</span>
+                            </div>
+                            <div class="reaction">
+                                <span class="reaction-emoji">✨</span>
+                                <span class="reaction-count">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 2 -->
+                <div class="message-group">
+                    <div class="message-avatar">🌟</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Oliver Knight</span>
+                            <span class="message-time">9:45 AM</span>
+                        </div>
+                        <div class="message-text">
+                            <span class="mention">@Charlotte Webb</span> Can't wait to see them! Are they the ones for the Spring collection?
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction">
+                                <span class="reaction-emoji">👀</span>
+                                <span class="reaction-count">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 3 with Attachment -->
+                <div class="message-group">
+                    <div class="message-avatar">👗</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Charlotte Webb</span>
+                            <span class="message-time">9:48 AM</span>
+                        </div>
+                        <div class="message-text">
+                            Yes! Here's the colour palette mockup I've been working on. Thoughts?
+                        </div>
+                        <div class="message-attachment">
+                            <span class="attachment-icon">🎨</span>
+                            <div class="attachment-info">
+                                <div class="attachment-name">spring-2026-palette.fig</div>
+                                <div class="attachment-size">2.4 MB</div>
+                            </div>
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction reacted">
+                                <span class="reaction-emoji">🔥</span>
+                                <span class="reaction-count">12</span>
+                            </div>
+                            <div class="reaction">
+                                <span class="reaction-emoji">😍</span>
+                                <span class="reaction-count">9</span>
+                            </div>
+                        </div>
+                        <div class="message-thread">💬 3 replies</div>
+                    </div>
+                </div>
+
+                <!-- Message 4 -->
+                <div class="message-group">
+                    <div class="message-avatar">🎭</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Amelia Rose</span>
+                            <span class="message-time">10:12 AM</span>
+                        </div>
+                        <div class="message-text">
+                            The colour combinations are gorgeous! Really capturing that nostalgic British vibe we discussed. Love the neon accents 💜
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction">
+                                <span class="reaction-emoji">💚</span>
+                                <span class="reaction-count">6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 5 -->
+                <div class="message-group">
+                    <div class="message-avatar">🌸</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Jasper Mills</span>
+                            <span class="message-time">10:15 AM</span>
+                        </div>
+                        <div class="message-text">
+                            Quick reminder: photoshoot tomorrow at 10 AM! <span class="mention">@Charlotte Webb</span> <span class="mention">@Oliver Knight</span> - can you both bring the sample pieces?
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction reacted">
+                                <span class="reaction-emoji">✅</span>
+                                <span class="reaction-count">7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 6 -->
+                <div class="message-group">
+                    <div class="message-avatar">🌟</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Oliver Knight</span>
+                            <span class="message-time">10:18 AM</span>
+                        </div>
+                        <div class="message-text">
+                            All sorted! I've got everything packed and ready. Also booked the studio space in Shoreditch - they have those gorgeous art nouveau windows we wanted 🏛️
+                        </div>
+                        <div class="message-reactions">
+                            <div class="reaction">
+                                <span class="reaction-emoji">🙌</span>
+                                <span class="reaction-count">10</span>
+                            </div>
+                            <div class="reaction">
+                                <span class="reaction-emoji">⭐</span>
+                                <span class="reaction-count">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator">
+                    <span>Charlotte is typing</span>
+                    <div class="typing-dots">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-input-container">
+                <div class="message-input-wrapper">
+                    <textarea class="message-input" placeholder="Message #general" aria-label="Message input" rows="1"></textarea>
+                    <div class="input-actions">
+                        <button class="input-action-btn" aria-label="Attach file">📎</button>
+                        <button class="input-action-btn" aria-label="Add emoji">😊</button>
+                        <button class="input-action-btn" aria-label="Record voice message">🎤</button>
+                        <button class="input-action-btn primary" aria-label="Send message">📮</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Art Nouveau Decorative Element -->
+    <div class="art-nouveau-flourish" aria-hidden="true">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,10 Q30,30 30,50 Q30,70 50,90 Q70,70 70,50 Q70,30 50,10 M50,20 Q60,35 60,50 Q60,65 50,80 Q40,65 40,50 Q40,35 50,20" fill="currentColor"/>
+            <circle cx="50" cy="50" r="8" fill="currentColor"/>
+        </svg>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 84;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Auto-resize textarea
+        const messageInput = document.querySelector('.message-input');
+        if (messageInput) {
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        // Focus management for accessibility
+        const focusableElements = document.querySelectorAll('button, input, textarea, [tabindex]:not([tabindex="-1"])');
+        focusableElements.forEach(el => {
+            el.addEventListener('focus', function() {
+                this.style.outline = '2px solid var(--color-primary)';
+                this.style.outlineOffset = '2px';
+            });
+            el.addEventListener('blur', function() {
+                this.style.outline = '';
+                this.style.outlineOffset = '';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

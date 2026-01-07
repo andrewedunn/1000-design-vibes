@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sculpt Hub - Restaurant Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!--
+    ABOUTME: Sculpt Hub - Art Deco restaurant discovery app with neumorphic elements
+    ABOUTME: Features jewel-toned color scheme, ultra-dense layout with editorial scroll and carousel browsing
+
+    DESIGN SYSTEM TOKENS:
+    - Primary: Deep Sapphire (#1a1557)
+    - Accent: Emerald (#0f766e), Ruby (#991b1b), Amethyst (#6b21a8)
+    - Gold Accents: Art Deco Gold (#d4af37)
+    - Background: Soft Pearl (#f8f7f4)
+    - Neumorphic shadows: Soft inset/outset for sculpted feel
+
+    AESTHETIC PRINCIPLES:
+    - Neumorphic surfaces with soft shadows create tactile, sculpted appearance
+    - Art Deco geometric patterns, symmetry, and gold accents for glamour
+    - Jewel tone color palette (sapphire, emerald, ruby, amethyst)
+    - Ultra-dense information architecture maximizes content visibility
+    - Editorial scroll creates magazine-like reading experience
+    - Breadcrumb-only navigation maintains minimal chrome
+    - Carousel content flow allows horizontal browsing of restaurants
+    -->
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Jewel Tones */
+            --color-primary: #1a1557;
+            --color-emerald: #0f766e;
+            --color-ruby: #991b1b;
+            --color-amethyst: #6b21a8;
+            --color-gold: #d4af37;
+            --color-background: #f8f7f4;
+            --color-surface: #ffffff;
+            --color-text: #1f1f1f;
+            --color-text-muted: #6b7280;
+
+            /* Typography - Art Deco */
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Cormorant Garamond', serif;
+
+            /* Spacing - Ultra Dense */
+            --space-unit: 6px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes - Neumorphic */
+            --radius-default: 16px;
+            --radius-large: 24px;
+
+            /* Neumorphic Shadows */
+            --shadow-outset: 8px 8px 16px rgba(0, 0, 0, 0.1),
+                            -8px -8px 16px rgba(255, 255, 255, 0.9);
+            --shadow-inset: inset 6px 6px 12px rgba(0, 0, 0, 0.08),
+                           inset -6px -6px 12px rgba(255, 255, 255, 0.9);
+            --shadow-small: 4px 4px 8px rgba(0, 0, 0, 0.1),
+                           -4px -4px 8px rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            position: fixed;
+            top: var(--space-md);
+            left: var(--space-lg);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--color-background);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--space-md);
+            box-shadow: var(--shadow-outset);
+        }
+
+        .breadcrumb-item {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--color-primary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .breadcrumb-separator {
+            color: var(--color-gold);
+            font-size: 8px;
+        }
+
+        /* Half Viewport Hero */
+        .hero {
+            height: 50vh;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-amethyst) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(212, 175, 55, 0.1) 40px, rgba(212, 175, 55, 0.1) 80px),
+                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(212, 175, 55, 0.1) 40px, rgba(212, 175, 55, 0.1) 80px);
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            max-width: 900px;
+            padding: var(--space-xl);
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: var(--space-sm);
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 68px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: var(--space-md);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            font-style: italic;
+            opacity: 0.95;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Search Bar - Neumorphic */
+        .hero-search {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--color-text);
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar:focus {
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: var(--space-xl) var(--space-lg);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Bar - Ultra Dense */
+        .filter-bar {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-outset);
+            margin-bottom: var(--space-lg);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-sm);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .filter-label {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .filter-select, .filter-button {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-background);
+            border: none;
+            border-radius: var(--space-md);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text);
+            box-shadow: var(--shadow-inset);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            font-weight: 600;
+        }
+
+        .filter-button:hover, .filter-button.active {
+            background: var(--color-emerald);
+            color: white;
+            box-shadow: var(--shadow-outset);
+        }
+
+        .filter-button:focus, .filter-select:focus {
+            outline: 2px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding: var(--space-sm) 0;
+        }
+
+        .results-count {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .view-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-background);
+            border: none;
+            border-radius: var(--space-sm);
+            box-shadow: var(--shadow-small);
+            cursor: pointer;
+            font-family: var(--font-heading);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .view-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .view-btn:focus {
+            outline: 2px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* Section Headers - Art Deco Style */
+        .section-header {
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-gold);
+            font-size: 12px;
+        }
+
+        .section-title::before {
+            left: -30px;
+        }
+
+        .section-title::after {
+            right: -30px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--color-text-muted);
+        }
+
+        /* Carousel Container */
+        .carousel-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            padding: 0 50px;
+        }
+
+        .carousel {
+            display: flex;
+            gap: var(--space-md);
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: var(--space-sm) 0 var(--space-lg);
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--color-surface);
+            border: none;
+            border-radius: 50%;
+            box-shadow: var(--shadow-outset);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .carousel-nav:hover {
+            box-shadow: var(--shadow-inset);
+            background: var(--color-gold);
+            color: white;
+        }
+
+        .carousel-nav:focus {
+            outline: 2px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        .carousel-nav.prev {
+            left: 0;
+        }
+
+        .carousel-nav.next {
+            right: 0;
+        }
+
+        /* Restaurant Card - Neumorphic */
+        .restaurant-card {
+            flex: 0 0 320px;
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-outset);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--color-emerald), var(--color-primary));
+        }
+
+        .card-content {
+            padding: var(--space-md);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-sm);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: var(--color-gold);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 20px;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: var(--shadow-small);
+        }
+
+        .card-cuisine {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .cuisine-tag {
+            font-size: 11px;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border-radius: 12px;
+            color: var(--color-text-muted);
+            box-shadow: var(--shadow-inset);
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            padding: var(--space-sm) 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-family: var(--font-heading);
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .card-footer {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            border-radius: var(--space-md);
+            font-family: var(--font-heading);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: var(--color-emerald);
+            color: white;
+            box-shadow: var(--shadow-outset);
+        }
+
+        .btn-primary:hover {
+            background: #0d5e57;
+        }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-text);
+            box-shadow: var(--shadow-inset);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: var(--shadow-outset);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* Map View Section */
+        .map-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .map-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-outset);
+            overflow: hidden;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background:
+                linear-gradient(135deg, transparent 25%, rgba(15, 118, 110, 0.05) 25%, rgba(15, 118, 110, 0.05) 50%, transparent 50%, transparent 75%, rgba(15, 118, 110, 0.05) 75%),
+                var(--color-background);
+            background-size: 40px 40px;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+
+        .map-placeholder-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-md);
+            color: var(--color-emerald);
+        }
+
+        /* Featured Restaurant Grid */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .featured-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-outset);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-ruby);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 12px;
+            font-family: var(--font-heading);
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: var(--shadow-small);
+        }
+
+        /* Quick Stats Panel */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-outset);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* Editorial Content Blocks */
+        .editorial-section {
+            margin-bottom: var(--space-xl);
+            background: var(--color-surface);
+            padding: var(--space-xl);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-outset);
+        }
+
+        .editorial-header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .editorial-kicker {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: var(--space-sm);
+        }
+
+        .editorial-title {
+            font-family: var(--font-heading);
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .editorial-lead {
+            font-size: 20px;
+            font-style: italic;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Price Range Indicators */
+        .price-indicator {
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        /* Open Now Badge */
+        .open-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: rgba(15, 118, 110, 0.1);
+            color: var(--color-emerald);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .open-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .filter-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-wrapper {
+                padding: 0 var(--space-md);
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            .breadcrumb {
+                font-size: 9px;
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus Visible */
+        *:focus-visible {
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb">
+        <a href="#" class="breadcrumb-item">Home</a>
+        <span class="breadcrumb-separator">◆</span>
+        <a href="#" class="breadcrumb-item">Restaurants</a>
+        <span class="breadcrumb-separator">◆</span>
+        <span class="breadcrumb-item active">Search</span>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-eyebrow">Fine Dining Discovery</div>
+            <h1 class="hero-title">Sculpt Hub</h1>
+            <p class="hero-subtitle">Curated culinary experiences in your neighborhood</p>
+            <div class="hero-search">
+                <input type="search" class="search-bar" placeholder="Search cuisine, location, or restaurant name..." aria-label="Search restaurants">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label" for="cuisine-filter">Cuisine</label>
+                <select id="cuisine-filter" class="filter-select">
+                    <option>All Cuisines</option>
+                    <option>Italian</option>
+                    <option>Japanese</option>
+                    <option>French</option>
+                    <option>Mediterranean</option>
+                    <option>American</option>
+                    <option>Thai</option>
+                    <option>Indian</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label" for="price-filter">Price Range</label>
+                <select id="price-filter" class="filter-select">
+                    <option>Any Price</option>
+                    <option>$ - Budget</option>
+                    <option>$$ - Moderate</option>
+                    <option>$$$ - Upscale</option>
+                    <option>$$$$ - Fine Dining</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label" for="distance-filter">Distance</label>
+                <select id="distance-filter" class="filter-select">
+                    <option>Any Distance</option>
+                    <option>Within 0.5 mi</option>
+                    <option>Within 1 mi</option>
+                    <option>Within 3 mi</option>
+                    <option>Within 5 mi</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Open Now</label>
+                <button class="filter-button active">
+                    <span>✓</span>
+                    <span>Open Only</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="results-count">Showing 247 restaurants</div>
+            <div class="view-toggle">
+                <button class="view-btn active">List</button>
+                <button class="view-btn">Map</button>
+                <button class="view-btn">Grid</button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🍽️</div>
+                <div class="stat-value">247</div>
+                <div class="stat-label">Restaurants</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">4.6</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🕐</div>
+                <div class="stat-value">182</div>
+                <div class="stat-label">Open Now</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📍</div>
+                <div class="stat-value">3.2mi</div>
+                <div class="stat-label">Avg Distance</div>
+            </div>
+        </div>
+
+        <!-- Featured Restaurants Carousel -->
+        <section class="carousel-section">
+            <div class="section-header">
+                <h2 class="section-title">Featured Tonight</h2>
+                <p class="section-subtitle">Handpicked reservations available now</p>
+            </div>
+
+            <div class="carousel-wrapper">
+                <button class="carousel-nav prev" aria-label="Previous restaurants">‹</button>
+                <div class="carousel" id="carousel-1">
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%230f766e'/%3E%3C/svg%3E" alt="La Maison D'Or restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">La Maison D'Or</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.8</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">French</span>
+                                <span class="cuisine-tag">Fine Dining</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">1.2 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">15 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%236b21a8'/%3E%3C/svg%3E" alt="Sakura Garden restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Sakura Garden</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.9</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Japanese</span>
+                                <span class="cuisine-tag">Sushi</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">0.8 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">30 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%231a1557'/%3E%3C/svg%3E" alt="The Amber Room restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">The Amber Room</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.7</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Mediterranean</span>
+                                <span class="cuisine-tag">Wine Bar</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">2.1 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">20 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%23991b1b'/%3E%3C/svg%3E" alt="Bella Vista restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Bella Vista</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.6</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Italian</span>
+                                <span class="cuisine-tag">Pasta</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">1.5 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">10 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%230f766e'/%3E%3C/svg%3E" alt="Thai Basil restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Thai Basil</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.8</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Thai</span>
+                                <span class="cuisine-tag">Asian Fusion</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">0.6 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">5 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <button class="carousel-nav next" aria-label="Next restaurants">›</button>
+            </div>
+        </section>
+
+        <!-- Map View Section -->
+        <section class="map-section">
+            <div class="section-header">
+                <h2 class="section-title">Nearby Locations</h2>
+                <p class="section-subtitle">Explore restaurants on the map</p>
+            </div>
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <div class="map-placeholder-icon">🗺️</div>
+                    <p>Interactive map view showing restaurant locations</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Rated Carousel -->
+        <section class="carousel-section">
+            <div class="section-header">
+                <h2 class="section-title">Highest Rated</h2>
+                <p class="section-subtitle">Critics' choice and diner favorites</p>
+            </div>
+
+            <div class="carousel-wrapper">
+                <button class="carousel-nav prev" aria-label="Previous restaurants">‹</button>
+                <div class="carousel" id="carousel-2">
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%236b21a8'/%3E%3C/svg%3E" alt="The Royal Oak restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">The Royal Oak</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.9</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">American</span>
+                                <span class="cuisine-tag">Steakhouse</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">2.8 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">45 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%230f766e'/%3E%3C/svg%3E" alt="Spice Route restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Spice Route</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.9</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Indian</span>
+                                <span class="cuisine-tag">Vegetarian</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">1.9 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">25 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%23991b1b'/%3E%3C/svg%3E" alt="Coastal Catch restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Coastal Catch</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.8</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Seafood</span>
+                                <span class="cuisine-tag">Contemporary</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">3.4 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">35 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="restaurant-card">
+                        <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%231a1557'/%3E%3C/svg%3E" alt="Garden Bistro restaurant" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Garden Bistro</h3>
+                                    <span class="open-badge">
+                                        <span class="open-dot"></span>
+                                        Open Now
+                                    </span>
+                                </div>
+                                <div class="card-rating">★ 4.7</div>
+                            </div>
+                            <div class="card-cuisine">
+                                <span class="cuisine-tag">Farm to Table</span>
+                                <span class="cuisine-tag">Organic</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Price</div>
+                                    <div class="detail-value price-indicator">$$$</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Distance</div>
+                                    <div class="detail-value">1.1 mi</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wait</div>
+                                    <div class="detail-value">20 min</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Reserve</button>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <button class="carousel-nav next" aria-label="Next restaurants">›</button>
+            </div>
+        </section>
+
+        <!-- Editorial Section -->
+        <section class="editorial-section">
+            <div class="editorial-header">
+                <div class="editorial-kicker">This Week's Feature</div>
+                <h2 class="editorial-title">Hidden Gems: Underground Dining Experiences</h2>
+                <p class="editorial-lead">Discover the city's best-kept culinary secrets, from speakeasy supper clubs to intimate chef's table experiences that redefine fine dining.</p>
+            </div>
+
+            <div class="featured-grid">
+                <article class="featured-card">
+                    <span class="featured-badge">Editor's Pick</span>
+                    <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%230f766e'/%3E%3C/svg%3E" alt="The Secret Garden restaurant" class="card-image">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">The Secret Garden</h3>
+                            </div>
+                            <div class="card-rating">★ 4.9</div>
+                        </div>
+                        <div class="card-cuisine">
+                            <span class="cuisine-tag">Farm to Table</span>
+                            <span class="cuisine-tag">Seasonal</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value price-indicator">$$$$</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Distance</div>
+                                <div class="detail-value">2.3 mi</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Wait</div>
+                                <div class="detail-value">60 min</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Reserve</button>
+                            <button class="btn btn-secondary">Details</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="featured-card">
+                    <span class="featured-badge">New Opening</span>
+                    <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%236b21a8'/%3E%3C/svg%3E" alt="Ember & Oak restaurant" class="card-image">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Ember & Oak</h3>
+                            </div>
+                            <div class="card-rating">★ 4.8</div>
+                        </div>
+                        <div class="card-cuisine">
+                            <span class="cuisine-tag">BBQ</span>
+                            <span class="cuisine-tag">Contemporary</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value price-indicator">$$$</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Distance</div>
+                                <div class="detail-value">1.7 mi</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Wait</div>
+                                <div class="detail-value">40 min</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Reserve</button>
+                            <button class="btn btn-secondary">Details</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="featured-card">
+                    <span class="featured-badge">Trending</span>
+                    <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%23991b1b'/%3E%3C/svg%3E" alt="Noir Lounge restaurant" class="card-image">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Noir Lounge</h3>
+                            </div>
+                            <div class="card-rating">★ 4.7</div>
+                        </div>
+                        <div class="card-cuisine">
+                            <span class="cuisine-tag">French Fusion</span>
+                            <span class="cuisine-tag">Cocktail Bar</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value price-indicator">$$$$</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Distance</div>
+                                <div class="detail-value">2.9 mi</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Wait</div>
+                                <div class="detail-value">50 min</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Reserve</button>
+                            <button class="btn btn-secondary">Details</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="featured-card">
+                    <span class="featured-badge">Local Favorite</span>
+                    <img src="data:image/svg+xml,%3Csvg width='320' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='320' height='180' fill='%231a1557'/%3E%3C/svg%3E" alt="Rustic Table restaurant" class="card-image">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Rustic Table</h3>
+                            </div>
+                            <div class="card-rating">★ 4.8</div>
+                        </div>
+                        <div class="card-cuisine">
+                            <span class="cuisine-tag">Italian</span>
+                            <span class="cuisine-tag">Comfort Food</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value price-indicator">$$</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Distance</div>
+                                <div class="detail-value">0.9 mi</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Wait</div>
+                                <div class="detail-value">15 min</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Reserve</button>
+                            <button class="btn btn-secondary">Details</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 60;
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        // Touch navigation
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Carousel functionality
+        const carousels = document.querySelectorAll('.carousel');
+
+        carousels.forEach((carousel, index) => {
+            const wrapper = carousel.parentElement;
+            const prevBtn = wrapper.querySelector('.carousel-nav.prev');
+            const nextBtn = wrapper.querySelector('.carousel-nav.next');
+
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: -340, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: 340, behavior: 'smooth' });
+                });
+            }
+        });
+
+        // Filter button toggle
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+            });
+        });
+
+        // View toggle
+        const viewBtns = document.querySelectorAll('.view-btn');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

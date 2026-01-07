@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Birch - Food Delivery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Modern Birch - Design #12
+        ABOUTME: Scandinavian minimalism meets candy colors in a food delivery experience
+
+        DESIGN SYSTEM: "Modern Birch"
+        Tagline: Scandinavian minimalism with candy undertones
+
+        AESTHETIC PRINCIPLES:
+        - Editorial layout with strong typography hierarchy
+        - Arts & Crafts era craftsmanship with handmade quality
+        - Split complementary candy palette (pink/orange/cyan) in dark mode
+        - Low contrast for softness, dramatic shadows for depth
+        - Organic birch bark pattern as surface texture
+        - Split-screen layout: menu left, cart/tracking right
+        - Center-aligned with position-based hierarchy
+        - Transitional serif headings, old-style serif body
+        - Loose line height for breathing room
+
+        COLOR PALETTE (Split Complementary Candy Dark):
+        Primary: #FF6B9D (candy pink)
+        Secondary: #FFB347 (candy orange)
+        Accent: #4ECDC4 (candy cyan)
+        Background: #2A2438 (deep purple-grey)
+        Surface: #3D3651 (lighter purple-grey)
+        Text: #F4E8E8 (warm off-white)
+        */
+
+        :root {
+            /* Color System - Split Complementary Candy Dark */
+            --color-primary: #FF6B9D;
+            --color-secondary: #FFB347;
+            --color-accent: #4ECDC4;
+            --color-background: #2A2438;
+            --color-surface: #3D3651;
+            --color-surface-elevated: #4A4260;
+            --color-text: #F4E8E8;
+            --color-text-muted: #B8A8B8;
+            --color-border: #554866;
+
+            /* Typography - Transitional Serif + Old Style Serif */
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'Crimson Text', serif;
+
+            /* Type Scale - Minor Second (1.067) */
+            --text-xs: 0.844rem;
+            --text-sm: 0.9rem;
+            --text-base: 1rem;
+            --text-md: 1.067rem;
+            --text-lg: 1.138rem;
+            --text-xl: 1.215rem;
+            --text-2xl: 1.296rem;
+            --text-3xl: 1.383rem;
+            --text-4xl: 1.476rem;
+
+            /* Spacing System - 10px base */
+            --space-unit: 10px;
+            --space-xs: 5px;
+            --space-sm: 10px;
+            --space-md: 20px;
+            --space-lg: 30px;
+            --space-xl: 40px;
+            --space-2xl: 60px;
+            --space-3xl: 80px;
+
+            /* Shapes */
+            --radius-default: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --border-width: 2px;
+
+            /* Shadows - Dramatic */
+            --shadow-default: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-dramatic: 0 16px 48px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.8;
+            color: var(--color-text);
+            background: var(--color-background);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Organic Birch Bark Pattern Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(255, 255, 255, 0.02) 3px,
+                    rgba(255, 255, 255, 0.02) 6px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 80px,
+                    rgba(255, 255, 255, 0.015) 80px,
+                    rgba(255, 255, 255, 0.015) 82px
+                );
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left Panel - Menu */
+        .menu-panel {
+            padding: var(--space-2xl) var(--space-xl);
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* Right Panel - Cart/Tracking */
+        .cart-panel {
+            background: var(--color-surface);
+            border-left: var(--border-width) solid var(--color-border);
+            padding: var(--space-2xl) var(--space-lg);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            color: var(--color-primary);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .tagline {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Address Input */
+        .address-section {
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+
+        .address-label {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-accent);
+            display: block;
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .address-input {
+            width: 100%;
+            max-width: 500px;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            text-align: center;
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+        }
+
+        .address-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-dramatic), 0 0 0 4px rgba(78, 205, 196, 0.2);
+        }
+
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-2xl);
+            padding: var(--space-md) 0;
+        }
+
+        .filter-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-lg);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-default);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-dramatic);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .filter-btn:focus {
+            outline: none;
+            box-shadow: var(--shadow-dramatic), 0 0 0 4px rgba(255, 107, 157, 0.3);
+        }
+
+        /* Restaurant Cards Grid */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .restaurant-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-dramatic);
+            border-color: var(--color-secondary);
+        }
+
+        .restaurant-card:focus-within {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .restaurant-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 50%;
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-3xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .restaurant-name {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+            font-weight: 700;
+        }
+
+        .restaurant-cuisine {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-md);
+        }
+
+        .restaurant-meta {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .rating {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        .delivery-time {
+            color: var(--color-accent);
+        }
+
+        /* Cart Panel Header */
+        .cart-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .cart-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .cart-count {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Cart Items */
+        .cart-items {
+            margin-bottom: var(--space-xl);
+        }
+
+        .cart-item {
+            background: var(--color-surface-elevated);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-default);
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-xs);
+        }
+
+        .cart-item-name {
+            font-family: var(--font-heading);
+            font-size: var(--text-md);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        .cart-item-restaurant {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cart-item-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-control {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+            cursor: pointer;
+            font-size: var(--text-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .qty-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.3);
+        }
+
+        .qty-display {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            padding: var(--space-xs);
+            transition: color 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            color: var(--color-primary);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            font-size: var(--text-sm);
+        }
+
+        .summary-row.total {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: var(--border-width) solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-primary);
+            border-radius: var(--radius-default);
+            color: var(--color-background);
+            font-family: var(--font-heading);
+            font-size: var(--text-md);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-dramatic);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            min-height: 44px;
+        }
+
+        .checkout-btn:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 56px rgba(0, 0, 0, 0.7);
+        }
+
+        .checkout-btn:focus {
+            outline: none;
+            box-shadow: var(--shadow-dramatic), 0 0 0 4px rgba(255, 107, 157, 0.4);
+        }
+
+        /* Order Tracking */
+        .tracking-section {
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-xl);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .tracking-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-accent);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .tracking-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .tracking-step {
+            display: flex;
+            gap: var(--space-md);
+            align-items: start;
+        }
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            background: var(--color-surface-elevated);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-default);
+            font-size: var(--text-lg);
+        }
+
+        .tracking-step.active .step-indicator {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: var(--color-background);
+        }
+
+        .tracking-step.completed .step-indicator {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-label {
+            font-family: var(--font-heading);
+            font-size: var(--text-md);
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+        }
+
+        .tracking-step.active .step-label {
+            color: var(--color-accent);
+        }
+
+        .step-time {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-3xl) var(--space-md);
+            color: var(--color-text-muted);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-lg);
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-style: italic;
+            font-size: var(--text-md);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-panel {
+                position: relative;
+                height: auto;
+                border-left: none;
+                border-top: var(--border-width) solid var(--color-border);
+                box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .menu-panel {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-filters {
+                gap: var(--space-xs);
+            }
+
+            .filter-btn {
+                font-size: var(--text-xs);
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
+
+        /* Focus Visible Support */
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Panel: Menu -->
+        <div class="menu-panel">
+            <header>
+                <div class="logo">Modern Birch</div>
+                <div class="tagline">Scandinavian minimalism with candy undertones</div>
+            </header>
+
+            <div class="address-section">
+                <label class="address-label" for="delivery-address">Delivery Address</label>
+                <input
+                    type="text"
+                    id="delivery-address"
+                    class="address-input"
+                    placeholder="Enter your address for delivery..."
+                    aria-label="Enter delivery address"
+                >
+            </div>
+
+            <nav class="category-filters" role="navigation" aria-label="Food categories">
+                <button class="filter-btn active" aria-pressed="true">All</button>
+                <button class="filter-btn" aria-pressed="false">Pizza</button>
+                <button class="filter-btn" aria-pressed="false">Sushi</button>
+                <button class="filter-btn" aria-pressed="false">Burgers</button>
+                <button class="filter-btn" aria-pressed="false">Salads</button>
+                <button class="filter-btn" aria-pressed="false">Asian</button>
+                <button class="filter-btn" aria-pressed="false">Mexican</button>
+                <button class="filter-btn" aria-pressed="false">Desserts</button>
+            </nav>
+
+            <div class="restaurant-grid" role="list">
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍕</div>
+                    <h2 class="restaurant-name">Birch & Stone Pizza</h2>
+                    <p class="restaurant-cuisine">Italian, Wood-fired</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.8</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">25-35 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍣</div>
+                    <h2 class="restaurant-name">Nordic Sushi House</h2>
+                    <p class="restaurant-cuisine">Japanese, Fusion</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.9</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">30-40 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍔</div>
+                    <h2 class="restaurant-name">The Minimal Burger</h2>
+                    <p class="restaurant-cuisine">American, Craft Burgers</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.7</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">20-30 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🥗</div>
+                    <h2 class="restaurant-name">Hygge Greens</h2>
+                    <p class="restaurant-cuisine">Healthy, Organic Salads</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.6</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">15-25 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍜</div>
+                    <h2 class="restaurant-name">Fika Ramen Bar</h2>
+                    <p class="restaurant-cuisine">Japanese, Noodles</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.8</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">25-35 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🌮</div>
+                    <h2 class="restaurant-name">Lagom Tacos</h2>
+                    <p class="restaurant-cuisine">Mexican, Street Food</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.7</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">20-30 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍰</div>
+                    <h2 class="restaurant-name">Sweet Birch Bakery</h2>
+                    <p class="restaurant-cuisine">Desserts, Pastries</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.9</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">15-20 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🍛</div>
+                    <h2 class="restaurant-name">Scandinavian Curry Co.</h2>
+                    <p class="restaurant-cuisine">Indian-Nordic Fusion</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.8</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">30-40 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="restaurant-card" role="listitem" tabindex="0">
+                    <div class="restaurant-icon">🥙</div>
+                    <h2 class="restaurant-name">Nordic Pita House</h2>
+                    <p class="restaurant-cuisine">Mediterranean, Wraps</p>
+                    <div class="restaurant-meta">
+                        <div class="meta-item">
+                            <span class="rating">★ 4.6</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="delivery-time">20-30 min</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- Right Panel: Cart & Tracking -->
+        <aside class="cart-panel" role="complementary" aria-label="Shopping cart and order tracking">
+            <div class="cart-header">
+                <h2 class="cart-title">Your Cart</h2>
+                <p class="cart-count">3 items</p>
+            </div>
+
+            <div class="cart-items">
+                <div class="cart-item">
+                    <div class="cart-item-header">
+                        <h3 class="cart-item-name">Margherita Pizza</h3>
+                        <span class="cart-item-price">$16.50</span>
+                    </div>
+                    <p class="cart-item-restaurant">from Birch & Stone Pizza</p>
+                    <div class="cart-item-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" aria-label="Decrease quantity">−</button>
+                            <span class="qty-display" aria-label="Quantity">1</span>
+                            <button class="qty-btn" aria-label="Increase quantity">+</button>
+                        </div>
+                        <button class="remove-btn" aria-label="Remove item">Remove</button>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <div class="cart-item-header">
+                        <h3 class="cart-item-name">Salmon Nigiri Set</h3>
+                        <span class="cart-item-price">$24.00</span>
+                    </div>
+                    <p class="cart-item-restaurant">from Nordic Sushi House</p>
+                    <div class="cart-item-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" aria-label="Decrease quantity">−</button>
+                            <span class="qty-display" aria-label="Quantity">2</span>
+                            <button class="qty-btn" aria-label="Increase quantity">+</button>
+                        </div>
+                        <button class="remove-btn" aria-label="Remove item">Remove</button>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <div class="cart-item-header">
+                        <h3 class="cart-item-name">Cinnamon Roll</h3>
+                        <span class="cart-item-price">$5.50</span>
+                    </div>
+                    <p class="cart-item-restaurant">from Sweet Birch Bakery</p>
+                    <div class="cart-item-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" aria-label="Decrease quantity">−</button>
+                            <span class="qty-display" aria-label="Quantity">1</span>
+                            <button class="qty-btn" aria-label="Increase quantity">+</button>
+                        </div>
+                        <button class="remove-btn" aria-label="Remove item">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>$70.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span>$4.99</span>
+                </div>
+                <div class="summary-row">
+                    <span>Service Fee</span>
+                    <span>$2.50</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>$77.49</span>
+                </div>
+            </div>
+
+            <button class="checkout-btn" aria-label="Proceed to checkout">
+                Checkout
+            </button>
+
+            <div class="tracking-section">
+                <h3 class="tracking-title">Order Status</h3>
+                <div class="tracking-steps">
+                    <div class="tracking-step completed">
+                        <div class="step-indicator">✓</div>
+                        <div class="step-content">
+                            <div class="step-label">Order Placed</div>
+                            <div class="step-time">2:34 PM</div>
+                        </div>
+                    </div>
+                    <div class="tracking-step completed">
+                        <div class="step-indicator">✓</div>
+                        <div class="step-content">
+                            <div class="step-label">Preparing</div>
+                            <div class="step-time">2:41 PM</div>
+                        </div>
+                    </div>
+                    <div class="tracking-step active">
+                        <div class="step-indicator">🚴</div>
+                        <div class="step-content">
+                            <div class="step-label">Out for Delivery</div>
+                            <div class="step-time">Est. 3:15 PM</div>
+                        </div>
+                    </div>
+                    <div class="tracking-step">
+                        <div class="step-indicator">📦</div>
+                        <div class="step-content">
+                            <div class="step-label">Delivered</div>
+                            <div class="step-time">Est. 3:20 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 12;
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            }
+            if (e.key === 'ArrowLeft') {
+                window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Touch navigation
+        let startX;
+        document.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+        });
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Category filter interaction
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterButtons.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-pressed', 'true');
+            });
+        });
+
+        // Restaurant card keyboard navigation
+        const restaurantCards = document.querySelectorAll('.restaurant-card');
+        restaurantCards.forEach(card => {
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

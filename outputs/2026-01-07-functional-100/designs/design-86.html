@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!--
+Design #86 - MemoryFlow Flashcard Study App
+ABOUTME: A flashcard study application with card flip animations, spaced repetition, and progress tracking
+ABOUTME: Features deck management, study session timer, and statistical feedback for learning optimization
+
+DESIGN SYSTEM TOKENS:
+Primary Color: #6366F1 (Indigo)
+Background: #0F172A (Dark Slate)
+Surface: #1E293B (Slate)
+Accent: #F59E0B (Amber)
+Success: #10B981 (Emerald)
+Error: #EF4444 (Red)
+
+Typography: Inter (headings), Inter (body)
+Type Scale: 1.25 (Major Third)
+Spacing Unit: 8px
+Border Radius: 12px
+Shadows: Layered elevation system
+
+AESTHETIC PRINCIPLES:
+- Modern dark theme optimized for extended study sessions
+- Card flip animations with 3D perspective for engagement
+- Color-coded feedback (green/red) for instant recognition
+- Spaced repetition stats prominently displayed
+- Clean, distraction-free interface for focus
+- Progress visualization through multiple indicators
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemoryFlow - Flashcard Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --color-primary: #6366F1;
+            --color-primary-dark: #4F46E5;
+            --color-background: #0F172A;
+            --color-surface: #1E293B;
+            --color-surface-elevated: #334155;
+            --color-text: #F1F5F9;
+            --color-text-muted: #94A3B8;
+            --color-accent: #F59E0B;
+            --color-success: #10B981;
+            --color-error: #EF4444;
+            --color-border: #334155;
+
+            /* Typography */
+            --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.64rem;
+            --font-size-sm: 0.8rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.563rem;
+            --font-size-2xl: 1.953rem;
+            --font-size-3xl: 2.441rem;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-default: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+        }
+
+        .session-timer {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--color-surface-elevated);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .timer-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+            width: 100%;
+        }
+
+        /* Deck Selector */
+        .deck-selector {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .deck-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .deck-selector-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+
+        .deck-select {
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-base);
+            font-family: var(--font-body);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            min-width: 200px;
+        }
+
+        .deck-select:hover {
+            border-color: var(--color-primary);
+        }
+
+        .deck-select:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .stat-card {
+            background: var(--color-surface-elevated);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card.success .stat-value {
+            color: var(--color-success);
+        }
+
+        .stat-card.error .stat-value {
+            color: var(--color-error);
+        }
+
+        .stat-card.primary .stat-value {
+            color: var(--color-primary);
+        }
+
+        .stat-card.accent .stat-value {
+            color: var(--color-accent);
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .progress-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+        }
+
+        .progress-stats {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--color-surface);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+
+        /* Flashcard Area */
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: var(--space-xl);
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            height: 400px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-2xl);
+            border: 2px solid var(--color-border);
+        }
+
+        .card-front {
+            border-top: 4px solid var(--color-primary);
+        }
+
+        .card-back {
+            border-top: 4px solid var(--color-accent);
+            transform: rotateY(180deg);
+        }
+
+        .card-label {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .card-content {
+            font-size: var(--font-size-2xl);
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: var(--space-lg);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .btn {
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            border-radius: var(--radius-default);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 160px;
+            box-shadow: var(--shadow-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .btn:focus {
+            outline: 3px solid rgba(255, 255, 255, 0.2);
+            outline-offset: 2px;
+        }
+
+        .btn-error {
+            background: var(--color-error);
+            color: white;
+        }
+
+        .btn-error:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        /* Spaced Repetition Panel */
+        .spaced-repetition {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-default);
+        }
+
+        .spaced-repetition-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .schedule-item {
+            background: var(--color-surface-elevated);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .schedule-item.due {
+            border-left-color: var(--color-error);
+        }
+
+        .schedule-item.upcoming {
+            border-left-color: var(--color-accent);
+        }
+
+        .schedule-time {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+        }
+
+        .schedule-desc {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Keyboard Shortcuts */
+        .shortcuts {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-default);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+
+        .shortcuts kbd {
+            background: var(--color-background);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 4px;
+            font-size: var(--font-size-xs);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .flashcard {
+                transition: none;
+            }
+
+            .progress-fill {
+                transition: none;
+            }
+
+            .btn {
+                transition: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .flashcard {
+                height: 320px;
+            }
+
+            .card-content {
+                font-size: var(--font-size-xl);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Icon helpers */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <span>MemoryFlow</span>
+            </div>
+            <div class="session-timer">
+                <svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+                <span id="timer">00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Deck Selector -->
+        <section class="deck-selector">
+            <div class="deck-selector-header">
+                <h2 class="deck-selector-title">Current Deck</h2>
+                <select class="deck-select" id="deckSelect">
+                    <option value="javascript">JavaScript Fundamentals</option>
+                    <option value="python">Python Data Structures</option>
+                    <option value="algorithms">Algorithms & Complexity</option>
+                    <option value="webdev">Web Development</option>
+                    <option value="databases">Database Design</option>
+                </select>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Total Cards</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Streak</div>
+                </div>
+                <div class="stat-card error">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">To Review</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Bar -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <h3 class="progress-title">Session Progress</h3>
+                <span class="progress-stats"><span id="currentCard">12</span> / 30 cards</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 40%"></div>
+            </div>
+        </section>
+
+        <!-- Flashcard -->
+        <section class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="card-face card-front">
+                    <span class="card-label">Question</span>
+                    <div class="card-content">
+                        What is the time complexity of binary search?
+                    </div>
+                    <div class="flip-hint">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M3 6h18M3 18h18"/>
+                        </svg>
+                        Click to reveal answer
+                    </div>
+                </div>
+                <div class="card-face card-back">
+                    <span class="card-label">Answer</span>
+                    <div class="card-content">
+                        O(log n) - The search space is halved with each iteration
+                    </div>
+                    <div class="flip-hint">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M3 6h18M3 18h18"/>
+                        </svg>
+                        Click to see question
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="action-buttons">
+            <button class="btn btn-error" id="incorrectBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M15 9l-6 6M9 9l6 6"/>
+                </svg>
+                Incorrect
+            </button>
+            <button class="btn btn-success" id="correctBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+                Correct
+            </button>
+        </section>
+
+        <!-- Spaced Repetition Stats -->
+        <section class="spaced-repetition">
+            <h3 class="spaced-repetition-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                Spaced Repetition Schedule
+            </h3>
+            <div class="schedule-grid">
+                <div class="schedule-item due">
+                    <div class="schedule-time">18 cards</div>
+                    <div class="schedule-desc">Due today</div>
+                </div>
+                <div class="schedule-item upcoming">
+                    <div class="schedule-time">34 cards</div>
+                    <div class="schedule-desc">Tomorrow</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">52 cards</div>
+                    <div class="schedule-desc">This week</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">89 cards</div>
+                    <div class="schedule-desc">Next 30 days</div>
+                </div>
+            </div>
+            <div class="shortcuts">
+                Keyboard shortcuts: <kbd>Space</kbd> flip card · <kbd>1</kbd> incorrect · <kbd>2</kbd> correct · <kbd>N</kbd> next deck
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // Flashcard flip functionality
+    const flashcard = document.getElementById('flashcard');
+    flashcard.addEventListener('click', () => {
+        flashcard.classList.toggle('flipped');
+    });
+
+    // Answer buttons
+    let currentCardNum = 12;
+    const totalCards = 30;
+
+    document.getElementById('correctBtn').addEventListener('click', nextCard);
+    document.getElementById('incorrectBtn').addEventListener('click', nextCard);
+
+    function nextCard() {
+        if (currentCardNum < totalCards) {
+            currentCardNum++;
+            document.getElementById('currentCard').textContent = currentCardNum;
+            const progress = (currentCardNum / totalCards) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Reset flip
+            flashcard.classList.remove('flipped');
+
+            // Simulate new card content (in real app, this would load from data)
+            setTimeout(() => {
+                // Card content would update here
+            }, 300);
+        }
+    }
+
+    // Session timer
+    let seconds = 0;
+    setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        document.getElementById('timer').textContent =
+            String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    }, 1000);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            flashcard.classList.toggle('flipped');
+        }
+        if (e.key === '1') {
+            document.getElementById('incorrectBtn').click();
+        }
+        if (e.key === '2') {
+            document.getElementById('correctBtn').click();
+        }
+    });
+
+    // Navigation script
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 86;
+
+        document.addEventListener('keydown', (e) => {
+            // Don't interfere with flashcard shortcuts
+            if (e.key === 'ArrowRight') {
+                window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            }
+            if (e.key === 'ArrowLeft') {
+                window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

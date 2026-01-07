@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sculpt Hub - Meditation App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Sculpt Hub - Meditation App Design
+        ABOUTME: Neumorphic Y2K dark meditation experience with monochromatic palette and energetic African-inspired patterns
+
+        DESIGN SYSTEM TOKENS:
+        - UI Paradigm: Neumorphic (soft extrusion, layered depth)
+        - Era: Y2K (chrome effects, tech optimism, gradients)
+        - Color: Monochromatic dark mode, neutral temperature
+        - Typography: Libre Baskerville (old style serif) + Work Sans (neo grotesque)
+        - Scale: Major third (1.25)
+        - Layout: App shell with persistent sidebar
+        - Cultural: African bold patterns as organic texture
+
+        AESTHETIC PRINCIPLES:
+        - Neumorphic surfaces with subtle inset/outset shadows
+        - Y2K chrome gradients and metallic accents
+        - Monochromatic palette (grays with slight warmth)
+        - Energetic African geometric patterns as background texture
+        - Balanced density with loose line-height
+        - Dramatic shadows for depth hierarchy
+        */
+
+        :root {
+            /* Colors - Monochromatic Dark */
+            --color-primary: #8a8a8a;
+            --color-primary-bright: #b8b8b8;
+            --color-background: #1a1a1c;
+            --color-surface: #242426;
+            --color-surface-raised: #2e2e32;
+            --color-surface-sunken: #1a1a1c;
+            --color-text: #e8e8ea;
+            --color-text-muted: #9a9a9c;
+            --color-border: #3a3a3c;
+
+            /* Y2K Chrome gradient */
+            --gradient-chrome: linear-gradient(135deg, #6a6a6c 0%, #b8b8ba 25%, #8a8a8c 50%, #b8b8ba 75%, #6a6a6c 100%);
+            --gradient-accent: linear-gradient(135deg, #8a8a8a 0%, #b8b8b8 100%);
+
+            /* Typography */
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'Work Sans', sans-serif;
+
+            /* Type Scale - Major Third (1.25) */
+            --text-xs: 0.64rem;
+            --text-sm: 0.8rem;
+            --text-base: 1rem;
+            --text-lg: 1.25rem;
+            --text-xl: 1.563rem;
+            --text-2xl: 1.953rem;
+            --text-3xl: 2.441rem;
+
+            /* Spacing - 4px base */
+            --space-unit: 4px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+
+            /* Shapes */
+            --radius-default: 8px;
+            --radius-subtle: 6px;
+
+            /* Neumorphic Shadows - Dramatic */
+            --shadow-neumorphic-raised:
+                8px 8px 16px rgba(0, 0, 0, 0.5),
+                -4px -4px 12px rgba(255, 255, 255, 0.03);
+            --shadow-neumorphic-sunken:
+                inset 6px 6px 12px rgba(0, 0, 0, 0.5),
+                inset -3px -3px 8px rgba(255, 255, 255, 0.02);
+            --shadow-default:
+                0 8px 24px rgba(0, 0, 0, 0.4),
+                0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            font-weight: 300;
+            line-height: 1.8; /* loose line-height */
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* African-inspired geometric pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 35px, var(--color-primary) 35px, var(--color-primary) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, var(--color-primary) 35px, var(--color-primary) 70px);
+            background-size: 100px 100px;
+            pointer-events: none;
+        }
+
+        /* App Shell Layout */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Persistent Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .sidebar-header {
+            padding: var(--space-8) var(--space-6);
+            background: var(--gradient-chrome);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em; /* tight */
+            background: linear-gradient(135deg, #fff 0%, #d0d0d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: var(--space-6) var(--space-4);
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-8);
+        }
+
+        .nav-section-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--color-text-muted);
+            padding: var(--space-2) var(--space-3);
+            margin-bottom: var(--space-2);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-3);
+            margin: var(--space-1) 0;
+            border-radius: var(--radius-subtle);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+            background: var(--color-surface);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover,
+        .nav-item:focus {
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+            border-color: var(--color-border);
+            outline: none;
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .nav-item.active {
+            background: var(--color-surface-sunken);
+            color: var(--color-primary-bright);
+            box-shadow: var(--shadow-neumorphic-sunken);
+            border-color: var(--color-primary);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sidebar Stats */
+        .sidebar-stats {
+            padding: var(--space-6);
+            background: var(--color-surface-raised);
+            border-top: 1px solid var(--color-border);
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) 0;
+            font-size: var(--text-sm);
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+        }
+
+        .stat-value {
+            font-weight: 500;
+            color: var(--color-primary-bright);
+            font-family: var(--font-heading);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* List-Detail Layout */
+        .content-list {
+            width: 360px;
+            background: var(--color-surface);
+            border-right: 1px solid var(--color-border);
+            overflow-y: auto;
+        }
+
+        .list-header {
+            padding: var(--space-6);
+            background: var(--color-surface-raised);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .list-header h2 {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-2);
+        }
+
+        .list-header p {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .session-list {
+            padding: var(--space-4);
+        }
+
+        .session-card {
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            padding: var(--space-4);
+            margin-bottom: var(--space-3);
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .session-card:hover,
+        .session-card:focus {
+            transform: translateY(-2px);
+            box-shadow:
+                12px 12px 24px rgba(0, 0, 0, 0.6),
+                -6px -6px 16px rgba(255, 255, 255, 0.04);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .session-card.active {
+            background: var(--gradient-chrome);
+            border-color: var(--color-primary-bright);
+        }
+
+        .session-category {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.01em;
+            font-family: var(--font-heading);
+        }
+
+        .session-title {
+            font-size: var(--text-lg);
+            font-weight: 500;
+            margin-bottom: var(--space-2);
+        }
+
+        .session-duration {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Detail Panel */
+        .content-detail {
+            flex: 1;
+            padding: var(--space-8);
+            overflow-y: auto;
+            background: var(--color-background);
+        }
+
+        .meditation-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .meditation-hero {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .meditation-hero h1 {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-4);
+            background: var(--gradient-chrome);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .meditation-description {
+            font-size: var(--text-base);
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        /* Breathing Animation - Neumorphic Circle */
+        .breathing-animation {
+            width: 320px;
+            height: 320px;
+            margin: var(--space-12) auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .breath-circle {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: var(--color-surface);
+            box-shadow: var(--shadow-neumorphic-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: breathe 6s ease-in-out infinite;
+        }
+
+        .breath-circle::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--gradient-chrome);
+            opacity: 0.5;
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .breath-text {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            z-index: 1;
+            color: var(--color-text);
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: var(--shadow-neumorphic-raised);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow:
+                    16px 16px 32px rgba(0, 0, 0, 0.6),
+                    -8px -8px 24px rgba(255, 255, 255, 0.04);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.9);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        /* Timer Display */
+        .timer-display {
+            text-align: center;
+            margin: var(--space-8) 0;
+            background: var(--color-surface);
+            padding: var(--space-8);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-sunken);
+        }
+
+        .timer-time {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-4);
+            background: var(--gradient-chrome);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-8);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-neumorphic-raised);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            background: var(--gradient-chrome);
+            transform: translateY(-2px);
+            box-shadow:
+                12px 12px 24px rgba(0, 0, 0, 0.6),
+                -6px -6px 16px rgba(255, 255, 255, 0.04);
+            outline: none;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-neumorphic-sunken);
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            border-color: var(--color-primary-bright);
+        }
+
+        /* Ambient Sounds Selector */
+        .ambient-sounds {
+            margin: var(--space-12) 0;
+        }
+
+        .ambient-sounds h3 {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .sound-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .sound-item {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: var(--space-5);
+            text-align: center;
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-neumorphic-raised);
+            min-height: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sound-item:hover,
+        .sound-item:focus {
+            background: var(--color-surface-raised);
+            box-shadow:
+                12px 12px 24px rgba(0, 0, 0, 0.6),
+                -6px -6px 16px rgba(255, 255, 255, 0.04);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .sound-item.active {
+            background: var(--gradient-chrome);
+            box-shadow: var(--shadow-neumorphic-sunken);
+            border-color: var(--color-primary-bright);
+        }
+
+        .sound-icon {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-2);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .sound-label {
+            font-size: var(--text-sm);
+            font-weight: 400;
+        }
+
+        /* Session History */
+        .session-history {
+            margin-top: var(--space-12);
+        }
+
+        .session-history h3 {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-6);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .history-item {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: var(--space-4);
+            border: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-neumorphic-raised);
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-date {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-1);
+        }
+
+        .history-session {
+            font-size: var(--text-base);
+            font-weight: 400;
+        }
+
+        .history-duration {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-primary-bright);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+            }
+
+            .content-list {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 100;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                flex-direction: column;
+            }
+
+            .content-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            .sound-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Persistent Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">Sculpt Hub</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Meditate</div>
+                    <a href="#" class="nav-item active">
+                        <span class="nav-icon">◆</span>
+                        <span>Quick Session</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◇</span>
+                        <span>Guided</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◈</span>
+                        <span>Sleep</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◊</span>
+                        <span>Focus</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Categories</div>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">▲</span>
+                        <span>Stress Relief</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">▼</span>
+                        <span>Anxiety</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">▶</span>
+                        <span>Mindfulness</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◀</span>
+                        <span>Breathing</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">●</span>
+                        <span>Body Scan</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Progress</div>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◐</span>
+                        <span>History</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">◑</span>
+                        <span>Achievements</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Current Streak</span>
+                    <span class="stat-value">12 days</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Sessions</span>
+                    <span class="stat-value">47</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Time</span>
+                    <span class="stat-value">8.5 hrs</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Session List -->
+            <div class="content-list">
+                <div class="list-header">
+                    <h2>Sessions</h2>
+                    <p>Choose your meditation journey</p>
+                </div>
+
+                <div class="session-list">
+                    <div class="session-card active" tabindex="0">
+                        <div class="session-category">Mindfulness</div>
+                        <div class="session-title">Morning Calm</div>
+                        <div class="session-duration">10 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Breathing</div>
+                        <div class="session-title">Deep Breath Work</div>
+                        <div class="session-duration">15 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Sleep</div>
+                        <div class="session-title">Evening Wind Down</div>
+                        <div class="session-duration">20 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Stress Relief</div>
+                        <div class="session-title">Release Tension</div>
+                        <div class="session-duration">12 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Focus</div>
+                        <div class="session-title">Mental Clarity</div>
+                        <div class="session-duration">8 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Anxiety</div>
+                        <div class="session-title">Peaceful Mind</div>
+                        <div class="session-duration">15 minutes</div>
+                    </div>
+
+                    <div class="session-card" tabindex="0">
+                        <div class="session-category">Body Scan</div>
+                        <div class="session-title">Full Body Awareness</div>
+                        <div class="session-duration">25 minutes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Panel -->
+            <div class="content-detail">
+                <div class="meditation-container">
+                    <div class="meditation-hero">
+                        <h1>Morning Calm</h1>
+                        <p class="meditation-description">
+                            Begin your day with centered awareness and peaceful intention. This guided mindfulness meditation helps you cultivate presence and clarity for the day ahead. Focus on your breath and find stillness in the morning quiet.
+                        </p>
+                    </div>
+
+                    <!-- Breathing Animation -->
+                    <div class="breathing-animation">
+                        <div class="breath-circle">
+                            <div class="breath-text">Breathe</div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Display -->
+                    <div class="timer-display">
+                        <div class="timer-time">10:00</div>
+                        <div class="timer-controls">
+                            <button class="btn">Reset</button>
+                            <button class="btn btn-primary">Start</button>
+                            <button class="btn">Pause</button>
+                        </div>
+                    </div>
+
+                    <!-- Ambient Sounds Selector -->
+                    <div class="ambient-sounds">
+                        <h3>Ambient Sounds</h3>
+                        <div class="sound-grid">
+                            <div class="sound-item active" tabindex="0">
+                                <div class="sound-icon">🌊</div>
+                                <div class="sound-label">Ocean Waves</div>
+                            </div>
+                            <div class="sound-item" tabindex="0">
+                                <div class="sound-icon">🌧️</div>
+                                <div class="sound-label">Rain</div>
+                            </div>
+                            <div class="sound-item" tabindex="0">
+                                <div class="sound-icon">🌲</div>
+                                <div class="sound-label">Forest</div>
+                            </div>
+                            <div class="sound-item" tabindex="0">
+                                <div class="sound-icon">🔥</div>
+                                <div class="sound-label">Fireplace</div>
+                            </div>
+                            <div class="sound-item" tabindex="0">
+                                <div class="sound-icon">🎵</div>
+                                <div class="sound-label">Singing Bowl</div>
+                            </div>
+                            <div class="sound-item" tabindex="0">
+                                <div class="sound-icon">🌬️</div>
+                                <div class="sound-label">Wind Chimes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session History -->
+                    <div class="session-history">
+                        <h3>Recent Sessions</h3>
+                        <div class="history-list">
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div class="history-date">Yesterday, 7:30 AM</div>
+                                    <div class="history-session">Morning Calm</div>
+                                </div>
+                                <div class="history-duration">10:00</div>
+                            </div>
+
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div class="history-date">Jan 6, 10:15 PM</div>
+                                    <div class="history-session">Evening Wind Down</div>
+                                </div>
+                                <div class="history-duration">20:00</div>
+                            </div>
+
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div class="history-date">Jan 6, 7:00 AM</div>
+                                    <div class="history-session">Morning Calm</div>
+                                </div>
+                                <div class="history-duration">10:00</div>
+                            </div>
+
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div class="history-date">Jan 5, 2:30 PM</div>
+                                    <div class="history-session">Mental Clarity</div>
+                                </div>
+                                <div class="history-duration">8:00</div>
+                            </div>
+
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div class="history-date">Jan 5, 7:15 AM</div>
+                                    <div class="history-session">Deep Breath Work</div>
+                                </div>
+                                <div class="history-duration">15:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 71;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive Elements
+
+        // Session card selection
+        document.querySelectorAll('.session-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.session-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Sound selection
+        document.querySelectorAll('.sound-item').forEach(sound => {
+            sound.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // Timer functionality
+        let timerSeconds = 600; // 10 minutes
+        let isRunning = false;
+        let timerInterval;
+
+        const timerDisplay = document.querySelector('.timer-time');
+        const startBtn = document.querySelector('.btn-primary');
+        const pauseBtn = document.querySelectorAll('.btn')[2];
+        const resetBtn = document.querySelectorAll('.btn')[0];
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                startBtn.textContent = 'Running';
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        startBtn.textContent = 'Start';
+                    }
+                }, 1000);
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                startBtn.textContent = 'Resume';
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timerSeconds = 600;
+            updateTimerDisplay();
+            startBtn.textContent = 'Start';
+        });
+    })();
+    </script>
+</body>
+</html>

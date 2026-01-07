@@ -46,6 +46,20 @@
 
 ---
 
+### v0.5 - Functional-100 Batch (2026-01-07)
+- [x] Generated 100 designs using Sonnet with expanded functional directions
+- [x] 82 unique functional directions across 18 categories
+- [x] Average file size: 36KB (vs 19KB for Haiku batch-100)
+- [x] Total batch size: 3.5MB
+- [x] All 100 designs validated and passed
+
+**Quality Observations:**
+- Sonnet designs nearly 2x larger than Haiku (more detailed CSS and components)
+- Functional direction-driven designs show much better variety
+- Designs clearly reflect their assigned functional direction
+
+---
+
 ## Planned
 
 ### Screenshot Generation
@@ -91,6 +105,7 @@ Based on A/B test results:
 | 2026-01-06 | ab-test-loose | 10 | Mixed | ~28KB | 5 Haiku + 5 Sonnet, 50% nav failure |
 | 2026-01-07 | nav-test | 3 | Haiku | ~33KB | Fixed nav script, all passed |
 | 2026-01-07 | batch-100 | 100 | Haiku | ~19KB | First large batch, 2.1MB total |
+| 2026-01-07 | functional-100 | 100 | Sonnet | ~36KB | 82 unique functional directions, 3.5MB total |
 
 **Key Learnings:**
 - Loose guide produces more varied layouts but smaller files

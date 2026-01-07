@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<!--
+ABOUTME: Design #89 - Global Winter
+ABOUTME: Y2K neumorphic meal planner with ultra-airy dark interface and tetradic cool primary colors
+
+DESIGN SYSTEM TOKENS:
+--color-primary: #00D4FF (cyan)
+--color-secondary: #FF00D4 (magenta)
+--color-tertiary: #D4FF00 (lime)
+--color-quaternary: #FFD400 (yellow)
+--color-background: #0a0e1a (deep navy)
+--color-surface: #141b2e (elevated navy)
+--font-heading: 'Space Grotesk' (neo-grotesque)
+--font-body: 'Crimson Text' (old-style serif)
+--space-unit: 8px
+--radius-default: 16px
+
+AESTHETIC PRINCIPLES:
+- Y2K nostalgia: chrome effects, glows, futuristic optimism
+- Neumorphic depth: soft inset/outset shadows creating dimensional surfaces
+- Ultra-airy spacing: generous whitespace, breathing room
+- Tetradic cool primaries: cyan/magenta/lime/yellow in dark space
+- Extreme contrast: vibrant accents pop against deep backgrounds
+- Layered shadows: multiple shadow layers for depth
+- Noise texture: subtle grain overlay for tactile quality
+- Golden ratio typography: dramatic scale jumps (1.618)
+- Very loose letter spacing: expanded headlines for tech feel
+- Left alignment: asymmetric, modern layout
+- Whitespace hierarchy: spatial relationships define structure
+- Isometric icons: 3D perspective for futuristic feel
+
+MEAL PLANNER FEATURES:
+- Weekly calendar grid with meal slots
+- Recipe card system with nutrition info
+- Drag-and-drop meal planning
+- Grocery list generator
+- Nutrition summary dashboard
+- Meal categories and filters
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Winter - Meal Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors - Tetradic Cool Primaries */
+            --color-primary: #00D4FF;
+            --color-secondary: #FF00D4;
+            --color-tertiary: #D4FF00;
+            --color-quaternary: #FFD400;
+            --color-background: #0a0e1a;
+            --color-surface: #141b2e;
+            --color-surface-elevated: #1a2438;
+            --color-surface-inset: #0d1220;
+            --color-text: #e8ecf4;
+            --color-text-muted: #7a8ba3;
+            --color-success: #00ff88;
+            --color-warning: #ffa500;
+
+            /* Typography - Golden Ratio Scale */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Crimson Text', serif;
+            --type-scale: 1.618;
+            --font-size-xs: 0.618rem;
+            --font-size-sm: 0.764rem;
+            --font-size-base: 1rem;
+            --font-size-md: 1.618rem;
+            --font-size-lg: 2.618rem;
+            --font-size-xl: 4.236rem;
+            --font-size-xxl: 6.854rem;
+            --letter-spacing-heading: 0.15em;
+            --line-height-tight: 1.2;
+            --line-height-body: 1.4;
+
+            /* Spacing - Ultra Airy (8px base) */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 2);
+            --space-sm: calc(var(--space-unit) * 3);
+            --space-md: calc(var(--space-unit) * 5);
+            --space-lg: calc(var(--space-unit) * 8);
+            --space-xl: calc(var(--space-unit) * 13);
+            --space-xxl: calc(var(--space-unit) * 21);
+
+            /* Shapes */
+            --radius-default: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            /* Neumorphic Shadows - Layered */
+            --shadow-neumorphic-outset:
+                8px 8px 16px rgba(0, 0, 0, 0.6),
+                -4px -4px 12px rgba(255, 255, 255, 0.02),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            --shadow-neumorphic-inset:
+                inset 6px 6px 12px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 8px rgba(255, 255, 255, 0.02);
+            --shadow-glow-cyan: 0 0 24px rgba(0, 212, 255, 0.4), 0 0 48px rgba(0, 212, 255, 0.2);
+            --shadow-glow-magenta: 0 0 24px rgba(255, 0, 212, 0.4), 0 0 48px rgba(255, 0, 212, 0.2);
+            --shadow-glow-lime: 0 0 24px rgba(212, 255, 0, 0.4), 0 0 48px rgba(212, 255, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-body);
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: overlay;
+        }
+
+        /* Top Transparent Navigation */
+        .nav-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-xl);
+            background: linear-gradient(180deg, rgba(10, 14, 26, 0.95) 0%, rgba(10, 14, 26, 0) 100%);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--color-surface);
+            border: none;
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            letter-spacing: var(--letter-spacing-heading);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            box-shadow: var(--shadow-neumorphic-outset);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            box-shadow: var(--shadow-glow-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-background);
+        }
+
+        /* Main Container - Fullscreen Slides */
+        .main-container {
+            margin-top: 96px;
+            min-height: calc(100vh - 96px);
+        }
+
+        /* Slide Section */
+        .slide-section {
+            min-height: 100vh;
+            padding: var(--space-xxl) var(--space-xl);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            line-height: var(--line-height-tight);
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-md);
+            color: var(--color-text-muted);
+        }
+
+        /* Weekly Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(7, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .calendar-header {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            letter-spacing: var(--letter-spacing-heading);
+            text-align: center;
+            padding: var(--space-sm);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-outset);
+            text-transform: uppercase;
+        }
+
+        .calendar-header:first-child {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .calendar-day-name {
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .calendar-day-date {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        .meal-time-label {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            letter-spacing: var(--letter-spacing-heading);
+            display: flex;
+            align-items: center;
+            padding: var(--space-sm);
+            text-transform: uppercase;
+        }
+
+        .meal-slot {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm);
+            min-height: 140px;
+            box-shadow: var(--shadow-neumorphic-inset);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meal-slot:hover {
+            box-shadow: var(--shadow-neumorphic-outset);
+        }
+
+        .meal-slot.has-meal {
+            box-shadow: var(--shadow-neumorphic-outset);
+        }
+
+        .meal-slot.has-meal::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .meal-card-mini {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .meal-card-mini-cal {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Recipe Library Section */
+        .recipe-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .recipe-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-neumorphic-outset);
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .recipe-card:active {
+            cursor: grabbing;
+        }
+
+        .recipe-card.glow-cyan:hover {
+            box-shadow: var(--shadow-glow-cyan);
+        }
+
+        .recipe-card.glow-magenta:hover {
+            box-shadow: var(--shadow-glow-magenta);
+        }
+
+        .recipe-card.glow-lime:hover {
+            box-shadow: var(--shadow-glow-lime);
+        }
+
+        .recipe-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--color-surface-inset);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            box-shadow: var(--shadow-neumorphic-inset);
+        }
+
+        .recipe-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xs);
+            line-height: var(--line-height-tight);
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        .recipe-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .recipe-nutrition {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
+        }
+
+        .nutrition-item {
+            background: var(--color-surface-inset);
+            padding: var(--space-xs);
+            border-radius: var(--radius-default);
+            text-align: center;
+            box-shadow: var(--shadow-neumorphic-inset);
+        }
+
+        .nutrition-value {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .nutrition-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Grocery List */
+        .grocery-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+        }
+
+        .grocery-list {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-outset);
+        }
+
+        .grocery-list-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+        }
+
+        .grocery-category {
+            margin-bottom: var(--space-lg);
+        }
+
+        .grocery-category-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-sm);
+            color: var(--color-primary);
+        }
+
+        .grocery-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-xs);
+            background: var(--color-surface-inset);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-inset);
+        }
+
+        .grocery-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: var(--color-surface-elevated);
+            box-shadow: var(--shadow-neumorphic-inset);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .grocery-checkbox.checked {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            box-shadow: var(--shadow-glow-cyan);
+        }
+
+        .grocery-item-text {
+            flex: 1;
+            font-size: var(--font-size-base);
+        }
+
+        .grocery-item-amount {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Nutrition Summary Dashboard */
+        .nutrition-dashboard {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-neumorphic-outset);
+        }
+
+        .dashboard-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+        }
+
+        .nutrition-stats {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .nutrition-stat {
+            background: var(--color-surface-inset);
+            padding: var(--space-md);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-neumorphic-inset);
+        }
+
+        .nutrition-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nutrition-stat-value {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: var(--line-height-tight);
+        }
+
+        .nutrition-progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--color-surface-elevated);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: var(--shadow-neumorphic-inset);
+            margin-top: var(--space-xs);
+        }
+
+        .nutrition-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+        }
+
+        /* Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            letter-spacing: var(--letter-spacing-heading);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: 999px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-neumorphic-outset);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .filter-pill:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-pill.active {
+            background: linear-gradient(135deg, var(--color-tertiary), var(--color-quaternary));
+            color: var(--color-background);
+            box-shadow: var(--shadow-glow-lime);
+        }
+
+        /* Action Buttons */
+        .action-button {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            letter-spacing: var(--letter-spacing-heading);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-default);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-background);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-neumorphic-outset);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            min-width: 200px;
+            min-height: 56px;
+        }
+
+        .action-button:hover {
+            box-shadow: var(--shadow-glow-cyan);
+            transform: translateY(-4px);
+        }
+
+        .action-button:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Drag and Drop State */
+        .dragging {
+            opacity: 0.5;
+            transform: rotate(3deg);
+        }
+
+        .drag-over {
+            box-shadow: var(--shadow-glow-lime);
+            transform: scale(1.05);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: 100px repeat(7, 1fr);
+            }
+
+            .recipe-library {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .grocery-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-top {
+                padding: 0 var(--space-md);
+            }
+
+            .logo {
+                font-size: var(--font-size-md);
+            }
+
+            .section-title {
+                font-size: var(--font-size-lg);
+            }
+
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-header {
+                display: none;
+            }
+
+            .calendar-header:first-child {
+                display: block;
+            }
+
+            .recipe-library {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-section {
+                padding: var(--space-lg) var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="nav-top">
+        <div class="logo">NutriPlan</div>
+        <div class="nav-controls">
+            <button class="nav-btn active">Week View</button>
+            <button class="nav-btn">Recipes</button>
+            <button class="nav-btn">Grocery</button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <!-- Slide 1: Weekly Calendar -->
+        <section class="slide-section">
+            <div class="section-header">
+                <h1 class="section-title">This Week's Meals</h1>
+                <p class="section-subtitle">Drag recipes from your library to plan your week</p>
+            </div>
+
+            <div class="calendar-grid">
+                <!-- Headers -->
+                <div class="calendar-header"></div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Mon</div>
+                    <div class="calendar-day-date">Jan 8</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Tue</div>
+                    <div class="calendar-day-date">Jan 9</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Wed</div>
+                    <div class="calendar-day-date">Jan 10</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Thu</div>
+                    <div class="calendar-day-date">Jan 11</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Fri</div>
+                    <div class="calendar-day-date">Jan 12</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Sat</div>
+                    <div class="calendar-day-date">Jan 13</div>
+                </div>
+                <div class="calendar-header">
+                    <div class="calendar-day-name">Sun</div>
+                    <div class="calendar-day-date">Jan 14</div>
+                </div>
+
+                <!-- Breakfast Row -->
+                <div class="meal-time-label">Breakfast</div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Protein Smoothie Bowl</div>
+                    <div class="meal-card-mini-cal">420 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Avocado Toast</div>
+                    <div class="meal-card-mini-cal">380 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Greek Yogurt Parfait</div>
+                    <div class="meal-card-mini-cal">320 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot"></div>
+
+                <!-- Lunch Row -->
+                <div class="meal-time-label">Lunch</div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Quinoa Buddha Bowl</div>
+                    <div class="meal-card-mini-cal">580 cal</div>
+                </div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Mediterranean Wrap</div>
+                    <div class="meal-card-mini-cal">520 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Asian Noodle Salad</div>
+                    <div class="meal-card-mini-cal">480 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot"></div>
+
+                <!-- Dinner Row -->
+                <div class="meal-time-label">Dinner</div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Grilled Salmon</div>
+                    <div class="meal-card-mini-cal">640 cal</div>
+                </div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Chicken Stir-Fry</div>
+                    <div class="meal-card-mini-cal">590 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot has-meal">
+                    <div class="meal-card-mini">Veggie Curry</div>
+                    <div class="meal-card-mini-cal">520 cal</div>
+                </div>
+                <div class="meal-slot"></div>
+                <div class="meal-slot"></div>
+            </div>
+
+            <div style="display: flex; gap: var(--space-md);">
+                <button class="action-button">Generate Grocery List</button>
+                <button class="action-button" style="background: linear-gradient(135deg, var(--color-tertiary), var(--color-quaternary));">Auto-Fill Week</button>
+            </div>
+        </section>
+
+        <!-- Slide 2: Recipe Library -->
+        <section class="slide-section">
+            <div class="section-header">
+                <h1 class="section-title">Recipe Library</h1>
+                <p class="section-subtitle">Browse and select meals to add to your weekly plan</p>
+            </div>
+
+            <div class="filter-pills">
+                <button class="filter-pill active">All</button>
+                <button class="filter-pill">Breakfast</button>
+                <button class="filter-pill">Lunch</button>
+                <button class="filter-pill">Dinner</button>
+                <button class="filter-pill">Vegetarian</button>
+                <button class="filter-pill">High Protein</button>
+                <button class="filter-pill">Low Carb</button>
+                <button class="filter-pill">Quick (&lt;30min)</button>
+            </div>
+
+            <div class="recipe-library">
+                <div class="recipe-card glow-cyan">
+                    <div class="recipe-image">🥗</div>
+                    <h3 class="recipe-title">Quinoa Buddha Bowl</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 25 min</div>
+                        <div class="recipe-meta-item">🍽 2 servings</div>
+                        <div class="recipe-meta-item">🌱 Vegan</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">580</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">18g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">72g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">22g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card glow-magenta">
+                    <div class="recipe-image">🍣</div>
+                    <h3 class="recipe-title">Grilled Salmon with Asparagus</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 35 min</div>
+                        <div class="recipe-meta-item">🍽 2 servings</div>
+                        <div class="recipe-meta-item">🐟 Pescatarian</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">640</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">42g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">28g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">38g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card glow-lime">
+                    <div class="recipe-image">🍜</div>
+                    <h3 class="recipe-title">Asian Noodle Salad</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 20 min</div>
+                        <div class="recipe-meta-item">🍽 4 servings</div>
+                        <div class="recipe-meta-item">🌱 Vegetarian</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">480</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">14g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">68g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">18g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card glow-cyan">
+                    <div class="recipe-image">🍳</div>
+                    <h3 class="recipe-title">Protein Smoothie Bowl</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 10 min</div>
+                        <div class="recipe-meta-item">🍽 1 serving</div>
+                        <div class="recipe-meta-item">💪 High Protein</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">420</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">32g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">52g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">12g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card glow-magenta">
+                    <div class="recipe-image">🍗</div>
+                    <h3 class="recipe-title">Chicken Stir-Fry</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 30 min</div>
+                        <div class="recipe-meta-item">🍽 3 servings</div>
+                        <div class="recipe-meta-item">🔥 Quick</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">590</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">38g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">54g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">24g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card glow-lime">
+                    <div class="recipe-image">🍛</div>
+                    <h3 class="recipe-title">Veggie Curry</h3>
+                    <div class="recipe-meta">
+                        <div class="recipe-meta-item">⏱ 40 min</div>
+                        <div class="recipe-meta-item">🍽 4 servings</div>
+                        <div class="recipe-meta-item">🌱 Vegan</div>
+                    </div>
+                    <div class="recipe-nutrition">
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">520</div>
+                            <div class="nutrition-label">Cal</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">16g</div>
+                            <div class="nutrition-label">Protein</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">64g</div>
+                            <div class="nutrition-label">Carbs</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-value">22g</div>
+                            <div class="nutrition-label">Fat</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Grocery List & Nutrition -->
+        <section class="slide-section">
+            <div class="section-header">
+                <h1 class="section-title">Shopping & Nutrition</h1>
+                <p class="section-subtitle">Your weekly grocery list and nutritional targets</p>
+            </div>
+
+            <div class="grocery-section">
+                <div class="grocery-list">
+                    <h2 class="grocery-list-title">Grocery List</h2>
+
+                    <div class="grocery-category">
+                        <h3 class="grocery-category-title">Produce</h3>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox checked"></div>
+                            <div class="grocery-item-text">Avocados</div>
+                            <div class="grocery-item-amount">3 pcs</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Spinach</div>
+                            <div class="grocery-item-amount">2 bunches</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox checked"></div>
+                            <div class="grocery-item-text">Bell Peppers (mixed)</div>
+                            <div class="grocery-item-amount">5 pcs</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Asparagus</div>
+                            <div class="grocery-item-amount">1 lb</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Cherry Tomatoes</div>
+                            <div class="grocery-item-amount">2 containers</div>
+                        </div>
+                    </div>
+
+                    <div class="grocery-category">
+                        <h3 class="grocery-category-title">Proteins</h3>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox checked"></div>
+                            <div class="grocery-item-text">Salmon Fillets</div>
+                            <div class="grocery-item-amount">1.5 lb</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Chicken Breast</div>
+                            <div class="grocery-item-amount">2 lb</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox checked"></div>
+                            <div class="grocery-item-text">Greek Yogurt</div>
+                            <div class="grocery-item-amount">32 oz</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Eggs</div>
+                            <div class="grocery-item-amount">1 dozen</div>
+                        </div>
+                    </div>
+
+                    <div class="grocery-category">
+                        <h3 class="grocery-category-title">Grains & Pantry</h3>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Quinoa</div>
+                            <div class="grocery-item-amount">1 lb</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Rice Noodles</div>
+                            <div class="grocery-item-amount">16 oz</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox checked"></div>
+                            <div class="grocery-item-text">Whole Grain Bread</div>
+                            <div class="grocery-item-amount">1 loaf</div>
+                        </div>
+                        <div class="grocery-item">
+                            <div class="grocery-checkbox"></div>
+                            <div class="grocery-item-text">Coconut Milk</div>
+                            <div class="grocery-item-amount">2 cans</div>
+                        </div>
+                    </div>
+
+                    <button class="action-button" style="margin-top: var(--space-md);">Export to Phone</button>
+                </div>
+
+                <div class="nutrition-dashboard">
+                    <h2 class="dashboard-title">Weekly Targets</h2>
+
+                    <div class="nutrition-stats">
+                        <div class="nutrition-stat">
+                            <div class="nutrition-stat-label">Daily Calories</div>
+                            <div class="nutrition-stat-value">1,847</div>
+                            <div class="nutrition-progress-bar">
+                                <div class="nutrition-progress-fill" style="width: 82%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="nutrition-stat">
+                            <div class="nutrition-stat-label">Protein (g/day)</div>
+                            <div class="nutrition-stat-value">94</div>
+                            <div class="nutrition-progress-bar">
+                                <div class="nutrition-progress-fill" style="width: 94%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="nutrition-stat">
+                            <div class="nutrition-stat-label">Carbs (g/day)</div>
+                            <div class="nutrition-stat-value">185</div>
+                            <div class="nutrition-progress-bar">
+                                <div class="nutrition-progress-fill" style="width: 74%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="nutrition-stat">
+                            <div class="nutrition-stat-label">Fat (g/day)</div>
+                            <div class="nutrition-stat-value">68</div>
+                            <div class="nutrition-progress-bar">
+                                <div class="nutrition-progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="nutrition-stat">
+                            <div class="nutrition-stat-label">Fiber (g/day)</div>
+                            <div class="nutrition-stat-value">32</div>
+                            <div class="nutrition-progress-bar">
+                                <div class="nutrition-progress-fill" style="width: 107%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="action-button" style="margin-top: var(--space-lg); background: linear-gradient(135deg, var(--color-tertiary), var(--color-quaternary));">View Full Report</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 89;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Drag and Drop functionality
+        const recipeCards = document.querySelectorAll('.recipe-card');
+        const mealSlots = document.querySelectorAll('.meal-slot');
+
+        recipeCards.forEach(card => {
+            card.setAttribute('draggable', 'true');
+
+            card.addEventListener('dragstart', (e) => {
+                card.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'copy';
+                const recipeTitle = card.querySelector('.recipe-title').textContent;
+                const recipeCal = card.querySelector('.nutrition-value').textContent;
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    title: recipeTitle,
+                    cal: recipeCal
+                }));
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+        });
+
+        mealSlots.forEach(slot => {
+            slot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                slot.classList.add('drag-over');
+            });
+
+            slot.addEventListener('dragleave', () => {
+                slot.classList.remove('drag-over');
+            });
+
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                slot.classList.remove('drag-over');
+
+                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                slot.classList.add('has-meal');
+                slot.innerHTML = `
+                    <div class="meal-card-mini">${data.title}</div>
+                    <div class="meal-card-mini-cal">${data.cal} cal</div>
+                `;
+            });
+        });
+
+        // Grocery checkbox functionality
+        const checkboxes = document.querySelectorAll('.grocery-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', () => {
+                checkbox.classList.toggle('checked');
+            });
+        });
+
+        // Filter pills functionality
+        const filterPills = document.querySelectorAll('.filter-pill');
+        filterPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                filterPills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

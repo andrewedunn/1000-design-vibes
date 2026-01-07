@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Satin - Medical Records System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Grid Satin - Medical Records System
+        ABOUTME: Swiss International precision meets metallic dark aesthetics for professional healthcare data management
+
+        DESIGN SYSTEM DOCUMENTATION
+        ===========================
+
+        CONCEPT:
+        A medical records interface built on Swiss International principles - precise grid systems,
+        objective typography, maximum information clarity. Metallic accents provide visual hierarchy
+        while maintaining clinical professionalism. Ultra-airy spacing ensures readability of dense
+        medical data across fullscreen slides.
+
+        COLOR SYSTEM (Metallic Dark Mode):
+        --color-background: #0a0a0a (near black)
+        --color-surface: #1a1a1a (elevated panels)
+        --color-primary: #b8b8b8 (brushed silver)
+        --color-secondary: #8a9ba8 (cool metal blue)
+        --color-accent: #d4af37 (medical gold)
+        --color-text: #e0e0e0 (high contrast white)
+        --color-text-muted: #888888 (subdued gray)
+        --color-border: #2a2a2a (subtle divisions)
+        --color-critical: #ff4444 (alert red)
+        --color-success: #00cc66 (positive green)
+
+        TYPOGRAPHY (Swiss International):
+        Heading: Roboto (neo-grotesque, systematic)
+        Body: Roboto (consistency across all data)
+        Mono: Space Mono (clinical precision for IDs and codes)
+        Scale: 1.200 (Minor Third - professional hierarchy)
+
+        GRID SYSTEM:
+        12-column grid with 24px gutters
+        Ultra-airy density: 48px base spacing unit
+        Precise alignment on 8px baseline grid
+
+        SPACING SCALE:
+        xs: 8px, sm: 16px, md: 24px, lg: 48px, xl: 96px, xxl: 144px
+
+        INTERACTION STATES:
+        Hover: 8px vertical shift with shadow enhancement
+        Focus: 2px solid accent outline
+        Active: Reduced opacity (0.7)
+
+        ACCESSIBILITY:
+        - WCAG AAA contrast ratios for medical data
+        - 44px minimum touch targets for clinical workflow
+        - Keyboard navigation for rapid data entry
+        - Reduced motion support for clinical environments
+        */
+
+        :root {
+            /* Colors - Metallic Dark Mode */
+            --color-background: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-primary: #b8b8b8;
+            --color-secondary: #8a9ba8;
+            --color-accent: #d4af37;
+            --color-text: #e0e0e0;
+            --color-text-muted: #888888;
+            --color-border: #2a2a2a;
+            --color-critical: #ff4444;
+            --color-success: #00cc66;
+            --color-warning: #ffa500;
+
+            /* Typography */
+            --font-heading: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Space Mono', 'Courier New', monospace;
+
+            /* Type Scale - Minor Third (1.200) */
+            --text-xs: 0.694rem;
+            --text-sm: 0.833rem;
+            --text-base: 1rem;
+            --text-lg: 1.2rem;
+            --text-xl: 1.44rem;
+            --text-2xl: 1.728rem;
+            --text-3xl: 2.074rem;
+            --text-4xl: 2.488rem;
+
+            /* Spacing - Ultra Airy */
+            --space-unit: 48px;
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 48px;
+            --space-xl: 96px;
+            --space-xxl: 144px;
+
+            /* Shape */
+            --radius-default: 2px;
+            --radius-sm: 1px;
+            --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.6);
+
+            /* Layout */
+            --max-width: 1400px;
+            --gutter: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Fullscreen Slides Structure */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: var(--space-xl) var(--gutter);
+        }
+
+        /* Video Background Hero */
+        .hero-slide {
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .video-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(184, 184, 184, 0.03) 2px,
+                    rgba(184, 184, 184, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(184, 184, 184, 0.03) 2px,
+                    rgba(184, 184, 184, 0.03) 4px
+                );
+            animation: scan 8s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .video-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(138, 155, 168, 0.1) 0%, transparent 50%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+            padding: var(--space-xl) var(--gutter);
+        }
+
+        .hero-title {
+            font-size: var(--text-4xl);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: var(--text-lg);
+            font-weight: 300;
+            color: var(--color-text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xl);
+        }
+
+        .patient-id-display {
+            font-family: var(--font-mono);
+            font-size: var(--text-2xl);
+            color: var(--color-accent);
+            padding: var(--space-md) var(--space-lg);
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-xl);
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            width: 100%;
+            max-width: 900px;
+            margin-top: var(--space-xl);
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--color-primary);
+        }
+
+        .stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            font-family: var(--font-mono);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Section Headers */
+        .section-header {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-title {
+            font-size: var(--text-3xl);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+            letter-spacing: 0.05em;
+        }
+
+        /* Grid System - Swiss Precision */
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--gutter);
+        }
+
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-6 { grid-column: span 6; }
+        .col-8 { grid-column: span 8; }
+        .col-9 { grid-column: span 9; }
+        .col-12 { grid-column: span 12; }
+
+        /* Data Cards */
+        .data-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-title {
+            font-size: var(--text-lg);
+            font-weight: 500;
+            color: var(--color-primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .card-badge {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-accent);
+        }
+
+        /* Patient Demographics */
+        .demographics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .demo-field {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+        }
+
+        .demo-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-value {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+        }
+
+        /* Medical Timeline */
+        .timeline {
+            position: relative;
+            padding-left: var(--space-lg);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--color-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-1 * var(--space-lg) - 4px);
+            top: 4px;
+            width: 9px;
+            height: 9px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px var(--color-background), 0 0 0 4px var(--color-border);
+        }
+
+        .timeline-date {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-accent);
+            margin-bottom: var(--space-xs);
+        }
+
+        .timeline-title {
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .timeline-desc {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Documents List */
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .document-item:hover {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+            transform: translateX(8px);
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-name {
+            font-size: var(--text-base);
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .document-meta {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .document-size {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-secondary);
+        }
+
+        /* Lab Results Table */
+        .lab-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lab-table thead {
+            background: var(--color-background);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .lab-table th {
+            padding: var(--space-md);
+            text-align: left;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lab-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+        }
+
+        .lab-table tbody tr:hover {
+            background: rgba(26, 26, 26, 0.5);
+        }
+
+        .lab-status {
+            display: inline-block;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .lab-status.normal {
+            background: rgba(0, 204, 102, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .lab-status.abnormal {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--color-critical);
+            border: 1px solid var(--color-critical);
+        }
+
+        .lab-status.pending {
+            background: rgba(255, 165, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+
+        /* Medications List */
+        .medication-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-md);
+        }
+
+        .med-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            color: var(--color-accent);
+        }
+
+        .med-details {
+            flex: 1;
+        }
+
+        .med-name {
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .med-dosage {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .med-instructions {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Provider Notes */
+        .note-card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .note-author {
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        .note-specialty {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .note-timestamp {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-accent);
+        }
+
+        .note-content {
+            font-size: var(--text-sm);
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        /* Imaging Records */
+        .imaging-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .imaging-card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .imaging-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .imaging-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .imaging-preview::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--color-accent);
+            opacity: 0.3;
+            animation: imagingScan 3s ease-in-out infinite;
+        }
+
+        @keyframes imagingScan {
+            0%, 100% { transform: translateY(-100px); }
+            50% { transform: translateY(100px); }
+        }
+
+        .imaging-icon {
+            font-size: var(--text-4xl);
+            color: var(--color-secondary);
+            opacity: 0.3;
+        }
+
+        .imaging-type {
+            font-size: var(--text-lg);
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .imaging-date {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-accent);
+            margin-bottom: var(--space-xs);
+        }
+
+        .imaging-location {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Vitals Display */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .vital-card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .vital-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-md);
+        }
+
+        .vital-value {
+            font-family: var(--font-mono);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .vital-unit {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .vital-trend {
+            font-size: var(--text-xs);
+            color: var(--color-success);
+            margin-top: var(--space-sm);
+        }
+
+        /* Accessibility */
+        a, button, .document-item, .imaging-card {
+            outline: none;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        .document-item:focus-visible,
+        .imaging-card:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-12 {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .col-3 { grid-column: span 6; }
+            .col-4 { grid-column: span 6; }
+            .col-8 { grid-column: span 6; }
+            .col-9 { grid-column: span 6; }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --space-unit: 32px;
+                --space-xl: 64px;
+                --space-xxl: 96px;
+            }
+
+            .grid-12 {
+                grid-template-columns: 1fr;
+            }
+
+            .col-3, .col-4, .col-6, .col-8, .col-9 {
+                grid-column: span 1;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .demographics-grid,
+            .imaging-grid,
+            .vitals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: var(--text-3xl);
+            }
+
+            .section-title {
+                font-size: var(--text-2xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Slide - Video Background -->
+    <section class="slide hero-slide">
+        <div class="video-background"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Grid Satin EMR</h1>
+            <p class="hero-subtitle">Electronic Medical Records System</p>
+            <div class="patient-id-display">MRN: 2847-9361-5028</div>
+
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Years</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Visits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Active Rx</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">A+</div>
+                    <div class="stat-label">Blood Type</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patient Demographics Slide -->
+    <section class="slide">
+        <div class="slide-container">
+            <div class="section-header">
+                <h2 class="section-title">Patient Demographics</h2>
+                <p class="section-subtitle">Primary Identification & Contact Information</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Personal Information</h3>
+                            <span class="card-badge">VERIFIED</span>
+                        </div>
+                        <div class="demographics-grid">
+                            <div class="demo-field">
+                                <span class="demo-label">Full Name</span>
+                                <span class="demo-value">Sarah Mitchell Chen</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Date of Birth</span>
+                                <span class="demo-value">1982-03-15</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Sex</span>
+                                <span class="demo-value">Female</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Gender Identity</span>
+                                <span class="demo-value">Female</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Marital Status</span>
+                                <span class="demo-value">Married</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Preferred Language</span>
+                                <span class="demo-value">English</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Contact Details</h3>
+                            <span class="card-badge">ACTIVE</span>
+                        </div>
+                        <div class="demographics-grid">
+                            <div class="demo-field">
+                                <span class="demo-label">Primary Phone</span>
+                                <span class="demo-value">(415) 782-9043</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Mobile Phone</span>
+                                <span class="demo-value">(415) 821-4567</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Email</span>
+                                <span class="demo-value">s.chen@email.com</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Address</span>
+                                <span class="demo-value">1847 Hayes St</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">City, State</span>
+                                <span class="demo-value">San Francisco, CA</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">ZIP Code</span>
+                                <span class="demo-value">94117</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Emergency Contact & Insurance</h3>
+                        </div>
+                        <div class="demographics-grid">
+                            <div class="demo-field">
+                                <span class="demo-label">Emergency Contact</span>
+                                <span class="demo-value">David Chen (Spouse)</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Emergency Phone</span>
+                                <span class="demo-value">(415) 782-9044</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Primary Insurance</span>
+                                <span class="demo-value">Blue Shield PPO</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Policy Number</span>
+                                <span class="demo-value">BSC-847291-03</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Primary Care Provider</span>
+                                <span class="demo-value">Dr. Michael Roberts, MD</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">PCP Phone</span>
+                                <span class="demo-value">(415) 555-2800</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Medical History Timeline Slide -->
+    <section class="slide">
+        <div class="slide-container">
+            <div class="section-header">
+                <h2 class="section-title">Medical History Timeline</h2>
+                <p class="section-subtitle">Chronological Patient Health Events</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Medical Events</h3>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">2025-12-08</div>
+                                <div class="timeline-title">Annual Physical Examination</div>
+                                <div class="timeline-desc">Routine annual checkup. All vitals within normal range. Ordered standard lab panel for preventive screening.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2025-09-22</div>
+                                <div class="timeline-title">Urgent Care Visit - Ankle Sprain</div>
+                                <div class="timeline-desc">Grade I lateral ankle sprain from jogging. X-ray negative for fracture. Treated with RICE protocol and NSAIDs.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2025-06-15</div>
+                                <div class="timeline-title">Dermatology Consultation</div>
+                                <div class="timeline-desc">Evaluation of suspicious mole on left shoulder. Dermoscopy performed. Benign seborrheic keratosis confirmed.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2025-03-10</div>
+                                <div class="timeline-title">Allergy Testing - Immunology</div>
+                                <div class="timeline-desc">Comprehensive allergy panel. Positive reactions to tree pollen (moderate) and dust mites (mild). Started on immunotherapy protocol.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Current Vitals</h3>
+                            <span class="card-badge">2025-12-08</span>
+                        </div>
+                        <div class="vitals-grid">
+                            <div class="vital-card">
+                                <div class="vital-label">Blood Pressure</div>
+                                <div class="vital-value">118<span style="font-size: 0.5em; opacity: 0.5;">/</span>76</div>
+                                <div class="vital-unit">mmHg</div>
+                                <div class="vital-trend">↓ Normal</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-label">Heart Rate</div>
+                                <div class="vital-value">72</div>
+                                <div class="vital-unit">bpm</div>
+                                <div class="vital-trend">→ Normal</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-label">Temperature</div>
+                                <div class="vital-value">98.4</div>
+                                <div class="vital-unit">°F</div>
+                                <div class="vital-trend">→ Normal</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-label">Respiratory Rate</div>
+                                <div class="vital-value">16</div>
+                                <div class="vital-unit">per min</div>
+                                <div class="vital-trend">→ Normal</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-label">SpO2</div>
+                                <div class="vital-value">98</div>
+                                <div class="vital-unit">%</div>
+                                <div class="vital-trend">→ Normal</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-label">BMI</div>
+                                <div class="vital-value">23.1</div>
+                                <div class="vital-unit">kg/m²</div>
+                                <div class="vital-trend">→ Normal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Past Medical History</h3>
+                        </div>
+                        <div class="demographics-grid">
+                            <div class="demo-field">
+                                <span class="demo-label">Chronic Conditions</span>
+                                <span class="demo-value">Seasonal Allergic Rhinitis</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Past Surgeries</span>
+                                <span class="demo-value">Appendectomy (2003)</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Allergies</span>
+                                <span class="demo-value">Penicillin (Rash), Tree Pollen</span>
+                            </div>
+                            <div class="demo-field">
+                                <span class="demo-label">Family History</span>
+                                <span class="demo-value">Hypertension (Father), Type 2 DM (Mother)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents & Lab Results Slide -->
+    <section class="slide">
+        <div class="slide-container">
+            <div class="section-header">
+                <h2 class="section-title">Documents & Lab Results</h2>
+                <p class="section-subtitle">Clinical Documentation & Laboratory Data</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-4">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Documents</h3>
+                        </div>
+                        <div class="document-list">
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Annual_Physical_2025.pdf</div>
+                                    <div class="document-meta">2025-12-08 | Dr. Roberts</div>
+                                </div>
+                                <div class="document-size">247 KB</div>
+                            </div>
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Lab_Results_Complete_Panel.pdf</div>
+                                    <div class="document-meta">2025-12-10 | Quest Diagnostics</div>
+                                </div>
+                                <div class="document-size">128 KB</div>
+                            </div>
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Allergy_Test_Report.pdf</div>
+                                    <div class="document-meta">2025-03-10 | Dr. Kim</div>
+                                </div>
+                                <div class="document-size">342 KB</div>
+                            </div>
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Ankle_Xray_Report.pdf</div>
+                                    <div class="document-meta">2025-09-22 | UCSF Imaging</div>
+                                </div>
+                                <div class="document-size">892 KB</div>
+                            </div>
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Dermatology_Consult_Note.pdf</div>
+                                    <div class="document-meta">2025-06-15 | Dr. Martinez</div>
+                                </div>
+                                <div class="document-size">156 KB</div>
+                            </div>
+                            <div class="document-item" tabindex="0">
+                                <div class="document-info">
+                                    <div class="document-name">Immunization_Record.pdf</div>
+                                    <div class="document-meta">2025-12-08 | Updated</div>
+                                </div>
+                                <div class="document-size">94 KB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Laboratory Results</h3>
+                            <span class="card-badge">2025-12-10</span>
+                        </div>
+                        <table class="lab-table">
+                            <thead>
+                                <tr>
+                                    <th>Test Name</th>
+                                    <th>Result</th>
+                                    <th>Reference Range</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Hemoglobin A1C</td>
+                                    <td>5.4</td>
+                                    <td>4.0 - 5.6</td>
+                                    <td>%</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Cholesterol</td>
+                                    <td>186</td>
+                                    <td>&lt; 200</td>
+                                    <td>mg/dL</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>LDL Cholesterol</td>
+                                    <td>108</td>
+                                    <td>&lt; 130</td>
+                                    <td>mg/dL</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>HDL Cholesterol</td>
+                                    <td>62</td>
+                                    <td>&gt; 40</td>
+                                    <td>mg/dL</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Triglycerides</td>
+                                    <td>82</td>
+                                    <td>&lt; 150</td>
+                                    <td>mg/dL</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Vitamin D, 25-Hydroxy</td>
+                                    <td>28</td>
+                                    <td>30 - 100</td>
+                                    <td>ng/mL</td>
+                                    <td><span class="lab-status abnormal">Low</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TSH</td>
+                                    <td>2.4</td>
+                                    <td>0.4 - 4.5</td>
+                                    <td>mIU/L</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Creatinine</td>
+                                    <td>0.9</td>
+                                    <td>0.6 - 1.2</td>
+                                    <td>mg/dL</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>eGFR</td>
+                                    <td>&gt;90</td>
+                                    <td>&gt;60</td>
+                                    <td>mL/min/1.73m²</td>
+                                    <td><span class="lab-status normal">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Complete Blood Count</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td><span class="lab-status pending">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Imaging & Medications Slide -->
+    <section class="slide">
+        <div class="slide-container">
+            <div class="section-header">
+                <h2 class="section-title">Imaging Records & Medications</h2>
+                <p class="section-subtitle">Diagnostic Imaging & Active Prescriptions</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Imaging Studies</h3>
+                        </div>
+                        <div class="imaging-grid">
+                            <div class="imaging-card" tabindex="0">
+                                <div class="imaging-preview">
+                                    <div class="imaging-icon">📊</div>
+                                </div>
+                                <div class="imaging-type">Ankle X-Ray (2 Views)</div>
+                                <div class="imaging-date">2025-09-22</div>
+                                <div class="imaging-location">UCSF Emergency Radiology</div>
+                            </div>
+                            <div class="imaging-card" tabindex="0">
+                                <div class="imaging-preview">
+                                    <div class="imaging-icon">🔬</div>
+                                </div>
+                                <div class="imaging-type">Chest X-Ray (PA/Lateral)</div>
+                                <div class="imaging-date">2024-11-18</div>
+                                <div class="imaging-location">UCSF Medical Center</div>
+                            </div>
+                            <div class="imaging-card" tabindex="0">
+                                <div class="imaging-preview">
+                                    <div class="imaging-icon">📈</div>
+                                </div>
+                                <div class="imaging-type">Mammogram (Screening)</div>
+                                <div class="imaging-date">2024-08-03</div>
+                                <div class="imaging-location">Bay Area Imaging Center</div>
+                            </div>
+                            <div class="imaging-card" tabindex="0">
+                                <div class="imaging-preview">
+                                    <div class="imaging-icon">🧬</div>
+                                </div>
+                                <div class="imaging-type">Skin Lesion Dermoscopy</div>
+                                <div class="imaging-date">2025-06-15</div>
+                                <div class="imaging-location">SF Dermatology Associates</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Active Medications</h3>
+                        </div>
+                        <div class="medication-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-details">
+                                <div class="med-name">Cetirizine (Zyrtec)</div>
+                                <div class="med-dosage">10 mg, Once Daily, Oral</div>
+                                <div class="med-instructions">Take in the morning for seasonal allergy management. Prescribed 2025-03-10. Refills: 3</div>
+                            </div>
+                        </div>
+                        <div class="medication-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-details">
+                                <div class="med-name">Fluticasone Nasal Spray (Flonase)</div>
+                                <div class="med-dosage">50 mcg, 2 sprays each nostril daily, Intranasal</div>
+                                <div class="med-instructions">Use daily during allergy season. Prescribed 2025-03-10. Refills: 5</div>
+                            </div>
+                        </div>
+                        <div class="medication-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-details">
+                                <div class="med-name">Vitamin D3 (Cholecalciferol)</div>
+                                <div class="med-dosage">2000 IU, Once Daily, Oral</div>
+                                <div class="med-instructions">Take with food to improve absorption. Prescribed 2025-12-08 for vitamin D deficiency. Refills: 6</div>
+                            </div>
+                        </div>
+                        <div class="medication-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-details">
+                                <div class="med-name">Ibuprofen (Advil)</div>
+                                <div class="med-dosage">400 mg, As Needed (Max 1200mg/day), Oral</div>
+                                <div class="med-instructions">Take with food or milk for pain/inflammation. PRN for ankle sprain recovery. Prescribed 2025-09-22.</div>
+                            </div>
+                        </div>
+                        <div class="medication-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-details">
+                                <div class="med-name">Omeprazole (Prilosec)</div>
+                                <div class="med-dosage">20 mg, Once Daily, Oral</div>
+                                <div class="med-instructions">Take 30 minutes before breakfast for GERD management. Prescribed 2024-06-20. Refills: 4</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Provider Notes Slide -->
+    <section class="slide">
+        <div class="slide-container">
+            <div class="section-header">
+                <h2 class="section-title">Provider Notes</h2>
+                <p class="section-subtitle">Clinical Documentation & Assessments</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-12">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Clinical Notes</h3>
+                        </div>
+
+                        <div class="note-card">
+                            <div class="note-header">
+                                <div>
+                                    <div class="note-author">Dr. Michael Roberts, MD</div>
+                                    <div class="note-specialty">Family Medicine</div>
+                                </div>
+                                <div class="note-timestamp">2025-12-08 10:30 AM</div>
+                            </div>
+                            <div class="note-content">
+                                <strong>Chief Complaint:</strong> Annual physical examination and preventive health screening.<br><br>
+
+                                <strong>History of Present Illness:</strong> Patient presents for routine annual physical. Reports overall good health with no new concerns. Seasonal allergies well-controlled on current medication regimen. No chest pain, shortness of breath, or palpitations. Reports regular exercise routine (jogging 3x/week) with no limitations except recent ankle injury which has resolved.<br><br>
+
+                                <strong>Physical Examination:</strong> Alert and oriented x3. Well-appearing. HEENT: Normocephalic, atraumatic. PERRLA. TMs clear bilaterally. Cardiovascular: Regular rate and rhythm, no murmurs. Lungs: Clear to auscultation bilaterally. Abdomen: Soft, non-tender, no organomegaly. Extremities: No edema, full ROM.<br><br>
+
+                                <strong>Assessment:</strong> 42-year-old female in excellent health. Vitals within normal limits. No acute concerns identified.<br><br>
+
+                                <strong>Plan:</strong> 1) Ordered comprehensive metabolic panel, lipid panel, CBC, TSH, Vitamin D. 2) Patient advised to start Vitamin D supplementation given borderline levels on previous testing. 3) Continue current allergy medications. 4) Counseled on importance of sunscreen use. 5) Return in 1 year for annual physical or PRN for any concerns.
+                            </div>
+                        </div>
+
+                        <div class="note-card">
+                            <div class="note-header">
+                                <div>
+                                    <div class="note-author">Dr. Jennifer Kim, MD</div>
+                                    <div class="note-specialty">Allergy & Immunology</div>
+                                </div>
+                                <div class="note-timestamp">2025-03-10 2:15 PM</div>
+                            </div>
+                            <div class="note-content">
+                                <strong>Chief Complaint:</strong> Evaluation of seasonal allergy symptoms and comprehensive allergy testing.<br><br>
+
+                                <strong>History:</strong> Patient reports worsening seasonal allergy symptoms over past 3 years. Primary symptoms include nasal congestion, rhinorrhea, sneezing, and itchy/watery eyes occurring March-June. Previous treatment with OTC antihistamines provides only partial relief. No history of anaphylaxis or severe reactions.<br><br>
+
+                                <strong>Allergy Testing Results:</strong> Skin prick testing performed for 40 common allergens. Significant positive reactions to: Tree pollen mix (4+ wheal), Grass pollen (2+), Dust mite (2+). Negative reactions to all food allergens tested, animal dander, and molds.<br><br>
+
+                                <strong>Assessment:</strong> Moderate seasonal allergic rhinitis with sensitivity to tree pollen and dust mites.<br><br>
+
+                                <strong>Plan:</strong> 1) Initiated daily cetirizine 10mg and fluticasone nasal spray. 2) Environmental control measures discussed (allergen-proof bedding, HEPA filters). 3) Consider sublingual immunotherapy if symptoms persist despite medical management. 4) Follow-up in 6 weeks to assess response to treatment.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 53;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

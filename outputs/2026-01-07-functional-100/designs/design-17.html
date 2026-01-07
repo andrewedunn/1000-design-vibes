@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>global glacier - the flat way to developer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&family=Indie+Flower:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN #17: GLOBAL GLACIER
+        ABOUTME: Psychedelic flat hotel search with hyper-saturated triadic colors
+        ABOUTME: African bold patterns meet cool temperature extreme contrast design
+
+        AESTHETIC PRINCIPLES:
+        - Flat UI with no gradients, pure color blocks
+        - Triadic color scheme: electric cyan, magenta, lime yellow (hyper-saturated)
+        - Psychedelic era influence: vibrant, bold, energetic patterns
+        - African bold: geometric shapes, strong patterns, confident use of space
+        - Extreme contrast: dark backgrounds with brilliant accent colors
+        - Pill-shaped corners everywhere for smooth, flowing forms
+        - Handwritten body text for approachable, human touch
+        - Dashed borders add playful texture without shadows
+        - Very loose letter and line spacing for airy readability
+
+        COLOR PALETTE (triadic cool hyper-saturated):
+        - Primary: #00FFFF (electric cyan)
+        - Secondary: #FF00FF (magenta)
+        - Tertiary: #CCFF00 (lime yellow)
+        - Background: #0A0A1F (deep navy)
+        - Surface: #1A1A3F (lighter navy)
+        - Text: #FFFFFF
+        - Text Muted: #B0B0D0
+
+        TYPOGRAPHY:
+        - Heading: Cabin (humanist sans) - warm, friendly geometric forms
+        - Body: Indie Flower (handwritten) - casual, human, approachable
+        - Scale: Major second (1.125) - subtle progression
+        - Case: lowercase only
+        - Letter spacing: very loose (+0.15em)
+        - Line height: very loose (2.0)
+
+        SPACING:
+        - Base unit: 4px
+        - Compact density but with breathing room via line-height
+
+        KEY TOKENS:
+        - Corner radius: 9999px (pill)
+        - Border: 2px dashed
+        - Shadow: layered (but flat paradigm = minimal use)
+        - Container: inset style
+        - Grid: two column layout
+        - Alignment: center
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Triadic hyper-saturated cool */
+            --color-primary: #00FFFF;
+            --color-secondary: #FF00FF;
+            --color-tertiary: #CCFF00;
+            --color-background: #0A0A1F;
+            --color-surface: #1A1A3F;
+            --color-surface-alt: #252550;
+            --color-text: #FFFFFF;
+            --color-text-muted: #B0B0D0;
+            --color-accent-1: #FF0080;
+            --color-accent-2: #00FF80;
+
+            /* Typography */
+            --font-heading: 'Cabin', sans-serif;
+            --font-body: 'Indie Flower', cursive;
+
+            /* Spacing - 4px base */
+            --space-unit: 4px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 4);
+            --space-lg: calc(var(--space-unit) * 6);
+            --space-xl: calc(var(--space-unit) * 8);
+            --space-2xl: calc(var(--space-unit) * 12);
+
+            /* Typography scale - Major second 1.125 */
+            --text-xs: 0.79rem;
+            --text-sm: 0.889rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.266rem;
+            --text-2xl: 1.424rem;
+            --text-3xl: 1.602rem;
+            --text-4xl: 1.802rem;
+
+            /* Shapes */
+            --radius-default: 9999px;
+            --radius-small: 9999px;
+            --radius-large: 9999px;
+            --border-width: 2px;
+            --border-style: dashed;
+
+            /* Shadows - layered but minimal for flat */
+            --shadow-small: 0 2px 0 var(--color-primary),
+                           0 4px 0 var(--color-secondary);
+            --shadow-medium: 0 3px 0 var(--color-primary),
+                            0 6px 0 var(--color-secondary),
+                            0 9px 0 var(--color-tertiary);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 2.0;
+            letter-spacing: 0.15em;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            line-height: 2.0;
+        }
+
+        h1 { font-size: var(--text-4xl); }
+        h2 { font-size: var(--text-3xl); }
+        h3 { font-size: var(--text-2xl); }
+        h4 { font-size: var(--text-xl); }
+
+        /* Layout - Sidebar + Main */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Top Transparent Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 31, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-lg);
+            border-bottom: var(--border-width) var(--border-style) var(--color-primary);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            text-transform: lowercase;
+            color: var(--color-primary);
+            letter-spacing: 0.15em;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .nav-link {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            text-decoration: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            border: var(--border-width) var(--border-style) transparent;
+            transition: all 0.2s;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            border-color: var(--color-secondary);
+            background: var(--color-surface);
+            outline: none;
+        }
+
+        .btn-sign-in {
+            background: var(--color-tertiary);
+            color: var(--color-background);
+            border-color: var(--color-tertiary);
+            font-weight: 600;
+        }
+
+        .btn-sign-in:hover,
+        .btn-sign-in:focus {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 280px;
+            height: calc(100vh - 60px);
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            overflow-y: auto;
+            border-right: var(--border-width) var(--border-style) var(--color-primary);
+        }
+
+        .filter-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .filter-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            text-transform: lowercase;
+        }
+
+        .filter-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .filter-label {
+            display: block;
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+            text-transform: lowercase;
+        }
+
+        .filter-input,
+        .filter-select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-background);
+            border: var(--border-width) var(--border-style) var(--color-secondary);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            letter-spacing: 0.15em;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--color-tertiary);
+            box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            color: var(--color-text);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            border-radius: calc(var(--radius-default) / 4);
+            cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+
+        .price-range {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .price-input {
+            flex: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 60px;
+            padding: var(--space-xl);
+        }
+
+        /* Hero - Gradient Background */
+        .hero {
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 50%,
+                var(--color-tertiary) 100%);
+            padding: var(--space-2xl) var(--space-xl);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            border: var(--border-width) var(--border-style) var(--color-text);
+        }
+
+        .hero-title {
+            font-size: var(--text-4xl);
+            color: var(--color-background);
+            margin-bottom: var(--space-sm);
+        }
+
+        .hero-tagline {
+            font-size: var(--text-lg);
+            color: var(--color-background);
+            margin-bottom: var(--space-xl);
+            opacity: 0.9;
+        }
+
+        /* Search Form */
+        .search-form {
+            background: var(--color-background);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            border: var(--border-width) var(--border-style) var(--color-tertiary);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: var(--space-md);
+            align-items: end;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .form-label {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+        }
+
+        .form-input {
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            letter-spacing: 0.15em;
+            min-height: 44px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 0 3px rgba(255, 0, 255, 0.2);
+        }
+
+        .btn-search {
+            padding: var(--space-md) var(--space-xl);
+            background: var(--color-secondary);
+            color: var(--color-text);
+            border: var(--border-width) var(--border-style) var(--color-secondary);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--text-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            min-height: 44px;
+            min-width: 120px;
+        }
+
+        .btn-search:hover,
+        .btn-search:focus {
+            background: var(--color-tertiary);
+            border-color: var(--color-tertiary);
+            color: var(--color-background);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        /* Results Header */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md) 0;
+            border-bottom: var(--border-width) var(--border-style) var(--color-primary);
+        }
+
+        .results-count {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-primary);
+        }
+
+        .results-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .sort-select {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-secondary);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .btn-map-toggle {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-tertiary);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .btn-map-toggle:hover,
+        .btn-map-toggle:focus {
+            background: var(--color-tertiary);
+            border-color: var(--color-tertiary);
+            color: var(--color-background);
+            outline: none;
+        }
+
+        /* Property Cards - Two Column Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .property-card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover,
+        .property-card:focus-within {
+            transform: translateY(-4px);
+            border-color: var(--color-secondary);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: var(--border-width) var(--border-style) var(--color-primary);
+        }
+
+        .property-image-placeholder {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            color: var(--color-background);
+            opacity: 0.5;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            padding: var(--space-xs) var(--space-md);
+            background: var(--color-tertiary);
+            color: var(--color-background);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            border: var(--border-width) var(--border-style) var(--color-background);
+        }
+
+        .property-content {
+            padding: var(--space-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-header {
+            margin-bottom: var(--space-md);
+        }
+
+        .property-name {
+            font-size: var(--text-xl);
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .property-location {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .star {
+            color: var(--color-tertiary);
+            font-size: var(--text-lg);
+        }
+
+        .rating-score {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-primary);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+        }
+
+        .rating-count {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .property-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .amenity-tag {
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border: var(--border-width) var(--border-style) var(--color-secondary);
+            border-radius: var(--radius-default);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+        }
+
+        .property-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: var(--space-md);
+            border-top: var(--border-width) var(--border-style) var(--color-surface-alt);
+        }
+
+        .property-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-amount {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-tertiary);
+            font-weight: 700;
+        }
+
+        .price-period {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .btn-book {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: var(--border-width) var(--border-style) var(--color-primary);
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: lowercase;
+            letter-spacing: 0.15em;
+            text-decoration: none;
+            display: inline-block;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-book:hover,
+        .btn-book:focus {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: var(--color-text);
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        /* Icon styles - duotone */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .icon::before,
+        .icon::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .icon-map::before {
+            width: 16px;
+            height: 16px;
+            background: var(--color-primary);
+            top: 4px;
+            left: 4px;
+        }
+
+        .icon-map::after {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-tertiary);
+            top: 0;
+            left: 0;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        *:focus-visible {
+            outline: 3px solid var(--color-tertiary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .top-nav {
+                padding: 0 var(--space-md);
+            }
+
+            .nav-actions {
+                gap: var(--space-sm);
+            }
+
+            .nav-link {
+                padding: var(--space-xs) var(--space-sm);
+                font-size: var(--text-xs);
+            }
+
+            .hero {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-md);
+            }
+
+            .results-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo">global glacier</div>
+        <div class="nav-actions">
+            <a href="#" class="nav-link">explore</a>
+            <a href="#" class="nav-link">trips</a>
+            <a href="#" class="nav-link">saved</a>
+            <a href="#" class="nav-link btn-sign-in">sign in</a>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- Sidebar with Filters -->
+        <aside class="sidebar">
+            <section class="filter-section">
+                <h2 class="filter-title">filters</h2>
+
+                <div class="filter-group">
+                    <label class="filter-label">price range</label>
+                    <div class="price-range">
+                        <input type="number" class="filter-input price-input" placeholder="min" value="50">
+                        <span style="color: var(--color-text-muted);">-</span>
+                        <input type="number" class="filter-input price-input" placeholder="max" value="500">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">property type</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            hotels
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            resorts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            apartments
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            villas
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">star rating</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            5 stars
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            4 stars
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            3 stars
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">amenities</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            free wifi
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            pool
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            spa
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            gym
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            parking
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            restaurant
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">guest rating</label>
+                    <select class="filter-select">
+                        <option>any rating</option>
+                        <option>9+ wonderful</option>
+                        <option selected>8+ very good</option>
+                        <option>7+ good</option>
+                    </select>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1 class="hero-title">find your perfect stay</h1>
+                <p class="hero-tagline">the flat way to developer - search hotels worldwide</p>
+
+                <!-- Search Form -->
+                <form class="search-form">
+                    <div class="form-field">
+                        <label class="form-label">destination</label>
+                        <input type="text" class="form-input" placeholder="where are you going?" value="cape town, south africa">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">check in</label>
+                        <input type="date" class="form-input" value="2026-02-15">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">check out</label>
+                        <input type="date" class="form-input" value="2026-02-22">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">guests</label>
+                        <select class="form-input">
+                            <option>1 guest</option>
+                            <option selected>2 guests</option>
+                            <option>3 guests</option>
+                            <option>4 guests</option>
+                            <option>5+ guests</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-search">search</button>
+                </form>
+            </section>
+
+            <!-- Results Header -->
+            <div class="results-header">
+                <div class="results-count">247 properties found</div>
+                <div class="results-controls">
+                    <select class="sort-select">
+                        <option>sort: recommended</option>
+                        <option>sort: price low to high</option>
+                        <option>sort: price high to low</option>
+                        <option>sort: rating</option>
+                        <option>sort: distance</option>
+                    </select>
+                    <button class="btn-map-toggle">
+                        <span class="icon icon-map"></span>
+                        show map
+                    </button>
+                </div>
+            </div>
+
+            <!-- Properties Grid -->
+            <div class="properties-grid">
+                <!-- Property Card 1 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                        <span class="property-badge">best seller</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">oceanview paradise resort</h3>
+                            <p class="property-location">camps bay, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                            <span class="rating-score">9.2</span>
+                            <span class="rating-count">(1,284 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">pool</span>
+                            <span class="amenity-tag">spa</span>
+                            <span class="amenity-tag">restaurant</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$289</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 2 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">mountain peak hotel</h3>
+                            <p class="property-location">table mountain, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star" style="opacity: 0.3;">★</span>
+                            </div>
+                            <span class="rating-score">8.8</span>
+                            <span class="rating-count">(892 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">gym</span>
+                            <span class="amenity-tag">parking</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$195</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 3 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                        <span class="property-badge">new</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">waterfront luxury suites</h3>
+                            <p class="property-location">v&a waterfront, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                            <span class="rating-score">9.5</span>
+                            <span class="rating-count">(456 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">pool</span>
+                            <span class="amenity-tag">spa</span>
+                            <span class="amenity-tag">gym</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$425</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 4 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">boutique garden inn</h3>
+                            <p class="property-location">gardens, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star" style="opacity: 0.3;">★</span>
+                            </div>
+                            <span class="rating-score">8.6</span>
+                            <span class="rating-count">(723 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">parking</span>
+                            <span class="amenity-tag">restaurant</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$145</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 5 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                        <span class="property-badge">eco-friendly</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">coastal breeze lodge</h3>
+                            <p class="property-location">sea point, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star" style="opacity: 0.3;">★</span>
+                            </div>
+                            <span class="rating-score">8.9</span>
+                            <span class="rating-count">(1,045 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">pool</span>
+                            <span class="amenity-tag">gym</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$215</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 6 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <span class="property-image-placeholder">🏨</span>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3 class="property-name">urban chic apartments</h3>
+                            <p class="property-location">city centre, cape town</p>
+                        </div>
+                        <div class="property-rating">
+                            <div class="rating-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star" style="opacity: 0.3;">★</span>
+                            </div>
+                            <span class="rating-score">8.4</span>
+                            <span class="rating-count">(634 reviews)</span>
+                        </div>
+                        <div class="property-amenities">
+                            <span class="amenity-tag">free wifi</span>
+                            <span class="amenity-tag">parking</span>
+                        </div>
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <span class="price-amount">$165</span>
+                                <span class="price-period">per night</span>
+                            </div>
+                            <a href="#" class="btn-book">book now</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 17;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

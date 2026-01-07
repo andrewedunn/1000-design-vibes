@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Bounce - Mental Health Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Pixel Bounce - Mental Health Journal
+ABOUTME: Y2K glassmorphic mental health journaling app with cyber vibes and Latin vibrant energy
+
+DESIGN SYSTEM: #23 - Pixel Bounce
+================================
+
+Aesthetic Principles:
+- Y2K glassmorphism with frosted glass panels and vibrant mesh gradients
+- Cyber color palette with extreme contrast and neon accents
+- Latin vibrant cultural influence through energetic colors and playful interactions
+- Compact density with 12px spacing base
+- Handwritten headings for personal warmth, humanist sans for readability
+- Paper texture with mesh gradients for depth
+- Hidden scroll navigation with editorial scroll structure
+
+Key Tokens:
+--color-primary: #00FFFF (cyber cyan)
+--color-secondary: #FF00FF (cyber magenta)
+--color-accent: #FFD700 (vibrant gold)
+--space-unit: 12px
+--radius-default: 16px
+--scale-ratio: 1.25 (major third)
+--border-style: 3px dashed
+--shadow-style: inset with colored glows
+-->
+
+<style>
+:root {
+    /* Colors - Cyber palette with extreme contrast */
+    --color-primary: #00FFFF;
+    --color-secondary: #FF00FF;
+    --color-accent: #FFD700;
+    --color-success: #00FF88;
+    --color-warning: #FF6B00;
+    --color-danger: #FF0066;
+
+    --color-background: #0A0A14;
+    --color-surface: rgba(20, 20, 40, 0.4);
+    --color-surface-solid: #1A1A28;
+    --color-text: #FFFFFF;
+    --color-text-muted: #B8B8D4;
+
+    /* Typography */
+    --font-heading: 'Caveat', cursive;
+    --font-body: 'Open Sans', sans-serif;
+
+    /* Type Scale - Major Third (1.25) */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+    --text-4xl: 3.052rem;
+
+    /* Spacing - 12px base */
+    --space-unit: 12px;
+    --space-xs: 6px;
+    --space-sm: 12px;
+    --space-md: 24px;
+    --space-lg: 36px;
+    --space-xl: 48px;
+    --space-2xl: 72px;
+
+    /* Shapes */
+    --radius-default: 16px;
+    --radius-sm: 8px;
+    --radius-lg: 24px;
+
+    /* Shadows - Inset with colored glows */
+    --shadow-default: inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 255, 255, 0.2);
+    --shadow-glow-cyan: 0 0 30px rgba(0, 255, 255, 0.4);
+    --shadow-glow-magenta: 0 0 30px rgba(255, 0, 255, 0.4);
+    --shadow-glow-gold: 0 0 30px rgba(255, 215, 0, 0.4);
+    --shadow-inset: inset 0 2px 12px rgba(0, 0, 0, 0.5);
+
+    /* Borders */
+    --border-default: 3px dashed rgba(255, 255, 255, 0.3);
+    --border-accent: 3px dashed var(--color-primary);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.5;
+    color: var(--color-text);
+    background: var(--color-background);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Paper texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Mesh gradient background */
+body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+    animation: meshFloat 20s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes meshFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(5%, 5%) rotate(2deg); }
+    66% { transform: translate(-3%, 3%) rotate(-2deg); }
+}
+
+/* Main container */
+.app-container {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    padding: var(--space-md);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Glassmorphic card component */
+.glass-card {
+    background: var(--color-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg) var(--space-md);
+    background: linear-gradient(135deg,
+        rgba(0, 255, 255, 0.2) 0%,
+        rgba(255, 0, 255, 0.2) 50%,
+        rgba(255, 215, 0, 0.2) 100%);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-inset);
+}
+
+.app-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--space-xs);
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+}
+
+.app-tagline {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+/* Streak Counter - Floating */
+.streak-counter {
+    position: fixed;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: 100;
+    background: var(--color-surface);
+    backdrop-filter: blur(20px);
+    border: var(--border-accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-md);
+    box-shadow: var(--shadow-glow-cyan);
+    min-width: 120px;
+}
+
+.streak-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    display: block;
+}
+
+.streak-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    text-align: center;
+    display: block;
+}
+
+/* Daily Check-in Section */
+.check-in-section {
+    margin-bottom: var(--space-lg);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Mood Selector */
+.mood-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.mood-btn {
+    background: var(--color-surface);
+    backdrop-filter: blur(10px);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.mood-btn:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow-cyan);
+    transform: translateY(-2px);
+}
+
+.mood-btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+.mood-btn.active {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow-cyan);
+}
+
+.mood-emoji {
+    font-size: var(--text-2xl);
+    display: block;
+}
+
+.mood-label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+}
+
+/* Journal Entry */
+.journal-entry {
+    margin-bottom: var(--space-lg);
+}
+
+.journal-textarea {
+    width: 100%;
+    min-height: 200px;
+    background: var(--color-surface);
+    backdrop-filter: blur(10px);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    resize: vertical;
+    box-shadow: var(--shadow-inset);
+}
+
+.journal-textarea::placeholder {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.journal-textarea:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow-cyan);
+}
+
+/* Accordion Sections */
+.accordion-section {
+    margin-bottom: var(--space-md);
+}
+
+.accordion-trigger {
+    width: 100%;
+    background: var(--color-surface);
+    backdrop-filter: blur(10px);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    color: var(--color-text);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+    transition: all 0.3s ease;
+}
+
+.accordion-trigger:hover {
+    border-color: var(--color-secondary);
+    box-shadow: var(--shadow-glow-magenta);
+}
+
+.accordion-trigger:focus {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 3px;
+}
+
+.accordion-trigger.active {
+    border-color: var(--color-secondary);
+    box-shadow: var(--shadow-glow-magenta);
+}
+
+.accordion-icon {
+    font-size: var(--text-lg);
+    transition: transform 0.3s ease;
+}
+
+.accordion-trigger.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.accordion-content.active {
+    max-height: 1000px;
+    padding-top: var(--space-md);
+}
+
+/* Gratitude Prompts */
+.gratitude-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.gratitude-item {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-start;
+}
+
+.gratitude-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--color-accent);
+    min-width: 30px;
+    font-weight: 700;
+}
+
+.gratitude-input {
+    flex: 1;
+    background: var(--color-surface);
+    backdrop-filter: blur(10px);
+    border: var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    min-height: 44px;
+}
+
+.gratitude-input:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow-gold);
+}
+
+/* Reflection Questions */
+.reflection-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.reflection-item {
+    background: var(--color-surface);
+    backdrop-filter: blur(10px);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-inset);
+}
+
+.reflection-question {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-success);
+    margin-bottom: var(--space-sm);
+}
+
+.reflection-answer {
+    width: 100%;
+    min-height: 80px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    resize: vertical;
+}
+
+.reflection-answer:focus {
+    outline: 3px solid var(--color-success);
+    outline-offset: 2px;
+    border-color: var(--color-success);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+/* Save Button */
+.save-section {
+    margin-top: var(--space-xl);
+    text-align: center;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-md) var(--space-xl);
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 200px;
+    box-shadow: var(--shadow-glow-cyan);
+    transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-glow-cyan), var(--shadow-glow-magenta);
+}
+
+.save-btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
+.save-btn:active {
+    transform: scale(0.98);
+}
+
+/* Calming Visuals */
+.calming-visual {
+    position: fixed;
+    bottom: var(--space-md);
+    left: var(--space-md);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.3));
+    animation: breathe 4s ease-in-out infinite;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: var(--shadow-glow-cyan);
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 0.9; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        padding: var(--space-sm);
+    }
+
+    .app-title {
+        font-size: var(--text-3xl);
+    }
+
+    .mood-selector {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .streak-counter {
+        top: var(--space-sm);
+        right: var(--space-sm);
+        padding: var(--space-xs) var(--space-sm);
+        min-width: 90px;
+    }
+
+    .streak-number {
+        font-size: var(--text-2xl);
+    }
+
+    .calming-visual {
+        width: 60px;
+        height: 60px;
+        bottom: var(--space-sm);
+        left: var(--space-sm);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+/* Small caps support */
+.small-caps {
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+}
+</style>
+
+<!-- Streak Counter (Floating) -->
+<div class="streak-counter">
+    <span class="streak-number">7</span>
+    <span class="streak-label">Day Streak</span>
+</div>
+
+<!-- Calming Visual -->
+<div class="calming-visual"></div>
+
+<!-- Main App Container -->
+<div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+        <h1 class="app-title">Pixel Bounce</h1>
+        <p class="app-tagline">Crafted for consumer premium with Latin vibrant roots</p>
+    </header>
+
+    <!-- Daily Check-in -->
+    <section class="check-in-section glass-card">
+        <h2 class="section-title">How are you feeling today?</h2>
+
+        <div class="mood-selector">
+            <button class="mood-btn" data-mood="amazing">
+                <span class="mood-emoji">😄</span>
+                <span class="mood-label">Amazing</span>
+            </button>
+            <button class="mood-btn" data-mood="good">
+                <span class="mood-emoji">🙂</span>
+                <span class="mood-label">Good</span>
+            </button>
+            <button class="mood-btn" data-mood="okay">
+                <span class="mood-emoji">😐</span>
+                <span class="mood-label">Okay</span>
+            </button>
+            <button class="mood-btn" data-mood="struggling">
+                <span class="mood-emoji">😔</span>
+                <span class="mood-label">Struggling</span>
+            </button>
+            <button class="mood-btn" data-mood="tough">
+                <span class="mood-emoji">😢</span>
+                <span class="mood-label">Tough Day</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Journal Entry -->
+    <section class="journal-entry glass-card">
+        <h2 class="section-title">Today's Journal</h2>
+        <textarea
+            class="journal-textarea"
+            placeholder="What's on your mind today? Write freely... No judgment, just you and your thoughts."
+            aria-label="Journal entry"></textarea>
+    </section>
+
+    <!-- Gratitude Accordion -->
+    <div class="accordion-section">
+        <button class="accordion-trigger glass-card" data-accordion="gratitude">
+            <span>Three Things I'm Grateful For</span>
+            <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-content glass-card" data-content="gratitude">
+            <div class="gratitude-list">
+                <div class="gratitude-item">
+                    <span class="gratitude-number">1.</span>
+                    <input type="text" class="gratitude-input" placeholder="I'm grateful for..." aria-label="Gratitude item 1">
+                </div>
+                <div class="gratitude-item">
+                    <span class="gratitude-number">2.</span>
+                    <input type="text" class="gratitude-input" placeholder="I'm grateful for..." aria-label="Gratitude item 2">
+                </div>
+                <div class="gratitude-item">
+                    <span class="gratitude-number">3.</span>
+                    <input type="text" class="gratitude-input" placeholder="I'm grateful for..." aria-label="Gratitude item 3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reflection Accordion -->
+    <div class="accordion-section">
+        <button class="accordion-trigger glass-card" data-accordion="reflection">
+            <span>Reflection Questions</span>
+            <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-content glass-card" data-content="reflection">
+            <div class="reflection-list">
+                <div class="reflection-item">
+                    <div class="reflection-question">What made you smile today?</div>
+                    <textarea class="reflection-answer" aria-label="Answer: What made you smile today?"></textarea>
+                </div>
+                <div class="reflection-item">
+                    <div class="reflection-question">What challenge did you overcome?</div>
+                    <textarea class="reflection-answer" aria-label="Answer: What challenge did you overcome?"></textarea>
+                </div>
+                <div class="reflection-item">
+                    <div class="reflection-question">What do you need more of tomorrow?</div>
+                    <textarea class="reflection-answer" aria-label="Answer: What do you need more of tomorrow?"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self-Care Accordion -->
+    <div class="accordion-section">
+        <button class="accordion-trigger glass-card" data-accordion="selfcare">
+            <span>Self-Care Check</span>
+            <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-content glass-card" data-content="selfcare">
+            <div class="reflection-list">
+                <div class="reflection-item">
+                    <div class="reflection-question">Did you take care of your body today?</div>
+                    <textarea class="reflection-answer" placeholder="Sleep, nutrition, movement..." aria-label="Answer: Did you take care of your body?"></textarea>
+                </div>
+                <div class="reflection-item">
+                    <div class="reflection-question">What boundaries did you honor?</div>
+                    <textarea class="reflection-answer" placeholder="Saying no, taking breaks..." aria-label="Answer: What boundaries did you honor?"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Section -->
+    <div class="save-section">
+        <button class="save-btn">Save My Entry</button>
+    </div>
+</div>
+
+<script>
+// Mood selector interaction
+document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// Accordion functionality
+document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+    trigger.addEventListener('click', function() {
+        const accordionId = this.dataset.accordion;
+        const content = document.querySelector(`[data-content="${accordionId}"]`);
+
+        this.classList.toggle('active');
+        content.classList.toggle('active');
+    });
+});
+
+// Save button feedback
+document.querySelector('.save-btn').addEventListener('click', function() {
+    const originalText = this.textContent;
+    this.textContent = 'Saved! ✨';
+    this.style.background = 'linear-gradient(135deg, var(--color-success), var(--color-accent))';
+
+    setTimeout(() => {
+        this.textContent = originalText;
+        this.style.background = 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))';
+    }, 2000);
+});
+
+// Navigation script
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 23;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

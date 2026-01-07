@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer Hub - Healthcare Analytics Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Layer Hub - Healthcare Analytics Dashboard
+        ABOUTME: Material design meets Art Nouveau with ultra-dense metrics, neon monochromatic palette, and organic flourishes
+
+        Design System Token Reference:
+
+        AESTHETIC PRINCIPLES:
+        - Material layering with Art Nouveau organic curves and nature-inspired ornament
+        - Ultra-dense information display for healthcare analytics
+        - Monochromatic cool neon color scheme (cyan/blue spectrum) with vivid saturation
+        - Layered surfaces with colored shadows creating depth
+        - Humanist sans headings (Source Sans 3) + modern serif body (Lora)
+        - Very loose letter spacing for readability at high density
+        - Organic corner radii following Art Nouveau curves
+        - Geometric patterns as surface texture
+        - Tab navigation with asymmetric grid layout
+        - Emoji icons for accessibility and visual interest
+
+        COLOR SYSTEM (Monochromatic Cool Vivid Neon):
+        --color-primary: #00FFFF (Electric Cyan)
+        --color-primary-dark: #00CCCC
+        --color-primary-darker: #009999
+        --color-primary-light: #66FFFF
+        --color-background: #F0FFFE (Very light cyan)
+        --color-surface: #FFFFFF
+        --color-surface-alt: #E0FFFE
+        --color-text: #003333 (Deep cyan-black)
+        --color-text-muted: #006666
+        --color-accent: #00DDDD
+        --color-border: #CCFFFF
+
+        TYPOGRAPHY:
+        - Headings: Source Sans 3 (Humanist Sans) - warm, friendly, professional
+        - Body: Lora (Modern Serif) - elegant, readable, contemporary
+        - Scale: Perfect Fourth (1.333)
+        - Letter Spacing: Very Loose (0.15em headings, 0.05em body)
+        - Line Height: Loose (1.8)
+
+        SPATIAL SYSTEM:
+        - Base Unit: 12px (ultra-dense spacing)
+        - Scale: 6px, 12px, 18px, 24px, 36px, 48px
+
+        VISUAL TREATMENT:
+        - Corner Radius: Organic (varied, asymmetric, nature-inspired)
+        - Shadows: Colored (cyan-tinted layered shadows)
+        - Borders: Hairline (1px)
+        - Surface: Geometric pattern texture
+        - Gradients: Accent only
+        */
+
+        :root {
+            /* Colors - Monochromatic Cool Vivid Neon */
+            --color-primary: #00FFFF;
+            --color-primary-dark: #00CCCC;
+            --color-primary-darker: #009999;
+            --color-primary-light: #66FFFF;
+            --color-background: #F0FFFE;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #E0FFFE;
+            --color-text: #003333;
+            --color-text-muted: #006666;
+            --color-accent: #00DDDD;
+            --color-border: #CCFFFF;
+
+            /* Typography */
+            --font-heading: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Lora', Georgia, serif;
+
+            /* Type Scale - Perfect Fourth (1.333) */
+            --text-xs: 0.563rem;    /* ~9px */
+            --text-sm: 0.75rem;     /* ~12px */
+            --text-base: 1rem;      /* 16px */
+            --text-lg: 1.333rem;    /* ~21px */
+            --text-xl: 1.777rem;    /* ~28px */
+            --text-2xl: 2.369rem;   /* ~38px */
+            --text-3xl: 3.157rem;   /* ~50px */
+
+            /* Spacing - Ultra Dense */
+            --space-unit: 12px;
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 18px;
+            --space-lg: 24px;
+            --space-xl: 36px;
+            --space-2xl: 48px;
+
+            /* Shapes - Organic Radius */
+            --radius-sm: 8px 12px 10px 14px;
+            --radius-default: 16px 24px 20px 28px;
+            --radius-lg: 24px 36px 28px 40px;
+            --radius-organic-1: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            --radius-organic-2: 40% 60% 70% 30% / 50% 60% 40% 50%;
+
+            /* Shadows - Colored */
+            --shadow-sm: 0 2px 8px rgba(0, 255, 255, 0.15);
+            --shadow-default: 0 4px 16px rgba(0, 255, 255, 0.2), 0 2px 4px rgba(0, 204, 204, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 255, 255, 0.25), 0 4px 8px rgba(0, 204, 204, 0.2);
+            --shadow-inset: inset 0 2px 8px rgba(0, 204, 204, 0.1);
+
+            /* Borders */
+            --border-width: 1px;
+            --border-color: var(--color-border);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.8;
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: 0.05em;
+            overflow-x: hidden;
+        }
+
+        /* Background geometric pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(0, 255, 255, 0.03) 20px, rgba(0, 255, 255, 0.03) 40px),
+                repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(0, 204, 204, 0.02) 20px, rgba(0, 204, 204, 0.02) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        h1 { font-size: var(--text-3xl); }
+        h2 { font-size: var(--text-2xl); }
+        h3 { font-size: var(--text-xl); }
+        h4 { font-size: var(--text-lg); }
+        h5 { font-size: var(--text-base); }
+        h6 { font-size: var(--text-sm); }
+
+        /* Layout - Single Canvas with Sidebar */
+        .app-container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            grid-column: 1;
+            grid-row: 1 / -1;
+            background: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-border);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .sidebar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+            opacity: 0.3;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            letter-spacing: 0.12em;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            border: var(--border-width) solid transparent;
+            background: var(--color-surface);
+        }
+
+        .nav-link:hover {
+            background: var(--color-surface-alt);
+            color: var(--color-primary-dark);
+            border-color: var(--color-primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-link:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+            color: var(--color-text);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: var(--text-lg);
+            line-height: 1;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            grid-column: 2;
+            grid-row: 1 / -1;
+            padding: var(--space-md);
+            overflow-y: auto;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+            background: var(--color-surface);
+            padding: var(--space-xs);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            border: var(--border-width) solid var(--color-border);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            letter-spacing: 0.12em;
+            padding: var(--space-xs) var(--space-md);
+            background: transparent;
+            color: var(--color-text-muted);
+            border: var(--border-width) solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 500;
+            min-height: 44px;
+        }
+
+        .tab-btn:hover {
+            background: var(--color-surface-alt);
+            color: var(--color-primary-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .tab-btn.active {
+            background: var(--color-primary);
+            color: var(--color-text);
+            border-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-default);
+            font-weight: 700;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: var(--space-md);
+        }
+
+        .header-title {
+            color: var(--color-primary-darker);
+            margin-bottom: var(--space-xs);
+        }
+
+        .header-subtitle {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            letter-spacing: 0.08em;
+        }
+
+        /* Asymmetric Grid Layout - Ultra Dense */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Data Card - Inset Container Style */
+        .data-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm);
+            box-shadow: var(--shadow-inset), var(--shadow-default);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary-light);
+        }
+
+        .data-card:hover::before {
+            opacity: 1;
+        }
+
+        .data-card.span-2 { grid-column: span 2; }
+        .data-card.span-3 { grid-column: span 3; }
+        .data-card.span-4 { grid-column: span 4; }
+        .data-card.span-6 { grid-column: span 6; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .card-icon {
+            font-size: var(--text-xl);
+            line-height: 1;
+        }
+
+        .card-value {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--color-primary-darker);
+            margin-bottom: var(--space-xs);
+            line-height: 1;
+        }
+
+        .card-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            letter-spacing: 0.08em;
+        }
+
+        .card-trend {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-top: var(--space-xs);
+        }
+
+        .card-trend.positive {
+            color: var(--color-primary-dark);
+        }
+
+        .card-trend.negative {
+            color: var(--color-text-muted);
+        }
+
+        /* Chart Container with Geometric Pattern */
+        .chart-container {
+            position: relative;
+            height: 180px;
+            background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-surface) 100%);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm);
+            margin-top: var(--space-xs);
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(0, 255, 255, 0.05) 10px, rgba(0, 255, 255, 0.05) 11px),
+                repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0, 255, 255, 0.05) 10px, rgba(0, 255, 255, 0.05) 11px);
+            pointer-events: none;
+        }
+
+        /* Simple Bar Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            gap: var(--space-xs);
+            position: relative;
+            z-index: 1;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--color-primary), var(--color-primary-light));
+            border-radius: var(--radius-sm);
+            min-height: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            border: var(--border-width) solid var(--color-primary);
+            position: relative;
+        }
+
+        .bar:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.1);
+        }
+
+        /* Simple Line Chart */
+        .line-chart {
+            position: relative;
+            height: 100%;
+        }
+
+        .line-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .line-path {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 2px 4px rgba(0, 255, 255, 0.3));
+        }
+
+        .line-area {
+            fill: url(#gradient);
+            opacity: 0.3;
+        }
+
+        .line-dot {
+            fill: var(--color-primary);
+            stroke: var(--color-surface);
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 4px rgba(0, 255, 255, 0.5));
+        }
+
+        /* Analytics Panel */
+        .analytics-panel {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .panel-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--color-primary-darker);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-xs);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 var(--space-xs);
+        }
+
+        .data-table th {
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            text-align: left;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-surface-alt);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .data-table th:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .data-table th:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .data-table td {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--text-sm);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .data-table tr:hover td {
+            background: var(--color-surface-alt);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .data-table td:first-child {
+            border-radius: 8px 0 0 8px;
+            font-weight: 600;
+            color: var(--color-primary-darker);
+        }
+
+        .data-table td:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            padding: 4px var(--space-xs);
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            border: var(--border-width) solid;
+        }
+
+        .status-badge.active {
+            background: var(--color-primary-light);
+            color: var(--color-text);
+            border-color: var(--color-primary);
+        }
+
+        .status-badge.pending {
+            background: var(--color-surface-alt);
+            color: var(--color-text-muted);
+            border-color: var(--color-border);
+        }
+
+        .status-badge.inactive {
+            background: var(--color-background);
+            color: var(--color-text-muted);
+            border-color: var(--color-border);
+        }
+
+        /* List Items */
+        .list-group {
+            list-style: none;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-xs);
+            margin-bottom: var(--space-xs);
+            background: var(--color-surface-alt);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--color-primary-light);
+        }
+
+        .list-item-label {
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            letter-spacing: 0.05em;
+        }
+
+        .list-item-value {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            letter-spacing: 0.08em;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 8px;
+            background: var(--color-surface-alt);
+            border-radius: 20px;
+            overflow: hidden;
+            border: var(--border-width) solid var(--color-border);
+            margin-top: var(--space-xs);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Art Nouveau Decorative Elements */
+        .decorative-flourish {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .flourish-top-left {
+            top: 0;
+            left: 200px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 0% 0%, var(--color-primary), transparent 70%);
+            border-radius: var(--radius-organic-1);
+        }
+
+        .flourish-bottom-right {
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at 100% 100%, var(--color-accent), transparent 70%);
+            border-radius: var(--radius-organic-2);
+        }
+
+        /* Centered Minimal Hero (subtle) */
+        .hero-section {
+            text-align: center;
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .hero-tagline {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            letter-spacing: 0.2em;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Styles */
+        *:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 160px 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .logo {
+                font-size: var(--text-lg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+            }
+
+            .sidebar {
+                grid-column: 1;
+                grid-row: 1;
+                border-right: none;
+                border-bottom: var(--border-width) solid var(--color-border);
+            }
+
+            .main-content {
+                grid-column: 1;
+                grid-row: 2 / -1;
+            }
+
+            .nav-menu {
+                display: flex;
+                gap: var(--space-xs);
+                overflow-x: auto;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .data-card.span-2,
+            .data-card.span-3,
+            .data-card.span-4,
+            .data-card.span-6 {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Art Nouveau Decorative Flourishes -->
+    <div class="decorative-flourish flourish-top-left"></div>
+    <div class="decorative-flourish flourish-bottom-right"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">Layer Hub</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">💊</span>
+                            <span>Pharmacy</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">🔬</span>
+                            <span>Lab Results</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Minimal Hero -->
+            <div class="hero-section">
+                <p class="hero-tagline">A material approach meets american corporate sensibility</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active">Overview</button>
+                <button class="tab-btn">Patients</button>
+                <button class="tab-btn">Operations</button>
+                <button class="tab-btn">Financial</button>
+                <button class="tab-btn">Quality</button>
+            </div>
+
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="header-title">Healthcare Dashboard</h1>
+                <p class="header-subtitle">Real-time analytics and operational metrics</p>
+            </div>
+
+            <!-- Metrics Grid - Ultra Dense Asymmetric Layout -->
+            <div class="metrics-grid">
+                <!-- Key Metrics - Span 2 -->
+                <div class="data-card span-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Patients</h3>
+                        <span class="card-icon">👤</span>
+                    </div>
+                    <div class="card-value">2,847</div>
+                    <div class="card-trend positive">↑ 12.3% vs last month</div>
+                </div>
+
+                <div class="data-card span-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Appointments Today</h3>
+                        <span class="card-icon">📋</span>
+                    </div>
+                    <div class="card-value">187</div>
+                    <div class="card-trend positive">↑ 8.7% vs yesterday</div>
+                </div>
+
+                <div class="data-card span-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Bed Occupancy</h3>
+                        <span class="card-icon">🛏️</span>
+                    </div>
+                    <div class="card-value">84%</div>
+                    <div class="card-trend negative">↓ 3.2% vs last week</div>
+                </div>
+
+                <!-- Single Column Metrics -->
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">ER Wait</h3>
+                        <span class="card-icon">⏱️</span>
+                    </div>
+                    <div class="card-value">18m</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Staff On</h3>
+                        <span class="card-icon">👨‍⚕️</span>
+                    </div>
+                    <div class="card-value">142</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue</h3>
+                        <span class="card-icon">💰</span>
+                    </div>
+                    <div class="card-value">$1.2M</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Satisfaction</h3>
+                        <span class="card-icon">⭐</span>
+                    </div>
+                    <div class="card-value">4.7</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Lab Tests</h3>
+                        <span class="card-icon">🔬</span>
+                    </div>
+                    <div class="card-value">423</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Surgeries</h3>
+                        <span class="card-icon">🏥</span>
+                    </div>
+                    <div class="card-value">28</div>
+                </div>
+
+                <!-- Chart Cards - Span 3 -->
+                <div class="data-card span-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Patient Admissions (7 Days)</h3>
+                        <span class="card-icon">📊</span>
+                    </div>
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 65%;"></div>
+                            <div class="bar" style="height: 72%;"></div>
+                            <div class="bar" style="height: 58%;"></div>
+                            <div class="bar" style="height: 81%;"></div>
+                            <div class="bar" style="height: 70%;"></div>
+                            <div class="bar" style="height: 88%;"></div>
+                            <div class="bar" style="height: 93%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card span-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue Trend (30 Days)</h3>
+                        <span class="card-icon">💹</span>
+                    </div>
+                    <div class="chart-container">
+                        <div class="line-chart">
+                            <svg viewBox="0 0 300 150" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color: var(--color-primary); stop-opacity: 0.5" />
+                                        <stop offset="100%" style="stop-color: var(--color-primary); stop-opacity: 0" />
+                                    </linearGradient>
+                                </defs>
+                                <path class="line-area" d="M 0 150 L 0 80 L 30 70 L 60 85 L 90 65 L 120 75 L 150 60 L 180 55 L 210 65 L 240 50 L 270 45 L 300 40 L 300 150 Z" />
+                                <path class="line-path" d="M 0 80 L 30 70 L 60 85 L 90 65 L 120 75 L 150 60 L 180 55 L 210 65 L 240 50 L 270 45 L 300 40" />
+                                <circle class="line-dot" cx="0" cy="80" r="4" />
+                                <circle class="line-dot" cx="30" cy="70" r="4" />
+                                <circle class="line-dot" cx="60" cy="85" r="4" />
+                                <circle class="line-dot" cx="90" cy="65" r="4" />
+                                <circle class="line-dot" cx="120" cy="75" r="4" />
+                                <circle class="line-dot" cx="150" cy="60" r="4" />
+                                <circle class="line-dot" cx="180" cy="55" r="4" />
+                                <circle class="line-dot" cx="210" cy="65" r="4" />
+                                <circle class="line-dot" cx="240" cy="50" r="4" />
+                                <circle class="line-dot" cx="270" cy="45" r="4" />
+                                <circle class="line-dot" cx="300" cy="40" r="4" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Performance - Span 4 -->
+                <div class="data-card span-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Department Performance</h3>
+                        <span class="card-icon">🏢</span>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-item">
+                            <span class="list-item-label">🫀 Cardiology</span>
+                            <span class="list-item-value">94%</span>
+                        </li>
+                        <li class="list-item">
+                            <span class="list-item-label">🦴 Orthopedics</span>
+                            <span class="list-item-value">91%</span>
+                        </li>
+                        <li class="list-item">
+                            <span class="list-item-label">🧠 Neurology</span>
+                            <span class="list-item-value">88%</span>
+                        </li>
+                        <li class="list-item">
+                            <span class="list-item-label">👶 Pediatrics</span>
+                            <span class="list-item-value">96%</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Resource Utilization - Span 2 -->
+                <div class="data-card span-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Resource Usage</h3>
+                        <span class="card-icon">📦</span>
+                    </div>
+                    <div style="margin-top: var(--space-sm);">
+                        <div style="margin-bottom: var(--space-sm);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Equipment</span>
+                                <span style="font-size: var(--text-xs); font-weight: 600; color: var(--color-primary-dark);">87%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 87%;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: var(--space-sm);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Supplies</span>
+                                <span style="font-size: var(--text-xs); font-weight: 600; color: var(--color-primary-dark);">72%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 72%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Capacity</span>
+                                <span style="font-size: var(--text-xs); font-weight: 600; color: var(--color-primary-dark);">84%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 84%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Panel with Data Table -->
+            <div class="analytics-panel">
+                <h2 class="panel-title">Recent Patient Activity</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Admitted</th>
+                            <th>Physician</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#P-2847</td>
+                            <td>Sarah Johnson</td>
+                            <td>Cardiology</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>2h ago</td>
+                            <td>Dr. Chen</td>
+                        </tr>
+                        <tr>
+                            <td>#P-2846</td>
+                            <td>Michael Brown</td>
+                            <td>Orthopedics</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>4h ago</td>
+                            <td>Dr. Patel</td>
+                        </tr>
+                        <tr>
+                            <td>#P-2845</td>
+                            <td>Emily Davis</td>
+                            <td>Neurology</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>6h ago</td>
+                            <td>Dr. Wilson</td>
+                        </tr>
+                        <tr>
+                            <td>#P-2844</td>
+                            <td>James Wilson</td>
+                            <td>Pediatrics</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>8h ago</td>
+                            <td>Dr. Lee</td>
+                        </tr>
+                        <tr>
+                            <td>#P-2843</td>
+                            <td>Lisa Anderson</td>
+                            <td>Emergency</td>
+                            <td><span class="status-badge inactive">Discharged</span></td>
+                            <td>12h ago</td>
+                            <td>Dr. Martinez</td>
+                        </tr>
+                        <tr>
+                            <td>#P-2842</td>
+                            <td>David Taylor</td>
+                            <td>Surgery</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>14h ago</td>
+                            <td>Dr. Thompson</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 10;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

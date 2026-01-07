@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Hub - Press Release</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        ABOUTME: Modern Hub - Design #96
+        ABOUTME: Editorial press release with Scandinavian modern aesthetic and handwritten typography
+
+        AESTHETIC PRINCIPLES:
+        - Editorial-first design language with magazine-quality typography
+        - Scandinavian modern: clean, light, natural, functional
+        - Handwritten fonts create warmth and approachability
+        - Monochromatic cool earth tones with high contrast
+        - Organic shapes soften the formal press release structure
+        - Noise texture adds tactile, paper-like quality
+        - Fullscreen slides create distinct reading sections
+
+        KEY DESIGN TOKENS:
+        --color-primary: #3d5a4f (forest green)
+        --color-background: #f5f4f0 (warm off-white)
+        --color-surface: #e8e6df (cool paper)
+        --space-unit: 12px
+        --radius-default: 30% 70% 70% 30% / 30% 30% 70% 70% (organic blob)
+        --font-heading: 'Caveat' (handwritten display)
+        --font-body: 'Kalam' (handwritten text)
+        */
+
+        :root {
+            /* Colors - Monochromatic cool earth palette */
+            --color-primary: #3d5a4f;
+            --color-primary-dark: #2a3f37;
+            --color-primary-light: #6a8577;
+            --color-background: #f5f4f0;
+            --color-surface: #e8e6df;
+            --color-surface-alt: #d4d2c8;
+            --color-text: #2a2a28;
+            --color-text-muted: #6b6b68;
+            --color-accent: #5a7268;
+            --color-border: #b8b6ab;
+
+            /* Typography */
+            --font-heading: 'Caveat', cursive;
+            --font-body: 'Kalam', cursive;
+            --type-scale: 1.067; /* minor_second */
+            --type-base: 17px;
+            --type-small: calc(var(--type-base) / var(--type-scale));
+            --type-large: calc(var(--type-base) * var(--type-scale));
+            --type-xlarge: calc(var(--type-large) * var(--type-scale));
+            --type-xxlarge: calc(var(--type-xlarge) * var(--type-scale));
+            --type-xxxlarge: calc(var(--type-xxlarge) * var(--type-scale));
+
+            /* Spacing */
+            --space-unit: 12px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+            --space-xxl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            --radius-alt: 70% 30% 30% 70% / 70% 70% 30% 30%;
+            --shadow-default: 0 2px 8px rgba(61, 90, 79, 0.08);
+            --border-default: 2px dashed var(--color-border);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--type-base);
+            line-height: 2.2; /* very_loose */
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: -0.02em; /* tight */
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        /* Mesh gradient background */
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            z-index: 0;
+            background:
+                radial-gradient(circle at 20% 30%, var(--color-primary-light) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--color-accent) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, var(--color-surface-alt) 0%, transparent 60%);
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Side persistent navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: var(--border-default);
+            padding: var(--space-xl);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--type-xxlarge);
+            font-weight: 700;
+            color: var(--color-primary);
+            text-transform: lowercase;
+            font-variant: small-caps;
+            letter-spacing: -0.03em;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .nav-item {
+            font-size: var(--type-base);
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+            font-variant: small-caps;
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-default);
+            transition: all 0.3s ease;
+            border: 2px dashed transparent;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--color-primary);
+            background: rgba(61, 90, 79, 0.05);
+            border-color: var(--color-border);
+        }
+
+        .nav-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: var(--space-lg);
+            border-top: var(--border-default);
+            font-size: var(--type-small);
+            color: var(--color-text-muted);
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Fullscreen slides */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xxl);
+            scroll-snap-align: start;
+        }
+
+        .slide-inner {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Press release header */
+        .press-header {
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .company-logo {
+            width: 180px;
+            height: 60px;
+            background: var(--color-primary);
+            border-radius: var(--radius-alt);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: var(--type-xlarge);
+            font-weight: 700;
+            color: var(--color-background);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        .press-label {
+            font-size: var(--type-small);
+            text-transform: uppercase;
+            font-variant: small-caps;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .dateline {
+            font-size: var(--type-base);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            font-weight: 700;
+        }
+
+        /* Hero section with split image */
+        .hero-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xxl);
+            align-items: center;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            border-radius: var(--radius-default);
+            border: var(--border-default);
+            box-shadow: var(--shadow-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: var(--type-xxxlarge);
+            color: rgba(255, 255, 255, 0.2);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xxxlarge);
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1.2;
+            margin-bottom: var(--space-md);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        .hero-content .subheading {
+            font-size: var(--type-xlarge);
+            color: var(--color-text);
+            font-weight: 400;
+            line-height: 1.8;
+        }
+
+        /* Body paragraphs */
+        .press-body {
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-alt);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .press-body p {
+            text-align: justify;
+            margin-bottom: var(--space-md);
+            font-size: var(--type-base);
+            color: var(--color-text);
+        }
+
+        .press-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Quote block */
+        .quote-block {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-radius: var(--radius-default);
+            padding: var(--space-xl);
+            margin: var(--space-xl) 0;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            font-family: var(--font-heading);
+            font-size: calc(var(--type-xxxlarge) * 2);
+            position: absolute;
+            top: -20px;
+            left: var(--space-md);
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: var(--type-large);
+            font-style: italic;
+            line-height: 2;
+            margin-bottom: var(--space-md);
+        }
+
+        .quote-attribution {
+            font-size: var(--type-base);
+            font-style: normal;
+            opacity: 0.9;
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        /* Tabs for additional sections */
+        .tabs-container {
+            margin-top: var(--space-xxl);
+        }
+
+        .tab-list {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            border-bottom: var(--border-default);
+            padding-bottom: var(--space-sm);
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: var(--type-base);
+            color: var(--color-text-muted);
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            border-radius: var(--radius-default);
+            transition: all 0.3s ease;
+            text-transform: lowercase;
+            font-variant: small-caps;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .tab-button:hover {
+            background: var(--color-surface);
+            color: var(--color-primary);
+        }
+
+        .tab-button.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .tab-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .tab-panel {
+            display: none;
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-alt);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Boilerplate section */
+        .boilerplate {
+            background: var(--color-surface-alt);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-top: var(--space-xl);
+            font-size: var(--type-small);
+            color: var(--color-text-muted);
+        }
+
+        .boilerplate h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-large);
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        /* Media contact info */
+        .media-contact {
+            background: var(--color-primary-dark);
+            color: var(--color-background);
+            border-radius: var(--radius-alt);
+            padding: var(--space-xl);
+            margin-top: var(--space-xl);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .media-contact h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xlarge);
+            margin-bottom: var(--space-md);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .contact-label {
+            font-size: var(--type-small);
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .contact-value {
+            font-size: var(--type-base);
+            font-weight: 700;
+        }
+
+        /* Hierarchy through color */
+        .section-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            margin-right: var(--space-xs);
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xxlarge);
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+            text-transform: lowercase;
+            font-variant: small-caps;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xlarge);
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+            text-transform: lowercase;
+            font-variant: small-caps;
+        }
+
+        /* Duotone icons */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .icon::before,
+        .icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .icon::before {
+            background: var(--color-primary);
+            opacity: 0.3;
+        }
+
+        .icon::after {
+            background: var(--color-primary);
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .hero-split {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .slide {
+                padding: var(--space-lg);
+            }
+
+            .hero-content h1 {
+                font-size: var(--type-xxlarge);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-mesh"></div>
+
+    <div class="app-container">
+        <!-- Side persistent navigation -->
+        <aside class="sidebar">
+            <div class="logo">modern hub</div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" tabindex="0">press release</li>
+                    <li class="nav-item" tabindex="0">about</li>
+                    <li class="nav-item" tabindex="0">newsroom</li>
+                    <li class="nav-item" tabindex="0">media kit</li>
+                    <li class="nav-item" tabindex="0">contact</li>
+                    <li class="nav-item" tabindex="0">archive</li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>Design #96</p>
+                <p>Modern Hub Press Office</p>
+                <p>&copy; 2026 All rights reserved</p>
+            </div>
+        </aside>
+
+        <!-- Main content with fullscreen slides -->
+        <main class="main-content">
+            <!-- Slide 1: Header & Hero -->
+            <section class="slide">
+                <div class="slide-inner">
+                    <div class="press-header">
+                        <div class="company-logo">modern hub</div>
+                        <div class="press-label">for immediate release</div>
+                        <div class="dateline">London, UK — January 7, 2026</div>
+                    </div>
+
+                    <div class="hero-split">
+                        <div class="hero-image">
+                            imagery
+                        </div>
+                        <div class="hero-content">
+                            <h1>Modern Hub Unveils Revolutionary Platform for Sustainable Travel</h1>
+                            <p class="subheading">groundbreaking technology connects eco-conscious travelers with carbon-neutral destinations worldwide</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Body Content -->
+            <section class="slide">
+                <div class="slide-inner">
+                    <h2><span class="section-indicator"></span>leading the future of travel</h2>
+
+                    <div class="press-body">
+                        <p>Modern Hub, the award-winning travel technology company, today announced the launch of its innovative sustainable travel platform, marking a significant milestone in the company's mission to transform global tourism. The platform leverages advanced artificial intelligence and comprehensive environmental data to help travelers make informed decisions that align with their sustainability values.</p>
+
+                        <p>The new platform features real-time carbon footprint calculations, verified eco-certifications for accommodations and activities, and personalized recommendations based on individual environmental preferences. Travelers can now seamlessly discover and book experiences that minimize environmental impact while maximizing authentic cultural connections.</p>
+
+                        <p>"We are witnessing a fundamental shift in how people approach travel," said Emma Richardson, Chief Executive Officer of Modern Hub. "Today's travelers demand transparency, authenticity, and environmental responsibility. Our platform delivers on all three fronts, empowering millions of people to explore the world while protecting it for future generations."</p>
+                    </div>
+
+                    <div class="quote-block">
+                        <p class="quote-text">The intersection of technology and sustainability represents the greatest opportunity in travel's history. We're not just building a platform—we're cultivating a movement.</p>
+                        <p class="quote-attribution">— Emma Richardson, Chief Executive Officer, Modern Hub</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: Additional Details & Tabs -->
+            <section class="slide">
+                <div class="slide-inner">
+                    <h2><span class="section-indicator"></span>platform features & impact</h2>
+
+                    <div class="tabs-container">
+                        <div class="tab-list" role="tablist">
+                            <button class="tab-button active" role="tab" aria-selected="true" data-tab="features">key features</button>
+                            <button class="tab-button" role="tab" aria-selected="false" data-tab="impact">environmental impact</button>
+                            <button class="tab-button" role="tab" aria-selected="false" data-tab="partners">partnerships</button>
+                        </div>
+
+                        <div class="tab-panel active" role="tabpanel" id="features">
+                            <h3>innovative capabilities</h3>
+                            <p>The Modern Hub platform introduces several industry-first features, including AI-powered itinerary optimization that reduces travel emissions by up to 40%, blockchain-verified sustainability credentials for all partner properties, and integrated carbon offset programs that support verified environmental projects across six continents.</p>
+                            <p>Users benefit from transparent pricing models, instant booking confirmations, and 24/7 multilingual customer support staffed by travel experts who specialize in sustainable tourism.</p>
+                        </div>
+
+                        <div class="tab-panel" role="tabpanel" id="impact">
+                            <h3>measurable results</h3>
+                            <p>Since entering beta testing six months ago, Modern Hub has facilitated over 50,000 sustainable journeys, resulting in an estimated reduction of 15,000 tons of CO₂ emissions compared to traditional travel booking methods. The platform has also contributed more than £2 million directly to local conservation initiatives and community development projects.</p>
+                            <p>Independent analysis by the Global Sustainable Tourism Council validates these figures and confirms Modern Hub's methodology exceeds industry standards for environmental accounting.</p>
+                        </div>
+
+                        <div class="tab-panel" role="tabpanel" id="partners">
+                            <h3>strategic collaborations</h3>
+                            <p>Modern Hub has established partnerships with over 2,000 certified sustainable accommodations, 500 carbon-neutral transport providers, and 300 community-based tourism initiatives across 85 countries. These partnerships ensure comprehensive coverage while maintaining rigorous environmental and social standards.</p>
+                            <p>Notable partners include leading conservation organizations, renewable energy providers, and cultural heritage preservation societies committed to responsible tourism development.</p>
+                        </div>
+                    </div>
+
+                    <div class="press-body" style="margin-top: var(--space-xl);">
+                        <p>The platform officially launches to the public on February 1, 2026, with availability in 12 languages and support for 45 currencies. Early access registration is now open at modernhub.travel, with founding members receiving lifetime benefits including priority booking, exclusive destination access, and enhanced carbon offset matching.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Boilerplate & Contact -->
+            <section class="slide">
+                <div class="slide-inner">
+                    <div class="boilerplate">
+                        <h3>about modern hub</h3>
+                        <p>Modern Hub is a technology-driven travel company dedicated to making sustainable tourism accessible, affordable, and inspiring. Founded in 2021 and headquartered in London, the company combines cutting-edge technology with deep environmental expertise to create travel experiences that benefit people and planet alike. Modern Hub has received recognition from the World Economic Forum, the United Nations Environment Programme, and the Adventure Travel Trade Association for its innovative approach to sustainable tourism. The company employs 250 people across offices in London, Copenhagen, Singapore, and Vancouver.</p>
+                    </div>
+
+                    <div class="media-contact">
+                        <h3>media contact information</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <span class="contact-label">press contact</span>
+                                <span class="contact-value">Sarah Mitchell</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">title</span>
+                                <span class="contact-value">Director of Communications</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">email</span>
+                                <span class="contact-value">press@modernhub.travel</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">phone</span>
+                                <span class="contact-value">+44 20 7946 0958</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">media kit</span>
+                                <span class="contact-value">modernhub.travel/press</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">high-res images</span>
+                                <span class="contact-value">available upon request</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="press-body" style="margin-top: var(--space-xl); text-align: center;">
+                        <p style="text-align: center;">###</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    // Navigation script
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 96;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+
+    // Tab functionality
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.dataset.tab;
+
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
+
+            // Update panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
+
+    // Sidebar navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        });
+
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+        });
+    });
+    </script>
+</body>
+</html>

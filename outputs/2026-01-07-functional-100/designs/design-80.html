@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Canon - Subscription Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600;700;800&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Modern Canon
+        ABOUTME: A brutalist subscription management dashboard with arts and crafts precision
+        ABOUTME: Combines hyper-saturated primary colors with utilitarian structure
+
+        AESTHETIC PRINCIPLES:
+        - Brutalist honesty: raw structure, visible grids, functional clarity
+        - Arts and crafts precision: deliberate spacing, crafted details, quality over decoration
+        - Dark mode with hyper-saturated primary colors (cool blues, cyans, purples)
+        - Ultra-dense information architecture with clear hierarchy
+        - Monospace uppercase headings provide mechanical precision
+        - Old style serif body text adds human craftsmanship
+        - Double borders create visual weight and structure
+        - Pill corners soften the brutalist edges
+        - Glassmorphic gradients add depth without shadows
+
+        KEY TOKENS:
+        --color-primary: #0080FF (electric blue)
+        --color-secondary: #00CCFF (cyan)
+        --color-accent: #6600FF (electric purple)
+        --space-unit: 10px (ultra-dense)
+        --radius-default: 50px (pill)
+        --border-style: double 4px
+        --type-scale: 1.333 (perfect fourth)
+        */
+
+        :root {
+            /* Colors - Dark mode with hyper-saturated primary colors (cool) */
+            --color-primary: #0080FF;
+            --color-secondary: #00CCFF;
+            --color-accent: #6600FF;
+            --color-warning: #FF6B00;
+            --color-success: #00FF88;
+            --color-danger: #FF0055;
+
+            --color-background: #0A0E1A;
+            --color-surface: #141B2E;
+            --color-surface-elevated: #1E2840;
+            --color-text: #E8EEF7;
+            --color-text-muted: #8B95AB;
+            --color-border: #2A3752;
+
+            /* Typography */
+            --font-heading: 'Roboto Mono', monospace;
+            --font-body: 'Crimson Text', serif;
+            --type-scale: 1.333; /* perfect fourth */
+            --line-height-base: 1.8; /* loose */
+            --line-height-heading: 1.4;
+
+            /* Spacing - ultra dense */
+            --space-unit: 10px;
+            --space-xs: 5px;
+            --space-sm: 10px;
+            --space-md: 15px;
+            --space-lg: 20px;
+            --space-xl: 30px;
+
+            /* Shapes */
+            --radius-default: 50px; /* pill */
+            --radius-sm: 30px;
+            --border-width: 4px;
+            --border-style: double;
+
+            /* Shadows - none for brutalist */
+            --shadow-default: none;
+
+            /* Glassmorphic backdrop */
+            --glass-bg: linear-gradient(135deg, rgba(0, 128, 255, 0.1) 0%, rgba(102, 0, 255, 0.1) 100%);
+            --glass-border: linear-gradient(135deg, rgba(0, 204, 255, 0.3) 0%, rgba(0, 128, 255, 0.3) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: var(--line-height-base);
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* Accessibility */
+        *:focus {
+            outline: var(--border-width) double var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Layout - Side persistent navigation with fullscreen slides */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: var(--border-width) var(--border-style) var(--color-border);
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-lg);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale) * var(--type-scale));
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-primary);
+            margin-bottom: var(--space-xl);
+            text-align: right;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-link {
+            display: block;
+            padding: var(--space-sm) var(--space-md);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: var(--border-width) var(--border-style) transparent;
+            border-radius: var(--radius-default);
+            transition: all 0.2s ease;
+            text-align: right;
+            background: transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--color-primary);
+            background: var(--glass-bg);
+            border-color: var(--color-primary);
+        }
+
+        .user-profile {
+            padding: var(--space-md);
+            background: var(--glass-bg);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            text-align: right;
+        }
+
+        .user-name {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--color-text);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen Slides */
+        .slide {
+            min-height: 100vh;
+            padding: var(--space-xl) var(--space-xl);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .slide-title {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale) * var(--type-scale) * var(--type-scale));
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-primary);
+            line-height: var(--line-height-heading);
+            margin-bottom: var(--space-sm);
+            text-align: right;
+        }
+
+        .slide-subtitle {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            text-align: right;
+        }
+
+        /* Masonry Grid for Content */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-md);
+            grid-auto-flow: dense;
+        }
+
+        /* Card Components */
+        .card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--glass-bg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-tall {
+            grid-row: span 2;
+        }
+
+        .card-wide {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+            flex-direction: row-reverse;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale));
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text);
+            text-align: right;
+        }
+
+        .card-badge {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            border: 2px var(--border-style) currentColor;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .badge-active {
+            color: var(--color-success);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .badge-trial {
+            color: var(--color-secondary);
+            background: rgba(0, 204, 255, 0.1);
+        }
+
+        .badge-expiring {
+            color: var(--color-warning);
+            background: rgba(255, 107, 0, 0.1);
+        }
+
+        .badge-cancelled {
+            color: var(--color-text-muted);
+            background: rgba(139, 149, 171, 0.1);
+        }
+
+        .card-content {
+            text-align: right;
+        }
+
+        .subscription-info {
+            margin-bottom: var(--space-md);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            flex-direction: row-reverse;
+        }
+
+        .info-label {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .price {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale) * var(--type-scale));
+            font-weight: 800;
+            color: var(--color-primary);
+            margin: var(--space-md) 0;
+            text-align: right;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+            justify-content: flex-end;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-default);
+            border: var(--border-width) var(--border-style);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            letter-spacing: 1px;
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: var(--glass-bg);
+        }
+
+        .btn-danger {
+            background: transparent;
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--color-danger);
+            color: var(--color-background);
+        }
+
+        /* Usage Stats */
+        .usage-stats {
+            margin-top: var(--space-md);
+        }
+
+        .stat-bar {
+            margin-bottom: var(--space-md);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+            flex-direction: row-reverse;
+        }
+
+        .stat-label {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            color: var(--color-text);
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--color-surface-elevated);
+            border-radius: 10px;
+            border: 2px var(--border-style) var(--color-border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        /* Plan Tiers */
+        .plan-tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .plan-card {
+            background: var(--color-surface);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            position: relative;
+            text-align: right;
+        }
+
+        .plan-card.current {
+            border-color: var(--color-primary);
+            background: var(--glass-bg);
+        }
+
+        .plan-card.current::after {
+            content: 'CURRENT PLAN';
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            font-family: var(--font-heading);
+            font-size: 9px;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-radius: var(--radius-sm);
+            letter-spacing: 1px;
+        }
+
+        .plan-name {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale));
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .plan-price {
+            font-family: var(--font-heading);
+            font-size: calc(16px * var(--type-scale) * var(--type-scale));
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .plan-price-unit {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: var(--space-lg);
+            text-align: right;
+        }
+
+        .plan-feature {
+            padding: var(--space-xs) 0;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .plan-feature::before {
+            content: '▸';
+            color: var(--color-primary);
+            margin-left: var(--space-xs);
+            font-family: var(--font-heading);
+        }
+
+        /* Payment Method */
+        .payment-method {
+            background: var(--color-surface-elevated);
+            border: var(--border-width) var(--border-style) var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row-reverse;
+        }
+
+        .payment-info {
+            text-align: right;
+        }
+
+        .payment-type {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .payment-details {
+            font-size: 18px;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 40px;
+            background: var(--glass-bg);
+            border: 2px var(--border-style) var(--color-primary);
+            border-radius: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 10px;
+            color: var(--color-primary);
+            font-weight: 800;
+        }
+
+        /* Billing History */
+        .billing-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 var(--space-sm);
+        }
+
+        .billing-table thead {
+            position: sticky;
+            top: 0;
+            background: var(--color-surface);
+        }
+
+        .billing-table th {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            padding: var(--space-sm);
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .billing-table td {
+            padding: var(--space-md);
+            background: var(--color-surface-elevated);
+            border-top: 2px var(--border-style) var(--color-border);
+            border-bottom: 2px var(--border-style) var(--color-border);
+            text-align: right;
+        }
+
+        .billing-table td:first-child {
+            border-right: 2px var(--border-style) var(--color-border);
+            border-radius: var(--radius-default) 0 0 var(--radius-default);
+        }
+
+        .billing-table td:last-child {
+            border-left: 2px var(--border-style) var(--color-border);
+            border-radius: 0 var(--radius-default) var(--radius-default) 0;
+        }
+
+        .status-paid {
+            color: var(--color-success);
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            color: var(--color-warning);
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            left: 50%;
+            bottom: var(--space-lg);
+            transform: translateX(-50%);
+            font-family: var(--font-heading);
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: var(--glass-bg);
+            border: var(--border-width) var(--border-style) var(--color-warning);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            text-align: right;
+        }
+
+        .alert-title {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--color-warning);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+        }
+
+        .alert-message {
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: var(--border-width) var(--border-style) var(--color-border);
+                padding: var(--space-md);
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                margin-bottom: var(--space-md);
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: var(--space-sm);
+            }
+
+            .masonry-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-wide {
+                grid-column: span 1;
+            }
+
+            .plan-tiers {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">MODERN<br>CANON</div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#overview" class="nav-link active">Overview</a></li>
+                    <li class="nav-item"><a href="#subscriptions" class="nav-link">Subscriptions</a></li>
+                    <li class="nav-item"><a href="#plans" class="nav-link">Plans</a></li>
+                    <li class="nav-item"><a href="#billing" class="nav-link">Billing</a></li>
+                    <li class="nav-item"><a href="#payment" class="nav-link">Payment</a></li>
+                    <li class="nav-item"><a href="#settings" class="nav-link">Settings</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-profile">
+                <span class="user-name">MARIA ROSSI</span>
+                <span class="user-email">maria.rossi@mediterranean.food</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Slide 1: Overview -->
+            <section class="slide" id="overview">
+                <div class="slide-header">
+                    <h1 class="slide-title">SUBSCRIPTION OVERVIEW</h1>
+                    <p class="slide-subtitle">Manage your enterprise food service subscriptions</p>
+                </div>
+
+                <div class="alert">
+                    <div class="alert-title">RENEWAL NOTICE</div>
+                    <div class="alert-message">Your Premium Plan subscription will renew in 7 days. Review your plan details below.</div>
+                </div>
+
+                <div class="masonry-grid">
+                    <!-- Active Subscriptions Summary -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <div class="card-badge badge-active">ACTIVE</div>
+                            <h2 class="card-title">ACTIVE SUBSCRIPTIONS</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="price">$2,847/mo</div>
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">4</span>
+                                    <span class="info-label">Total Services</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Jan 15, 2026</span>
+                                    <span class="info-label">Next Billing Date</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">$34,164</span>
+                                    <span class="info-label">Annual Cost</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card">
+                        <h3 class="card-title">MONTHLY SPEND</h3>
+                        <div class="card-content">
+                            <div class="price">$2,847</div>
+                            <div class="info-value" style="color: var(--color-success); font-size: 14px; margin-top: var(--space-sm);">↓ 12% from last month</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">SERVICES ACTIVE</h3>
+                        <div class="card-content">
+                            <div class="price">4</div>
+                            <div class="info-value" style="color: var(--color-text-muted); font-size: 14px; margin-top: var(--space-sm);">2 trials expiring soon</div>
+                        </div>
+                    </div>
+
+                    <!-- Usage Overview -->
+                    <div class="card card-tall">
+                        <h3 class="card-title">USAGE OVERVIEW</h3>
+                        <div class="card-content">
+                            <div class="usage-stats">
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">2,340 / 3,000</span>
+                                        <span class="stat-label">API Calls</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">1.2 TB / 2 TB</span>
+                                        <span class="stat-label">Storage</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">847 / 1,000</span>
+                                        <span class="stat-label">Users</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 84%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">234 / 500</span>
+                                        <span class="stat-label">Projects</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 47%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Active Subscriptions -->
+            <section class="slide" id="subscriptions">
+                <div class="slide-header">
+                    <h1 class="slide-title">ACTIVE SUBSCRIPTIONS</h1>
+                    <p class="slide-subtitle">Your current service subscriptions</p>
+                </div>
+
+                <div class="masonry-grid">
+                    <!-- Premium Plan -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <div class="card-badge badge-active">ACTIVE</div>
+                            <h2 class="card-title">FOOD ANALYTICS PREMIUM</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="price">$1,299/mo</div>
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">Jan 15, 2026</span>
+                                    <span class="info-label">Renewal Date</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Annual</span>
+                                    <span class="info-label">Billing Cycle</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">March 2024</span>
+                                    <span class="info-label">Member Since</span>
+                                </div>
+                            </div>
+                            <div class="usage-stats">
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">1,840 / 3,000</span>
+                                        <span class="stat-label">API Calls</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 61%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-danger">CANCEL</button>
+                                <button class="btn btn-secondary">MANAGE</button>
+                                <button class="btn btn-primary">UPGRADE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enterprise Storage -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-badge badge-active">ACTIVE</div>
+                            <h2 class="card-title">ENTERPRISE STORAGE</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="price">$899/mo</div>
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">Jan 22, 2026</span>
+                                    <span class="info-label">Renewal Date</span>
+                                </div>
+                            </div>
+                            <div class="usage-stats">
+                                <div class="stat-bar">
+                                    <div class="stat-header">
+                                        <span class="stat-value">1.2 TB / 2 TB</span>
+                                        <span class="stat-label">Storage Used</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-secondary">MANAGE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-badge badge-trial">TRIAL</div>
+                            <h2 class="card-title">SUPPLY CHAIN PRO</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="price">$449/mo</div>
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">14 days</span>
+                                    <span class="info-label">Trial Remaining</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Jan 21, 2026</span>
+                                    <span class="info-label">Trial Ends</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-secondary">CANCEL TRIAL</button>
+                                <button class="btn btn-primary">SUBSCRIBE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Collaboration -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-badge badge-trial">TRIAL</div>
+                            <h2 class="card-title">TEAM COLLABORATION</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="price">$199/mo</div>
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">7 days</span>
+                                    <span class="info-label">Trial Remaining</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Jan 14, 2026</span>
+                                    <span class="info-label">Trial Ends</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-secondary">CANCEL TRIAL</button>
+                                <button class="btn btn-primary">SUBSCRIBE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cancelled Service -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-badge badge-cancelled">CANCELLED</div>
+                            <h2 class="card-title">INVENTORY MANAGER</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">Dec 31, 2025</span>
+                                    <span class="info-label">Cancelled On</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Jan 31, 2026</span>
+                                    <span class="info-label">Access Until</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-primary">REACTIVATE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: Plan Tiers -->
+            <section class="slide" id="plans">
+                <div class="slide-header">
+                    <h1 class="slide-title">AVAILABLE PLANS</h1>
+                    <p class="slide-subtitle">Upgrade or downgrade your subscription tier</p>
+                </div>
+
+                <div class="plan-tiers">
+                    <!-- Starter Plan -->
+                    <div class="plan-card">
+                        <h3 class="plan-name">STARTER</h3>
+                        <div class="plan-price">
+                            $499<span class="plan-price-unit">/mo</span>
+                        </div>
+                        <ul class="plan-features">
+                            <li class="plan-feature">500 GB Storage</li>
+                            <li class="plan-feature">1,000 API Calls/mo</li>
+                            <li class="plan-feature">100 Users</li>
+                            <li class="plan-feature">Email Support</li>
+                            <li class="plan-feature">Basic Analytics</li>
+                        </ul>
+                        <button class="btn btn-secondary">SELECT PLAN</button>
+                    </div>
+
+                    <!-- Premium Plan (Current) -->
+                    <div class="plan-card current">
+                        <h3 class="plan-name">PREMIUM</h3>
+                        <div class="plan-price">
+                            $1,299<span class="plan-price-unit">/mo</span>
+                        </div>
+                        <ul class="plan-features">
+                            <li class="plan-feature">2 TB Storage</li>
+                            <li class="plan-feature">3,000 API Calls/mo</li>
+                            <li class="plan-feature">1,000 Users</li>
+                            <li class="plan-feature">Priority Support</li>
+                            <li class="plan-feature">Advanced Analytics</li>
+                            <li class="plan-feature">Custom Integrations</li>
+                            <li class="plan-feature">Dedicated Account Manager</li>
+                        </ul>
+                        <button class="btn btn-primary" disabled>CURRENT PLAN</button>
+                    </div>
+
+                    <!-- Enterprise Plan -->
+                    <div class="plan-card">
+                        <h3 class="plan-name">ENTERPRISE</h3>
+                        <div class="plan-price">
+                            $3,499<span class="plan-price-unit">/mo</span>
+                        </div>
+                        <ul class="plan-features">
+                            <li class="plan-feature">10 TB Storage</li>
+                            <li class="plan-feature">Unlimited API Calls</li>
+                            <li class="plan-feature">Unlimited Users</li>
+                            <li class="plan-feature">24/7 Phone Support</li>
+                            <li class="plan-feature">Advanced Analytics</li>
+                            <li class="plan-feature">Custom Integrations</li>
+                            <li class="plan-feature">Dedicated Account Manager</li>
+                            <li class="plan-feature">SLA Guarantee</li>
+                            <li class="plan-feature">White Label Options</li>
+                        </ul>
+                        <button class="btn btn-primary">UPGRADE</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Payment Method -->
+            <section class="slide" id="payment">
+                <div class="slide-header">
+                    <h1 class="slide-title">PAYMENT METHOD</h1>
+                    <p class="slide-subtitle">Manage your billing information</p>
+                </div>
+
+                <div class="masonry-grid">
+                    <div class="card card-wide">
+                        <h2 class="card-title">PRIMARY PAYMENT METHOD</h2>
+                        <div class="card-content">
+                            <div class="payment-method" style="margin-top: var(--space-lg);">
+                                <div class="payment-info">
+                                    <div class="payment-type">VISA CREDIT</div>
+                                    <div class="payment-details">•••• •••• •••• 4532</div>
+                                    <div style="margin-top: var(--space-sm); color: var(--color-text-muted); font-size: 14px;">
+                                        Expires 08/2027
+                                    </div>
+                                </div>
+                                <div class="card-icon">VISA</div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-danger">REMOVE</button>
+                                <button class="btn btn-secondary">EDIT</button>
+                                <button class="btn btn-primary">ADD NEW</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">BILLING ADDRESS</h2>
+                        <div class="card-content">
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value">Mediterranean Food Corp</span>
+                                    <span class="info-label">Company</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Rome, Italy</span>
+                                    <span class="info-label">City</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">00184</span>
+                                    <span class="info-label">Postal Code</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-secondary">EDIT</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">AUTO-RENEWAL</h2>
+                        <div class="card-content">
+                            <div class="subscription-info">
+                                <div class="info-row">
+                                    <span class="info-value" style="color: var(--color-success);">ENABLED</span>
+                                    <span class="info-label">Status</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-value">Jan 15, 2026</span>
+                                    <span class="info-label">Next Charge</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-danger">DISABLE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Billing History -->
+            <section class="slide" id="billing">
+                <div class="slide-header">
+                    <h1 class="slide-title">BILLING HISTORY</h1>
+                    <p class="slide-subtitle">Your transaction history and invoices</p>
+                </div>
+
+                <div class="card" style="overflow-x: auto;">
+                    <table class="billing-table">
+                        <thead>
+                            <tr>
+                                <th>INVOICE</th>
+                                <th>DATE</th>
+                                <th>DESCRIPTION</th>
+                                <th>AMOUNT</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#INV-2025-12</td>
+                                <td>Dec 15, 2025</td>
+                                <td>Premium Plan - Annual</td>
+                                <td>$15,588.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-11</td>
+                                <td>Nov 22, 2025</td>
+                                <td>Enterprise Storage</td>
+                                <td>$899.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-10</td>
+                                <td>Oct 22, 2025</td>
+                                <td>Enterprise Storage</td>
+                                <td>$899.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-09</td>
+                                <td>Sep 22, 2025</td>
+                                <td>Enterprise Storage</td>
+                                <td>$899.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-08</td>
+                                <td>Aug 22, 2025</td>
+                                <td>Enterprise Storage</td>
+                                <td>$899.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-07</td>
+                                <td>Jul 15, 2025</td>
+                                <td>Premium Plan Upgrade</td>
+                                <td>$7,794.00</td>
+                                <td><span class="status-paid">PAID</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 15px; min-height: 36px;">DOWNLOAD</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="scroll-indicator">SCROLL ↓</div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 80;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Hide scroll indicator after scrolling
+        let scrollTimeout;
+        const indicator = document.querySelector('.scroll-indicator');
+        document.querySelector('.main-content').addEventListener('scroll', () => {
+            indicator.style.opacity = '0';
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                indicator.style.opacity = '0.5';
+            }, 1000);
+        });
+    })();
+    </script>
+</body>
+</html>

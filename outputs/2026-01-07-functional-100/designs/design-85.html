@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisma Summit - Conference Schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+ABOUTME: Prisma Summit - Neo-brutalist conference schedule with split-complementary colors and geometric patterns
+ABOUTME: Tab-based navigation with timeline slots, speaker cards, room locations, and session detail modals
+
+DESIGN SYSTEM DOCUMENTATION
+===========================
+
+Design Name: Prisma Summit
+Tagline: Bold conference scheduling experience
+Functional Direction: conference_schedule
+
+AESTHETIC PRINCIPLES
+-------------------
+1. NEO-BRUTALIST: Raw HTML aesthetic with bold borders, stark contrast, and honest structure
+2. SPLIT-COMPLEMENTARY: Electric blue (#0047FF) with coral (#FF6B47) and golden yellow (#FFB800)
+3. GEOMETRIC PATTERNS: Grid-based overlays and repeating shapes
+4. THICK BORDERS: 4-6px borders throughout for definition
+5. GRID PRECISION: Swiss-influenced layout with strict alignment
+6. PLAYFUL DATA: Conference data presented with Memphis-inspired geometric accents
+
+COLOR SYSTEM
+-----------
+Split-complementary palette with high saturation:
+- Primary: #0047FF (electric blue)
+- Secondary: #FF6B47 (coral)
+- Tertiary: #FFB800 (golden yellow)
+- Background: #F8F8F6 (off-white warm)
+- Surface: #FFFFFF (pure white)
+- Text: #0A0A0A (near black)
+- Text muted: #666666 (mid grey)
+- Border: #0A0A0A (black borders)
+- Track colors: #00D9A0 (teal), #A347FF (purple), #FF4785 (pink)
+
+TYPOGRAPHY
+---------
+- Headings: Space Grotesk (geometric sans, bold, tight)
+- Body: DM Sans (humanist sans, clean readability)
+- Scale ratio: 1.200 (minor third)
+- Line height: 1.5
+- Letter spacing: -0.02em on headings for tightness
+
+SPACING
+-------
+- Base unit: 8px
+- Scale: 8, 16, 24, 32, 40, 48, 64, 80px
+- Dense spacing for data-packed interface
+
+COMPONENTS
+----------
+- Sharp corners: 0px (fully square)
+- Medium borders: 4px solid black
+- Hard shadows: 6px 6px 0 rgba(0,0,0,1) for offset effect
+- Geometric pattern overlays
+- Tab navigation with thick underlines
+- Timeline grid layout
+- Session cards with speaker avatars
+- Modal overlays with backdrop
+
+CONFERENCE SCHEDULE FEATURES
+----------------------------
+✓ Day/Track tabbed navigation
+✓ Time slot grid layout (8am-7pm)
+✓ Session cards with titles, speakers, room
+✓ Color-coded tracks
+✓ Add to calendar buttons
+✓ Session detail modal with full description
+✓ Filter by track
+✓ Room location indicators
+✓ Duration displays
+✓ Speaker bio links
+
+QUICK START
+-----------
+Key CSS variables:
+  --color-primary: #0047FF
+  --color-secondary: #FF6B47
+  --color-tertiary: #FFB800
+  --color-bg: #F8F8F6
+  --color-text: #0A0A0A
+  --space-unit: 8px
+  --border-width: 4px
+  --shadow-hard: 6px 6px 0 rgba(0,0,0,1)
+-->
+
+<style>
+:root {
+    /* Color System - Split-Complementary Bold */
+    --color-primary: #0047FF;
+    --color-secondary: #FF6B47;
+    --color-tertiary: #FFB800;
+    --color-background: #F8F8F6;
+    --color-surface: #FFFFFF;
+    --color-text: #0A0A0A;
+    --color-text-muted: #666666;
+    --color-border: #0A0A0A;
+
+    /* Track colors */
+    --color-track-1: #00D9A0;
+    --color-track-2: #A347FF;
+    --color-track-3: #FF4785;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-width: 4px;
+    --shadow-default: 6px 6px 0 rgba(0,0,0,1);
+    --shadow-small: 3px 3px 0 rgba(0,0,0,1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* Geometric pattern background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(0,0,0,0.03) 35px, rgba(0,0,0,0.03) 36px),
+        repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(0,0,0,0.03) 35px, rgba(0,0,0,0.03) 36px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.header {
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-xl);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.conference-title {
+    font-family: var(--font-heading);
+    font-size: 2.986rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.conference-date {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 12px 24px;
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-small);
+}
+
+.btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,1);
+}
+
+.btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--color-secondary);
+    color: white;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-default);
+}
+
+.tab-header {
+    display: flex;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    background: var(--color-surface);
+    border: none;
+    border-right: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.tab-btn:last-child {
+    border-right: none;
+}
+
+.tab-btn:hover {
+    background: var(--color-background);
+}
+
+.tab-btn.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.tab-btn:focus {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: -3px;
+    z-index: 10;
+}
+
+/* Track filters */
+.track-filters {
+    padding: var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+}
+
+.track-filter {
+    padding: 8px 16px;
+    border: 3px solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.track-filter:hover {
+    background: var(--color-background);
+}
+
+.track-filter.active {
+    box-shadow: var(--shadow-small);
+}
+
+.track-filter:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.track-filter[data-track="design"] {
+    border-color: var(--color-track-1);
+    color: var(--color-track-1);
+}
+
+.track-filter[data-track="design"].active {
+    background: var(--color-track-1);
+    color: white;
+}
+
+.track-filter[data-track="engineering"] {
+    border-color: var(--color-track-2);
+    color: var(--color-track-2);
+}
+
+.track-filter[data-track="engineering"].active {
+    background: var(--color-track-2);
+    color: white;
+}
+
+.track-filter[data-track="business"] {
+    border-color: var(--color-track-3);
+    color: var(--color-track-3);
+}
+
+.track-filter[data-track="business"].active {
+    background: var(--color-track-3);
+    color: white;
+}
+
+/* Tab content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Schedule Grid */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0;
+    margin-bottom: var(--space-xl);
+}
+
+.time-slot {
+    display: contents;
+}
+
+.time-label {
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-right: none;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sessions-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-left: none;
+}
+
+/* Session Card */
+.session-card {
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-small);
+    position: relative;
+}
+
+.session-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 rgba(0,0,0,1);
+}
+
+.session-card:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.session-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+}
+
+.session-card[data-track="design"]::before {
+    background: var(--color-track-1);
+}
+
+.session-card[data-track="engineering"]::before {
+    background: var(--color-track-2);
+}
+
+.session-card[data-track="business"]::before {
+    background: var(--color-track-3);
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-sm);
+    gap: var(--space-sm);
+}
+
+.session-track {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border: 2px solid;
+}
+
+.session-track.track-design {
+    color: var(--color-track-1);
+    border-color: var(--color-track-1);
+}
+
+.session-track.track-engineering {
+    color: var(--color-track-2);
+    border-color: var(--color-track-2);
+}
+
+.session-track.track-business {
+    color: var(--color-track-3);
+    border-color: var(--color-track-3);
+}
+
+.session-duration {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.session-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.session-speaker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.speaker-avatar {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border);
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-heading);
+}
+
+.speaker-info {
+    flex: 1;
+}
+
+.speaker-name {
+    font-weight: 600;
+    font-size: 0.938rem;
+}
+
+.speaker-role {
+    font-size: 0.813rem;
+    color: var(--color-text-muted);
+}
+
+.session-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+}
+
+.session-actions {
+    display: flex;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-width: 2px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,1);
+}
+
+.btn-small:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,1);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-md);
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: 12px 12px 0 rgba(0,0,0,1);
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-header {
+    padding: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+    position: sticky;
+    top: 0;
+    background: var(--color-surface);
+    z-index: 10;
+}
+
+.modal-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: 44px;
+    height: 44px;
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-background);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-small);
+}
+
+.modal-close:hover {
+    background: var(--color-secondary);
+    color: white;
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,1);
+}
+
+.modal-close:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.modal-body {
+    padding: var(--space-lg);
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 2.074rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.meta-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.modal-description {
+    font-size: 1.067rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+}
+
+.modal-speaker-section {
+    margin-bottom: var(--space-lg);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 1.44rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+}
+
+.speaker-card {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.speaker-avatar-large {
+    width: 80px;
+    height: 80px;
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.728rem;
+    color: white;
+    font-family: var(--font-heading);
+    flex-shrink: 0;
+}
+
+.speaker-details h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.speaker-details p {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.speaker-bio {
+    font-size: 0.938rem;
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .conference-title {
+        font-size: 2rem;
+    }
+
+    .tab-btn {
+        font-size: 0.875rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .schedule-grid {
+        grid-template-columns: 80px 1fr;
+    }
+
+    .sessions-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal {
+        max-height: 100vh;
+        height: 100%;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+</style>
+
+<div class="header">
+    <div class="container">
+        <div class="header-content">
+            <div>
+                <h1 class="conference-title">Prisma Summit 2026</h1>
+                <p class="conference-date">April 15-17, 2026 • San Francisco, CA</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary">Register Now</button>
+                <button class="btn">View Map</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tab-navigation">
+        <div class="tab-header">
+            <button class="tab-btn active" data-day="day1">Day 1 • Apr 15</button>
+            <button class="tab-btn" data-day="day2">Day 2 • Apr 16</button>
+            <button class="tab-btn" data-day="day3">Day 3 • Apr 17</button>
+        </div>
+
+        <div class="track-filters">
+            <span class="filter-label">Filter by Track:</span>
+            <button class="track-filter active" data-track="all">All Tracks</button>
+            <button class="track-filter" data-track="design">Design</button>
+            <button class="track-filter" data-track="engineering">Engineering</button>
+            <button class="track-filter" data-track="business">Business</button>
+        </div>
+    </div>
+
+    <!-- Day 1 Schedule -->
+    <div class="tab-content active" id="day1">
+        <div class="schedule-grid">
+            <!-- 9:00 AM -->
+            <div class="time-slot">
+                <div class="time-label">9:00 AM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">The Future of Design Systems</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">SM</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Sarah Mitchell</div>
+                                <div class="speaker-role">Design Lead @ Figma</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Main Hall A</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Building Scalable Microservices</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">JC</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">James Chen</div>
+                                <div class="speaker-role">Staff Engineer @ Google</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Product-Led Growth Strategies</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">AR</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Aisha Rawlings</div>
+                                <div class="speaker-role">VP Product @ Stripe</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Business Hub</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10:30 AM -->
+            <div class="time-slot">
+                <div class="time-label">10:30 AM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">45 min</span>
+                        </div>
+                        <h3 class="session-title">Accessibility in Modern Web Apps</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">MP</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Marcus Peterson</div>
+                                <div class="speaker-role">A11y Advocate @ Adobe</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Workshop Room 1</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">45 min</span>
+                        </div>
+                        <h3 class="session-title">WebAssembly Performance Optimization</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">LK</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Laura Kim</div>
+                                <div class="speaker-role">Principal Engineer @ Mozilla</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12:00 PM -->
+            <div class="time-slot">
+                <div class="time-label">12:00 PM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">90 min</span>
+                        </div>
+                        <h3 class="session-title">Lunch & Networking</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">🍽️</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Open Networking</div>
+                                <div class="speaker-role">All Attendees</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Garden Terrace</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2:00 PM -->
+            <div class="time-slot">
+                <div class="time-label">2:00 PM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">AI-Powered Design Tools Workshop</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">TN</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Tina Nguyen</div>
+                                <div class="speaker-role">Creative Director @ Midjourney</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Main Hall A</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Kubernetes at Scale</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">DW</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">David Wu</div>
+                                <div class="speaker-role">DevOps Lead @ Netflix</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Building Trust Through Design</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">EJ</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Emma Johnson</div>
+                                <div class="speaker-role">Head of UX @ Airbnb</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Business Hub</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3:30 PM -->
+            <div class="time-slot">
+                <div class="time-label">3:30 PM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">45 min</span>
+                        </div>
+                        <h3 class="session-title">Motion Design Best Practices</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">RG</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Ryan Garcia</div>
+                                <div class="speaker-role">Motion Designer @ Apple</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Workshop Room 2</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">45 min</span>
+                        </div>
+                        <h3 class="session-title">Securing Modern Web Applications</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">NH</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Nina Harris</div>
+                                <div class="speaker-role">Security Engineer @ GitHub</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5:00 PM -->
+            <div class="time-slot">
+                <div class="time-label">5:00 PM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">120 min</span>
+                        </div>
+                        <h3 class="session-title">Opening Reception & Keynote</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">CEO</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Conference Team</div>
+                                <div class="speaker-role">All Welcome</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Grand Ballroom</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 2 Schedule -->
+    <div class="tab-content" id="day2">
+        <div class="schedule-grid">
+            <div class="time-slot">
+                <div class="time-label">9:00 AM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">90 min</span>
+                        </div>
+                        <h3 class="session-title">Advanced Prototyping Techniques</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">KL</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Kate Lee</div>
+                                <div class="speaker-role">Product Designer @ Meta</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Main Hall A</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">90 min</span>
+                        </div>
+                        <h3 class="session-title">Real-Time Data Streaming with Kafka</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">OS</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Omar Singh</div>
+                                <div class="speaker-role">Data Engineer @ LinkedIn</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-slot">
+                <div class="time-label">11:00 AM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Customer-Centric Product Development</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">PB</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Patricia Brown</div>
+                                <div class="speaker-role">CPO @ Shopify</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Business Hub</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 3 Schedule -->
+    <div class="tab-content" id="day3">
+        <div class="schedule-grid">
+            <div class="time-slot">
+                <div class="time-label">9:00 AM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="design" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-design">Design</span>
+                            <span class="session-duration">120 min</span>
+                        </div>
+                        <h3 class="session-title">Design System Migration Strategies</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">VC</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Victoria Cruz</div>
+                                <div class="speaker-role">Design Systems Lead @ Atlassian</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Main Hall A</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="session-card" data-track="engineering" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-engineering">Engineering</span>
+                            <span class="session-duration">120 min</span>
+                        </div>
+                        <h3 class="session-title">Building GraphQL APIs at Scale</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">IF</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">Ian Foster</div>
+                                <div class="speaker-role">Backend Architect @ Shopify</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Tech Theater</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-slot">
+                <div class="time-label">12:00 PM</div>
+                <div class="sessions-row">
+                    <div class="session-card" data-track="business" tabindex="0">
+                        <div class="session-header">
+                            <span class="session-track track-business">Business</span>
+                            <span class="session-duration">60 min</span>
+                        </div>
+                        <h3 class="session-title">Closing Keynote & Farewell</h3>
+                        <div class="session-speaker">
+                            <div class="speaker-avatar">ALL</div>
+                            <div class="speaker-info">
+                                <div class="speaker-name">All Speakers</div>
+                                <div class="speaker-role">Conference Wrap-up</div>
+                            </div>
+                        </div>
+                        <div class="session-location">
+                            <div class="location-icon"></div>
+                            <span>Grand Ballroom</span>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn btn-small btn-primary">Add to Calendar</button>
+                            <button class="btn btn-small">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="sessionModal">
+    <div class="modal">
+        <div class="modal-header">
+            <button class="modal-close" aria-label="Close modal">×</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title" id="modalTitle">The Future of Design Systems</h2>
+
+            <div class="modal-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Time</div>
+                    <div class="meta-value" id="modalTime">9:00 AM - 10:00 AM</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Duration</div>
+                    <div class="meta-value" id="modalDuration">60 minutes</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Location</div>
+                    <div class="meta-value" id="modalLocation">Main Hall A</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Track</div>
+                    <div class="meta-value" id="modalTrack">Design</div>
+                </div>
+            </div>
+
+            <div class="modal-description" id="modalDescription">
+                <p>Join us for an in-depth exploration of how design systems are evolving in 2026. We'll cover the latest tools, techniques, and methodologies that are shaping the future of collaborative design work. This session will include live demonstrations, case studies from leading tech companies, and interactive discussions about best practices.</p>
+                <p>Key topics include: component architecture, design tokens, automated documentation, version control strategies, and cross-platform consistency. Whether you're just starting with design systems or looking to level up your existing practice, this session will provide valuable insights and actionable takeaways.</p>
+            </div>
+
+            <div class="modal-speaker-section">
+                <h3 class="section-title">About the Speaker</h3>
+                <div class="speaker-card">
+                    <div class="speaker-avatar-large">SM</div>
+                    <div class="speaker-details">
+                        <h3>Sarah Mitchell</h3>
+                        <p>Design Lead @ Figma</p>
+                        <div class="speaker-bio">
+                            Sarah is a design systems expert with over 10 years of experience building scalable design infrastructure. At Figma, she leads the design systems team and has been instrumental in developing tools that help thousands of designers collaborate more effectively. She's a frequent speaker at design conferences and contributes to open-source design tools.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-actions">
+                <button class="btn btn-primary">Add to Calendar</button>
+                <button class="btn btn-secondary">Share Session</button>
+                <button class="btn">View Speaker Profile</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 85;
+
+    // Navigation
+    document.addEventListener('keydown', (e) => {
+        // Don't navigate if modal is open
+        const modal = document.getElementById('sessionModal');
+        if (modal.classList.contains('active')) return;
+
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const day = btn.dataset.day;
+
+            // Update active states
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === day) {
+                    content.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // Track filtering
+    const trackFilters = document.querySelectorAll('.track-filter');
+
+    trackFilters.forEach(filter => {
+        filter.addEventListener('click', () => {
+            const track = filter.dataset.track;
+
+            // Update active state
+            trackFilters.forEach(f => f.classList.remove('active'));
+            filter.classList.add('active');
+
+            // Filter sessions
+            const sessions = document.querySelectorAll('.session-card');
+            sessions.forEach(session => {
+                if (track === 'all' || session.dataset.track === track) {
+                    session.style.display = 'block';
+                } else {
+                    session.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Modal functionality
+    const modal = document.getElementById('sessionModal');
+    const modalClose = document.querySelector('.modal-close');
+    const sessionCards = document.querySelectorAll('.session-card');
+
+    sessionCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Don't open modal if clicking on a button
+            if (e.target.tagName === 'BUTTON') return;
+
+            openModal();
+        });
+
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openModal();
+            }
+        });
+    });
+
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Add to calendar functionality
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-primary') &&
+            e.target.textContent.includes('Add to Calendar')) {
+            e.stopPropagation();
+            alert('Calendar event would be created here (ICS file download or calendar API integration)');
+        }
+    });
+
+    // Details button functionality
+    document.querySelectorAll('.btn-small').forEach(btn => {
+        if (btn.textContent === 'Details') {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openModal();
+            });
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

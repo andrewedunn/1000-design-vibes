@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raw Hub - Live Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Univers:wght@400;700&family=Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN #25: RAW HUB
+        ABOUTME: A brutalist live streaming platform that merges stark architectural honesty
+        ABOUTME: with refined British traditional sensibility - raw concrete meets manor house study.
+
+        AESTHETIC PRINCIPLES:
+        - Brutalist foundation: Exposed structure, honest materials, functional first
+        - British traditional overlay: Refined typography, measured spacing, subtle warmth
+        - Pop art influence: Bold graphic elements, high contrast moments
+        - Cyber mood with warm muted tones: Amber/ochre accents on neutral concrete
+        - Dense information architecture with breathing room
+        - Hard shadows and double borders create architectural depth
+        - Noise texture adds tactile rawness
+        - Very rounded corners soften brutalist edges (British restraint)
+        - Glassmorphic overlays for status indicators
+        - Hand-drawn icons for human touch in mechanical space
+
+        KEY TOKENS:
+        - Base: 8px grid system
+        - Type Scale: Golden ratio (1.618)
+        - Corners: 24px (very rounded)
+        - Colors: Warm neutrals (concrete greys) with amber/rust accents
+        - Borders: Double lines (4px + 2px) for architectural weight
+        - Shadows: Hard offsets for depth
+        - Typography: Neo-grotesque headings + Transitional serif body
+        - Spacing: Dense but structured
+        - Grid: Single column with sidebar chat
+        */
+
+        :root {
+            /* Colors - Warm Neutral with Cyber Accent */
+            --color-concrete-base: #3a3530;
+            --color-concrete-light: #4d4541;
+            --color-concrete-lighter: #625d58;
+            --color-concrete-dark: #2a2622;
+            --color-concrete-darker: #1a1815;
+
+            --color-accent-amber: #d97d3a;
+            --color-accent-rust: #b85c2e;
+            --color-accent-ochre: #c49456;
+
+            --color-background: #2a2622;
+            --color-surface: #3a3530;
+            --color-surface-raised: #4d4541;
+            --color-text: #e8e4df;
+            --color-text-muted: #a39d96;
+            --color-text-secondary: #827d77;
+
+            --color-live: #e85d3a;
+            --color-success: #8b9d6e;
+
+            /* Typography */
+            --font-heading: 'Univers', 'Helvetica Neue', sans-serif;
+            --font-body: 'Baskerville', 'Georgia', serif;
+
+            /* Type Scale (Golden Ratio: 1.618) */
+            --text-xs: 0.618rem;      /* ~9.9px */
+            --text-sm: 0.786rem;      /* ~12.6px */
+            --text-base: 1rem;        /* 16px */
+            --text-md: 1.272rem;      /* ~20.4px */
+            --text-lg: 1.618rem;      /* ~25.9px */
+            --text-xl: 2.618rem;      /* ~41.9px */
+            --text-2xl: 4.236rem;     /* ~67.8px */
+
+            /* Spacing (8px base) */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 0.5);  /* 4px */
+            --space-sm: var(--space-unit);               /* 8px */
+            --space-md: calc(var(--space-unit) * 2);    /* 16px */
+            --space-lg: calc(var(--space-unit) * 3);    /* 24px */
+            --space-xl: calc(var(--space-unit) * 4);    /* 32px */
+            --space-2xl: calc(var(--space-unit) * 6);   /* 48px */
+            --space-3xl: calc(var(--space-unit) * 8);   /* 64px */
+
+            /* Shapes */
+            --radius-default: 24px;
+            --radius-sm: 16px;
+            --radius-lg: 32px;
+
+            /* Borders */
+            --border-double: 4px double var(--color-concrete-lighter);
+            --border-thick: 4px solid var(--color-concrete-lighter);
+            --border-medium: 2px solid var(--color-concrete-lighter);
+
+            /* Shadows - Hard */
+            --shadow-hard: 8px 8px 0 rgba(0, 0, 0, 0.4);
+            --shadow-hard-sm: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            --shadow-hard-lg: 12px 12px 0 rgba(0, 0, 0, 0.5);
+            --shadow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.3);
+
+            /* Noise texture */
+            --noise-opacity: 0.03;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --color-background: #e8e4df;
+                --color-surface: #d4cfc8;
+                --color-surface-raised: #c4beb6;
+                --color-text: #2a2622;
+                --color-text-muted: #625d58;
+                --color-text-secondary: #827d77;
+                --color-concrete-base: #d4cfc8;
+                --color-concrete-light: #e0dbd4;
+                --color-concrete-lighter: #eae6e1;
+                --noise-opacity: 0.02;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: var(--noise-opacity);
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        h1 { font-size: var(--text-2xl); }
+        h2 { font-size: var(--text-xl); }
+        h3 { font-size: var(--text-lg); }
+        h4 { font-size: var(--text-md); }
+
+        /* Layout */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-surface);
+            border-bottom: var(--border-double);
+            padding: var(--space-md) var(--space-lg);
+            z-index: 1000;
+            box-shadow: var(--shadow-hard);
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-accent-amber);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-variant: small-caps;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .nav-item {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            font-variant: small-caps;
+        }
+
+        .nav-item:hover {
+            color: var(--color-accent-amber);
+            border-color: var(--color-accent-amber);
+        }
+
+        .main-container {
+            margin-top: 88px;
+            display: flex;
+            min-height: calc(100vh - 88px);
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stream-area {
+            flex: 1;
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        /* Video Player */
+        .video-container {
+            position: relative;
+            background: var(--color-concrete-darker);
+            border-radius: var(--radius-default);
+            border: var(--border-double);
+            overflow: hidden;
+            box-shadow: var(--shadow-hard-lg);
+            aspect-ratio: 16 / 9;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-concrete-darker) 0%, var(--color-concrete-dark) 100%);
+            position: relative;
+        }
+
+        .video-placeholder::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.02) 2px,
+                rgba(255, 255, 255, 0.02) 4px
+            );
+        }
+
+        /* Hand-drawn play icon */
+        .play-icon {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .play-icon svg {
+            filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.3));
+        }
+
+        /* Glassmorphic live badge */
+        .live-badge {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            background: rgba(232, 93, 58, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: var(--shadow-hard-sm);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .viewer-count {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            background: rgba(58, 53, 48, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            box-shadow: var(--shadow-hard-sm);
+            font-variant: small-caps;
+        }
+
+        .viewer-count strong {
+            color: var(--color-accent-amber);
+            margin-right: var(--space-xs);
+        }
+
+        /* Stream Info */
+        .stream-info {
+            background: var(--color-surface);
+            border: var(--border-double);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .stream-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .streamer-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--color-concrete-light);
+            border: var(--border-thick);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-accent-amber);
+            box-shadow: var(--shadow-inset);
+            flex-shrink: 0;
+        }
+
+        .stream-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stream-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+        }
+
+        .streamer-name {
+            font-family: var(--font-body);
+            font-size: var(--text-md);
+            color: var(--color-accent-amber);
+            margin-bottom: var(--space-sm);
+            font-style: italic;
+        }
+
+        .stream-description {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        .stream-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: var(--space-md) var(--space-lg);
+            border: var(--border-medium);
+            border-radius: var(--radius-default);
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-hard-sm);
+            font-weight: 700;
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            font-variant: small-caps;
+        }
+
+        .btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-accent-amber);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-accent-amber);
+            color: var(--color-concrete-darker);
+            border-color: var(--color-accent-rust);
+        }
+
+        .btn-secondary {
+            background: var(--color-concrete-light);
+            border-color: var(--color-concrete-lighter);
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+            width: 400px;
+            background: var(--color-surface);
+            border-left: var(--border-double);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -8px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            padding: var(--space-lg);
+            border-bottom: var(--border-medium);
+            background: var(--color-concrete-light);
+        }
+
+        .chat-title {
+            font-size: var(--text-md);
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .chat-count {
+            background: var(--color-accent-amber);
+            color: var(--color-concrete-darker);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 700;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            background: var(--color-concrete-base);
+        }
+
+        .chat-message {
+            background: var(--color-surface);
+            border: 2px solid var(--color-concrete-lighter);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--text-sm);
+            line-height: 1.5;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-user {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-accent-ochre);
+            margin-bottom: var(--space-xs);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-variant: small-caps;
+        }
+
+        .chat-text {
+            color: var(--color-text);
+            font-family: var(--font-body);
+        }
+
+        .chat-input-area {
+            padding: var(--space-md);
+            border-top: var(--border-medium);
+            background: var(--color-concrete-light);
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-medium);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            resize: none;
+            min-height: 80px;
+            box-shadow: var(--shadow-inset);
+        }
+
+        .chat-input:focus {
+            outline: 3px solid var(--color-accent-amber);
+            outline-offset: 2px;
+        }
+
+        .chat-input::placeholder {
+            color: var(--color-text-secondary);
+        }
+
+        .chat-send {
+            margin-top: var(--space-sm);
+            width: 100%;
+        }
+
+        /* Donation Alert */
+        .donation-alert {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: var(--space-lg);
+            background: rgba(200, 148, 86, 0.95);
+            backdrop-filter: blur(10px);
+            border: var(--border-thick);
+            border-color: var(--color-accent-rust);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-hard-lg);
+            max-width: 400px;
+            animation: slideIn 0.5s ease-out;
+            z-index: 1001;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .donation-amount {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-concrete-darker);
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .donation-from {
+            font-size: var(--text-md);
+            color: var(--color-concrete-dark);
+            font-style: italic;
+        }
+
+        .donation-message {
+            font-size: var(--text-sm);
+            color: var(--color-concrete-darker);
+            margin-top: var(--space-sm);
+            padding-top: var(--space-sm);
+            border-top: 2px solid var(--color-concrete-dark);
+        }
+
+        /* Carousel indicators at bottom */
+        .stream-carousel {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--color-concrete-base);
+            border: var(--border-medium);
+            border-radius: var(--radius-default);
+            overflow-x: auto;
+        }
+
+        .carousel-item {
+            flex: 0 0 120px;
+            aspect-ratio: 16 / 9;
+            background: var(--color-concrete-dark);
+            border: 2px solid var(--color-concrete-lighter);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-item:hover {
+            border-color: var(--color-accent-amber);
+            transform: translateY(-2px);
+        }
+
+        .carousel-item::after {
+            content: 'CLIP ' attr(data-clip);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-xs);
+            background: rgba(58, 53, 48, 0.9);
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-variant: small-caps;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .chat-sidebar {
+                width: 320px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .chat-sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: var(--border-double);
+                max-height: 500px;
+            }
+
+            .header-nav {
+                display: none;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus visible */
+        *:focus-visible {
+            outline: 3px solid var(--color-accent-amber);
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--color-concrete-dark);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--color-concrete-lighter);
+            border: 2px solid var(--color-concrete-dark);
+            border-radius: var(--radius-sm);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent-amber);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Raw Hub</div>
+            <nav class="header-nav">
+                <a href="#" class="nav-item">Browse</a>
+                <a href="#" class="nav-item">Following</a>
+                <a href="#" class="nav-item">Categories</a>
+                <a href="#" class="nav-item">About</a>
+                <button class="btn btn-primary">Subscribe</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Stream Area -->
+        <div class="stream-area">
+            <!-- Video Player -->
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <!-- Hand-drawn play icon -->
+                    <div class="play-icon">
+                        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M60 110C88.7188 110 112 86.7188 112 58C112 29.2812 88.7188 6 60 6C31.2812 6 8 29.2812 8 58C8 86.7188 31.2812 110 60 110Z"
+                                  stroke="#d97d3a"
+                                  stroke-width="3"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  fill="none"
+                                  style="stroke-dasharray: 2, 3;"/>
+                            <path d="M48 40L48 76L78 58L48 40Z"
+                                  fill="#d97d3a"
+                                  stroke="#d97d3a"
+                                  stroke-width="2"
+                                  stroke-linejoin="round"
+                                  style="transform: rotate(-2deg); transform-origin: center;"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Live Badge -->
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    <span>Live</span>
+                </div>
+
+                <!-- Viewer Count -->
+                <div class="viewer-count">
+                    <strong>2,847</strong> viewing
+                </div>
+            </div>
+
+            <!-- Stream Info -->
+            <div class="stream-info">
+                <div class="stream-header">
+                    <div class="streamer-avatar">RH</div>
+                    <div class="stream-meta">
+                        <h2 class="stream-title">Building a Design System from Scratch</h2>
+                        <div class="streamer-name">Charlotte Pemberton</div>
+                        <p class="stream-description">
+                            Join us for an evening of creative exploration as we construct
+                            a comprehensive design system using modern web technologies.
+                            We shall examine typography, establish colour palettes, and
+                            develop reusable components with careful attention to accessibility
+                            and performance considerations. Questions and discourse most welcome.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="stream-actions">
+                    <button class="btn btn-primary">Follow</button>
+                    <button class="btn btn-secondary">Subscribe</button>
+                    <button class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 1L12.5 7H19L14 11L16 17L10 13L4 17L6 11L1 7H7.5L10 1Z"
+                                  stroke="currentColor"
+                                  stroke-width="1"
+                                  stroke-linejoin="round"
+                                  style="stroke-dasharray: 1, 2;"/>
+                        </svg>
+                        Donate
+                    </button>
+                    <button class="btn btn-secondary">Share</button>
+                </div>
+            </div>
+
+            <!-- Carousel of clips -->
+            <div class="stream-carousel">
+                <div class="carousel-item" data-clip="01"></div>
+                <div class="carousel-item" data-clip="02"></div>
+                <div class="carousel-item" data-clip="03"></div>
+                <div class="carousel-item" data-clip="04"></div>
+                <div class="carousel-item" data-clip="05"></div>
+                <div class="carousel-item" data-clip="06"></div>
+            </div>
+        </div>
+
+        <!-- Chat Sidebar -->
+        <aside class="chat-sidebar">
+            <div class="chat-header">
+                <h3 class="chat-title">
+                    Live Chat
+                    <span class="chat-count">847</span>
+                </h3>
+            </div>
+
+            <div class="chat-messages">
+                <div class="chat-message">
+                    <div class="chat-user">DesignEnthusiast</div>
+                    <div class="chat-text">This brutalist approach is fascinating! Love the double borders.</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">TypeNerd_42</div>
+                    <div class="chat-text">That golden ratio type scale is *chef's kiss*</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">BritishDesignFan</div>
+                    <div class="chat-text">The serif body copy adds such refinement to the raw aesthetic</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">CodePoet</div>
+                    <div class="chat-text">How do you balance brutalist honesty with user-friendliness?</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">WebWizard</div>
+                    <div class="chat-text">Those rounded corners on brutalism is genius - softens without losing edge</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">AccessibilityAdvocate</div>
+                    <div class="chat-text">Contrast ratios looking good! 44px touch targets too 👍</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">ColorTheoryQueen</div>
+                    <div class="chat-text">Those warm amber accents on concrete grey = perfection</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">ModernistMike</div>
+                    <div class="chat-text">This is what happens when Le Corbusier meets Saville Row</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">UIUnicorn</div>
+                    <div class="chat-text">The noise texture adds such tactile quality!</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">LayoutLegend</div>
+                    <div class="chat-text">Can you share the CSS custom properties setup?</div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <textarea class="chat-input" placeholder="Send a message..."></textarea>
+                <button class="btn btn-primary chat-send">Send Message</button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Donation Alert (appears temporarily) -->
+    <div class="donation-alert">
+        <div class="donation-amount">£50.00</div>
+        <div class="donation-from">from DesignPatron_UK</div>
+        <div class="donation-message">
+            "Brilliant stream! Your attention to typographic detail is inspiring. Keep up the excellent work!"
+        </div>
+    </div>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 25;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Auto-hide donation alert after 8 seconds
+        setTimeout(() => {
+            const alert = document.querySelector('.donation-alert');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s, transform 0.5s';
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(100px)';
+            }
+        }, 8000);
+
+        // Simulate new chat messages
+        const chatMessages = document.querySelector('.chat-messages');
+        const sampleMessages = [
+            { user: 'StreamViewer', text: 'This is incredibly well thought out' },
+            { user: 'CSSMaster', text: 'That 8px grid system is so clean' },
+            { user: 'DesignStudent', text: 'Taking notes furiously!' },
+            { user: 'BrutalistFan', text: 'Finally someone who gets it right' }
+        ];
+
+        function addChatMessage() {
+            const msg = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+            const messageEl = document.createElement('div');
+            messageEl.className = 'chat-message';
+            messageEl.innerHTML = `
+                <div class="chat-user">${msg.user}</div>
+                <div class="chat-text">${msg.text}</div>
+            `;
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Remove old messages if too many
+            if (chatMessages.children.length > 15) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+        }
+
+        // Add a new message every 5-8 seconds
+        setInterval(addChatMessage, 5000 + Math.random() * 3000);
+    })();
+    </script>
+</body>
+</html>

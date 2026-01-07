@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fjord Flame - Fitness Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+ABOUTME: Fjord Flame - Design #29
+ABOUTME: A hyper-saturated neon fitness tracker blending Memphis playfulness with skeuomorphic depth and Scandinavian clarity
+
+DESIGN SYSTEM DOCUMENTATION
+============================
+
+Name: Fjord Flame
+Tagline: Neon meets warm: a memphis perspective
+ID: 29
+Seed: b624220242e5
+
+AESTHETIC PRINCIPLES
+--------------------
+1. Memphis Energy: Bold geometric patterns, playful shapes, contrasting colors in organized chaos
+2. Skeuomorphic Depth: Real-world material textures (wood grain, leather, fabric) with dimensional depth
+3. Neon Warmth: Hyper-saturated warm tetradic palette (orange, red-pink, yellow-green, blue-purple)
+4. Scandinavian Balance: Despite the chaos, maintain clean functional hierarchy and breathing room
+5. Gaming Enterprise: Professional fitness tracking with energetic personality
+
+COLOR SYSTEM (Tetradic Warm Neon)
+----------------------------------
+Primary: #FF3366 (Hot Pink/Red) - Main CTAs, active states
+Secondary: #FF9500 (Bright Orange) - Progress, highlights
+Tertiary: #9DFF00 (Electric Lime) - Success, goals met
+Quaternary: #6B4CFF (Electric Purple) - Accents, premium features
+
+Background: #FFF8F0 (Warm Cream) - Soft Scandinavian base
+Surface: #FFFFFF with textured patterns
+Text: #2D1B2E (Deep Aubergine) - High contrast on warm backgrounds
+Text Muted: #7A6B7D
+
+Mesh gradients throughout for depth and energy
+
+TYPOGRAPHY
+----------
+Headings: Libre Baskerville (Old Style Serif) - Classic elegance meets Memphis
+Body: Roboto Mono (Monospace) - Data-focused, technical precision
+Scale: Minor Third (1.2) - Tight hierarchy
+Spacing: Tight (-0.02em) with very loose line-height (2.0)
+Case: Normal (respecting the data-driven nature)
+
+SPATIAL SYSTEM
+--------------
+Base Unit: 8px (ultra airy density)
+Scale: 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 128, 160
+
+SHAPE LANGUAGE
+--------------
+Corners: Very Rounded (24px) - Soft, approachable forms
+Borders: Medium (3px) - Memphis boldness
+Shadows: Dramatic multi-layered shadows with color tints
+Textures: Organic patterns (noise, grain, dots) on cards
+
+FUNCTIONAL COMPONENTS (Fitness Tracker)
+----------------------------------------
+- Daily stats rings (steps, calories, active minutes)
+- Heart rate monitor with live pulse
+- Workout log cards with exercise types
+- Goal progress indicators
+- Activity feed timeline
+- Exercise history chart (7-day view)
+- Personal records display
+- Quick action buttons for workouts
+
+LAYOUT
+------
+Structure: Card Mosaic (bento grid with varied sizes)
+Navigation: Top Transparent with frosted effect
+Hero: Split Image (stats dashboard + motivational image)
+Grid: Three Column with flexible card spanning
+Alignment: Right-aligned for dynamic tension
+Hierarchy: Position-based (important items larger and higher)
+
+-->
+
+<style>
+/* ================================
+   DESIGN TOKENS & VARIABLES
+   ================================ */
+
+:root {
+    /* Color Palette - Tetradic Warm Neon */
+    --color-primary: #FF3366;
+    --color-secondary: #FF9500;
+    --color-tertiary: #9DFF00;
+    --color-quaternary: #6B4CFF;
+
+    --color-background: #FFF8F0;
+    --color-surface: #FFFFFF;
+    --color-text: #2D1B2E;
+    --color-text-muted: #7A6B7D;
+
+    /* Extended palette */
+    --color-success: #9DFF00;
+    --color-warning: #FF9500;
+    --color-danger: #FF3366;
+    --color-heart: #FF0066;
+
+    /* Typography */
+    --font-heading: 'Libre Baskerville', serif;
+    --font-body: 'Roboto Mono', monospace;
+    --type-scale: 1.2; /* Minor Third */
+    --letter-spacing: -0.02em;
+    --line-height-base: 2.0;
+    --line-height-heading: 1.6;
+
+    /* Spacing - Ultra Airy */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 5);
+    --space-2xl: calc(var(--space-unit) * 6);
+    --space-3xl: calc(var(--space-unit) * 8);
+    --space-4xl: calc(var(--space-unit) * 10);
+    --space-5xl: calc(var(--space-unit) * 12);
+    --space-6xl: calc(var(--space-unit) * 16);
+    --space-7xl: calc(var(--space-unit) * 20);
+
+    /* Shape */
+    --radius-default: 24px;
+    --radius-sm: 16px;
+    --radius-lg: 32px;
+    --radius-full: 9999px;
+    --border-width: 3px;
+
+    /* Shadows - Dramatic */
+    --shadow-default:
+        0 4px 12px rgba(255, 51, 102, 0.15),
+        0 8px 24px rgba(107, 76, 255, 0.1),
+        0 16px 48px rgba(255, 149, 0, 0.08);
+    --shadow-elevated:
+        0 8px 16px rgba(255, 51, 102, 0.2),
+        0 16px 32px rgba(107, 76, 255, 0.15),
+        0 24px 64px rgba(255, 149, 0, 0.1);
+    --shadow-inset:
+        inset 0 2px 8px rgba(45, 27, 46, 0.1);
+}
+
+/* ================================
+   BASE STYLES
+   ================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: var(--line-height-base);
+    color: var(--color-text);
+    background: var(--color-background);
+    letter-spacing: var(--letter-spacing);
+    overflow-x: hidden;
+
+    /* Organic pattern texture */
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 149, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(107, 76, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 51, 102, 0.03) 0%, transparent 50%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: var(--line-height-heading);
+    font-weight: 700;
+    letter-spacing: var(--letter-spacing);
+}
+
+h1 { font-size: 2.074rem; }
+h2 { font-size: 1.728rem; }
+h3 { font-size: 1.44rem; }
+h4 { font-size: 1.2rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.833rem; }
+
+/* ================================
+   NAVIGATION - Top Transparent
+   ================================ */
+
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: var(--border-width) solid var(--color-primary);
+    box-shadow: 0 4px 24px rgba(255, 51, 102, 0.1);
+}
+
+.nav-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.44rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: var(--letter-spacing);
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-xl);
+    list-style: none;
+}
+
+.nav-links a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    letter-spacing: 0.05em;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* ================================
+   HERO - Split Image Style
+   ================================ */
+
+.hero {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-6xl) var(--space-lg);
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-stats {
+    text-align: right;
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3xl);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.hero-image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 50%,
+        var(--color-quaternary) 100%);
+    min-height: 400px;
+    box-shadow: var(--shadow-elevated);
+    border: var(--border-width) solid var(--color-primary);
+
+    /* Memphis pattern overlay */
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.1) 10px, rgba(255, 255, 255, 0.1) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.05) 10px, rgba(0, 0, 0, 0.05) 20px);
+}
+
+.hero-image-content {
+    position: absolute;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    text-align: right;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ================================
+   MAIN CONTENT - Card Mosaic
+   ================================ */
+
+.main-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+}
+
+.card-mosaic {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-4xl);
+}
+
+/* Card spanning variations for mosaic */
+.card-span-2 {
+    grid-column: span 2;
+}
+
+.card-span-3 {
+    grid-column: span 3;
+}
+
+.card-tall {
+    grid-row: span 2;
+}
+
+/* ================================
+   CARD COMPONENT - Skeuomorphic
+   ================================ */
+
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-default);
+    border: var(--border-width) solid;
+    border-color: var(--color-primary);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 149, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(107, 76, 255, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+}
+
+.card:focus-within {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    position: relative;
+    z-index: 1;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    color: var(--color-text);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--shadow-default);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.5);
+}
+
+/* ================================
+   STATS RINGS - Daily Progress
+   ================================ */
+
+.stats-rings {
+    display: flex;
+    gap: var(--space-2xl);
+    justify-content: flex-end;
+    margin-bottom: var(--space-3xl);
+}
+
+.stat-ring {
+    text-align: center;
+}
+
+.ring-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto var(--space-md);
+}
+
+.ring-bg,
+.ring-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-full);
+    border: 12px solid;
+}
+
+.ring-bg {
+    border-color: rgba(45, 27, 46, 0.1);
+    box-shadow: var(--shadow-inset);
+}
+
+.ring-progress {
+    border-color: transparent;
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+    transform: rotate(-90deg);
+    transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 0 20px currentColor;
+}
+
+.ring-steps { color: var(--color-primary); }
+.ring-calories { color: var(--color-secondary); }
+.ring-active { color: var(--color-tertiary); }
+
+.ring-steps .ring-progress { transform: rotate(-90deg) rotate(252deg); } /* 70% of 360deg */
+.ring-calories .ring-progress { transform: rotate(-90deg) rotate(306deg); } /* 85% of 360deg */
+.ring-active .ring-progress { transform: rotate(-90deg) rotate(223.2deg); } /* 62% of 360deg */
+
+.ring-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.ring-number {
+    font-size: 2rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1.2;
+}
+
+.ring-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+.ring-goal {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.ring-percent {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: currentColor;
+}
+
+/* ================================
+   HEART RATE MONITOR
+   ================================ */
+
+.heart-rate-display {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, rgba(255, 0, 102, 0.1), rgba(255, 51, 102, 0.05));
+    border-radius: var(--radius-default);
+    border: var(--border-width) solid var(--color-heart);
+    box-shadow: 0 0 24px rgba(255, 0, 102, 0.2);
+}
+
+.heart-icon {
+    font-size: 3rem;
+    color: var(--color-heart);
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    10% { transform: scale(1.15); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.15); }
+    40% { transform: scale(1); }
+}
+
+.heart-value {
+    text-align: right;
+}
+
+.heart-bpm {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-heart);
+    line-height: 1;
+}
+
+.heart-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+}
+
+.heart-status {
+    font-size: 14px;
+    color: var(--color-tertiary);
+    font-weight: 600;
+}
+
+/* ================================
+   WORKOUT LOG
+   ================================ */
+
+.workout-list {
+    list-style: none;
+}
+
+.workout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    background: linear-gradient(90deg,
+        rgba(255, 149, 0, 0.05) 0%,
+        rgba(107, 76, 255, 0.05) 100%);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-secondary);
+    transition: transform 0.2s;
+}
+
+.workout-item:hover {
+    transform: translateX(-4px);
+    background: linear-gradient(90deg,
+        rgba(255, 149, 0, 0.1) 0%,
+        rgba(107, 76, 255, 0.1) 100%);
+}
+
+.workout-info {
+    flex: 1;
+}
+
+.workout-name {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+}
+
+.workout-details {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.workout-duration {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    min-width: 80px;
+    text-align: right;
+}
+
+/* ================================
+   GOAL PROGRESS BARS
+   ================================ */
+
+.goals-list {
+    list-style: none;
+}
+
+.goal-item {
+    margin-bottom: var(--space-xl);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+}
+
+.goal-name {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.goal-value {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.progress-bar-bg {
+    height: 16px;
+    background: rgba(45, 27, 46, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    box-shadow: var(--shadow-inset);
+    border: 2px solid rgba(45, 27, 46, 0.2);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-full);
+    transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+    position: relative;
+    box-shadow: 0 0 12px rgba(255, 51, 102, 0.5);
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* ================================
+   ACTIVITY FEED
+   ================================ */
+
+.activity-feed {
+    list-style: none;
+}
+
+.activity-item {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px dashed rgba(45, 27, 46, 0.1);
+    position: relative;
+}
+
+.activity-item::before {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 40px;
+    bottom: -12px;
+    width: 2px;
+    background: linear-gradient(180deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 50%,
+        transparent 100%);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item:last-child::before {
+    display: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-surface);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: var(--border-width) solid var(--color-primary);
+    box-shadow: var(--shadow-default);
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+}
+
+.activity-time {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ================================
+   EXERCISE CHART
+   ================================ */
+
+.chart-container {
+    padding: var(--space-lg) 0;
+}
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 200px;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.chart-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--color-secondary), var(--color-primary));
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: var(--border-width) solid rgba(255, 149, 0, 0.5);
+    box-shadow: 0 -4px 12px rgba(255, 149, 0, 0.3);
+    min-height: 20px;
+}
+
+.chart-bar:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 -8px 24px rgba(255, 149, 0, 0.5);
+}
+
+.chart-bar-value {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.chart-label {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ================================
+   PERSONAL RECORDS
+   ================================ */
+
+.records-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.record-item {
+    text-align: right;
+    padding: var(--space-lg);
+    background: linear-gradient(135deg,
+        rgba(157, 255, 0, 0.1) 0%,
+        rgba(107, 76, 255, 0.1) 100%);
+    border-radius: var(--radius-sm);
+    border: var(--border-width) solid var(--color-tertiary);
+    box-shadow: 0 0 16px rgba(157, 255, 0, 0.2);
+}
+
+.record-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-tertiary);
+    line-height: 1.2;
+    margin-bottom: var(--space-xs);
+}
+
+.record-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.record-date {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* ================================
+   QUICK ACTIONS
+   ================================ */
+
+.quick-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: var(--space-md) var(--space-xl);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border: var(--border-width) solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: var(--shadow-default);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+}
+
+.action-btn:focus {
+    outline: 3px solid var(--color-quaternary);
+    outline-offset: 4px;
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    font-size: 20px;
+}
+
+/* ================================
+   ACCESSIBILITY
+   ================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 1024px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-stats {
+        text-align: left;
+    }
+
+    .stats-rings {
+        justify-content: flex-start;
+    }
+
+    .card-mosaic {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .card-mosaic {
+        grid-template-columns: 1fr;
+    }
+
+    .card-span-2,
+    .card-span-3 {
+        grid-column: span 1;
+    }
+
+    .stats-rings {
+        flex-direction: column;
+    }
+
+    .nav-links {
+        gap: var(--space-md);
+    }
+
+    .records-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions {
+        justify-content: flex-start;
+    }
+}
+
+/* ================================
+   MEMPHIS DECORATIVE ELEMENTS
+   ================================ */
+
+.memphis-dot {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: var(--radius-full);
+    display: inline-block;
+}
+
+.memphis-line {
+    height: 3px;
+    background: currentColor;
+    border-radius: var(--radius-full);
+}
+
+/* ================================
+   UTILITY CLASSES
+   ================================ */
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-muted { color: var(--color-text-muted); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+
+</style>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+    <div class="nav-container">
+        <a href="#" class="logo">Fjord Flame</a>
+        <ul class="nav-links">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#workouts">Workouts</a></li>
+            <li><a href="#goals">Goals</a></li>
+            <li><a href="#profile">Profile</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<header class="hero">
+    <div class="hero-stats">
+        <h1 class="hero-title">Your Peak Performance</h1>
+        <p class="hero-subtitle">Enterprise Fitness Tracking</p>
+
+        <!-- Daily Stats Rings -->
+        <div class="stats-rings">
+            <div class="stat-ring ring-steps">
+                <div class="ring-container">
+                    <div class="ring-bg"></div>
+                    <div class="ring-progress"></div>
+                    <div class="ring-value">
+                        <span class="ring-number">14,234</span>
+                        <span class="ring-label">Steps</span>
+                    </div>
+                </div>
+                <p class="ring-goal"><span class="ring-percent">70%</span> of 20,000</p>
+            </div>
+
+            <div class="stat-ring ring-calories">
+                <div class="ring-container">
+                    <div class="ring-bg"></div>
+                    <div class="ring-progress"></div>
+                    <div class="ring-value">
+                        <span class="ring-number">1,689</span>
+                        <span class="ring-label">Calories</span>
+                    </div>
+                </div>
+                <p class="ring-goal"><span class="ring-percent">85%</span> of 2,000</p>
+            </div>
+
+            <div class="stat-ring ring-active">
+                <div class="ring-container">
+                    <div class="ring-bg"></div>
+                    <div class="ring-progress"></div>
+                    <div class="ring-value">
+                        <span class="ring-number">37</span>
+                        <span class="ring-label">Minutes</span>
+                    </div>
+                </div>
+                <p class="ring-goal"><span class="ring-percent">62%</span> of 60</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <div class="hero-image-content">
+            <h3>Keep Moving Forward</h3>
+            <p>Every step counts</p>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+    <!-- Card Mosaic Layout -->
+    <div class="card-mosaic">
+
+        <!-- Heart Rate Monitor -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Heart Rate</h3>
+                <div class="card-icon">❤️</div>
+            </div>
+            <div class="heart-rate-display">
+                <div class="heart-icon">💓</div>
+                <div class="heart-value">
+                    <div class="heart-bpm">128</div>
+                    <div class="heart-label">BPM</div>
+                    <div class="heart-status">In Zone</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Workouts -->
+        <div class="card card-span-2">
+            <div class="card-header">
+                <h3 class="card-title">Today's Workouts</h3>
+                <div class="card-icon">🏃</div>
+            </div>
+            <ul class="workout-list">
+                <li class="workout-item">
+                    <div class="workout-info">
+                        <div class="workout-name">Morning Run</div>
+                        <div class="workout-details">5.2 km • 156 avg HR • 512 cal</div>
+                    </div>
+                    <div class="workout-duration">42 min</div>
+                </li>
+                <li class="workout-item">
+                    <div class="workout-info">
+                        <div class="workout-name">Strength Training</div>
+                        <div class="workout-details">Upper body • 142 avg HR • 289 cal</div>
+                    </div>
+                    <div class="workout-duration">35 min</div>
+                </li>
+                <li class="workout-item">
+                    <div class="workout-info">
+                        <div class="workout-name">Evening Yoga</div>
+                        <div class="workout-details">Flow session • 98 avg HR • 124 cal</div>
+                    </div>
+                    <div class="workout-duration">30 min</div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Weekly Goals -->
+        <div class="card card-span-2">
+            <div class="card-header">
+                <h3 class="card-title">Weekly Goals</h3>
+                <div class="card-icon">🎯</div>
+            </div>
+            <ul class="goals-list">
+                <li class="goal-item">
+                    <div class="goal-header">
+                        <span class="goal-name">Active Days</span>
+                        <span class="goal-value">5 / 7 days</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 71%;"></div>
+                    </div>
+                </li>
+                <li class="goal-item">
+                    <div class="goal-header">
+                        <span class="goal-name">Total Distance</span>
+                        <span class="goal-value">32.4 / 50 km</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 65%;"></div>
+                    </div>
+                </li>
+                <li class="goal-item">
+                    <div class="goal-header">
+                        <span class="goal-name">Calories Burned</span>
+                        <span class="goal-value">6,234 / 8,000 kcal</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 78%;"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Activity</h3>
+                <div class="card-icon">📊</div>
+            </div>
+            <ul class="activity-feed">
+                <li class="activity-item">
+                    <div class="activity-icon">🏆</div>
+                    <div class="activity-content">
+                        <div class="activity-title">New Personal Record!</div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">✅</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Weekly goal completed</div>
+                        <div class="activity-time">Yesterday</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">🔥</div>
+                    <div class="activity-content">
+                        <div class="activity-title">7-day streak!</div>
+                        <div class="activity-time">2 days ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">⭐</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Level up: Gold tier</div>
+                        <div class="activity-time">3 days ago</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Exercise History Chart -->
+        <div class="card card-span-3">
+            <div class="card-header">
+                <h3 class="card-title">7-Day Exercise Minutes</h3>
+                <div class="card-icon">📈</div>
+            </div>
+            <div class="chart-container">
+                <div class="chart">
+                    <div class="chart-bar" style="height: 65%;">
+                        <span class="chart-bar-value">78 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 45%;">
+                        <span class="chart-bar-value">54 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 80%;">
+                        <span class="chart-bar-value">96 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 55%;">
+                        <span class="chart-bar-value">66 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 70%;">
+                        <span class="chart-bar-value">84 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 90%;">
+                        <span class="chart-bar-value">107 min</span>
+                    </div>
+                    <div class="chart-bar" style="height: 85%;">
+                        <span class="chart-bar-value">102 min</span>
+                    </div>
+                </div>
+                <div class="chart-labels">
+                    <div class="chart-label">Mon</div>
+                    <div class="chart-label">Tue</div>
+                    <div class="chart-label">Wed</div>
+                    <div class="chart-label">Thu</div>
+                    <div class="chart-label">Fri</div>
+                    <div class="chart-label">Sat</div>
+                    <div class="chart-label">Sun</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Records -->
+        <div class="card card-span-2">
+            <div class="card-header">
+                <h3 class="card-title">Personal Records</h3>
+                <div class="card-icon">🥇</div>
+            </div>
+            <div class="records-grid">
+                <div class="record-item">
+                    <div class="record-value">10.8 km</div>
+                    <div class="record-label">Longest Run</div>
+                    <div class="record-date">Dec 28, 2025</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-value">4:32</div>
+                    <div class="record-label">Best Pace (min/km)</div>
+                    <div class="record-date">Jan 2, 2026</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-value">892 cal</div>
+                    <div class="record-label">Most Calories</div>
+                    <div class="record-date">Jan 1, 2026</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-value">28,456</div>
+                    <div class="record-label">Most Steps</div>
+                    <div class="record-date">Dec 31, 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Quick Start</h3>
+                <div class="card-icon">⚡</div>
+            </div>
+            <div class="quick-actions">
+                <button class="action-btn">
+                    <span class="btn-icon">🏃</span>
+                    Run
+                </button>
+                <button class="action-btn">
+                    <span class="btn-icon">🚴</span>
+                    Cycle
+                </button>
+                <button class="action-btn">
+                    <span class="btn-icon">💪</span>
+                    Strength
+                </button>
+                <button class="action-btn">
+                    <span class="btn-icon">🧘</span>
+                    Yoga
+                </button>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- NAVIGATION SCRIPT -->
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 29;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

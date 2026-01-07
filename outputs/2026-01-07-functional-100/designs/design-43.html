@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force Hub - Announcement Board</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN #43: FORCE HUB
+        ABOUTME: Brutalist Scandinavian announcement board with pastel complementary tones
+        ABOUTME: Raw concrete-inspired design with soft pastel blue-orange complementary palette
+
+        AESTHETIC PRINCIPLES:
+        - Brutalist structure with harsh edges and exposed structural elements
+        - Scandinavian minimalism with light, airy spacing
+        - Pastel complementary colors (soft blue vs soft orange) with low contrast
+        - Card mosaic layout with varied card sizes creating bulletin board effect
+        - Raw, honest presentation with visible borders and clear hierarchy
+
+        KEY TOKENS:
+        - Primary: #B4C7D9 (pastel blue)
+        - Accent: #E8C4A8 (pastel orange/peach)
+        - Background: #EEF1F4 (light gray-blue)
+        - Surface: #FAFBFC (off-white)
+        - Text: #5A6570 (muted blue-gray)
+        */
+
+        :root {
+            /* Colors - Complementary Pastel Palette */
+            --color-primary: #B4C7D9;
+            --color-accent: #E8C4A8;
+            --color-background: #EEF1F4;
+            --color-surface: #FAFBFC;
+            --color-text: #5A6570;
+            --color-text-muted: #8A93A0;
+            --color-border: #D4DAE0;
+            --color-priority-high: #E8B4B8;
+            --color-priority-medium: #E8D9B4;
+            --color-priority-low: #B4E8D4;
+            --color-new: #E8C4A8;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes - Sharp for Brutalist */
+            --radius-default: 0px;
+            --shadow-default: none;
+            --border-width: 3px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Brutalist header with breadcrumb */
+        .header {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .breadcrumb a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover,
+        .breadcrumb a:focus {
+            color: var(--color-text);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .breadcrumb-separator {
+            width: 4px;
+            height: 4px;
+            background: var(--color-text-muted);
+        }
+
+        .hero-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--color-text-muted);
+        }
+
+        .hero-image {
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-border);
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--color-surface);
+        }
+
+        /* Toolbar with search and filters */
+        .toolbar {
+            background: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-border);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--color-text);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .search-box button {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-border);
+            border-left: none;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover,
+        .search-box button:focus {
+            background: var(--color-accent);
+            outline: none;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .filter-label {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+        }
+
+        .filter-btn {
+            padding: var(--space-xs) var(--space-md);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .filter-btn:hover,
+        .filter-btn:focus {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        /* Main content area */
+        .main-content {
+            padding: var(--space-xl);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Card mosaic layout - Bento grid style */
+        .announcements-mosaic {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-lg);
+            grid-auto-flow: dense;
+        }
+
+        /* Announcement cards */
+        .announcement-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .announcement-card:hover {
+            transform: translate(-2px, -2px);
+            border-color: var(--color-text);
+        }
+
+        .announcement-card.pinned {
+            border-color: var(--color-primary);
+            border-width: 4px;
+        }
+
+        .announcement-card.featured {
+            grid-column: span 2;
+            border-color: var(--color-accent);
+        }
+
+        .announcement-card.tall {
+            grid-row: span 2;
+        }
+
+        /* Card header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            flex: 1;
+        }
+
+        .card-date {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 4px var(--space-sm);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text);
+            width: fit-content;
+        }
+
+        .priority-indicator {
+            width: 48px;
+            height: 48px;
+            border: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .priority-high {
+            background: var(--color-priority-high);
+            color: var(--color-text);
+        }
+
+        .priority-medium {
+            background: var(--color-priority-medium);
+            color: var(--color-text);
+        }
+
+        .priority-low {
+            background: var(--color-priority-low);
+            color: var(--color-text);
+        }
+
+        /* Card badges */
+        .card-badges {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px var(--space-sm);
+            font-family: var(--font-heading);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 2px solid;
+        }
+
+        .badge-new {
+            background: var(--color-new);
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .badge-pinned {
+            background: var(--color-primary);
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .badge-urgent {
+            background: var(--color-priority-high);
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        /* Card content */
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .card-excerpt {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        /* Card footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: var(--space-md);
+            border-top: 2px solid var(--color-border);
+        }
+
+        .card-author {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--color-accent);
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .author-name {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .author-role {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+
+        .card-action {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .card-action:hover,
+        .card-action:focus {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        /* Carousel pagination */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+        }
+
+        .carousel-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .carousel-btn:hover,
+        .carousel-btn:focus {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .carousel-dot:hover,
+        .carousel-dot:focus {
+            background: var(--color-border);
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .carousel-dot.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus styles */
+        a:focus,
+        button:focus,
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .announcements-mosaic {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+
+            .announcement-card.featured {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-split {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .hero-image {
+                aspect-ratio: 16/9;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .filter-group {
+                flex-wrap: wrap;
+            }
+
+            .announcements-mosaic {
+                grid-template-columns: 1fr;
+            }
+
+            .announcement-card.tall {
+                grid-row: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="#">Home</a>
+            <div class="breadcrumb-separator"></div>
+            <a href="#">Announcements</a>
+            <div class="breadcrumb-separator"></div>
+            <span>Board</span>
+        </nav>
+
+        <div class="hero-split">
+            <div class="hero-content">
+                <h1>Force Hub</h1>
+                <p>Your central command for team announcements, updates, and essential communications</p>
+            </div>
+            <div class="hero-image" aria-hidden="true">
+                FH
+            </div>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="search" placeholder="Search announcements..." aria-label="Search announcements">
+            <button type="submit">Search</button>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Priority:</span>
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">High</button>
+            <button class="filter-btn">Medium</button>
+            <button class="filter-btn">Low</button>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">New</button>
+            <button class="filter-btn">Pinned</button>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="announcements-mosaic">
+            <!-- Featured pinned announcement -->
+            <article class="announcement-card pinned featured">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-07">Jan 7, 2026</time>
+                        <span class="card-category">Company-Wide</span>
+                        <div class="card-badges">
+                            <span class="badge badge-pinned">Pinned</span>
+                            <span class="badge badge-urgent">Urgent</span>
+                        </div>
+                    </div>
+                    <div class="priority-indicator priority-high">!</div>
+                </div>
+
+                <h2 class="card-title">Q1 2026 All-Hands Meeting - Mandatory Attendance</h2>
+                <p class="card-excerpt">Join us this Thursday, January 10th at 2:00 PM EST for our quarterly all-hands meeting. We'll be covering major product launches, organizational changes, and celebrating our incredible achievements from Q4. Remote attendance options available via video conference.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">SM</div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah Martinez</div>
+                            <div class="author-role">Chief Executive Officer</div>
+                        </div>
+                    </div>
+                    <button class="card-action">Read More</button>
+                </div>
+            </article>
+
+            <!-- Standard announcements -->
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-06">Jan 6, 2026</time>
+                        <span class="card-category">Engineering</span>
+                        <div class="card-badges">
+                            <span class="badge badge-new">New</span>
+                        </div>
+                    </div>
+                    <div class="priority-indicator priority-medium">M</div>
+                </div>
+
+                <h2 class="card-title">New CI/CD Pipeline Deployed</h2>
+                <p class="card-excerpt">We've successfully migrated to our new continuous integration and deployment pipeline. All builds are now 40% faster.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">DL</div>
+                        <div class="author-info">
+                            <div class="author-name">David Liu</div>
+                            <div class="author-role">DevOps Lead</div>
+                        </div>
+                    </div>
+                    <button class="card-action">View</button>
+                </div>
+            </article>
+
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-06">Jan 6, 2026</time>
+                        <span class="card-category">Benefits</span>
+                        <div class="card-badges">
+                            <span class="badge badge-new">New</span>
+                        </div>
+                    </div>
+                    <div class="priority-indicator priority-low">L</div>
+                </div>
+
+                <h2 class="card-title">2026 Health Insurance Enrollment</h2>
+                <p class="card-excerpt">Open enrollment period for health benefits begins next week. Review your options and make changes by January 20th.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">JP</div>
+                        <div class="author-info">
+                            <div class="author-name">Jennifer Park</div>
+                            <div class="author-role">HR Director</div>
+                        </div>
+                    </div>
+                    <button class="card-action">View</button>
+                </div>
+            </article>
+
+            <article class="announcement-card tall">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-05">Jan 5, 2026</time>
+                        <span class="card-category">Product</span>
+                    </div>
+                    <div class="priority-indicator priority-high">!</div>
+                </div>
+
+                <h2 class="card-title">Major Feature Launch: Customer Portal 2.0</h2>
+                <p class="card-excerpt">After six months of development, we're thrilled to announce the launch of Customer Portal 2.0. This complete redesign includes real-time analytics, advanced reporting, and a mobile-first interface. The rollout begins January 15th with select beta customers, followed by general availability on February 1st. All teams should review the launch documentation and prepare for customer inquiries.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">MR</div>
+                        <div class="author-info">
+                            <div class="author-name">Marcus Rodriguez</div>
+                            <div class="author-role">Product Manager</div>
+                        </div>
+                    </div>
+                    <button class="card-action">Details</button>
+                </div>
+            </article>
+
+            <article class="announcement-card pinned">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-04">Jan 4, 2026</time>
+                        <span class="card-category">Facilities</span>
+                        <div class="card-badges">
+                            <span class="badge badge-pinned">Pinned</span>
+                        </div>
+                    </div>
+                    <div class="priority-indicator priority-medium">M</div>
+                </div>
+
+                <h2 class="card-title">Office Renovation Schedule</h2>
+                <p class="card-excerpt">The 3rd floor renovation begins next Monday. Affected teams will work from home or use the 2nd floor flex space.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">KW</div>
+                        <div class="author-info">
+                            <div class="author-name">Kevin Walsh</div>
+                            <div class="author-role">Facilities Manager</div>
+                        </div>
+                    </div>
+                    <button class="card-action">View</button>
+                </div>
+            </article>
+
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-03">Jan 3, 2026</time>
+                        <span class="card-category">Social</span>
+                    </div>
+                    <div class="priority-indicator priority-low">L</div>
+                </div>
+
+                <h2 class="card-title">Team Happy Hour This Friday</h2>
+                <p class="card-excerpt">Join us for drinks and appetizers at The Harbor Lounge, 6:00 PM. First round on the company!</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">AL</div>
+                        <div class="author-info">
+                            <div class="author-name">Amanda Lee</div>
+                            <div class="author-role">Culture Committee</div>
+                        </div>
+                    </div>
+                    <button class="card-action">RSVP</button>
+                </div>
+            </article>
+
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-02">Jan 2, 2026</time>
+                        <span class="card-category">Security</span>
+                    </div>
+                    <div class="priority-indicator priority-high">!</div>
+                </div>
+
+                <h2 class="card-title">Mandatory Security Training Due</h2>
+                <p class="card-excerpt">Complete your annual cybersecurity training by January 15th. Access the course through the learning portal.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">RC</div>
+                        <div class="author-info">
+                            <div class="author-name">Robert Chen</div>
+                            <div class="author-role">Security Officer</div>
+                        </div>
+                    </div>
+                    <button class="card-action">Start</button>
+                </div>
+            </article>
+
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2026-01-02">Jan 2, 2026</time>
+                        <span class="card-category">IT</span>
+                    </div>
+                    <div class="priority-indicator priority-medium">M</div>
+                </div>
+
+                <h2 class="card-title">System Maintenance Window</h2>
+                <p class="card-excerpt">Scheduled maintenance this Saturday 2:00-6:00 AM EST. Email and VPN services may be briefly unavailable.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">TN</div>
+                        <div class="author-info">
+                            <div class="author-name">Tanya Nguyen</div>
+                            <div class="author-role">IT Director</div>
+                        </div>
+                    </div>
+                    <button class="card-action">View</button>
+                </div>
+            </article>
+
+            <article class="announcement-card">
+                <div class="card-header">
+                    <div class="card-meta">
+                        <time class="card-date" datetime="2025-12-30">Dec 30, 2025</time>
+                        <span class="card-category">HR</span>
+                    </div>
+                    <div class="priority-indicator priority-low">L</div>
+                </div>
+
+                <h2 class="card-title">New Employee Onboarding Sessions</h2>
+                <p class="card-excerpt">Welcome orientation for our January new hires will be held on Monday, January 13th. Hiring managers please coordinate.</p>
+
+                <div class="card-footer">
+                    <div class="card-author">
+                        <div class="author-avatar">JP</div>
+                        <div class="author-info">
+                            <div class="author-name">Jennifer Park</div>
+                            <div class="author-role">HR Director</div>
+                        </div>
+                    </div>
+                    <button class="card-action">View</button>
+                </div>
+            </article>
+        </div>
+
+        <div class="carousel-controls">
+            <button class="carousel-btn" aria-label="Previous page">←</button>
+            <div class="carousel-dots" role="navigation" aria-label="Pagination">
+                <button class="carousel-dot active" aria-label="Page 1"></button>
+                <button class="carousel-dot" aria-label="Page 2"></button>
+                <button class="carousel-dot" aria-label="Page 3"></button>
+                <button class="carousel-dot" aria-label="Page 4"></button>
+            </div>
+            <button class="carousel-btn" aria-label="Next page">→</button>
+        </div>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 43;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const group = this.closest('.filter-group');
+                group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Carousel pagination
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-controls .carousel-btn:first-child');
+        const nextBtn = document.querySelector('.carousel-controls .carousel-btn:last-child');
+
+        let currentPage = 0;
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                dots[currentPage].classList.remove('active');
+                currentPage = index;
+                dots[currentPage].classList.add('active');
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            dots[currentPage].classList.remove('active');
+            currentPage = currentPage === 0 ? dots.length - 1 : currentPage - 1;
+            dots[currentPage].classList.add('active');
+        });
+
+        nextBtn.addEventListener('click', () => {
+            dots[currentPage].classList.remove('active');
+            currentPage = currentPage === dots.length - 1 ? 0 : currentPage + 1;
+            dots[currentPage].classList.add('active');
+        });
+    })();
+    </script>
+</body>
+</html>
