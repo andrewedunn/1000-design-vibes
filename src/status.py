@@ -81,11 +81,33 @@ def show_status(path: str) -> None:
 
     console.print(table)
 
-    # Show next designs to generate
+    # Show next batch suggestion
     if pending > 0:
         all_done = completed | staging | failed_ids
-        next_ids = sorted([i for i in range(1, total + 1) if i not in all_done])[:5]
-        console.print(f"\n[dim]Next to generate: {', '.join(f'#{i}' for i in next_ids)}[/dim]")
+        missing_ids = sorted([i for i in range(1, total + 1) if i not in all_done])
+
+        # Suggest a batch of 100 (or remaining)
+        batch_size = min(100, len(missing_ids))
+        if missing_ids:
+            start_id = missing_ids[0]
+            end_id = missing_ids[min(batch_size - 1, len(missing_ids) - 1)]
+
+            console.print(f"\n[bold]Next batch suggestion:[/bold]")
+            console.print(f"  Range: [cyan]{start_id}-{end_id}[/cyan] ({batch_size} designs)")
+            console.print(f"  Remaining after: {len(missing_ids) - batch_size}")
+
+            # Show resume instructions
+            console.print(f"\n[bold]Resume prompt for Claude:[/bold]")
+            console.print(f"[dim]───────────────────────────────────────[/dim]")
+            console.print(f"Resume generating designs for 1000 Design Vibes.")
+            console.print(f"")
+            console.print(f"BATCH: {output_path}")
+            console.print(f"RANGE: {start_id}-{end_id}")
+            console.print(f"MODEL: Sonnet")
+            console.print(f"")
+            console.print(f"Read DESIGN_GUIDE_LOOSE.md and manifest.json.")
+            console.print(f"Skip any design IDs that already exist in designs/ or .staging/")
+            console.print(f"[dim]───────────────────────────────────────[/dim]")
 
     # Show failures if any
     if failures:

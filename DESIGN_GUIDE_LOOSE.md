@@ -202,13 +202,48 @@ Include this exact script at the end of your `<body>`, updating CURRENT_DESIGN t
 
 ---
 
-## Documentation Block
+## Documentation Block (Required)
 
-Start with an HTML comment containing:
-- Design name and ABOUTME lines
-- Quick-start CSS variables
-- Aesthetic principles (what makes this design unique)
-- Key token values
+Start your HTML with a substantial comment block (30+ lines) containing:
+
+```html
+<!--
+DESIGN: [Name] - [Tagline]
+ABOUTME: This design system implements [functional_direction] with [ui_paradigm] aesthetics.
+ABOUTME: Key characteristics: [2-3 defining visual traits]
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #xxx;
+--color-background: #xxx;
+--color-surface: #xxx;
+--color-text: #xxx;
+--font-heading: 'Font Name', fallback;
+--font-body: 'Font Name', fallback;
+--radius-default: Xpx;
+--space-unit: Xpx;
+
+AESTHETIC PRINCIPLES:
+1. [First principle - e.g., "High contrast borders define all interactive elements"]
+2. [Second principle - e.g., "Typography scale creates dramatic hierarchy"]
+3. [Third principle - e.g., "Generous whitespace emphasizes content blocks"]
+
+BEST FOR:
+- [Use case 1]
+- [Use case 2]
+
+AVOID IF:
+- [Anti-pattern 1]
+- [Anti-pattern 2]
+
+FUNCTIONAL DIRECTION: [functional_direction]
+This design must clearly function as a [functional_direction]. Required elements:
+- [Element 1 from dimensions.py]
+- [Element 2]
+- [Element 3]
+-->
+```
+
+This documentation helps AI agents understand and apply the design to other projects.
 
 ---
 
@@ -216,15 +251,24 @@ Start with an HTML comment containing:
 
 Write to: `outputs/{batch}/.staging/design-{id}.html`
 
-**Make something distinctive.** If someone browsed through 20 designs, yours should be memorable.
+**Make something distinctive.** If someone browsed through 20 designs, yours should be memorable. Go bold with your interpretation of the dimensions.
+
+---
+
+## Quality Expectations
+
+- **File size**: 25-50KB is typical for a complete design. Under 15KB suggests missing components.
+- **Component variety**: Include multiple states (hover, focus, active, disabled) for interactive elements.
+- **Real content**: Use realistic placeholder text, not just "Lorem ipsum" everywhere.
 
 ---
 
 ## Validation Checklist
 
 Your design will be validated for:
-- [ ] File size > 10KB
+- [ ] File size > 10KB (aim for 25KB+)
 - [ ] Contains `<!DOCTYPE html>`
 - [ ] Contains `<style>` block
 - [ ] Contains `ArrowRight` and `ArrowLeft` navigation handlers
 - [ ] Navigation actually works (functions are defined, not just listeners)
+- [ ] Clearly reflects the assigned functional_direction
