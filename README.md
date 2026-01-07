@@ -1,16 +1,26 @@
 # 1000 Design Vibes
 
-Generate unique, self-contained design system showcases. Each design is a single HTML file that's both a visual demo and a complete style guide.
+Generate unique, self-contained design system showcases using Claude Code subagents. Each design is a single HTML file that's both a visual demo and a complete style guide.
+
+**Current Status:** 140 designs generated across 5 test runs.
 
 ## What is this?
 
-This tool creates design systems by combining 30+ visual dimensions:
-- UI paradigm (flat, material, glassmorphic, brutalist...)
-- Design era (art deco, bauhaus, y2k, neo-brutalist...)
-- Color theory (monochromatic, complementary, triadic...)
-- Typography, spacing, shadows, and more
+This project generates design systems by combining 30+ visual dimensions:
+- **UI paradigm**: flat, material, glassmorphic, brutalist, organic...
+- **Design era**: art deco, bauhaus, y2k, neo-brutalist, punk...
+- **Color theory**: monochromatic, complementary, triadic...
+- **Typography, spacing, shadows, and 25+ more dimensions**
 
-Each combination produces a unique design with its own personality, name, and complete component library.
+Each combination produces a unique design with its own personality, creative name, and complete component library. All designs are self-contained HTML files that work offline.
+
+## Browse the Gallery
+
+Open `outputs/index.html` in your browser to see all generated designs. Each design page includes:
+- Full component library (buttons, forms, cards, navigation)
+- Complete CSS custom properties for all design tokens
+- Keyboard navigation (← →) to browse designs
+- Mobile touch/swipe support
 
 ## Quick Start
 
@@ -85,6 +95,14 @@ Shows:
 - Staging designs (in `.staging/`)
 - Failed designs (in `failures.json`)
 - Pending designs (not yet started)
+
+### `build-indexes` - Rebuild gallery pages
+
+```bash
+python design_vibes.py build-indexes
+```
+
+Regenerates the index.html for each run with updated stats and design cards.
 
 ## Output Structure
 

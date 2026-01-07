@@ -29,5 +29,20 @@ def status(path: str):
     show_status(path=path)
 
 
+@cli.command()
+def build_indexes():
+    """Build or rebuild index pages for all runs."""
+    from pathlib import Path
+    from src.index import build_all_indexes
+
+    outputs_path = Path("outputs")
+    if not outputs_path.exists():
+        click.echo("No outputs directory found")
+        return
+
+    build_all_indexes(outputs_path)
+    click.echo("Done!")
+
+
 if __name__ == "__main__":
     cli()

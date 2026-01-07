@@ -450,6 +450,23 @@ CULTURAL_INFLUENCE = Dimension(
     },
 )
 
+FUNCTIONAL_DIRECTION = Dimension(
+    name="functional_direction",
+    description="Primary functional purpose of the design",
+    values={
+        "dashboard": "Analytics, metrics, data-heavy admin panels",
+        "admin_panel": "Backend management, CRUD interfaces",
+        "mobile_app": "Mobile-first responsive, touch-optimized",
+        "landing_page": "Marketing, conversion-focused, hero-driven",
+        "documentation": "Docs sites, technical content, navigation-heavy",
+        "e_commerce": "Product catalog, shopping cart, checkout flows",
+        "portfolio": "Personal/agency showcase, case studies",
+        "blog": "Content-focused, article layouts, reading experience",
+        "data_visualization": "Charts, graphs, data storytelling",
+        "social_platform": "Feeds, profiles, interactions",
+    },
+)
+
 
 # All dimensions in order
 ALL_DIMENSIONS: list[Dimension] = [
@@ -490,6 +507,7 @@ ALL_DIMENSIONS: list[Dimension] = [
     TARGET_AUDIENCE,
     EMOTIONAL_TONE,
     CULTURAL_INFLUENCE,
+    FUNCTIONAL_DIRECTION,
 ]
 
 

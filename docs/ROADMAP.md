@@ -1,58 +1,182 @@
-# Roadmap
+# 1000 Design Vibes - Roadmap
 
-Future enhancements and ideas for 1000 Design Vibes.
+## Completed
+
+### v0.1 - API-Based Generation
+- [x] Manifest generator with 30+ design dimensions
+- [x] Anthropic API-based design generation
+- [x] Rule-based creative naming
+
+### v0.2 - Claude Code Subagent Architecture (2026-01-06)
+- [x] Removed API dependency entirely
+- [x] DESIGN_GUIDE.md for agent instructions
+- [x] Parallel subagent generation via Task tool
+- [x] Staging → validation → final workflow
+- [x] Gallery index generation
+- [x] Status command for progress tracking
+- [x] Successfully generated 20 designs in ~7 minutes
+
+---
+
+### v0.3 - GitHub Ready (2026-01-07)
+- [x] A/B tested Haiku vs Sonnet with loose guide (10 designs)
+- [x] Fixed navigation bug (exact script in guide)
+- [x] Generated 100 designs with Haiku
+- [x] Master gallery index at outputs/index.html
+- [x] Per-run index pages with stats and collapsible prompt
+- [x] CLI command: `build-indexes`
+
+**Findings:**
+- Sonnet produces noticeably better quality designs
+- Navigation script must be exact (vague instructions caused 50% failure)
+- Haiku produces ~19KB avg files, acceptable but less polished
+- Building to 1000 designs incrementally over weeks is sustainable
+
+---
+
+## In Progress
+
+### v0.4 - Functional Direction Dimensions
+
+Add `functional_direction` dimension to guide design purpose:
+- `dashboard` - Analytics/admin dashboards
+- `admin_panel` - Backend management UI
+- `mobile_app` - Mobile-first responsive
+- `mobile_first` - Touch-optimized
+- `landing_page` - Marketing/conversion focus
+- `documentation` - Docs sites
+- `e_commerce` - Product/shop layouts
+- `portfolio` - Personal/agency showcases
+- `blog` - Content-focused layouts
+- `data_visualization` - Charts/graphs emphasis
+
+---
 
 ## Planned
 
-### Multi-Provider Support
-- Add `--provider` flag to support different LLM backends
-- Providers to consider: OpenAI, Anthropic, Ollama (local), Together.ai
-- Abstract LLM calls behind a clean interface
-- Config file option so users don't need to pass flags every time
+### Layout Dimensions for Manifest
 
-```bash
-# Future syntax
-python design_vibes.py generate --provider openai --model gpt-4o ...
-python design_vibes.py generate --provider ollama --model llama3 ...
+Add structural variety at the manifest level. Currently dimensions control visual style but not page structure.
+
+```python
+LAYOUT_DIMENSIONS = {
+    "page_structure": [
+        "hero_sections",        # Traditional hero → sections flow
+        "split_screen",         # Two-column throughout
+        "card_mosaic",          # Bento/Pinterest-style grid
+        "editorial_scroll",     # Magazine long-form
+        "app_shell",            # Fixed nav + scrolling content
+        "asymmetric_panels",    # Deliberately unbalanced
+        "single_canvas",        # One continuous surface
+        "modular_blocks",       # Lego-like stackable sections
+    ],
+
+    "section_count": [
+        "minimal",              # 3 sections
+        "standard",             # 5 sections
+        "comprehensive",        # 8+ sections
+    ],
+
+    "navigation_pattern": [
+        "top_fixed",            # Standard sticky header
+        "side_drawer",          # Hamburger → slide out
+        "floating_pill",        # Floating nav element
+        "hidden_scroll",        # Appears on scroll up
+        "bottom_bar",           # Mobile-style bottom nav
+        "integrated",           # Nav embedded in content
+        "none",                 # No navigation (artistic)
+    ],
+
+    "content_flow": [
+        "vertical_scroll",      # Standard scrolling
+        "horizontal_sections",  # Sideways scroll areas
+        "masonry",              # Variable height grid
+        "bento_grid",           # Mixed size cells
+        "overlap_layers",       # Overlapping elements
+        "timeline",             # Sequential storytelling
+    ],
+
+    "hero_style": [
+        "full_bleed",           # Edge to edge
+        "contained",            # Padded container
+        "split",                # Image + text side by side
+        "minimal",              # Just text, lots of space
+        "immersive",            # Takes full viewport
+        "none",                 # No hero, dive into content
+    ],
+}
 ```
 
+#### Implementation Steps
+1. Add dimensions to `src/dimensions.py`
+2. Update manifest generator to include layout dimensions
+3. Update DESIGN_GUIDE to interpret layout dimensions
+4. Test with batch of varied layouts
+5. Evaluate if agents follow layout instructions well
+
+---
+
 ### Screenshot Generation
-- Auto-generate preview screenshots for each design
-- Use Playwright or similar for headless rendering
-- Include thumbnails in the gallery index
+- Auto-generate preview thumbnails for gallery
+- Use Playwright for headless rendering
+- Include in gallery index cards
 
-## Ideas (Not Yet Planned)
+### Multi-Model Strategy
+Based on A/B test results:
+- Determine which model works best for different design types
+- Potentially use Haiku for simpler designs (cost savings)
+- Route complex designs to Sonnet
 
-### Web UI
-- Browser-based interface for exploring designs
-- Filter/search by dimensions
-- Side-by-side comparison view
+---
 
-### Dimension Constraints
-- Soft rules between dimensions (e.g., "glassmorphic prefers cool colors")
-- Weighted sampling to favor certain aesthetic combinations
-- Exclusion rules to prevent clashing combinations
+## Ideas (Future)
 
-### Enhanced Validation
-- Accessibility auditing (axe-core integration)
-- Contrast ratio checking
+### Quality & Validation
+- Design scoring/rating system
+- Automated visual diff between designs
+- Component coverage validation
+- Accessibility auditing (axe-core)
 - Lighthouse scores
 
 ### Export Formats
-- Export design tokens to various formats (Tailwind config, CSS-in-JS, Figma tokens)
-- Generate React/Vue/Svelte component libraries from designs
+- Export design tokens to Tailwind config
+- Generate React/Vue component libraries
+- Figma tokens export
 
-### Community Features
-- Gallery of community-generated designs
-- Voting/rating system
-- "Remix" feature to create variations of existing designs
+### Web UI
+- Browser-based gallery with filters
+- Side-by-side comparison view
+- "Remix" feature for variations
 
-## Known Limitations
+---
 
-- Generation is sequential (parallel would hit rate limits)
-- No automated accessibility testing yet
-- Index thumbnails are color swatches, not actual screenshots
+## Experiments Log
 
-## Contributing Ideas
+| Date | Experiment | Designs | Model | Avg Size | Notes |
+|------|------------|---------|-------|----------|-------|
+| 2026-01-06 | full-test | 20 | Sonnet | ~90KB | Uniform layouts, ~1M tokens |
+| 2026-01-06 | test-batch | 7 | Sonnet | ~59KB | Initial test |
+| 2026-01-06 | ab-test-loose | 10 | Mixed | ~28KB | 5 Haiku + 5 Sonnet, 50% nav failure |
+| 2026-01-07 | nav-test | 3 | Haiku | ~33KB | Fixed nav script, all passed |
+| 2026-01-07 | batch-100 | 100 | Haiku | ~19KB | First large batch, 2.1MB total |
 
-Have an idea? Open an issue or add it here via PR!
+**Key Learnings:**
+- Loose guide produces more varied layouts but smaller files
+- Navigation must be an exact script, not vague instructions
+- Haiku is ~3x cheaper but Sonnet quality is noticeably better
+- Target: Use Sonnet for future batches, build to 1000 incrementally
+
+---
+
+## Resource Notes
+
+### Token Usage (Claude Max 20x)
+- ~40K tokens per design with strict guide
+- Monthly budget: ~40-50M tokens
+- Current capacity: ~600-800 designs/month
+- Goal: Optimize to 1000+ designs/month
+
+### Model Selection
+- **Opus**: Complex debugging, architecture decisions
+- **Sonnet**: Default for design generation (quality + speed balance)
+- **Haiku**: Potential for simpler designs, 3x cheaper

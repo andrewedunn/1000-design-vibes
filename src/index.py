@@ -1,11 +1,43 @@
 # ABOUTME: Builds the gallery index.html page.
 # ABOUTME: Creates a browsable grid of all designs with previews and navigation.
 
+import json
+import os
+from datetime import datetime
 from pathlib import Path
 
 from rich.console import Console
 
 console = Console()
+
+
+def format_size(size_bytes: int) -> str:
+    """Format bytes as human-readable size."""
+    for unit in ["B", "KB", "MB", "GB"]:
+        if size_bytes < 1024:
+            return f"{size_bytes:.1f} {unit}"
+        size_bytes /= 1024
+    return f"{size_bytes:.1f} TB"
+
+
+def get_run_stats(output_path: Path) -> dict:
+    """Get stats about the run (file sizes, count, etc.)."""
+    designs_dir = output_path / "designs"
+    total_size = 0
+    file_count = 0
+
+    if designs_dir.exists():
+        for f in designs_dir.glob("design-*.html"):
+            total_size += f.stat().st_size
+            file_count += 1
+
+    return {
+        "file_count": file_count,
+        "total_size": total_size,
+        "total_size_formatted": format_size(total_size),
+        "avg_size": total_size // file_count if file_count > 0 else 0,
+        "avg_size_formatted": format_size(total_size // file_count) if file_count > 0 else "0 B",
+    }
 
 
 def get_color_preview_style(dimensions: dict[str, str]) -> str:
@@ -36,10 +68,21 @@ def get_color_preview_style(dimensions: dict[str, str]) -> str:
         return f"background: linear-gradient(135deg, {colors[0]} 0%, {colors[1]} 50%, {colors[2]} 100%);"
 
 
-def build_index(output_path: Path, manifest: dict) -> None:
-    """Build the index.html gallery page."""
+def build_index(output_path: Path, manifest: dict, run_name: str = None, model: str = "unknown") -> None:
+    """Build the index.html gallery page with stats and collapsible sections."""
     designs = manifest["designs"]
     total = manifest["total_designs"]
+    generated_at = manifest.get("generated_at", "Unknown")
+
+    # Parse timestamp for display
+    try:
+        dt = datetime.fromisoformat(generated_at)
+        formatted_date = dt.strftime("%B %d, %Y at %I:%M %p")
+    except Exception:
+        formatted_date = generated_at
+
+    # Get run stats
+    stats = get_run_stats(output_path)
 
     # Check which designs exist
     designs_dir = output_path / "designs"
@@ -52,6 +95,19 @@ def build_index(output_path: Path, manifest: dict) -> None:
             except ValueError:
                 pass
 
+    # Try to load the design guide prompt
+    project_root = output_path.parent.parent
+    prompt_content = ""
+    for guide_name in ["DESIGN_GUIDE_LOOSE.md", "DESIGN_GUIDE.md"]:
+        guide_path = project_root / guide_name
+        if guide_path.exists():
+            prompt_content = guide_path.read_text()
+            break
+
+    # Escape HTML in prompt
+    import html
+    prompt_escaped = html.escape(prompt_content) if prompt_content else "Prompt not available"
+
     # Build design cards HTML
     cards_html = []
     for design in designs:
@@ -63,7 +119,7 @@ def build_index(output_path: Path, manifest: dict) -> None:
         tone = design["dimensions"].get("emotional_tone", "").replace("_", " ")
 
         card = f"""
-        <a href="{'designs/design-' + str(design['id']) + '.html' if exists else '#'}"
+        <a href="{'design-' + str(design['id']) + '.html' if exists else '#'}"
            class="card {'disabled' if not exists else ''}"
            {'aria-disabled="true"' if not exists else ''}>
             <div class="card-preview" style="{color_style}">
@@ -82,31 +138,25 @@ def build_index(output_path: Path, manifest: dict) -> None:
         """
         cards_html.append(card)
 
+    # Get run name from path if not provided
+    if not run_name:
+        run_name = output_path.name
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1000 Design Vibes - Gallery</title>
+    <title>{run_name} - 1000 Design Vibes</title>
     <style>
         :root {{
             --color-bg: #0a0a0a;
-            --color-surface: #1a1a1a;
+            --color-surface: #141414;
             --color-border: #2a2a2a;
-            --color-text: #fafafa;
+            --color-text: #e5e5e5;
             --color-text-muted: #888;
             --color-accent: #6366f1;
             --radius: 12px;
-        }}
-
-        @media (prefers-color-scheme: light) {{
-            :root {{
-                --color-bg: #fafafa;
-                --color-surface: #ffffff;
-                --color-border: #e5e5e5;
-                --color-text: #0a0a0a;
-                --color-text-muted: #666;
-            }}
         }}
 
         * {{
@@ -124,25 +174,95 @@ def build_index(output_path: Path, manifest: dict) -> None:
         }}
 
         header {{
-            padding: 3rem 2rem 2rem;
-            text-align: center;
+            padding: 2rem;
             border-bottom: 1px solid var(--color-border);
+            max-width: 1600px;
+            margin: 0 auto;
+        }}
+
+        .breadcrumb {{
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }}
+
+        .breadcrumb a {{
+            color: var(--color-accent);
+            text-decoration: none;
+        }}
+
+        .breadcrumb a:hover {{
+            text-decoration: underline;
         }}
 
         h1 {{
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }}
 
         .subtitle {{
             color: var(--color-text-muted);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
         }}
 
-        .stats {{
+        .stats-grid {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }}
+
+        .stat {{
+            text-align: left;
+        }}
+
+        .stat-value {{
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-accent);
+        }}
+
+        .stat-label {{
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+
+        details {{
             margin-top: 1rem;
-            font-size: 0.9rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }}
+
+        summary {{
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            user-select: none;
+        }}
+
+        summary:hover {{
+            background: rgba(255,255,255,0.02);
+        }}
+
+        .details-content {{
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--color-border);
+            max-height: 400px;
+            overflow-y: auto;
+        }}
+
+        .details-content pre {{
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
             color: var(--color-text-muted);
         }}
 
@@ -282,9 +402,37 @@ def build_index(output_path: Path, manifest: dict) -> None:
 </head>
 <body>
     <header>
-        <h1>1000 Design Vibes</h1>
-        <p class="subtitle">A gallery of unique design systems</p>
-        <p class="stats">{len(existing_ids)} of {total} designs generated</p>
+        <nav class="breadcrumb">
+            <a href="../../index.html">All Runs</a> / {run_name}
+        </nav>
+        <h1>{run_name}</h1>
+        <p class="subtitle">Generated {formatted_date}</p>
+
+        <div class="stats-grid">
+            <div class="stat">
+                <div class="stat-value">{len(existing_ids)}</div>
+                <div class="stat-label">Designs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">{stats['total_size_formatted']}</div>
+                <div class="stat-label">Total Size</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">{stats['avg_size_formatted']}</div>
+                <div class="stat-label">Avg Size</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="text-transform: capitalize;">{model}</div>
+                <div class="stat-label">Model</div>
+            </div>
+        </div>
+
+        <details>
+            <summary>View Prompt Used</summary>
+            <div class="details-content">
+                <pre>{prompt_escaped}</pre>
+            </div>
+        </details>
     </header>
 
     <main class="gallery">
@@ -292,6 +440,7 @@ def build_index(output_path: Path, manifest: dict) -> None:
     </main>
 
     <footer>
+        <p>Use arrow keys to navigate, Enter to open</p>
         <p>Generated with <a href="https://github.com/anthropics/claude-code">Claude Code</a></p>
     </footer>
 
@@ -349,5 +498,33 @@ def build_index(output_path: Path, manifest: dict) -> None:
 </html>
 """
 
-    index_path = output_path / "index.html"
+    # Write to designs folder so relative links work
+    designs_dir = output_path / "designs"
+    designs_dir.mkdir(exist_ok=True)
+    index_path = designs_dir / "index.html"
     index_path.write_text(html)
+    console.print(f"[green]Built index at {index_path}[/green]")
+
+
+def build_all_indexes(outputs_path: Path) -> None:
+    """Build index pages for all runs in outputs directory."""
+    # Known model info (could be stored in manifest later)
+    run_models = {
+        "2026-01-07-batch-100": "haiku",
+        "2026-01-07-nav-test": "haiku",
+        "2026-01-06-ab-test-loose": "haiku + sonnet",
+        "2026-01-06-full-test": "sonnet",
+        "2026-01-06-test-batch": "sonnet",
+    }
+
+    for run_dir in sorted(outputs_path.iterdir(), reverse=True):
+        if not run_dir.is_dir():
+            continue
+        manifest_path = run_dir / "manifest.json"
+        if not manifest_path.exists():
+            continue
+
+        console.print(f"[blue]Building index for {run_dir.name}...[/blue]")
+        manifest = json.loads(manifest_path.read_text())
+        model = run_models.get(run_dir.name, "unknown")
+        build_index(run_dir, manifest, run_name=run_dir.name, model=model)
