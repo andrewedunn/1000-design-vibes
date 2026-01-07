@@ -3,9 +3,6 @@
 # ABOUTME: Provides manifest and status commands. Design generation happens via Claude Code agents.
 
 import click
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 @click.group()
