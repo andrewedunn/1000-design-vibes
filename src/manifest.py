@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from .dimensions import ALL_DIMENSIONS, get_dimension_names
-from .naming import generate_names_batch
+from .naming import generate_names_batch, generate_name_fallback
 
 console = Console()
 
@@ -124,7 +124,7 @@ def create_output_folder(name: str | None) -> Path:
     return output_path
 
 
-def generate_manifest(count: int, name: str | None) -> None:
+def generate_manifest(count: int, name: str | None, use_api: bool = True) -> None:
     """Generate a complete manifest with unique designs."""
     console.print(f"\n[bold blue]1000 Design Vibes[/bold blue] - Manifest Generator\n")
 
@@ -134,7 +134,11 @@ def generate_manifest(count: int, name: str | None) -> None:
     combinations = generate_balanced_combinations(count)
 
     console.print(f"\n[bold]Generating names for {count} designs...[/bold]")
-    names_and_taglines = generate_names_batch(combinations)
+    if use_api:
+        names_and_taglines = generate_names_batch(combinations)
+    else:
+        console.print("[dim]Using rule-based names (--no-api flag set)[/dim]")
+        names_and_taglines = [generate_name_fallback(combo) for combo in combinations]
 
     designs = []
     for i, (combo, (design_name, tagline)) in enumerate(zip(combinations, names_and_taglines), start=1):

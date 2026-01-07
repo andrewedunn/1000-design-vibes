@@ -18,10 +18,11 @@ def cli():
 @cli.command()
 @click.option("--count", default=20, help="Number of designs to generate")
 @click.option("--name", default=None, help="Optional name suffix for output folder")
-def manifest(count: int, name: str | None):
+@click.option("--no-api", is_flag=True, help="Use rule-based names instead of Claude API")
+def manifest(count: int, name: str | None, no_api: bool):
     """Create a manifest with unique design seeds."""
     from src.manifest import generate_manifest
-    generate_manifest(count=count, name=name)
+    generate_manifest(count=count, name=name, use_api=not no_api)
 
 
 @cli.command()
