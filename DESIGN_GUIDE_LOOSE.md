@@ -13,23 +13,93 @@ Generate a self-contained HTML file showcasing a unique design system. **Be crea
 
 ---
 
-## Creative Freedom
+## CRITICAL: Functional Direction Drives Everything
 
-You have full creative control over:
+**The `functional_direction` dimension is the PRIMARY driver of your design.** It determines the page structure, components, and layout - not just styling.
 
-- **Page structure** - Not required to follow any template
-- **Section types** - Invent sections that fit the design's personality
-- **Layout approach** - Grid, freeform, asymmetric, scrolling, cards, whatever fits
-- **Component selection** - Show what best demonstrates this design system
-- **Visual storytelling** - Let the design speak for itself
+| Value | YOU MUST INCLUDE |
+|-------|------------------|
+| `dashboard` | Sidebar nav, metric cards with numbers, charts/graphs, data tables, status indicators |
+| `admin_panel` | Data tables, CRUD action buttons, form inputs, filters, breadcrumbs |
+| `landing_page` | Hero section with CTA, feature grid, testimonial cards, pricing table |
+| `documentation` | Sidebar table of contents, code blocks, search bar, prev/next navigation |
+| `e_commerce` | Product cards with prices, filter sidebar, shopping cart icon, ratings |
+| `portfolio` | Project cards with images, case study sections, about/contact |
+| `blog` | Article with proper typography, author byline, related posts, reading time |
+| `social_platform` | Post cards with avatar/name/timestamp, like/comment buttons, feed layout |
+| `music_player` | Large album art, progress bar, play/pause/skip buttons, playlist |
+| `messaging_app` | Conversation list sidebar, chat bubbles (left/right), message input |
+| `calendar_app` | Month grid or week view, event cards, mini calendar, today button |
+| `email_client` | Inbox list, email preview pane, folder sidebar, compose button |
+| `weather_app` | Large current temp, weather icon, hourly row, 5-day forecast |
+| `fitness_tracker` | Progress rings/circles, stat cards, activity list, goal indicators |
+| `settings_panel` | Grouped toggles, dropdown selects, save button, section headers |
+| `onboarding_flow` | Step indicator dots, single focused content, next/back buttons |
+| `terminal_ui` | Monospace font everywhere, command prompts, dark bg with green/amber text |
+| `retro_game_hud` | Score display, health/lives, pixel-style elements, game-like layout |
+| `sci_fi_console` | Glowing borders, tech readouts, hexagonal or angular shapes |
+| `newspaper` | Multi-column text, large masthead, bylines, pull quotes |
+| `restaurant_menu` | Food categories, dish name + description + price format |
+| `recipe_card` | Ingredients list, numbered steps, prep/cook time, servings |
+| `event_poster` | Giant headline, date/time/venue prominently displayed |
+| `magazine_spread` | Large images, pull quotes, editorial layout |
+| `streaming_service` | Content rows with thumbnails, play buttons, category headers |
+| `vintage_catalog` | Product grid with illustrations, item numbers, retro styling |
+| `museum_exhibit` | Lots of whitespace, caption-style text, gallery cards |
+| `meditation_app` | Calm colors, breathing circle placeholder, session cards |
+| `government_form` | Form fields, section numbers, official/bureaucratic styling |
+| `infographic` | Data viz elements, icon + stat combinations, flow diagrams |
 
-**The only constraint:** The page should effectively showcase a usable design system that another developer could understand and apply.
+**If your design doesn't clearly look like its functional_direction, you've failed the task.**
 
 ---
 
-## Dimension Interpretation
+## Layout Structure Dimensions
 
-Use these as creative inspiration, not rigid rules:
+These dimensions further control layout:
+
+### Page Structure
+| Value | Layout |
+|-------|--------|
+| `hero_sections` | Hero at top, then stacked sections |
+| `split_screen` | Two columns throughout |
+| `card_mosaic` | Bento/Pinterest mixed grid |
+| `app_shell` | Fixed nav frame + scrolling content |
+| `sidebar_main` | Persistent sidebar + main area |
+| `fullscreen_slides` | Viewport-height sections |
+
+### Navigation Pattern
+| Value | Implementation |
+|-------|----------------|
+| `top_fixed` | Sticky header |
+| `side_persistent` | Always-visible sidebar nav |
+| `bottom_bar` | Mobile-style bottom nav |
+| `floating_pill` | Floating nav button/pill |
+| `tabs` | Tab-based navigation |
+| `none` | No navigation |
+
+### Hero Style
+| Value | Treatment |
+|-------|-----------|
+| `full_viewport` | 100vh hero |
+| `split_image` | Image + content side by side |
+| `centered_minimal` | Just text, lots of space |
+| `none` | No hero, dive into content |
+
+### Content Flow
+| Value | Organization |
+|-------|--------------|
+| `card_grid` | Uniform cards |
+| `masonry` | Varied heights |
+| `timeline` | Chronological |
+| `list_detail` | List + detail panel |
+| `kanban` | Column board |
+
+---
+
+## Visual Dimension Interpretation
+
+Use these as creative inspiration:
 
 ### UI Paradigm
 | Value | Essence |
@@ -77,20 +147,6 @@ Use these as creative inspiration, not rigid rules:
 - **Shadows**: none | subtle | medium | hard | dramatic | colored | layered | inset
 - **Borders**: none | hairline | thin | medium | thick | double | dashed
 - **Textures**: none | noise | paper | fabric | geometric_pattern | organic_pattern | gradient_mesh
-
-### Functional Direction
-| Value | Focus |
-|-------|-------|
-| `dashboard` | Analytics, metrics, data-heavy panels |
-| `admin_panel` | Backend management, CRUD interfaces |
-| `mobile_app` | Mobile-first, touch-optimized |
-| `landing_page` | Marketing, conversion-focused |
-| `documentation` | Docs sites, technical content |
-| `e_commerce` | Product catalog, checkout flows |
-| `portfolio` | Personal/agency showcase |
-| `blog` | Content-focused, reading experience |
-| `data_visualization` | Charts, graphs, data storytelling |
-| `social_platform` | Feeds, profiles, interactions |
 
 ---
 

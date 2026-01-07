@@ -34,87 +34,20 @@
 
 ---
 
-## In Progress
+### v0.4 - Functional Direction & Layout Dimensions (2026-01-07)
+- [x] Expanded `functional_direction` from 10 to 30 options
+- [x] Added wild/experimental types: terminal_ui, retro_game_hud, sci_fi_console, newspaper, restaurant_menu, recipe_card, event_poster, magazine_spread, streaming_service, vintage_catalog, museum_exhibit, meditation_app, government_form, infographic
+- [x] Added app-specific types: music_player, messaging_app, calendar_app, email_client, weather_app, fitness_tracker, settings_panel, onboarding_flow
+- [x] Added 4 layout structure dimensions: page_structure, navigation_pattern, hero_style, content_flow
+- [x] Updated DESIGN_GUIDE_LOOSE.md to make functional_direction the PRIMARY driver
+- [x] Total dimensions: 31 → 35
+- [x] GitHub Pages deployed at andrewedunn.github.io/1000-design-vibes
 
-### v0.4 - Functional Direction Dimensions
-
-Add `functional_direction` dimension to guide design purpose:
-- `dashboard` - Analytics/admin dashboards
-- `admin_panel` - Backend management UI
-- `mobile_app` - Mobile-first responsive
-- `mobile_first` - Touch-optimized
-- `landing_page` - Marketing/conversion focus
-- `documentation` - Docs sites
-- `e_commerce` - Product/shop layouts
-- `portfolio` - Personal/agency showcases
-- `blog` - Content-focused layouts
-- `data_visualization` - Charts/graphs emphasis
+**Key Change:** functional_direction now determines page structure and required components, not just styling. Guide explicitly states "If your design doesn't clearly look like its functional_direction, you've failed the task."
 
 ---
 
 ## Planned
-
-### Layout Dimensions for Manifest
-
-Add structural variety at the manifest level. Currently dimensions control visual style but not page structure.
-
-```python
-LAYOUT_DIMENSIONS = {
-    "page_structure": [
-        "hero_sections",        # Traditional hero → sections flow
-        "split_screen",         # Two-column throughout
-        "card_mosaic",          # Bento/Pinterest-style grid
-        "editorial_scroll",     # Magazine long-form
-        "app_shell",            # Fixed nav + scrolling content
-        "asymmetric_panels",    # Deliberately unbalanced
-        "single_canvas",        # One continuous surface
-        "modular_blocks",       # Lego-like stackable sections
-    ],
-
-    "section_count": [
-        "minimal",              # 3 sections
-        "standard",             # 5 sections
-        "comprehensive",        # 8+ sections
-    ],
-
-    "navigation_pattern": [
-        "top_fixed",            # Standard sticky header
-        "side_drawer",          # Hamburger → slide out
-        "floating_pill",        # Floating nav element
-        "hidden_scroll",        # Appears on scroll up
-        "bottom_bar",           # Mobile-style bottom nav
-        "integrated",           # Nav embedded in content
-        "none",                 # No navigation (artistic)
-    ],
-
-    "content_flow": [
-        "vertical_scroll",      # Standard scrolling
-        "horizontal_sections",  # Sideways scroll areas
-        "masonry",              # Variable height grid
-        "bento_grid",           # Mixed size cells
-        "overlap_layers",       # Overlapping elements
-        "timeline",             # Sequential storytelling
-    ],
-
-    "hero_style": [
-        "full_bleed",           # Edge to edge
-        "contained",            # Padded container
-        "split",                # Image + text side by side
-        "minimal",              # Just text, lots of space
-        "immersive",            # Takes full viewport
-        "none",                 # No hero, dive into content
-    ],
-}
-```
-
-#### Implementation Steps
-1. Add dimensions to `src/dimensions.py`
-2. Update manifest generator to include layout dimensions
-3. Update DESIGN_GUIDE to interpret layout dimensions
-4. Test with batch of varied layouts
-5. Evaluate if agents follow layout instructions well
-
----
 
 ### Screenshot Generation
 - Auto-generate preview thumbnails for gallery

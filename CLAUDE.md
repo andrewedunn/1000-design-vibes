@@ -67,8 +67,9 @@ Generate a COMPLETE HTML file. Do not truncate.
 | File | Purpose |
 |------|---------|
 | `design_vibes.py` | CLI entry point (manifest, status) |
-| `DESIGN_GUIDE.md` | Instructions for design agents |
-| `src/dimensions.py` | All 30+ dimension definitions |
+| `DESIGN_GUIDE_LOOSE.md` | Instructions for design agents (primary) |
+| `DESIGN_GUIDE.md` | Strict instructions (original) |
+| `src/dimensions.py` | All 35 dimension definitions |
 | `src/manifest.py` | Manifest generation logic |
 | `src/naming.py` | Rule-based name generation |
 | `src/index.py` | Gallery index builder |
@@ -111,6 +112,7 @@ python design_vibes.py status --path outputs/2026-01-06-dev-test
 3. **Date-stamped outputs** - Each run isolated
 4. **Staging folder** - Validate before accepting
 5. **Parallel agents** - 3-5 at a time for speed
+6. **Functional direction is primary** - The `functional_direction` dimension drives page structure and required components, not just styling. A dashboard must look like a dashboard.
 
 ## Key Docs
 

@@ -452,18 +452,111 @@ CULTURAL_INFLUENCE = Dimension(
 
 FUNCTIONAL_DIRECTION = Dimension(
     name="functional_direction",
-    description="Primary functional purpose of the design",
+    description="Primary functional purpose - THIS DRIVES THE PAGE STRUCTURE",
     values={
-        "dashboard": "Analytics, metrics, data-heavy admin panels",
-        "admin_panel": "Backend management, CRUD interfaces",
-        "mobile_app": "Mobile-first responsive, touch-optimized",
-        "landing_page": "Marketing, conversion-focused, hero-driven",
-        "documentation": "Docs sites, technical content, navigation-heavy",
-        "e_commerce": "Product catalog, shopping cart, checkout flows",
-        "portfolio": "Personal/agency showcase, case studies",
-        "blog": "Content-focused, article layouts, reading experience",
-        "data_visualization": "Charts, graphs, data storytelling",
-        "social_platform": "Feeds, profiles, interactions",
+        # Standard web types
+        "dashboard": "Analytics panels, metrics grid, sidebar nav, data cards, charts",
+        "admin_panel": "Table views, CRUD forms, action buttons, breadcrumbs, filters",
+        "landing_page": "Hero section, CTAs, testimonials, pricing tables, conversion focus",
+        "documentation": "Sidebar nav, code blocks, search, breadcrumbs, prev/next links",
+        "e_commerce": "Product grid, filters, cart, product cards with prices",
+        "portfolio": "Project cards, case study layout, about section, contact",
+        "blog": "Article layout, reading typography, author bio, related posts",
+        "social_platform": "Feed of posts, profile cards, interactions, notifications",
+        # Specific app types
+        "music_player": "Now playing, album art, playlists, progress bar, controls",
+        "messaging_app": "Conversation list, chat bubbles, input field, timestamps",
+        "calendar_app": "Month/week/day views, event cards, time slots, mini calendar",
+        "email_client": "Inbox list, preview pane, folders sidebar, compose button",
+        "weather_app": "Current conditions large, forecast row, location, hourly",
+        "fitness_tracker": "Progress rings, stat cards, activity feed, goals",
+        "settings_panel": "Toggle groups, preference sections, save buttons, categories",
+        "onboarding_flow": "Step indicators, single focus per screen, progress, CTAs",
+        # Wild and experimental
+        "terminal_ui": "Monospace everything, command prompts, green/amber on black, ASCII",
+        "retro_game_hud": "Score displays, health bars, pixel aesthetic, lives counter",
+        "sci_fi_console": "Holographic panels, tech readouts, glowing borders, futuristic",
+        "newspaper": "Multi-column text, masthead, bylines, pull quotes, datelines",
+        "restaurant_menu": "Categories, dish names with descriptions, prices, specials",
+        "recipe_card": "Ingredients list, numbered steps, cook time, servings, image",
+        "event_poster": "Large headline, date/time/venue, artistic, bold typography",
+        "magazine_spread": "Editorial layout, large imagery, pull quotes, captions",
+        "streaming_service": "Content rows, thumbnails with titles, play buttons, categories",
+        "vintage_catalog": "Product illustrations, prices, item numbers, retro grid",
+        "museum_exhibit": "Gallery cards, captions, lots of whitespace, minimal",
+        "meditation_app": "Breathing animation placeholder, session cards, calm, minimal",
+        "government_form": "Form fields, section numbers, official styling, stamps",
+        "infographic": "Data visualization, icon stats, flow diagrams, comparisons",
+    },
+)
+
+# Tier 8: Layout Structure
+
+PAGE_STRUCTURE = Dimension(
+    name="page_structure",
+    description="Overall page layout architecture",
+    values={
+        "hero_sections": "Traditional hero → stacked sections flow",
+        "split_screen": "Two-column layout throughout",
+        "card_mosaic": "Bento/Pinterest-style mixed grid",
+        "editorial_scroll": "Magazine long-form vertical",
+        "app_shell": "Fixed nav + scrolling content area",
+        "sidebar_main": "Persistent sidebar with main content",
+        "single_canvas": "One continuous surface, no sections",
+        "modular_blocks": "Distinct stackable content blocks",
+        "asymmetric_panels": "Deliberately unbalanced layout",
+        "fullscreen_slides": "Viewport-height sections",
+    },
+)
+
+NAVIGATION_PATTERN = Dimension(
+    name="navigation_pattern",
+    description="Primary navigation style",
+    values={
+        "top_fixed": "Standard sticky header nav",
+        "top_transparent": "Transparent header over hero",
+        "side_persistent": "Always-visible sidebar nav",
+        "side_collapsible": "Hamburger → slide out drawer",
+        "bottom_bar": "Mobile-style fixed bottom nav",
+        "floating_pill": "Floating nav element (centered or corner)",
+        "hidden_scroll": "Appears on scroll up, hides on scroll down",
+        "tabs": "Tab-based navigation",
+        "breadcrumb_only": "No main nav, just breadcrumbs",
+        "none": "No navigation (single page, artistic)",
+    },
+)
+
+HERO_STYLE = Dimension(
+    name="hero_style",
+    description="Hero/header section treatment",
+    values={
+        "full_viewport": "Takes entire viewport height",
+        "half_viewport": "50vh hero section",
+        "contained": "Padded container, not edge-to-edge",
+        "split_image": "Image on one side, content on other",
+        "centered_minimal": "Just text, lots of breathing room",
+        "video_background": "Placeholder for video bg",
+        "image_background": "Full-bleed background image area",
+        "gradient_background": "Bold gradient background",
+        "illustrated": "Custom illustration placeholder",
+        "none": "No hero, dive straight into content",
+    },
+)
+
+CONTENT_FLOW = Dimension(
+    name="content_flow",
+    description="How content is organized and flows",
+    values={
+        "vertical_scroll": "Standard vertical scrolling",
+        "card_grid": "Uniform card grid",
+        "masonry": "Pinterest-style varied heights",
+        "timeline": "Sequential/chronological flow",
+        "accordion": "Expandable sections",
+        "tabs_panels": "Tabbed content panels",
+        "carousel": "Horizontal sliding content",
+        "list_detail": "List view with detail panel",
+        "kanban": "Column-based board layout",
+        "tree": "Hierarchical tree structure",
     },
 )
 
@@ -508,6 +601,11 @@ ALL_DIMENSIONS: list[Dimension] = [
     EMOTIONAL_TONE,
     CULTURAL_INFLUENCE,
     FUNCTIONAL_DIRECTION,
+    # Tier 8: Layout Structure
+    PAGE_STRUCTURE,
+    NAVIGATION_PATTERN,
+    HERO_STYLE,
+    CONTENT_FLOW,
 ]
 
 
