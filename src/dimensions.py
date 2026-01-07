@@ -454,39 +454,203 @@ FUNCTIONAL_DIRECTION = Dimension(
     name="functional_direction",
     description="Primary functional purpose - THIS DRIVES THE PAGE STRUCTURE",
     values={
-        # Standard web types
+        # === STANDARD WEB TYPES ===
         "dashboard": "Analytics panels, metrics grid, sidebar nav, data cards, charts",
         "admin_panel": "Table views, CRUD forms, action buttons, breadcrumbs, filters",
         "landing_page": "Hero section, CTAs, testimonials, pricing tables, conversion focus",
-        "documentation": "Sidebar nav, code blocks, search, breadcrumbs, prev/next links",
-        "e_commerce": "Product grid, filters, cart, product cards with prices",
-        "portfolio": "Project cards, case study layout, about section, contact",
-        "blog": "Article layout, reading typography, author bio, related posts",
-        "social_platform": "Feed of posts, profile cards, interactions, notifications",
-        # Specific app types
-        "music_player": "Now playing, album art, playlists, progress bar, controls",
-        "messaging_app": "Conversation list, chat bubbles, input field, timestamps",
-        "calendar_app": "Month/week/day views, event cards, time slots, mini calendar",
-        "email_client": "Inbox list, preview pane, folders sidebar, compose button",
-        "weather_app": "Current conditions large, forecast row, location, hourly",
-        "fitness_tracker": "Progress rings, stat cards, activity feed, goals",
-        "settings_panel": "Toggle groups, preference sections, save buttons, categories",
-        "onboarding_flow": "Step indicators, single focus per screen, progress, CTAs",
-        # Wild and experimental
+        "documentation": "Sidebar TOC, code blocks, search, breadcrumbs, prev/next links",
+        "e_commerce": "Product grid, filters, cart icon, product cards with prices, ratings",
+        "portfolio": "Project cards, case study sections, about/contact, work samples",
+        "blog": "Article layout, reading typography, author byline, related posts",
+        "social_feed": "Post cards with avatar/timestamp, like/comment buttons, feed layout",
+        "forum": "Thread list, post/reply structure, user badges, vote counts",
+        "wiki": "Article with TOC, edit button, revision history, internal links",
+        "knowledge_base": "Search-prominent, category cards, FAQ accordion, help articles",
+        "pricing_page": "Tier comparison cards, feature checkmarks, CTA buttons, toggle billing",
+        "changelog": "Version entries, date headers, tag badges, expandable details",
+        "status_page": "Service list with indicators, uptime graphs, incident history",
+
+        # === EDUCATION & LEARNING ===
+        "online_course": "Video player area, lesson sidebar, progress bar, notes section",
+        "quiz_interface": "Question card, answer options, progress indicator, timer, score",
+        "flashcard_app": "Card flip interaction, deck progress, study stats, streak",
+        "language_learning": "Lesson modules, XP/streak display, practice exercises, mascot",
+        "lms_dashboard": "Course cards, assignment list, grades, calendar, announcements",
+        "textbook_reader": "Page content, chapter nav, highlights, annotations, bookmarks",
+        "tutorial_walkthrough": "Step-by-step panels, code snippets, try-it areas, checkpoints",
+        "grade_book": "Student roster, assignment columns, score cells, averages, filters",
+        "exam_interface": "Question navigation, answer area, flag for review, submit, timer",
+        "certification_page": "Certificate display, verification code, share buttons, details",
+
+        # === PRODUCTIVITY & WORK ===
+        "project_management": "Task columns/lists, assignees, due dates, progress bars",
+        "kanban_board": "Draggable columns, task cards, labels, swimlanes, WIP limits",
+        "note_taking": "Editor area, notebook sidebar, tags, search, formatting toolbar",
+        "spreadsheet": "Cell grid, column/row headers, formula bar, sheet tabs, toolbar",
+        "time_tracker": "Timer display, task list, weekly summary, project breakdown",
+        "invoice": "Company header, line items table, totals, payment terms, due date",
+        "crm": "Contact list, deal pipeline, activity timeline, company cards",
+        "help_desk": "Ticket list, status badges, priority tags, assignee, response area",
+        "file_manager": "Folder tree, file grid/list, breadcrumbs, upload, preview pane",
+        "presentation": "Slide canvas, thumbnail sidebar, presenter notes, controls",
+
+        # === COMMUNICATION ===
+        "messaging_app": "Conversation list, chat bubbles (left/right), input field, timestamps",
+        "email_client": "Inbox list, preview pane, folder sidebar, compose button, search",
+        "video_call": "Video grid, participant list, controls bar, chat sidebar, screen share",
+        "team_chat": "Channel sidebar, message thread, reactions, mentions, file attachments",
+        "comment_section": "Threaded comments, reply forms, vote buttons, user avatars",
+        "live_chat_widget": "Chat bubble, message history, typing indicator, agent info",
+        "announcement_board": "Post cards, pinned items, categories, timestamps, admin badges",
+
+        # === MEDIA & ENTERTAINMENT ===
+        "music_player": "Now playing with album art, progress bar, controls, playlist queue",
+        "video_player": "Video area, playback controls, quality selector, captions, related",
+        "podcast_player": "Episode list, player controls, show notes, subscribe button",
+        "photo_gallery": "Image grid, lightbox, albums, upload, filters",
+        "news_reader": "Article list, reading pane, categories, save/share, font controls",
+        "streaming_service": "Content rows, thumbnails, play buttons, categories, continue watching",
+        "movie_database": "Movie cards, ratings, cast list, reviews, watchlist button",
+        "comic_reader": "Page view, panel zoom, chapter navigation, reading progress",
+        "audio_visualizer": "Waveform/spectrum display, track info, playback, color themes",
+        "live_stream": "Video player, chat sidebar, viewer count, streamer info, donations",
+
+        # === FINANCE & BUSINESS ===
+        "banking_dashboard": "Account summary, transaction list, quick actions, spending chart",
+        "investment_portfolio": "Holdings table, performance chart, gain/loss, allocation pie",
+        "expense_tracker": "Transaction list, category breakdown, budget progress, add expense",
+        "crypto_tracker": "Coin list, price charts, portfolio value, market cap, watchlist",
+        "pos_terminal": "Product grid, cart, payment buttons, receipt preview, numpad",
+        "stock_ticker": "Price display, mini charts, volume, ticker tape, alerts",
+        "budget_planner": "Category budgets, spending bars, remaining amounts, monthly view",
+        "subscription_manager": "Service list, costs, renewal dates, total monthly, cancel",
+
+        # === HEALTH & WELLNESS ===
+        "fitness_tracker": "Progress rings, stat cards, activity feed, workout log, goals",
+        "meditation_app": "Session timer, breathing guide, streak display, ambient backgrounds",
+        "habit_tracker": "Habit grid, streak counts, daily checkboxes, statistics, reminders",
+        "sleep_tracker": "Sleep score, duration graph, sleep stages, bedtime, trends",
+        "nutrition_counter": "Food log, calorie/macro breakdown, meal sections, barcode scan",
+        "appointment_booking": "Calendar picker, time slots, provider selection, confirmation",
+        "symptom_checker": "Body map, symptom selection, severity scale, recommendations",
+        "medical_records": "Patient info, visit history, medications, test results, documents",
+        "mental_health_journal": "Daily entry, mood tracker, prompts, insights, privacy lock",
+
+        # === TRAVEL & LOCATION ===
+        "flight_booking": "Search form, flight results, filters, seat map, booking flow",
+        "hotel_search": "Property cards, map view, filters, amenities, reviews, book button",
+        "trip_planner": "Itinerary timeline, day cards, map, budget tracker, packing list",
+        "maps_interface": "Map canvas, search bar, directions panel, layers, pins",
+        "transit_app": "Route planner, departure times, line maps, service alerts, favorites",
+        "restaurant_finder": "Listing cards, map, filters, cuisine types, ratings, distance",
+        "ride_sharing": "Map with car locations, pickup/dropoff, fare estimate, driver info",
+        "travel_guide": "Destination hero, attractions, tips, photos, local info",
+
+        # === SOCIAL & COMMUNITY ===
+        "dating_profile": "Photos carousel, bio, interests tags, match percentage, message",
+        "user_profile": "Avatar, bio, stats, activity feed, followers, settings",
+        "community_directory": "Member cards, search, filters, join button, activity stats",
+        "review_site": "Star ratings, review cards, photos, helpful votes, owner response",
+        "event_discovery": "Event cards, date filters, map, categories, RSVP, sharing",
+        "group_page": "Cover photo, member list, discussion feed, events, files",
+
+        # === CREATIVE TOOLS ===
+        "code_editor": "Editor pane, file tree, tabs, terminal, syntax highlighting, minimap",
+        "design_tool": "Canvas area, toolbar, layers panel, properties sidebar, zoom",
+        "color_picker": "Color wheel, sliders, swatches, palette generator, export formats",
+        "font_browser": "Specimen cards, preview text, filters, categories, download",
+        "component_library": "Component cards, code snippets, props table, live preview",
+        "icon_library": "Icon grid, search, categories, size/color options, copy code",
+        "markdown_editor": "Split pane editor/preview, toolbar, file browser, export",
+        "animation_timeline": "Timeline tracks, keyframes, playhead, properties, preview",
+
+        # === REAL ESTATE ===
+        "property_listing": "Photo gallery, price, details grid, map, agent contact, similar",
+        "floor_plan": "Interactive plan, room labels, measurements, furniture toggle",
+        "mortgage_calculator": "Input sliders, monthly payment, amortization chart, comparison",
+
+        # === FOOD & DINING ===
+        "restaurant_menu": "Categories, dish name + description + price, specials, dietary icons",
+        "recipe_card": "Ingredients list, numbered steps, prep/cook time, servings, ratings",
+        "food_delivery": "Restaurant list, menu, cart, checkout, order tracking, address",
+        "meal_planner": "Weekly calendar, recipe cards, shopping list, nutrition totals",
+        "wine_list": "Regions, varietals, tasting notes, price, pairings, sommelier picks",
+
+        # === SPORTS & GAMING ===
+        "sports_scores": "Live scores, team matchups, league standings, schedule, stats",
+        "fantasy_sports": "Team roster, points, matchup, waiver wire, league standings",
+        "tournament_bracket": "Bracket tree, match cards, seeds, winners path, champion",
+        "game_leaderboard": "Rank list, player names, scores, trophies, filters, search",
+        "character_sheet": "Stats block, inventory grid, abilities, portrait, level/XP",
+        "game_inventory": "Item grid, categories, equip slots, stats comparison, sort",
+        "achievement_showcase": "Badge grid, unlock progress, rarity, descriptions, dates",
+
+        # === NEWS & PUBLISHING ===
+        "newspaper": "Multi-column layout, masthead, bylines, pull quotes, sections",
+        "magazine_spread": "Large imagery, editorial layout, pull quotes, captions",
+        "newsletter": "Header branding, article sections, CTA buttons, footer links",
+        "press_release": "Company header, headline, dateline, body text, contact info",
+        "podcast_directory": "Show cards, categories, charts, episode lists, subscribe",
+
+        # === EVENTS & BOOKING ===
+        "event_poster": "Giant headline, date/time/venue, artistic layout, RSVP",
+        "ticket_booking": "Event details, seat map, ticket types, quantity, checkout",
+        "conference_schedule": "Day tabs, time slots, session cards, tracks, speakers",
+        "wedding_invitation": "Couple names, date/venue, RSVP form, registry, story",
+        "countdown_page": "Large countdown timer, event name, email signup, teaser",
+
+        # === UTILITY PAGES ===
+        "calculator": "Display, number pad, operation buttons, history, modes",
+        "survey_form": "Question progression, answer types, progress bar, submit",
+        "url_shortener": "Input field, shorten button, result with copy, click stats",
+        "password_generator": "Output field, length slider, options checkboxes, copy button",
+        "unit_converter": "Input/output fields, unit dropdowns, swap button, conversions",
+        "qr_generator": "Input field, QR display, download button, customization options",
+
+        # === RETRO & NOVELTY ===
         "terminal_ui": "Monospace everything, command prompts, green/amber on black, ASCII",
-        "retro_game_hud": "Score displays, health bars, pixel aesthetic, lives counter",
-        "sci_fi_console": "Holographic panels, tech readouts, glowing borders, futuristic",
-        "newspaper": "Multi-column text, masthead, bylines, pull quotes, datelines",
-        "restaurant_menu": "Categories, dish names with descriptions, prices, specials",
-        "recipe_card": "Ingredients list, numbered steps, cook time, servings, image",
-        "event_poster": "Large headline, date/time/venue, artistic, bold typography",
-        "magazine_spread": "Editorial layout, large imagery, pull quotes, captions",
-        "streaming_service": "Content rows, thumbnails with titles, play buttons, categories",
-        "vintage_catalog": "Product illustrations, prices, item numbers, retro grid",
-        "museum_exhibit": "Gallery cards, captions, lots of whitespace, minimal",
-        "meditation_app": "Breathing animation placeholder, session cards, calm, minimal",
-        "government_form": "Form fields, section numbers, official styling, stamps",
-        "infographic": "Data visualization, icon stats, flow diagrams, comparisons",
+        "retro_game_hud": "Score display, health bar, lives, pixel aesthetic, power-ups",
+        "sci_fi_console": "Holographic panels, tech readouts, glowing borders, hexagonal",
+        "windows_95": "Title bars, start menu, desktop icons, gray beveled buttons",
+        "vaporwave": "Pink/cyan gradients, grid backgrounds, glitch effects, statues",
+        "cyberpunk": "Neon on dark, glitch effects, tech overlays, angular shapes",
+        "pixel_art_ui": "Pixelated elements, 8-bit aesthetic, chiptune vibes, retro palette",
+        "90s_website": "Under construction GIFs, hit counter, guestbook, tiled backgrounds",
+        "myspace_profile": "Top 8 friends, profile song, sparkly GIFs, custom CSS chaos",
+        "vintage_catalog": "Product illustrations, item numbers, prices, order form, retro",
+
+        # === PROFESSIONAL & INDUSTRY ===
+        "government_form": "Form fields, section numbers, official seals, instructions",
+        "legal_document": "Numbered paragraphs, signatures, seals, formal typography",
+        "scientific_paper": "Abstract, sections, citations, figures, references list",
+        "medical_chart": "Patient header, vitals, notes sections, orders, signatures",
+        "lab_results": "Test names, values, reference ranges, flags, interpretation",
+        "shipping_tracker": "Package status, timeline, map, delivery estimate, details",
+        "inventory_system": "Stock levels, SKUs, locations, reorder alerts, movements",
+        "security_dashboard": "Threat alerts, logs, status indicators, maps, severity",
+        "iot_dashboard": "Device cards, sensor readings, status lights, graphs, controls",
+
+        # === PERSONAL & MISC ===
+        "resume_cv": "Contact header, experience timeline, skills, education, achievements",
+        "business_card": "Name, title, contact info, logo, QR code, minimal layout",
+        "personal_homepage": "Hero intro, about, projects, contact, social links",
+        "linktree_clone": "Profile pic, bio, stacked link buttons, social icons",
+        "memorial_page": "Photo, dates, biography, guestbook, photo gallery, donations",
+        "coming_soon": "Logo, launch countdown, email signup, social links, teaser",
+        "404_page": "Error message, illustration, search, navigation suggestions",
+        "maintenance_page": "Status message, estimated time, contact info, updates",
+        "login_page": "Form fields, submit button, forgot password, social login, signup",
+        "settings_panel": "Toggle groups, preference sections, save buttons, categories",
+        "onboarding_flow": "Step indicator, single focus content, progress, next/back",
+        "cookie_consent": "Banner, accept/reject buttons, preferences, privacy link",
+        "age_verification": "Date inputs or yes/no, legal text, submit, logo",
+
+        # === DATA & ANALYTICS ===
+        "infographic": "Data visualizations, icon stats, flow diagrams, comparisons",
+        "report_builder": "Chart widgets, drag-drop, filters, date range, export options",
+        "data_table": "Sortable columns, pagination, filters, row selection, bulk actions",
+        "chart_dashboard": "Multiple chart types, filters, date range, drill-down, export",
+        "analytics_overview": "KPI cards, trend lines, comparison periods, top lists",
     },
 )
 

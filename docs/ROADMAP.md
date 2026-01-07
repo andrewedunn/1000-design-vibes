@@ -35,15 +35,14 @@
 ---
 
 ### v0.4 - Functional Direction & Layout Dimensions (2026-01-07)
-- [x] Expanded `functional_direction` from 10 to 30 options
-- [x] Added wild/experimental types: terminal_ui, retro_game_hud, sci_fi_console, newspaper, restaurant_menu, recipe_card, event_poster, magazine_spread, streaming_service, vintage_catalog, museum_exhibit, meditation_app, government_form, infographic
-- [x] Added app-specific types: music_player, messaging_app, calendar_app, email_client, weather_app, fitness_tracker, settings_panel, onboarding_flow
+- [x] Expanded `functional_direction` from 10 to **158 options** across 18 categories
+- [x] Categories include: Standard Web, Education, Productivity, Communication, Media, Finance, Health, Travel, Social, Creative Tools, Food & Dining, Sports & Gaming, Events, Utility, Retro & Novelty, Professional, Personal, Data & Analytics
 - [x] Added 4 layout structure dimensions: page_structure, navigation_pattern, hero_style, content_flow
 - [x] Updated DESIGN_GUIDE_LOOSE.md to make functional_direction the PRIMARY driver
-- [x] Total dimensions: 31 → 35
+- [x] Total dimensions: 31 → 35, total values: ~200 → 412
 - [x] GitHub Pages deployed at andrewedunn.github.io/1000-design-vibes
 
-**Key Change:** functional_direction now determines page structure and required components, not just styling. Guide explicitly states "If your design doesn't clearly look like its functional_direction, you've failed the task."
+**Key Change:** functional_direction now determines page structure and required components, not just styling. Each direction specifies exact UI elements that must be present. Guide explicitly states "If your design doesn't clearly look like its functional_direction, you've failed the task."
 
 ---
 

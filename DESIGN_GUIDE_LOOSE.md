@@ -17,38 +17,30 @@ Generate a self-contained HTML file showcasing a unique design system. **Be crea
 
 **The `functional_direction` dimension is the PRIMARY driver of your design.** It determines the page structure, components, and layout - not just styling.
 
-| Value | YOU MUST INCLUDE |
-|-------|------------------|
-| `dashboard` | Sidebar nav, metric cards with numbers, charts/graphs, data tables, status indicators |
-| `admin_panel` | Data tables, CRUD action buttons, form inputs, filters, breadcrumbs |
-| `landing_page` | Hero section with CTA, feature grid, testimonial cards, pricing table |
-| `documentation` | Sidebar table of contents, code blocks, search bar, prev/next navigation |
-| `e_commerce` | Product cards with prices, filter sidebar, shopping cart icon, ratings |
-| `portfolio` | Project cards with images, case study sections, about/contact |
-| `blog` | Article with proper typography, author byline, related posts, reading time |
-| `social_platform` | Post cards with avatar/name/timestamp, like/comment buttons, feed layout |
-| `music_player` | Large album art, progress bar, play/pause/skip buttons, playlist |
-| `messaging_app` | Conversation list sidebar, chat bubbles (left/right), message input |
-| `calendar_app` | Month grid or week view, event cards, mini calendar, today button |
-| `email_client` | Inbox list, email preview pane, folder sidebar, compose button |
-| `weather_app` | Large current temp, weather icon, hourly row, 5-day forecast |
-| `fitness_tracker` | Progress rings/circles, stat cards, activity list, goal indicators |
-| `settings_panel` | Grouped toggles, dropdown selects, save button, section headers |
-| `onboarding_flow` | Step indicator dots, single focused content, next/back buttons |
-| `terminal_ui` | Monospace font everywhere, command prompts, dark bg with green/amber text |
-| `retro_game_hud` | Score display, health/lives, pixel-style elements, game-like layout |
-| `sci_fi_console` | Glowing borders, tech readouts, hexagonal or angular shapes |
-| `newspaper` | Multi-column text, large masthead, bylines, pull quotes |
-| `restaurant_menu` | Food categories, dish name + description + price format |
-| `recipe_card` | Ingredients list, numbered steps, prep/cook time, servings |
-| `event_poster` | Giant headline, date/time/venue prominently displayed |
-| `magazine_spread` | Large images, pull quotes, editorial layout |
-| `streaming_service` | Content rows with thumbnails, play buttons, category headers |
-| `vintage_catalog` | Product grid with illustrations, item numbers, retro styling |
-| `museum_exhibit` | Lots of whitespace, caption-style text, gallery cards |
-| `meditation_app` | Calm colors, breathing circle placeholder, session cards |
-| `government_form` | Form fields, section numbers, official/bureaucratic styling |
-| `infographic` | Data viz elements, icon + stat combinations, flow diagrams |
+There are **158 functional directions** organized into categories. Each one specifies required UI elements. Here are the categories and examples:
+
+| Category | Examples |
+|----------|----------|
+| **Standard Web** | dashboard, admin_panel, landing_page, documentation, e_commerce, blog, wiki, pricing_page |
+| **Education** | online_course, quiz_interface, flashcard_app, language_learning, lms_dashboard, grade_book, exam_interface |
+| **Productivity** | project_management, kanban_board, note_taking, spreadsheet, time_tracker, invoice, crm, file_manager |
+| **Communication** | messaging_app, email_client, video_call, team_chat, comment_section, live_chat_widget |
+| **Media** | music_player, video_player, podcast_player, photo_gallery, streaming_service, movie_database, comic_reader |
+| **Finance** | banking_dashboard, investment_portfolio, expense_tracker, crypto_tracker, pos_terminal, budget_planner |
+| **Health** | fitness_tracker, meditation_app, habit_tracker, sleep_tracker, nutrition_counter, appointment_booking |
+| **Travel** | flight_booking, hotel_search, trip_planner, maps_interface, transit_app, ride_sharing |
+| **Social** | dating_profile, user_profile, review_site, event_discovery, community_directory |
+| **Creative Tools** | code_editor, design_tool, color_picker, font_browser, component_library, markdown_editor |
+| **Food & Dining** | restaurant_menu, recipe_card, food_delivery, meal_planner, wine_list |
+| **Sports & Gaming** | sports_scores, tournament_bracket, game_leaderboard, character_sheet, game_inventory |
+| **Events** | event_poster, ticket_booking, conference_schedule, wedding_invitation, countdown_page |
+| **Utility** | calculator, survey_form, password_generator, qr_generator, unit_converter |
+| **Retro & Novelty** | terminal_ui, retro_game_hud, sci_fi_console, windows_95, vaporwave, cyberpunk, 90s_website, myspace_profile |
+| **Professional** | government_form, legal_document, scientific_paper, medical_chart, shipping_tracker, security_dashboard |
+| **Personal** | resume_cv, personal_homepage, linktree_clone, 404_page, login_page, coming_soon |
+| **Data & Analytics** | infographic, report_builder, data_table, chart_dashboard, analytics_overview |
+
+**Each functional_direction has specific required components in `src/dimensions.py`.** Your design MUST include those elements.
 
 **If your design doesn't clearly look like its functional_direction, you've failed the task.**
 
