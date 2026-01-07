@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mid Epoch - Design #21</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Design #21 - Mid Epoch
+        ABOUTME: A mid-century modern editorial experience with mediterranean warmth and sophisticated restraint
+
+        Design Philosophy:
+        - Editorial typography-driven layout with slab serif headlines
+        - Triadic color palette in monochromatic presentation creates sophisticated depth
+        - Very rounded containers with thick borders create organic, friendly forms
+        - Compact density in freeform grid suggests enterprise maturity
+        - Subtle background gradients and justified text evoke newsletter/magazine aesthetic
+        - Mediterranean cultural influence in warm earth tones and golden accents
+
+        Key Design Tokens:
+        - Primary: Warm sand (#C4A563)
+        - Secondary: Deep navy (#2C3E50)
+        - Accent: Mediterranean terracotta (#C85A54)
+        - Base spacing: 4px (16px unit system: 4x4, 8x4, 12x4, etc.)
+        - Very rounded corners (32-40px radius on cards)
+        - Thick 3px borders throughout
+        - No shadows - flat, confident design
+        - Slab serif headlines (Playfair Display) - authoritative
+        - Geometric sans body (Inter) - clean, modern
+        - Type scale: Minor second (1.067x)
+        */
+
+        :root {
+            /* Colors - Triadic with monochromatic presentation */
+            --color-primary: #C4A563;
+            --color-secondary: #2C3E50;
+            --color-accent: #C85A54;
+            --color-background: #FEFEF9;
+            --color-surface: #F5F3ED;
+            --color-text: #2C2C2C;
+            --color-text-muted: #6B6B6B;
+            --color-border: #2C3E50;
+
+            /* Typography */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Spacing - 4px base unit */
+            --space-unit: 4px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 5);
+            --space-2xl: calc(var(--space-unit) * 6);
+            --space-3xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 32px;
+            --radius-lg: 40px;
+            --border-default: 3px;
+            --shadow-default: none;
+
+            /* Type Scale (Minor Second: 1.067x) */
+            --font-size-xs: 0.875rem;
+            --font-size-sm: 0.935rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.067rem;
+            --font-size-xl: 1.138rem;
+            --font-size-2xl: 1.215rem;
+            --font-size-3xl: 1.296rem;
+            --font-size-4xl: 1.383rem;
+            --font-size-5xl: 1.476rem;
+            --font-size-6xl: 1.575rem;
+            --font-size-7xl: 1.681rem;
+            --font-size-8xl: 1.794rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--color-background);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states */
+        *:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-8xl);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-2xl);
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-6xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-xl);
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.2;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-lg);
+        }
+
+        h4 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.25;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        p {
+            margin-bottom: var(--space-lg);
+            line-height: 1.5;
+            text-align: justify;
+            color: var(--color-text);
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: underline;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.75;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+            padding: var(--space-3xl);
+            margin-bottom: var(--space-3xl);
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .hero h1 {
+            margin-bottom: var(--space-xl);
+        }
+
+        .tagline {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            font-weight: 500;
+            margin-bottom: var(--space-2xl);
+            line-height: 1.4;
+        }
+
+        /* Freeform grid layout */
+        .grid-freeform {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3xl);
+            margin-bottom: var(--space-3xl);
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-freeform {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-freeform {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card component - floating style */
+        .card {
+            background: var(--color-surface);
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-2xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-secondary));
+        }
+
+        .card h3 {
+            margin-top: var(--space-lg);
+        }
+
+        /* Typography showcase */
+        .type-showcase {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .type-scale {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .scale-item {
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-2xl);
+            background: var(--color-surface);
+        }
+
+        .scale-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+        }
+
+        /* Color palette */
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .color-swatch {
+            border-radius: var(--radius-default);
+            height: 120px;
+            border: var(--border-default) solid var(--color-border);
+            display: flex;
+            align-items: flex-end;
+            padding: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-label {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text);
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* Components section */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-2xl);
+        }
+
+        .component-demo {
+            background: var(--color-surface);
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-2xl);
+        }
+
+        .component-demo h4 {
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Button styles */
+        button, .btn {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: var(--border-default) solid var(--color-primary);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg) var(--space-2xl);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            display: inline-block;
+            margin-right: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        button:hover, .btn:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-secondary);
+            border: var(--border-default) solid var(--color-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary);
+            color: var(--color-background);
+        }
+
+        .btn-accent {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .btn-accent:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        /* Input styles */
+        input, textarea {
+            width: 100%;
+            padding: var(--space-lg);
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            margin-bottom: var(--space-lg);
+            line-height: 1.3;
+        }
+
+        input:focus, textarea:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Utility grid for icons */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .icon-box {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            border: var(--border-default) solid var(--color-border);
+            border-radius: var(--radius-default);
+            background: var(--color-surface);
+        }
+
+        .icon-box::after {
+            content: '■';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--font-size-4xl);
+            color: var(--color-primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-secondary);
+            color: var(--color-background);
+            padding: var(--space-3xl);
+            border-top: var(--border-default) solid var(--color-border);
+            text-align: center;
+            margin-top: var(--space-3xl);
+        }
+
+        footer p {
+            margin-bottom: var(--space-md);
+            text-align: center;
+            justify-content: center;
+        }
+
+        footer a {
+            color: var(--color-primary);
+        }
+
+        /* Spacing demo */
+        .spacing-demo {
+            display: flex;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+            flex-wrap: wrap;
+        }
+
+        .space-box {
+            border: var(--border-default) dashed var(--color-border);
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            font-size: var(--font-size-xs);
+            border-radius: var(--radius-default);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .space-box.xs { width: 20px; height: 20px; }
+        .space-box.sm { width: 32px; height: 32px; }
+        .space-box.md { width: 48px; height: 48px; }
+        .space-box.lg { width: 64px; height: 64px; }
+        .space-box.xl { width: 80px; height: 80px; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Mid Epoch</h1>
+            <p class="tagline">A Mediterranean-inspired design system for enterprise, rooted in mid-century modern sensibilities.</p>
+            <p>This design brings together editorial typography with sophisticated color harmony. Golden sand tones meet deep navy and terracotta, creating a warm yet professional aesthetic that speaks to timeless design principles.</p>
+        </section>
+
+        <!-- Color Palette -->
+        <section>
+            <h2>Color Palette</h2>
+            <p>Triadic color theory expressed through a monochromatic lens—primary colors subtly modulated for enterprise restraint.</p>
+            <div class="palette">
+                <div class="color-swatch" style="background: #C4A563;">
+                    <div class="color-label">Primary<br>Sand</div>
+                </div>
+                <div class="color-swatch" style="background: #2C3E50;">
+                    <div class="color-label">Secondary<br>Navy</div>
+                </div>
+                <div class="color-swatch" style="background: #C85A54;">
+                    <div class="color-label">Accent<br>Terracotta</div>
+                </div>
+                <div class="color-swatch" style="background: #FEFEF9; border: var(--border-default) solid #E0E0E0;">
+                    <div class="color-label">Background<br>Cream</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="type-showcase">
+            <h2>Typography</h2>
+            <p>Slab serif headlines project authority. Geometric sans-serif body text ensures clarity. Type scale uses minor second ratio (1.067x) for intimate, compact hierarchy.</p>
+
+            <div class="type-scale">
+                <div class="scale-item">
+                    <div class="scale-label">Heading (Playfair Display)</div>
+                    <h4>The Quick Brown Fox</h4>
+                </div>
+                <div class="scale-item">
+                    <div class="scale-label">Body (Inter)</div>
+                    <p>The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet.</p>
+                </div>
+                <div class="scale-item">
+                    <div class="scale-label">Type Sizes H1-H4</div>
+                    <div style="font-size: var(--font-size-8xl); font-family: var(--font-heading); line-height: 1; margin-bottom: 4px;">H1</div>
+                    <div style="font-size: var(--font-size-6xl); font-family: var(--font-heading); line-height: 1; margin-bottom: 4px;">H2</div>
+                    <div style="font-size: var(--font-size-4xl); font-family: var(--font-heading); line-height: 1; margin-bottom: 4px;">H3</div>
+                    <div style="font-size: var(--font-size-2xl); font-family: var(--font-heading); line-height: 1;">H4</div>
+                </div>
+                <div class="scale-item">
+                    <div class="scale-label">Body Sizes (xs to xl)</div>
+                    <div style="font-size: var(--font-size-xs); margin-bottom: 4px;">Extra Small</div>
+                    <div style="font-size: var(--font-size-sm); margin-bottom: 4px;">Small</div>
+                    <div style="font-size: var(--font-size-base); margin-bottom: 4px;">Base</div>
+                    <div style="font-size: var(--font-size-lg); margin-bottom: 4px;">Large</div>
+                    <div style="font-size: var(--font-size-xl);">Extra Large</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing System -->
+        <section>
+            <h2>Spacing System</h2>
+            <p>Base unit: 4px. All spacing scales from this minimal unit, creating tight, controlled layouts appropriate for enterprise applications.</p>
+            <div class="spacing-demo">
+                <div class="space-box xs">4px</div>
+                <div class="space-box sm">8px</div>
+                <div class="space-box md">12px</div>
+                <div class="space-box lg">16px</div>
+                <div class="space-box xl">20px</div>
+            </div>
+        </section>
+
+        <!-- Components Grid -->
+        <section>
+            <h2>Components</h2>
+            <div class="components-grid">
+                <div class="component-demo">
+                    <h4>Buttons</h4>
+                    <button>Primary</button>
+                    <button class="btn-secondary">Secondary</button>
+                    <button class="btn-accent">Accent</button>
+                </div>
+
+                <div class="component-demo">
+                    <h4>Form Inputs</h4>
+                    <input type="text" placeholder="Text input">
+                    <textarea placeholder="Textarea input" rows="3"></textarea>
+                </div>
+
+                <div class="component-demo">
+                    <h4>Cards</h4>
+                    <div class="card">
+                        <h4>Card Title</h4>
+                        <p>Cards use very rounded corners and thick borders. Subtle gradient top accent creates visual hierarchy.</p>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <h4>Emphasis Styles</h4>
+                    <p><strong>Strong text</strong> for emphasis</p>
+                    <p><em>Italic text</em> for secondary meaning</p>
+                    <p><a href="#">Link styling</a> with underline</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filled Icon Grid -->
+        <section>
+            <h2>Icon System</h2>
+            <p>Filled icon style. Solid geometric forms convey confidence and clarity.</p>
+            <div class="icon-grid">
+                <div class="icon-box"></div>
+                <div class="icon-box"></div>
+                <div class="icon-box"></div>
+                <div class="icon-box"></div>
+                <div class="icon-box"></div>
+                <div class="icon-box"></div>
+            </div>
+        </section>
+
+        <!-- Feature Cards -->
+        <section>
+            <h2>Design Features</h2>
+            <div class="grid-freeform">
+                <div class="card">
+                    <h3>Freeform Grid</h3>
+                    <p>Layout breaks free from rigid structure while maintaining ordered elegance. No predetermined template—design flows naturally.</p>
+                </div>
+                <div class="card">
+                    <h3>Very Rounded Forms</h3>
+                    <p>32-40px border radius on all major containers creates friendly, organic shapes that soften the editorial formality.</p>
+                </div>
+                <div class="card">
+                    <h3>Thick Borders</h3>
+                    <p>3px borders throughout provide bold visual definition. No shadows—pure form and line create structure.</p>
+                </div>
+                <div class="card">
+                    <h3>Justified Text</h3>
+                    <p>Body text aligns on both edges, creating formal, editorial presentation. Pairs perfectly with slab serif headlines for print-like quality.</p>
+                </div>
+                <div class="card">
+                    <h3>Mediterranean Soul</h3>
+                    <p>Warm sand tones with deep anchors evoke coastal sophistication. Colors are vivid yet restrained—enterprise with warmth.</p>
+                </div>
+                <div class="card">
+                    <h3>Mid-Century Heritage</h3>
+                    <p>Curves meet geometry. Functionality meets beauty. Design that looks equally at home in 1960 and 2060.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p><strong>Mid Epoch—Design #21</strong></p>
+        <p>1000 Design Vibes | Generated 2026-01-07</p>
+    </footer>
+
+    <script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 21;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+    </script>
+</body>
+</html>

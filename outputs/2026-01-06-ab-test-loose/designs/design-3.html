@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Core - Design System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Thunder Core Design System
+        ABOUTME: Claymorphic meets American Corporate - A SaaS design that blends soft, playful depth with professional structure.
+
+        DESIGN PHILOSOPHY:
+        - Claymorphic UI: Soft, rounded elements with warm earthy tones create a friendly, approachable aesthetic
+        - Scandinavian Modern: Minimalist structure and generous whitespace balance the playfulness
+        - Corporate Sensibility: Right-aligned emphasis, weight-based hierarchy, broken grid layout
+        - American Energy: Vivid warm earth palette with complementary teal accents for high contrast
+        - Compact Density: Information-rich but not cramped - breathing room with purpose
+
+        AESTHETIC PRINCIPLES:
+        The design merges contradictions: rigid corporate structure with soft, inviting forms. It's energetic yet sophisticated,
+        playful yet trustworthy. Uses asymmetric layout to break visual monotony while maintaining scanability.
+        */
+
+        :root {
+            /* Color Palette - Warm Earth meets Complementary Teal */
+            --color-primary: #C85A17;           /* Warm burnt orange */
+            --color-secondary: #1B7373;         /* Teal complement */
+            --color-accent: #E8A537;            /* Golden accent */
+            --color-background: #F9F6F0;        /* Warm off-white */
+            --color-surface: #FFFFFF;           /* Pure white for surfaces */
+            --color-text: #2D2416;              /* Deep brown */
+            --color-text-muted: #7A6D5F;        /* Muted taupe */
+            --color-border: #D4C4B0;            /* Soft beige border */
+            --color-clay-light: #F0D5BA;        /* Light clay */
+            --color-clay-dark: #E8BFA5;         /* Mid clay */
+
+            /* Typography */
+            --font-heading: 'Lora', serif;      /* Transitional serif for headings */
+            --font-body: 'Inter', sans-serif;   /* Geometric sans for body */
+
+            /* Spacing - 12px base unit, compact density */
+            --space-unit: 12px;
+            --space-xs: calc(var(--space-unit) * 0.5);    /* 6px */
+            --space-sm: var(--space-unit);                /* 12px */
+            --space-md: calc(var(--space-unit) * 1.5);   /* 18px */
+            --space-lg: calc(var(--space-unit) * 2);     /* 24px */
+            --space-xl: calc(var(--space-unit) * 3);     /* 36px */
+            --space-2xl: calc(var(--space-unit) * 4);    /* 48px */
+
+            /* Shapes - Subtle rounded corners with soft clay appearance */
+            --radius-default: 8px;
+            --radius-lg: 16px;
+            --radius-pill: 24px;
+
+            /* Shadows - Inset style for claymorphic depth */
+            --shadow-default: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+            --shadow-clay: inset 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04);
+
+            /* Typography Scale - Perfect Fourth (1.333) */
+            --scale-sm: 0.75rem;        /* 12px */
+            --scale-base: 1rem;         /* 16px */
+            --scale-md: 1.333rem;       /* 21px */
+            --scale-lg: 1.777rem;       /* 28px */
+            --scale-xl: 2.369rem;       /* 38px */
+            --scale-2xl: 3.157rem;      /* 50px */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+
+        /* Organic pattern texture - subtle noise overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(232, 165, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(27, 115, 115, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* Accessible focus states */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ========================================
+           NAVIGATION & HEADER
+           ======================================== */
+
+        header {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-clay-light) 100%);
+            padding: var(--space-xl) var(--space-2xl);
+            border-bottom: 2px double var(--color-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            right: -100px;
+            top: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+            opacity: 0.08;
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: var(--scale-2xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: var(--scale-md);
+            color: var(--color-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-family: var(--font-body);
+        }
+
+        /* ========================================
+           MAIN LAYOUT - BROKEN ASYMMETRIC GRID
+           ======================================== */
+
+        main {
+            max-width: 1400px;
+            margin: var(--space-2xl) auto;
+            padding: 0 var(--space-xl);
+        }
+
+        /* Broken grid: mixed width columns for asymmetry */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr 0.9fr;
+            gap: var(--space-lg);
+            grid-auto-flow: dense;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .grid-item {
+            background: var(--color-surface);
+            border: 2px double var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-clay);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-clay), 0 4px 12px rgba(200, 90, 23, 0.1);
+        }
+
+        /* Claymorphic cards with soft depth */
+        .clay-card {
+            background: linear-gradient(135deg, var(--color-clay-light) 0%, var(--color-clay-dark) 100%);
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5),
+                       inset 0 -4px 8px rgba(0, 0, 0, 0.1),
+                       0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clay-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .clay-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========================================
+           COLOR SYSTEM SHOWCASE
+           ======================================== */
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+        }
+
+        .color-swatch {
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            text-align: center;
+            box-shadow: var(--shadow-clay);
+            border: 2px double var(--color-border);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .swatch-label {
+            font-size: var(--scale-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .swatch-value {
+            font-size: 0.875rem;
+            font-family: monospace;
+            opacity: 0.7;
+        }
+
+        /* ========================================
+           TYPOGRAPHY SHOWCASE
+           ======================================== */
+
+        .type-showcase {
+            background: var(--color-surface);
+            border: 2px double var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-xl);
+            margin: var(--space-xl) 0;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: var(--scale-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: var(--scale-lg);
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin: var(--space-lg) 0 var(--space-md);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .type-sample {
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--color-background);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius-default);
+        }
+
+        .type-label {
+            font-size: var(--scale-sm);
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            letter-spacing: 0.15em;
+        }
+
+        /* ========================================
+           COMPONENT SHOWCASE
+           ======================================== */
+
+        .component-section {
+            margin: var(--space-2xl) 0;
+        }
+
+        /* Buttons - claymorphic with weight hierarchy */
+        .button-group {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin: var(--space-lg) 0;
+        }
+
+        button, .button {
+            font-family: var(--font-body);
+            font-size: var(--scale-base);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            border: none;
+            border-radius: var(--radius-default);
+            padding: var(--space-md) var(--space-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                       inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+                       0 2px 8px rgba(0, 0, 0, 0.08);
+            min-height: 44px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #A83E0C 100%);
+            color: white;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                       inset 0 -2px 4px rgba(0, 0, 0, 0.15),
+                       0 6px 16px rgba(200, 90, 23, 0.3);
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #145555 100%);
+            color: white;
+        }
+
+        .button-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                       inset 0 -2px 4px rgba(0, 0, 0, 0.15),
+                       0 6px 16px rgba(27, 115, 115, 0.3);
+        }
+
+        .button-tertiary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 2px double var(--color-primary);
+            box-shadow: none;
+        }
+
+        .button-tertiary:hover {
+            background: var(--color-clay-light);
+        }
+
+        /* Input fields with claymorphic style */
+        input, textarea {
+            font-family: var(--font-body);
+            font-size: var(--scale-base);
+            padding: var(--space-md);
+            border: 2px double var(--color-border);
+            border-radius: var(--radius-default);
+            background: var(--color-surface);
+            color: var(--color-text);
+            box-shadow: var(--shadow-clay);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-clay), 0 0 0 3px rgba(200, 90, 23, 0.1);
+        }
+
+        /* Tags and badges */
+        .tag {
+            display: inline-block;
+            font-size: var(--scale-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-pill);
+            background: var(--color-clay-light);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            font-weight: 600;
+            margin: var(--space-xs);
+        }
+
+        .tag-primary {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+        }
+
+        .tag-secondary {
+            background: var(--color-secondary);
+            color: white;
+            border: none;
+        }
+
+        /* Feature list with weight hierarchy */
+        .feature-list {
+            list-style: none;
+            margin: var(--space-lg) 0;
+        }
+
+        .feature-list li {
+            padding: var(--space-md) 0;
+            padding-left: var(--space-xl);
+            position: relative;
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* ========================================
+           LAYOUT VARIATIONS
+           ======================================== */
+
+        .asymmetric-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+            align-items: start;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .right-aligned {
+            text-align: right;
+        }
+
+        .accent-stripe {
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-secondary));
+            border-radius: var(--radius-default);
+            margin: var(--space-lg) 0;
+        }
+
+        /* ========================================
+           FOOTER & NAVIGATION
+           ======================================== */
+
+        footer {
+            background: linear-gradient(135deg, var(--color-text) 0%, #1A1310 100%);
+            color: var(--color-background);
+            padding: var(--space-xl) var(--space-2xl);
+            margin-top: var(--space-2xl);
+            text-align: right;
+            border-top: 2px double var(--color-accent);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: flex-end;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: var(--scale-sm);
+            letter-spacing: 0.1em;
+            min-height: 44px;
+        }
+
+        .nav-button:hover {
+            background: var(--color-accent);
+            color: var(--color-text);
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .asymmetric-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .right-aligned {
+                text-align: left;
+            }
+
+            header {
+                padding: var(--space-lg) var(--space-lg);
+            }
+
+            h1 {
+                font-size: var(--scale-xl);
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --space-unit: 10px;
+            }
+
+            body {
+                letter-spacing: 0.02em;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tagline {
+                font-size: var(--scale-base);
+            }
+
+            h1 {
+                font-size: var(--scale-lg);
+            }
+
+            h2 {
+                font-size: var(--scale-md);
+            }
+
+            input, textarea {
+                max-width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button, .button {
+                width: 100%;
+            }
+
+            .nav-controls {
+                justify-content: flex-end;
+            }
+        }
+
+        /* ========================================
+           SPECIAL ELEMENTS & DETAILS
+           ======================================== */
+
+        .divider {
+            height: 2px;
+            background: var(--color-border);
+            margin: var(--space-xl) 0;
+            border-radius: 1px;
+        }
+
+        .stat-block {
+            text-align: center;
+            padding: var(--space-lg);
+        }
+
+        .stat-number {
+            font-size: var(--scale-2xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+        }
+
+        .stat-label {
+            font-size: var(--scale-sm);
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 0.15em;
+            margin-top: var(--space-xs);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Thunder Core</h1>
+            <p class="tagline">A claymorphic approach meets american corporate sensibility</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- COLOR SYSTEM SECTION -->
+        <section class="component-section">
+            <h2>Color System</h2>
+            <p>Complementary warm earth and teal palette with high contrast and vivid saturation. Primary burns orange provides energy and trust, while secondary teal offers sophisticated balance.</p>
+
+            <div class="color-grid">
+                <div class="color-swatch" style="background: #C85A17; color: white;">
+                    <div class="swatch-label">Primary</div>
+                    <div class="swatch-value">#C85A17</div>
+                </div>
+                <div class="color-swatch" style="background: #1B7373; color: white;">
+                    <div class="swatch-label">Secondary</div>
+                    <div class="swatch-value">#1B7373</div>
+                </div>
+                <div class="color-swatch" style="background: #E8A537;">
+                    <div class="swatch-label">Accent</div>
+                    <div class="swatch-value">#E8A537</div>
+                </div>
+                <div class="color-swatch" style="background: #F0D5BA; color: var(--color-text);">
+                    <div class="swatch-label">Clay Light</div>
+                    <div class="swatch-value">#F0D5BA</div>
+                </div>
+                <div class="color-swatch" style="background: #F9F6F0; color: var(--color-text); border: 2px solid var(--color-border);">
+                    <div class="swatch-label">Background</div>
+                    <div class="swatch-value">#F9F6F0</div>
+                </div>
+                <div class="color-swatch" style="background: #2D2416; color: white;">
+                    <div class="swatch-label">Text</div>
+                    <div class="swatch-value">#2D2416</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TYPOGRAPHY SECTION -->
+        <section class="type-showcase">
+            <h2>Typography System</h2>
+
+            <div class="type-sample">
+                <div class="type-label">Heading Font: Lora (Transitional Serif)</div>
+                <h3>Perfect for commanding attention</h3>
+                <p style="font-size: var(--scale-lg); line-height: 1.4;">Display weight conveys professional authority while maintaining warmth</p>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Body Font: Inter (Geometric Sans)</div>
+                <p style="font-size: var(--scale-base);">This is body text at 1rem (16px). Very loose letter-spacing (0.15em) and line-height (1.8) create breathing room and scandinavian minimalism. Geometric sans provides modern efficiency.</p>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Small Caps Text Treatment</div>
+                <p style="text-transform: uppercase; font-size: var(--scale-sm); letter-spacing: 0.15em; font-weight: 600;">ENERGETIC YET PROFESSIONAL TEXT TREATMENT FOR LABELS AND CATEGORIES</p>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-label">Scale Hierarchy (Perfect Fourth Ratio)</div>
+                <p style="font-size: 0.75rem;">12px / 0.75rem — Tertiary</p>
+                <p style="font-size: 1rem;">16px / 1rem — Base</p>
+                <p style="font-size: 1.333rem;">21px / 1.333rem — Heading 4</p>
+                <p style="font-size: 1.777rem;">28px / 1.777rem — Heading 3</p>
+                <p style="font-size: 2.369rem;">38px / 2.369rem — Heading 2</p>
+                <p style="font-size: 3.157rem; line-height: 1.1;">50px / 3.157rem — Heading 1</p>
+            </div>
+        </section>
+
+        <!-- CLAYMORPHIC COMPONENTS -->
+        <section class="component-section">
+            <h2>Claymorphic Components</h2>
+            <p>Soft, puffy forms with inset shadows create approachable depth. Elements feel pressed into the surface—inviting interaction while maintaining corporate polish.</p>
+
+            <div class="grid-container">
+                <div class="clay-card">
+                    <div class="clay-card-content">
+                        <h3>Clay Card Style</h3>
+                        <p>Gradient background from light to mid-clay with inset highlight and shadow for dimensional effect.</p>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Standard Card</h3>
+                    <p>White surface with double border, sharp inset shadow. Right-aligned layout follows corporate convention.</p>
+                    <div class="divider"></div>
+                    <ul class="feature-list">
+                        <li>Double border styling</li>
+                        <li>Inset shadows for depth</li>
+                        <li>Right-aligned emphasis</li>
+                    </ul>
+                </div>
+
+                <div class="grid-item">
+                    <div class="stat-block">
+                        <div class="stat-number">87%</div>
+                        <div class="stat-label">Energy Level</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUTTONS & INTERACTIONS -->
+        <section class="component-section">
+            <h2>Interactive Elements</h2>
+
+            <h3>Button Styles</h3>
+            <div class="button-group">
+                <button class="button-primary">Primary Action</button>
+                <button class="button-secondary">Secondary Action</button>
+                <button class="button-tertiary">Tertiary Link</button>
+            </div>
+
+            <h3>Form Inputs</h3>
+            <div style="margin: var(--space-lg) 0; display: flex; gap: var(--space-lg); flex-wrap: wrap;">
+                <input type="text" placeholder="Text input with double border">
+                <textarea placeholder="Textarea element" rows="3" style="max-width: 400px;"></textarea>
+            </div>
+
+            <h3>Tags & Labels</h3>
+            <div style="margin: var(--space-lg) 0;">
+                <span class="tag">Technology</span>
+                <span class="tag">Design</span>
+                <span class="tag-primary">Featured</span>
+                <span class="tag-secondary">Verified</span>
+            </div>
+        </section>
+
+        <!-- ASYMMETRIC LAYOUT EXAMPLE -->
+        <section class="component-section">
+            <h2>Asymmetric Layout</h2>
+            <div class="asymmetric-layout">
+                <div>
+                    <h3>Broken Grid System</h3>
+                    <p style="margin-bottom: var(--space-md);">The layout breaks traditional symmetry with a mixed-width column grid (1fr, 1.4fr, 0.9fr). This creates visual interest while maintaining corporate structure and right-aligned emphasis. Spacing uses 12px base unit in compact density.</p>
+                    <p style="margin-bottom: var(--space-md);">Elements flow with purpose: important content gets more breathing room, secondary content compressed to reinforce hierarchy through weight and position.</p>
+                </div>
+                <div class="right-aligned">
+                    <div class="clay-card">
+                        <div class="clay-card-content">
+                            <h3 style="color: var(--color-text);">Positioned Right</h3>
+                            <p style="font-size: var(--scale-sm);">Asymmetric layouts break visual monotony while maintaining scandinavian clarity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accent-stripe"></div>
+        </section>
+
+        <!-- DESIGN SPECIFICATIONS -->
+        <section class="component-section">
+            <h2>Design Specifications</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h3>Corners & Shadows</h3>
+                    <ul class="feature-list">
+                        <li>Default radius: 8px (subtle)</li>
+                        <li>Large radius: 16px</li>
+                        <li>Pill radius: 24px</li>
+                        <li>Inset shadows for claymorphic depth</li>
+                        <li>Layered shadows on hover</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h3>Spacing System</h3>
+                    <ul class="feature-list">
+                        <li>Base unit: 12px</li>
+                        <li>Compact density: information-rich</li>
+                        <li>Generous whitespace maintains breathing room</li>
+                        <li>Scandinavian minimalism in structure</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h3>Borders & Dividers</h3>
+                    <ul class="feature-list">
+                        <li>Double borders (2px) on containers</li>
+                        <li>Hairline dividers for separation</li>
+                        <li>Accent gradient stripe for emphasis</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACCESSIBILITY & FEATURES -->
+        <section class="component-section">
+            <h2>Accessibility & Standards</h2>
+            <div class="clay-card">
+                <div class="clay-card-content">
+                    <ul class="feature-list">
+                        <li>WCAG AA contrast compliance: 4.5:1 minimum on all text</li>
+                        <li>Visible focus indicators on interactive elements</li>
+                        <li>44px minimum touch target size for buttons</li>
+                        <li>Reduced motion media query support</li>
+                        <li>Semantic HTML structure</li>
+                        <li>Keyboard navigation support (arrow keys work on footer)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PERSONALITY STATEMENT -->
+        <section class="component-section">
+            <h2>Design Personality</h2>
+            <div class="asymmetric-layout">
+                <div>
+                    <h3>The Tension</h3>
+                    <p>Thunder Core merges contradictions: rigid corporate structure with soft, inviting forms. Energetic yet sophisticated. Playful yet trustworthy. American optimism tempered with Scandinavian restraint.</p>
+                    <p style="margin-top: var(--space-md);">The name itself—Thunder + Core—evokes power and solidity, delivered through warm clay-like forms that feel approachable rather than intimidating.</p>
+                </div>
+                <div class="right-aligned">
+                    <p style="font-size: var(--scale-base); font-weight: 600; color: var(--color-primary);">This is a design for premium consumer SaaS: professional enough for business, playful enough to delight.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="nav-controls">
+                <button class="nav-button" onclick="navigateDesign(-1)" title="Previous design (←)">← Previous</button>
+                <button class="nav-button" onclick="navigateDesign(1)" title="Next design (→)">Next →</button>
+            </div>
+            <p style="font-size: var(--scale-sm); margin-bottom: var(--space-md);">Thunder Core • Design #3 • 1000 Design Vibes</p>
+            <p style="font-size: var(--scale-sm); opacity: 0.8;">Claymorphic UI + Scandinavian Modern + American Corporate</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') navigateDesign(-1);
+            if (e.key === 'ArrowRight') navigateDesign(1);
+        });
+
+        function navigateDesign(direction) {
+            const currentId = 3;
+            const newId = currentId + direction;
+
+            if (newId >= 1 && newId <= 10) {
+                const newFile = `design-${newId}.html`;
+                window.location.href = newFile;
+            }
+        }
+
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) {
+                navigateDesign(1); // Swipe left -> next
+            } else if (touchEndX > touchStartX + threshold) {
+                navigateDesign(-1); // Swipe right -> previous
+            }
+        }
+    </script>
+</body>
+</html>

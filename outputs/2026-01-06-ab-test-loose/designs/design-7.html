@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage Sora - Design #7</title>
+
+    <!--
+    ABOUTME: Vintage Sora - Arts and crafts design system with neon neutral tones
+    ABOUTME: Skeuomorphic surfaces meet ultra-dense layouts in a nostalgic Japanese-inspired aesthetic
+
+    DESIGN SYSTEM QUICK START
+    =========================
+
+    Color Palette:
+    - Split complementary with neon neutrals
+    - Hyper-saturated neons against muted grays
+    - Low contrast for nostalgic warmth
+
+    Typography:
+    - Headings: Monospace (JetBrains Mono) in small caps
+    - Body: Humanist sans (Inter) for readability
+    - Minor second scale (1.067) creates tight vertical rhythm
+
+    Aesthetic Principles:
+    - Skeuomorphic textures: noise, embossed surfaces, craft paper feel
+    - Ultra-dense spacing (4px base) creates magazine-like density
+    - Freeform grid with overlapping elements
+    - Dashed borders evoke hand-drawn quality
+    - Rounded corners soften the digital edge
+
+    Key Design Tokens:
+    --space-unit: 4px (ultra-dense)
+    --radius-default: 12px
+    --type-scale: 1.067 (minor second)
+    --border-style: 2px dashed
+
+    Arts & Crafts Movement Influence:
+    - Honest materials (texture, grain)
+    - Handcrafted feel (dashed lines, noise)
+    - Japanese aesthetic (wabi-sabi, asymmetry)
+    - Attention to detail in small elements
+    -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===================================
+           DESIGN SYSTEM FOUNDATIONS
+           =================================== */
+
+        :root {
+            /* NEON NEUTRAL COLOR PALETTE */
+            /* Split complementary: Neon cyan + Neon magenta/orange against neutral grays */
+            --color-primary: #00ffcc;          /* Neon cyan */
+            --color-secondary: #ff2a9f;        /* Neon magenta */
+            --color-accent: #ffaa00;           /* Neon orange */
+            --color-background: #1a1a1f;       /* Deep charcoal */
+            --color-surface: #28282e;          /* Slightly lighter charcoal */
+            --color-surface-raised: #35353d;   /* Raised surface */
+            --color-text: #e8e8ea;             /* Off-white */
+            --color-text-muted: #9a9aa3;       /* Muted gray */
+            --color-text-dimmed: #666670;      /* Dimmed gray */
+
+            /* TYPOGRAPHY */
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+
+            /* TYPE SCALE - Minor Second (1.067) */
+            --text-xs: 0.75rem;      /* 12px */
+            --text-sm: 0.8rem;       /* 12.8px */
+            --text-base: 0.875rem;   /* 14px - ultra dense base */
+            --text-md: 0.934rem;     /* 14.9px */
+            --text-lg: 1rem;         /* 16px */
+            --text-xl: 1.067rem;     /* 17px */
+            --text-2xl: 1.138rem;    /* 18.2px */
+            --text-3xl: 1.214rem;    /* 19.4px */
+            --text-4xl: 1.296rem;    /* 20.7px */
+
+            /* SPACING - Ultra Dense (4px base) */
+            --space-unit: 4px;
+            --space-1: calc(var(--space-unit) * 1);   /* 4px */
+            --space-2: calc(var(--space-unit) * 2);   /* 8px */
+            --space-3: calc(var(--space-unit) * 3);   /* 12px */
+            --space-4: calc(var(--space-unit) * 4);   /* 16px */
+            --space-5: calc(var(--space-unit) * 5);   /* 20px */
+            --space-6: calc(var(--space-unit) * 6);   /* 24px */
+            --space-8: calc(var(--space-unit) * 8);   /* 32px */
+            --space-10: calc(var(--space-unit) * 10); /* 40px */
+            --space-12: calc(var(--space-unit) * 12); /* 48px */
+
+            /* SHAPES */
+            --radius-default: 12px;
+            --radius-sm: 6px;
+            --radius-lg: 18px;
+            --shadow-default: none; /* No shadows in this design */
+
+            /* BORDERS */
+            --border-width: 2px;
+            --border-style: dashed;
+            --border-color: var(--color-primary);
+            --border-default: var(--border-width) var(--border-style) var(--border-color);
+
+            /* TEXTURE & EFFECTS */
+            --noise-opacity: 0.08;
+            --glassmorphic-blur: 20px;
+        }
+
+        /* ===================================
+           GLOBAL RESETS & BASE STYLES
+           =================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.4; /* Tight line height */
+            color: var(--color-text);
+            background-color: var(--color-background);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: var(--noise-opacity);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ===================================
+           TYPOGRAPHY SYSTEM
+           =================================== */
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-variant: small-caps;
+            letter-spacing: normal;
+            line-height: 1.2;
+            margin-bottom: var(--space-2);
+        }
+
+        h1 { font-size: var(--text-4xl); font-weight: 700; }
+        h2 { font-size: var(--text-3xl); font-weight: 600; }
+        h3 { font-size: var(--text-2xl); font-weight: 600; }
+        h4 { font-size: var(--text-xl); font-weight: 600; }
+        h5 { font-size: var(--text-lg); font-weight: 500; }
+        h6 { font-size: var(--text-md); font-weight: 500; }
+
+        p {
+            margin-bottom: var(--space-3);
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--color-primary);
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--color-secondary);
+            border-bottom-color: var(--color-secondary);
+        }
+
+        a:focus {
+            outline: 2px dashed var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===================================
+           COMPONENT LIBRARY
+           =================================== */
+
+        /* Skeuomorphic Card */
+        .card {
+            background: var(--color-surface);
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            padding: var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Glassmorphic overlay for certain cards */
+        .card--glass {
+            background: rgba(40, 40, 46, 0.6);
+            backdrop-filter: blur(var(--glassmorphic-blur));
+            border-color: rgba(0, 255, 204, 0.3);
+        }
+
+        /* Badge component */
+        .badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            font-size: var(--text-xs);
+            font-family: var(--font-heading);
+            font-variant: small-caps;
+            border: 1px dashed currentColor;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--color-primary);
+        }
+
+        .badge--secondary {
+            background: rgba(255, 42, 159, 0.1);
+            color: var(--color-secondary);
+        }
+
+        .badge--accent {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--color-accent);
+        }
+
+        /* Button component */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-variant: small-caps;
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            background: var(--color-surface-raised);
+            color: var(--color-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px; /* Touch target */
+        }
+
+        .btn:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .btn:focus {
+            outline: 2px dashed var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 2px;
+            background: var(--border-default);
+            background-image: repeating-linear-gradient(
+                90deg,
+                var(--color-primary),
+                var(--color-primary) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            margin: var(--space-6) 0;
+        }
+
+        /* Tag list */
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        /* ===================================
+           LAYOUT - FREEFORM GRID
+           =================================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-4);
+        }
+
+        /* Masthead - Dense header with offset elements */
+        .masthead {
+            position: relative;
+            padding: var(--space-8) var(--space-4);
+            text-align: center;
+            border-bottom: var(--border-default);
+            margin-bottom: var(--space-8);
+        }
+
+        .masthead__title {
+            font-size: clamp(var(--text-3xl), 5vw, 3rem);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-2);
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+
+        .masthead__tagline {
+            font-size: var(--text-lg);
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-4);
+        }
+
+        .masthead__decoration {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+
+        .masthead__decoration-line {
+            width: 60px;
+            height: 2px;
+            background: var(--border-default);
+            background-image: repeating-linear-gradient(
+                90deg,
+                var(--color-secondary),
+                var(--color-secondary) 6px,
+                transparent 6px,
+                transparent 12px
+            );
+        }
+
+        /* Freeform grid layout */
+        .freeform-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .grid-item {
+            position: relative;
+        }
+
+        /* Specific grid placements for asymmetric layout */
+        .grid-item--1 { grid-column: 1 / 8; grid-row: 1; }
+        .grid-item--2 { grid-column: 8 / 13; grid-row: 1 / 3; }
+        .grid-item--3 { grid-column: 1 / 5; grid-row: 2; }
+        .grid-item--4 { grid-column: 5 / 8; grid-row: 2; }
+        .grid-item--5 { grid-column: 1 / 7; grid-row: 3; }
+        .grid-item--6 { grid-column: 7 / 13; grid-row: 3; }
+
+        /* Overlapping elements */
+        .overlap-cluster {
+            position: relative;
+            margin: var(--space-8) 0;
+            min-height: 400px;
+        }
+
+        .overlap-item {
+            position: absolute;
+            z-index: 1;
+        }
+
+        .overlap-item:hover {
+            z-index: 10;
+        }
+
+        .overlap-item--1 { top: 0; left: 5%; width: 40%; }
+        .overlap-item--2 { top: 40px; right: 10%; width: 45%; }
+        .overlap-item--3 { bottom: 0; left: 25%; width: 35%; }
+
+        /* Stacked content blocks */
+        .stack {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        /* Dense two-column layout */
+        .dense-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+        }
+
+        /* Color palette showcase */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-3);
+            margin: var(--space-6) 0;
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border: var(--border-default);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-variant: small-caps;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                transparent 100%);
+        }
+
+        .swatch--primary { background: var(--color-primary); color: var(--color-background); }
+        .swatch--secondary { background: var(--color-secondary); color: var(--color-background); }
+        .swatch--accent { background: var(--color-accent); color: var(--color-background); }
+        .swatch--surface { background: var(--color-surface); color: var(--color-text); }
+        .swatch--text { background: var(--color-text); color: var(--color-background); }
+
+        /* Typography specimen */
+        .type-specimen {
+            margin: var(--space-6) 0;
+        }
+
+        .type-specimen__example {
+            padding: var(--space-4);
+            border: 1px dashed var(--color-text-dimmed);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-3);
+        }
+
+        /* Component grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+        }
+
+        /* Stat counter */
+        .stat {
+            text-align: center;
+            padding: var(--space-4);
+        }
+
+        .stat__value {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .stat__label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-variant: small-caps;
+        }
+
+        /* Icon placeholder */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border: 1px dashed currentColor;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: var(--space-12);
+            padding: var(--space-6) var(--space-4);
+            border-top: var(--border-default);
+            text-align: center;
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* ===================================
+           RESPONSIVE DESIGN
+           =================================== */
+
+        @media (max-width: 768px) {
+            .freeform-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-3);
+            }
+
+            .grid-item--1,
+            .grid-item--2,
+            .grid-item--3,
+            .grid-item--4,
+            .grid-item--5,
+            .grid-item--6 {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .dense-columns {
+                grid-template-columns: 1fr;
+                gap: var(--space-3);
+            }
+
+            .overlap-cluster {
+                position: static;
+                min-height: auto;
+            }
+
+            .overlap-item {
+                position: static;
+                width: 100% !important;
+                margin-bottom: var(--space-3);
+            }
+        }
+
+        /* ===================================
+           ACCESSIBILITY
+           =================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px dashed var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: var(--space-2) var(--space-4);
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- MASTHEAD -->
+    <header class="masthead">
+        <div class="container">
+            <h1 class="masthead__title">Vintage Sora</h1>
+            <p class="masthead__tagline">Arts and crafts design with neon neutral tones</p>
+            <div class="masthead__decoration">
+                <span class="masthead__decoration-line"></span>
+                <span class="badge">Design #7</span>
+                <span class="masthead__decoration-line"></span>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="container">
+
+        <!-- FREEFORM ASYMMETRIC GRID -->
+        <section class="freeform-grid">
+            <div class="grid-item grid-item--1">
+                <div class="card">
+                    <h2>Handcrafted Digital</h2>
+                    <p>This design system draws from the Arts and Crafts movement—honest materials, attention to detail, and a rejection of soulless mass production. Every element feels considered, textured, deliberately imperfect.</p>
+                    <div class="tag-list">
+                        <span class="badge">Skeuomorphic</span>
+                        <span class="badge badge--secondary">Ultra Dense</span>
+                        <span class="badge badge--accent">Nostalgic</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-item grid-item--2">
+                <div class="card card--glass">
+                    <div class="stat">
+                        <div class="stat__value">1.067</div>
+                        <div class="stat__label">Type Scale</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="stat">
+                        <div class="stat__value">4px</div>
+                        <div class="stat__label">Base Unit</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="stat">
+                        <div class="stat__value">12px</div>
+                        <div class="stat__label">Border Radius</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-item grid-item--3">
+                <div class="card">
+                    <h4>Monospace Soul</h4>
+                    <p>JetBrains Mono in small caps creates a technical yet crafted feel—like typesetting on a vintage press.</p>
+                </div>
+            </div>
+
+            <div class="grid-item grid-item--4">
+                <div class="card">
+                    <h4>Neon Neutrals</h4>
+                    <p>Hyper-saturated cyan, magenta, and orange glow against deep charcoal—nostalgic neon signage.</p>
+                </div>
+            </div>
+
+            <div class="grid-item grid-item--5">
+                <div class="card card--glass">
+                    <h3>Color as Hierarchy</h3>
+                    <p>In ultra-dense layouts, color becomes the primary way to establish visual hierarchy. Neon accents guide the eye through tightly packed information.</p>
+                    <button class="btn">
+                        <span class="icon">→</span>
+                        Explore System
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid-item grid-item--6">
+                <div class="card">
+                    <h4>Wabi-Sabi Digital</h4>
+                    <p>Japanese aesthetic influence embraces imperfection—dashed borders, noise texture, asymmetric layouts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLOR PALETTE -->
+        <section>
+            <h2>Neon Neutral Palette</h2>
+            <p>Split complementary harmony with hyper-saturated neons against muted neutral grays.</p>
+            <div class="color-palette">
+                <div class="color-swatch swatch--primary">
+                    <span>Cyan</span>
+                </div>
+                <div class="color-swatch swatch--secondary">
+                    <span>Magenta</span>
+                </div>
+                <div class="color-swatch swatch--accent">
+                    <span>Orange</span>
+                </div>
+                <div class="color-swatch swatch--surface">
+                    <span>Surface</span>
+                </div>
+                <div class="color-swatch swatch--text">
+                    <span>Text</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- TYPOGRAPHY SPECIMENS -->
+        <section class="type-specimen">
+            <h2>Typography System</h2>
+            <p>Minor second scale (1.067) creates tight, magazine-like vertical rhythm. Monospace headings in small caps contrast with humanist sans body text.</p>
+
+            <div class="type-specimen__example">
+                <h1>Heading Level 1</h1>
+                <h2>Heading Level 2</h2>
+                <h3>Heading Level 3</h3>
+                <h4>Heading Level 4</h4>
+                <p>Body text in Inter provides excellent readability even at small sizes. The tight line height (1.4) reinforces the ultra-dense aesthetic while maintaining legibility.</p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- OVERLAPPING CLUSTER - FREEFORM LAYOUT -->
+        <section>
+            <h2>Freeform Composition</h2>
+            <p>Elements overlap and shift like collage pieces—organic, handcrafted, deliberately imperfect.</p>
+            <div class="overlap-cluster">
+                <div class="overlap-item overlap-item--1">
+                    <div class="card">
+                        <h3>Layered Surfaces</h3>
+                        <p>Skeuomorphic design means surfaces have depth, texture, and materiality. Cards feel like pieces of craft paper with embossed details.</p>
+                        <div class="tag-list">
+                            <span class="badge">Texture</span>
+                            <span class="badge badge--secondary">Depth</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overlap-item overlap-item--2">
+                    <div class="card card--glass">
+                        <h3>Glassmorphic Accents</h3>
+                        <p>Frosted glass overlays add contemporary lightness to the craft aesthetic—a bridge between vintage and digital.</p>
+                        <button class="btn">
+                            <span class="icon">✦</span>
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overlap-item overlap-item--3">
+                    <div class="card">
+                        <h4>Dashed Borders</h4>
+                        <p>Every border is dashed—evoking hand-drawn quality, blueprint precision, artisan detail.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- COMPONENT SHOWCASE -->
+        <section>
+            <h2>Component Library</h2>
+            <p>A selection of reusable components demonstrating the design system in action.</p>
+
+            <div class="component-grid">
+                <div class="card">
+                    <h4>Badges</h4>
+                    <div class="stack">
+                        <span class="badge">Primary</span>
+                        <span class="badge badge--secondary">Secondary</span>
+                        <span class="badge badge--accent">Accent</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>Buttons</h4>
+                    <div class="stack">
+                        <button class="btn">
+                            <span class="icon">+</span>
+                            Add Item
+                        </button>
+                        <button class="btn">
+                            <span class="icon">→</span>
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>Stats</h4>
+                    <div class="stat">
+                        <div class="stat__value">88%</div>
+                        <div class="stat__label">Satisfaction</div>
+                    </div>
+                </div>
+
+                <div class="card card--glass">
+                    <h4>Glass Cards</h4>
+                    <p>Frosted glass effect with backdrop blur creates depth and layering.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- DENSE TWO-COLUMN CONTENT -->
+        <section>
+            <h2>Design Principles</h2>
+            <div class="dense-columns">
+                <div class="stack">
+                    <div class="card">
+                        <h4>Ultra-Dense Spacing</h4>
+                        <p>4px base unit creates tight, information-rich layouts. Every pixel is intentional. No wasted space.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Honest Materials</h4>
+                        <p>Noise texture, dashed borders, and subtle gradients evoke paper, fabric, and craft materials.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Asymmetric Balance</h4>
+                        <p>Freeform grid system allows organic, collage-like compositions that feel human-made.</p>
+                    </div>
+                </div>
+
+                <div class="stack">
+                    <div class="card card--glass">
+                        <h4>Neon Warmth</h4>
+                        <p>Hyper-saturated neons provide emotional warmth in an otherwise neutral palette—nostalgic signage meets modern UI.</p>
+                    </div>
+                    <div class="card card--glass">
+                        <h4>Low Contrast Comfort</h4>
+                        <p>Low contrast creates a softer, more nostalgic feel—easier on the eyes, welcoming to seniors.</p>
+                    </div>
+                    <div class="card card--glass">
+                        <h4>Japanese Simplicity</h4>
+                        <p>Wabi-sabi appreciation for imperfection, asymmetry, and humble materials guides every decision.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- DESIGN TOKENS REFERENCE -->
+        <section>
+            <h2>Design Tokens</h2>
+            <p>Core variables that define this system. Copy and adapt these tokens for your project.</p>
+
+            <div class="card">
+                <pre style="font-family: var(--font-heading); font-size: var(--text-xs); color: var(--color-primary); overflow-x: auto; line-height: 1.6;">
+/* Colors */
+--color-primary: #00ffcc;
+--color-secondary: #ff2a9f;
+--color-accent: #ffaa00;
+--color-background: #1a1a1f;
+--color-surface: #28282e;
+--color-text: #e8e8ea;
+
+/* Typography */
+--font-heading: 'JetBrains Mono', monospace;
+--font-body: 'Inter', sans-serif;
+--text-base: 0.875rem; /* 14px */
+
+/* Spacing (Ultra Dense) */
+--space-unit: 4px;
+
+/* Shapes */
+--radius-default: 12px;
+--border-default: 2px dashed var(--color-primary);
+                </pre>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Design #7 - Vintage Sora - 1000 Design Vibes</p>
+        <p style="margin-top: var(--space-2);">
+            <span class="badge">Skeuomorphic</span>
+            <span class="badge badge--secondary">Arts & Crafts</span>
+            <span class="badge badge--accent">Neon Neutrals</span>
+        </p>
+    </footer>
+
+    <!-- KEYBOARD & SWIPE NAVIGATION -->
+    <script>
+        // Navigation between designs
+        const currentDesignId = 7;
+        const totalDesigns = 10;
+
+        // Keyboard navigation (arrow keys)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                navigateToDesign(currentDesignId - 1);
+            } else if (e.key === 'ArrowRight') {
+                navigateToDesign(currentDesignId + 1);
+            }
+        });
+
+        // Touch swipe navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next design
+                    navigateToDesign(currentDesignId + 1);
+                } else {
+                    // Swipe right - previous design
+                    navigateToDesign(currentDesignId - 1);
+                }
+            }
+        }
+
+        function navigateToDesign(designId) {
+            if (designId < 1 || designId > totalDesigns) {
+                return; // Out of bounds
+            }
+
+            // Navigate to the design file
+            window.location.href = `design-${designId}.html`;
+        }
+
+        // Announce current design for screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.className = 'sr-only';
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.style.width = '1px';
+        announcement.style.height = '1px';
+        announcement.style.overflow = 'hidden';
+        announcement.textContent = `Design ${currentDesignId} of ${totalDesigns}: Vintage Sora. Arts and crafts design with neon neutral tones. Use left and right arrow keys to navigate between designs.`;
+        document.body.appendChild(announcement);
+    </script>
+</body>
+</html>

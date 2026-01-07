@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Core - Design #25</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        // ABOUTME: Shadow Core Design System
+        // A grunge-meets-organic primary vibes design for food industry with ultra airy spacing
+
+        DESIGN DIMENSIONS:
+        - ui_paradigm: organic (flowing, blob-like, natural curves)
+        - design_era: grunge (textured, worn, authentic)
+        - color_theory: triadic
+        - color_temperature: warm
+        - color_saturation: balanced
+        - color_contrast: medium
+        - color_palette_mood: primary
+        - color_mode: both (light and dark)
+        - type_heading_class: modern_serif
+        - type_body_class: monospace
+        - density: ultra_airy
+        - corner_radius: sharp
+        - border_style: medium
+        - shadow_style: none
+        - surface_texture: organic_pattern
+        - gradient_usage: subtle_background
+        - icon_style: isometric
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color System - Triadic Primary */
+            --color-primary: #EF3B54;        /* Red */
+            --color-secondary: #0066FF;     /* Blue */
+            --color-tertiary: #FFB800;      /* Yellow/Gold */
+
+            --color-background: #F8F7F5;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-border: #D0CEC8;
+
+            /* Typography */
+            --font-heading: 'Crimson Text', serif;
+            --font-body: 'JetBrains Mono', monospace;
+
+            /* Spacing - Ultra Airy */
+            --space-unit: 4px;
+            --space-xs: calc(var(--space-unit) * 2);
+            --space-sm: calc(var(--space-unit) * 4);
+            --space-md: calc(var(--space-unit) * 8);
+            --space-lg: calc(var(--space-unit) * 12);
+            --space-xl: calc(var(--space-unit) * 16);
+            --space-2xl: calc(var(--space-unit) * 24);
+
+            /* Shapes */
+            --radius-default: 0px;  /* sharp corners */
+            --border-weight: 3px;
+            --shadow-default: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #1A1A1A;
+                --color-surface: #2A2A2A;
+                --color-text: #F0EDE8;
+                --color-text-muted: #999999;
+                --color-border: #3A3A3A;
+            }
+        }
+
+        /* Base Typography */
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 2;
+            letter-spacing: 0.1em;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(239, 59, 84, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 184, 0, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            text-transform: lowercase;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+
+        h1 {
+            font-size: 3.375em;
+            line-height: 1.2;
+            color: var(--color-primary);
+            border: var(--border-weight) solid var(--color-primary);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        h2 {
+            font-size: 2.25em;
+            color: var(--color-secondary);
+            border-bottom: var(--border-weight) solid var(--color-secondary);
+            padding-bottom: var(--space-md);
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--color-tertiary);
+        }
+
+        p {
+            margin-bottom: var(--space-xl);
+            max-width: 80ch;
+            line-height: 2.2;
+        }
+
+        /* Grunge Texture Overlay */
+        .grunge-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter></defs><rect width="100" height="100" fill="rgba(0,0,0,0.02)" filter="url(%23noise)"/></svg>');
+            pointer-events: none;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        /* Layout Structure */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-2xl);
+        }
+
+        /* Asymmetric Grid Container */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-2xl);
+            align-items: start;
+        }
+
+        /* Card System with Organic Borders */
+        .card {
+            background-color: var(--color-surface);
+            border: var(--border-weight) solid var(--color-border);
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at top left, rgba(239, 59, 84, 0.04), transparent 70%);
+            pointer-events: none;
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            border-bottom: var(--border-weight) dotted var(--color-tertiary);
+            padding-bottom: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Color Swatches - Isometric Style */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .swatch {
+            aspect-ratio: 1;
+            border: var(--border-weight) solid var(--color-border);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .swatch:hover {
+            transform: skewY(-2deg);
+        }
+
+        .swatch.primary {
+            background: linear-gradient(135deg, var(--color-primary), rgba(239, 59, 84, 0.7));
+            border-color: var(--color-primary);
+        }
+
+        .swatch.secondary {
+            background: linear-gradient(135deg, var(--color-secondary), rgba(0, 102, 255, 0.7));
+            border-color: var(--color-secondary);
+        }
+
+        .swatch.tertiary {
+            background: linear-gradient(135deg, var(--color-tertiary), rgba(255, 184, 0, 0.7));
+            border-color: var(--color-tertiary);
+        }
+
+        .swatch-label {
+            position: absolute;
+            bottom: var(--space-md);
+            left: var(--space-md);
+            font-size: 0.75em;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Typography Scale Showcase */
+        .type-scale {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+
+        .type-sample {
+            border-left: var(--border-weight) solid var(--color-primary);
+            padding-left: var(--space-lg);
+            line-height: 1.4;
+        }
+
+        .type-label {
+            font-size: 0.75em;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Components Section */
+        .components {
+            margin: var(--space-2xl) 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: var(--space-md) var(--space-lg);
+            border: var(--border-weight) solid currentColor;
+            background: transparent;
+            font-family: var(--font-body);
+            text-transform: lowercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            margin: var(--space-md) var(--space-md) var(--space-md) 0;
+            font-size: 0.9em;
+        }
+
+        .button:focus {
+            outline: 2px dashed var(--color-text);
+            outline-offset: 4px;
+        }
+
+        .button.primary {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .button.primary:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .button.secondary {
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .button.secondary:hover {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .button.tertiary {
+            color: var(--color-tertiary);
+            border-color: var(--color-tertiary);
+        }
+
+        .button.tertiary:hover {
+            background-color: var(--color-tertiary);
+            color: white;
+        }
+
+        /* Input Elements */
+        input, textarea {
+            width: 100%;
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            border: var(--border-weight) solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 1em;
+            letter-spacing: 0.05em;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: inset 0 0 0 2px rgba(239, 59, 84, 0.2);
+        }
+
+        /* Asymmetric Left-Aligned Layout */
+        .asymmetric-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-2xl);
+            margin: var(--space-2xl) 0;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .asymmetric-section {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            main {
+                padding: var(--space-xl);
+            }
+        }
+
+        /* Navigation Info */
+        .nav-info {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            padding: var(--space-md);
+            background-color: var(--color-surface);
+            border: var(--border-weight) solid var(--color-border);
+            font-size: 0.75em;
+            color: var(--color-text-muted);
+            z-index: 100;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Link Styles */
+        a {
+            color: var(--color-primary);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+
+        a:hover {
+            color: var(--color-secondary);
+        }
+
+        a:focus {
+            outline: 2px dashed var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Section Dividers */
+        hr {
+            border: none;
+            border-top: var(--border-weight) dashed var(--color-secondary);
+            margin: var(--space-2xl) 0;
+        }
+
+        /* Icon Placeholder - Isometric Style */
+        .icon-placeholder {
+            width: 80px;
+            height: 80px;
+            border: var(--border-weight) solid var(--color-tertiary);
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), transparent);
+        }
+
+        .icon-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            right: 20%;
+            bottom: 20%;
+            border: 2px solid var(--color-tertiary);
+            transform: perspective(100px) rotateX(10deg) rotateY(10deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="grunge-overlay"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>shadow core</h1>
+            <p>
+                a design system that blends organic flowing curves with grunge authenticity.
+                primary color palette meets ultra-airy spacing for a food-forward, mysterious experience.
+            </p>
+        </section>
+
+        <hr>
+
+        <!-- Color System -->
+        <section class="colors">
+            <h2>color system</h2>
+            <p>
+                triadic primary palette with warm temperature. balanced saturation
+                creates medium contrast suitable for both light and dark modes.
+            </p>
+
+            <div class="color-grid">
+                <div class="card">
+                    <div class="swatch primary">
+                        <span class="swatch-label">red</span>
+                    </div>
+                    <p style="margin-top: var(--space-lg); font-size: 0.85em;">
+                        primary red: #EF3B54
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="swatch secondary">
+                        <span class="swatch-label">blue</span>
+                    </div>
+                    <p style="margin-top: var(--space-lg); font-size: 0.85em;">
+                        secondary blue: #0066FF
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="swatch tertiary">
+                        <span class="swatch-label">gold</span>
+                    </div>
+                    <p style="margin-top: var(--space-lg); font-size: 0.85em;">
+                        accent gold: #FFB800
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Typography Section -->
+        <section class="typography">
+            <h2>typography</h2>
+            <p>
+                modern serif headings with monospace body text. lowercase styling
+                and very loose line heights emphasize the grunge aesthetic.
+            </p>
+
+            <div class="asymmetric-section">
+                <div>
+                    <h3>scale</h3>
+                    <p style="font-size: 0.85em;">
+                        minor third ratio (1.2) creates intentional
+                        visual rhythm that breaks convention.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="type-scale">
+                        <div class="type-sample">
+                            <div class="type-label">display</div>
+                            <div style="font-size: 2.4em; font-family: var(--font-heading);">typography</div>
+                        </div>
+                        <div class="type-sample">
+                            <div class="type-label">heading</div>
+                            <div style="font-size: 1.6em; font-family: var(--font-heading);">shadow core</div>
+                        </div>
+                        <div class="type-sample">
+                            <div class="type-label">body</div>
+                            <div style="font-size: 1em; font-family: var(--font-body);">monospace body text runs long</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Components Section -->
+        <section class="components">
+            <h2>components</h2>
+            <p>
+                sharp corners, medium borders, and no shadows define this brutal aesthetic.
+                isometric icons hint at depth without traditional drop shadows.
+            </p>
+
+            <div class="card" style="margin-bottom: var(--space-2xl);">
+                <div class="card-header">
+                    <h3>button states</h3>
+                </div>
+                <button class="button primary">primary action</button>
+                <button class="button secondary">secondary action</button>
+                <button class="button tertiary">tertiary action</button>
+            </div>
+
+            <div class="card" style="margin-bottom: var(--space-2xl);">
+                <div class="card-header">
+                    <h3>form elements</h3>
+                </div>
+                <input type="text" placeholder="text input with focus indicator" />
+                <textarea placeholder="multi-line textarea for longer content"></textarea>
+            </div>
+
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>icon</h3>
+                    </div>
+                    <div class="icon-placeholder"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>spacing</h3>
+                    </div>
+                    <p style="font-size: 0.9em;">
+                        ultra-airy density with 4px base unit.
+                        creates breathing room between elements.
+                        asymmetric grid aligns left-justified content.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>texture</h3>
+                    </div>
+                    <p style="font-size: 0.9em;">
+                        subtle organic pattern gradient overlay.
+                        grunge noise texture at 2% opacity creates worn aesthetic
+                        without overwhelming the interface.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Design Principles -->
+        <section class="principles">
+            <h2>design principles</h2>
+            <div class="asymmetric-section">
+                <div>
+                    <h3>authentic wear</h3>
+                    <p>
+                        grunge textures and medium contrast prevent sterile appearance.
+                        worn authenticity speaks to food industry heritage.
+                    </p>
+                </div>
+                <div>
+                    <h3>breathing space</h3>
+                    <p>
+                        ultra-airy spacing (12-24px gaps) reduces cognitive load.
+                        generous whitespace emphasizes content hierarchy through position.
+                    </p>
+                </div>
+            </div>
+            <div class="asymmetric-section">
+                <div>
+                    <h3>organic flow</h3>
+                    <p>
+                        curved blob-like forms and organic patterns contrast with
+                        sharp corners and rigid borders for dynamic tension.
+                    </p>
+                </div>
+                <div>
+                    <h3>mysterious tone</h3>
+                    <p>
+                        primary palette with grunge treatment creates intrigue.
+                        perfect for food brands seeking sophisticated, authentic presence.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Accessibility Note -->
+        <section class="accessibility">
+            <h2>accessibility</h2>
+            <p>
+                all interactive elements include visible focus states (2px dashed outline).
+                medium contrast ratio exceeds wcag aa requirements.
+                motion preferences are respected with @media prefers-reduced-motion.
+            </p>
+            <p>
+                44px minimum touch targets on all buttons.
+                semantic html structure supports screen readers and assistive technology.
+            </p>
+        </section>
+    </main>
+
+    <div class="nav-info">
+        25 / 100<br>
+        arrow keys or swipe to navigate
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 25;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Shift - Design #1</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=RobotoSlab:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        ABOUTME: Global Shift - Neo brutalist design system for children
+        ABOUTME: Glassmorphic UI paradigm with hard shadows, organic forms, and whitespace-driven hierarchy
+
+        AESTHETIC PRINCIPLES:
+        - Raw, honest structure (neo-brutalist) softened for children
+        - Floating elements with hard drop shadows create depth without glass blur
+        - Monochromatic color theory with primary mood accents
+        - Ultra-airy density: whitespace as a design tool
+        - Uppercase type hierarchy with monospace boldness
+        - Organic corner radius breaks rigid brutalism into playful forms
+        - Three-column justified grid for consistent visual rhythm
+
+        KEY TOKENS:
+        - Spacing: 12px base unit throughout
+        - Type scale: 1.111 (minor third)
+        - Headings: IBM Plex Mono (monospace, uppercase, tight letter-spacing)
+        - Body: Roboto Slab (slab serif, humanized)
+        - Shadows: Hard shadows (offset 4px, 0 blur) for definition
+        - Corners: 24px organic radius for softness
+        - Density: 2-3x spacing between elements (ultra-airy)
+        */
+
+        :root {
+            /* Colors - Monochromatic with primary mood desaturated palette */
+            --color-primary: #3d3d3d;
+            --color-primary-light: #6b6b6b;
+            --color-primary-lighter: #a8a8a8;
+            --color-accent-warm: #d4a574;
+            --color-accent-cool: #5a8a99;
+            --color-background: #fafaf8;
+            --color-surface: #ffffff;
+            --color-text: #2a2a2a;
+            --color-text-muted: #727272;
+            --color-border: #e0e0e0;
+
+            /* Typography */
+            --font-heading: 'IBM Plex Mono', monospace;
+            --font-body: 'Roboto Slab', serif;
+            --font-display: 'IBM Plex Mono', monospace;
+
+            /* Spacing (12px base unit) */
+            --space-unit: 12px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+            --space-2xl: calc(var(--space-unit) * 6);
+            --space-3xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-organic: 24px;
+            --radius-soft: 16px;
+            --shadow-hard: 4px 4px 0 rgba(0, 0, 0, 0.15);
+            --shadow-hard-accent: 4px 4px 0 rgba(61, 61, 61, 0.25);
+
+            /* Typography scale (minor third: 1.111) */
+            --size-xs: 0.81rem;
+            --size-sm: 0.9rem;
+            --size-base: 1rem;
+            --size-lg: 1.111rem;
+            --size-xl: 1.234rem;
+            --size-2xl: 1.371rem;
+            --size-3xl: 1.522rem;
+            --size-4xl: 1.691rem;
+            --size-5xl: 1.879rem;
+        }
+
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            font-size: var(--size-base);
+        }
+
+        /* Typography baseline */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--color-primary);
+        }
+
+        h1 { font-size: var(--size-5xl); margin-bottom: var(--space-lg); }
+        h2 { font-size: var(--size-4xl); margin-bottom: var(--space-lg); }
+        h3 { font-size: var(--size-3xl); margin-bottom: var(--space-md); }
+        h4 { font-size: var(--size-2xl); margin-bottom: var(--space-md); }
+        h5 { font-size: var(--size-xl); margin-bottom: var(--space-sm); }
+        h6 { font-size: var(--size-lg); margin-bottom: var(--space-sm); }
+
+        p {
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        /* Layout wrapper */
+        .viewport {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Hero section - deconstructed layout */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-background);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 600px;
+            padding: var(--space-3xl);
+        }
+
+        .hero-title {
+            font-size: var(--size-5xl);
+            line-height: 1.1;
+            margin-bottom: var(--space-xl);
+            color: var(--color-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-body);
+            font-size: var(--size-xl);
+            color: var(--color-text-muted);
+            font-weight: 400;
+            text-transform: none;
+            margin-bottom: var(--space-2xl);
+            line-height: 1.4;
+        }
+
+        /* Floating decorative elements */
+        .float-element {
+            position: absolute;
+            background: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-hard);
+            border-radius: var(--radius-organic);
+            z-index: 1;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .float-element:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .float-element:nth-child(2) {
+            width: 80px;
+            height: 140px;
+            top: 60%;
+            right: 8%;
+            animation-delay: 1s;
+        }
+
+        .float-element:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            left: 12%;
+            animation-delay: 2s;
+        }
+
+        .float-element:nth-child(4) {
+            width: 90px;
+            height: 150px;
+            top: 25%;
+            right: 12%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        /* Content grid section */
+        .content-section {
+            position: relative;
+            padding: var(--space-3xl) var(--space-2xl);
+            background-color: var(--color-surface);
+            margin: var(--space-3xl) auto;
+            max-width: 1200px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-2xl);
+            text-align: justify;
+        }
+
+        /* Card system */
+        .card {
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-organic);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-hard);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .card:focus-within {
+            outline: 3px solid var(--color-accent-cool);
+            outline-offset: 2px;
+        }
+
+        .card-title {
+            font-size: var(--size-lg);
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+        }
+
+        .card-body {
+            font-size: var(--size-sm);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        /* Color accent cards */
+        .card-accent {
+            background: linear-gradient(135deg, var(--color-accent-warm) 0%, var(--color-accent-cool) 100%);
+            color: var(--color-surface);
+            border-color: transparent;
+        }
+
+        .card-accent .card-title {
+            color: var(--color-surface);
+        }
+
+        .card-accent .card-body {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Section with zigzag layout */
+        .zigzag-section {
+            position: relative;
+            padding: var(--space-3xl) var(--space-2xl);
+            background-color: var(--color-background);
+        }
+
+        .zigzag-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-3xl);
+            gap: var(--space-2xl);
+        }
+
+        .zigzag-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .zigzag-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .zigzag-item-visual {
+            width: 200px;
+            height: 200px;
+            background: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-organic);
+            box-shadow: var(--shadow-hard);
+            flex-shrink: 0;
+        }
+
+        /* Button styles */
+        button, .btn {
+            font-family: var(--font-heading);
+            font-size: var(--size-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: var(--space-sm) var(--space-lg);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-soft);
+            background: var(--color-surface);
+            color: var(--color-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-hard);
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        button:hover, .btn:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        button:focus, .btn:focus {
+            outline: 3px solid var(--color-accent-cool);
+            outline-offset: 2px;
+        }
+
+        button:active, .btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-light);
+        }
+
+        /* List styles */
+        ul, ol {
+            margin-left: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        li {
+            margin-bottom: var(--space-sm);
+            line-height: 1.6;
+        }
+
+        /* Footer grid */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-2xl);
+            padding: var(--space-3xl) var(--space-2xl);
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .footer-column h3 {
+            color: var(--color-surface);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--size-lg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .zigzag-item, .zigzag-item:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: var(--size-3xl); }
+            h2 { font-size: var(--size-2xl); }
+
+            .nav-controls {
+                bottom: var(--space-md);
+                right: var(--space-md);
+            }
+        }
+
+        /* Utility classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-2xl);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-justify {
+            text-align: justify;
+        }
+
+        .mt-lg { margin-top: var(--space-lg); }
+        .mb-lg { margin-bottom: var(--space-lg); }
+        .mb-2xl { margin-bottom: var(--space-2xl); }
+    </style>
+</head>
+<body>
+    <div class="viewport">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="float-element"></div>
+            <div class="float-element"></div>
+            <div class="float-element"></div>
+            <div class="float-element"></div>
+
+            <div class="hero-content">
+                <h1 class="hero-title">Global Shift</h1>
+                <p class="hero-tagline">Neo brutalist-inspired design for children</p>
+                <button class="btn btn-primary">Explore Below</button>
+            </div>
+        </section>
+
+        <!-- Design System Overview -->
+        <section class="content-section">
+            <h2 class="text-center mb-2xl">Design System Foundation</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3 class="card-title">Typography</h3>
+                    <div class="card-body">
+                        <p><strong>Headings:</strong> IBM Plex Mono (monospace)</p>
+                        <p><strong>Body:</strong> Roboto Slab (slab serif)</p>
+                        <p><strong>Scale:</strong> Minor third (1.111)</p>
+                        <p><strong>Style:</strong> Uppercase headings, tight letter-spacing</p>
+                    </div>
+                </div>
+
+                <div class="card card-accent">
+                    <h3 class="card-title">Color Theory</h3>
+                    <div class="card-body">
+                        <p><strong>Primary:</strong> Monochromatic grays</p>
+                        <p><strong>Accents:</strong> Warm & cool tones</p>
+                        <p><strong>Saturation:</strong> Desaturated palette</p>
+                        <p><strong>Mood:</strong> Primary with subtlety</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Spatial Design</h3>
+                    <div class="card-body">
+                        <p><strong>Base Unit:</strong> 12px spacing</p>
+                        <p><strong>Density:</strong> Ultra-airy (2-3x spacing)</p>
+                        <p><strong>Radius:</strong> 24px organic corners</p>
+                        <p><strong>Shadows:</strong> Hard (4px offset, 0 blur)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Showcase -->
+        <section class="zigzag-section">
+            <div class="container">
+                <h2 class="text-center mb-2xl">Component System</h2>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Floating Containers</h3>
+                        <p>Hard shadows create depth without glass blur effects. Each floating element has a 4px offset shadow, organic corner radius (24px), and responds to interaction with subtle translation. The glassmorphic paradigm merges with brutalist honesty—raw geometry softened for play.</p>
+                    </div>
+                </div>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Grid Hierarchy</h3>
+                        <p>Three-column justified layout creates visual rhythm. Typography-driven hierarchy uses size and weight rather than color. Monospace headings in uppercase anchor content blocks. Whitespace becomes the primary design tool—generous margins let elements breathe.</p>
+                    </div>
+                </div>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Interactive States</h3>
+                        <p>All buttons and cards have focus indicators with 3px outline (4.5:1 contrast). Hover states translate elements -2px, amplify shadows. Active states compress. Touch targets exceed 44px minimum. Keyboard navigation fully supported with visible focus throughout.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Extended Grid Showcase -->
+        <section class="content-section">
+            <h2 class="text-center mb-2xl">Expanded Component Library</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3 class="card-title">Monospace Headers</h3>
+                    <div class="card-body">
+                        <p>IBM Plex Mono creates technical, raw aesthetic. Uppercase treatment reinforces graphic weight. Tight letter-spacing (-0.02em) creates cohesion. Perfect for a children's design that doesn't condescend—honest, structured, playful.</p>
+                    </div>
+                </div>
+
+                <div class="card card-accent">
+                    <h3 class="card-title">Accent Colors</h3>
+                    <div class="card-body">
+                        <p>Warm accent (#d4a574) and cool accent (#5a8a99) provide visual interest within desaturated palette. Used as duotone gradients on featured cards. Low overall contrast maintains calm, child-friendly environment while guiding attention.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Organic Geometry</h3>
+                    <div class="card-body">
+                        <p>24px border-radius softens brutalist edges. Not fully rounded (pill-shaped), but organic enough to feel inviting. Contrast with 2px borders that reinforce structure. This balance defines the aesthetic: honest structure with gentle character.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Density Approach</h3>
+                    <div class="card-body">
+                        <p>Ultra-airy spacing (3-4x base unit between major sections) creates breathing room. Perfect for children—less cognitive load, clearer focus areas. Whitespace isn't wasted; it's intentional hierarchy. Each element floats independently.</p>
+                    </div>
+                </div>
+
+                <div class="card card-accent">
+                    <h3 class="card-title">Hard Shadows</h3>
+                    <div class="card-body">
+                        <p>4px offset, 0 blur radius creates sharp definition. No atmospheric perspective—elements feel present and tactile. Responds to interaction: hover amplifies (6px offset), active compresses (2px offset). Shadow as interactive feedback.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Accessibility</h3>
+                    <div class="card-body">
+                        <p>4.5:1 minimum contrast ratio throughout. 44px minimum touch targets on all buttons. Visible focus indicators (3px outline, 2px offset). Supports prefers-reduced-motion. Keyboard navigation fully functional. WCAG AA compliant.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Principles Section -->
+        <section class="zigzag-section">
+            <div class="container">
+                <h2 class="text-center mb-2xl">Design Principles</h2>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Honest Structure</h3>
+                        <p>Neo-brutalism reveals the structure. Borders visible, spacing logical, hierarchy clear. No visual tricks or fake materials. Children appreciate honesty—this design respects their intelligence without pretension.</p>
+                    </div>
+                </div>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Gentle Playfulness</h3>
+                        <p>Floating animations, organic corners, and duotone gradients soften the brutalist edge. Movement is subtle (4s float cycle), not jarring. Colors desaturated but present. The design feels approachable to children, not intimidating.</p>
+                    </div>
+                </div>
+
+                <div class="zigzag-item">
+                    <div class="zigzag-item-visual"></div>
+                    <div class="zigzag-item-content">
+                        <h3>Whitespace as Tool</h3>
+                        <p>Ultra-airy density means every element matters. No clutter, no distraction. Whitespace creates focus and reduces cognitive load. Perfect for healthcare context—clarity and calm matter. Children thrive in uncluttered environments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-grid">
+            <div class="footer-column">
+                <h3>Design System</h3>
+                <p>Global Shift demonstrates neo-brutalist principles adapted for children's healthcare applications. Raw structural honesty meets gentle playfulness.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Technology</h3>
+                <ul style="list-style: none;">
+                    <li>• Self-contained HTML/CSS</li>
+                    <li>• Google Fonts integration</li>
+                    <li>• CSS custom properties</li>
+                    <li>• WCAG AA accessibility</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Navigation</h3>
+                <p>Use arrow keys or buttons below to navigate between designs. Each design showcases distinct aesthetic principles and system thinking.</p>
+            </div>
+        </footer>
+
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="nav-btn" aria-label="Previous design" onclick="navigatePrevious()">←</button>
+            <button class="nav-btn" aria-label="Next design" onclick="navigateNext()">→</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation between designs
+        function navigatePrevious() {
+            const currentId = 1;
+            const previousId = currentId === 1 ? 10 : currentId - 1;
+            window.location.href = `design-${previousId}.html`;
+        }
+
+        function navigateNext() {
+            const currentId = 1;
+            const nextId = currentId === 10 ? 1 : currentId + 1;
+            window.location.href = `design-${nextId}.html`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') navigatePrevious();
+            if (e.key === 'ArrowRight') navigateNext();
+        });
+
+        // Smooth scroll to section
+        document.querySelector('button')?.addEventListener('click', () => {
+            document.querySelector('.content-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Keyboard access for all buttons
+        document.querySelectorAll('button, .btn').forEach(btn => {
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

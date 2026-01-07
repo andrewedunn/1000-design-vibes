@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mizu Blue - Design System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        // ABOUTME: Mizu Blue Design System
+        // Earth vibes for food - skeuomorphic mid-century modern aesthetic with Japanese cultural influence
+
+        Design #17 for 1000 Design Vibes
+        Seed: 41811a4a1adb
+
+        Aesthetic Principles:
+        - Skeuomorphic: Textured, material-based UI that mimics real-world food & nature
+        - Mid-Century Modern: Organic curves, optimistic warmth, functional geometry
+        - Earth Palette: Split-complementary colors (teals & earth tones) for food context
+        - Dense Layout: Information-rich, compact spacing
+        - Fabric Texture: Subtle woven/textile patterns throughout
+        - Japanese Influence: Minimalist philosophy, reverence for food, aquatic zen elements
+
+        Key Tokens:
+        - Primary: #2F8B7E (teal-green, "mizu" - water in Japanese)
+        - Accent: #D4A574 (warm earth, food/harvest)
+        - Background: #F5F3EF (off-white cream, fabric tone)
+        - Text: #2C2C2C (near-black for contrast)
+        - Secondary: #B8D4A3 (muted sage, complementary)
+
+        Typography:
+        - Headings: Quicksand (geometric sans) uppercase, tight line-height
+        - Body: Playfair Display (display font), uppercase emphasis
+        - Golden ratio: 1.618 scaling
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Split Complementary */
+            --color-primary: #2F8B7E;        /* Teal (water/mizu) */
+            --color-accent: #D4A574;         /* Warm earth (food/harvest) */
+            --color-secondary: #B8D4A3;      /* Sage (complementary) */
+            --color-background: #F5F3EF;    /* Cream (fabric base) */
+            --color-surface: #FFFFFF;        /* Pure white cards */
+            --color-text: #2C2C2C;          /* Near-black */
+            --color-text-muted: #6B6B6B;    /* Muted gray */
+            --color-border: #D4C5B9;        /* Subtle tan border */
+
+            /* Typography */
+            --font-heading: 'Quicksand', sans-serif;
+            --font-body: 'Playfair Display', serif;
+
+            /* Spacing - 8px base */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 0.5);    /* 4px */
+            --space-sm: var(--space-unit);                 /* 8px */
+            --space-md: calc(var(--space-unit) * 1.618);   /* 13px */
+            --space-lg: calc(var(--space-unit) * 3);       /* 24px */
+            --space-xl: calc(var(--space-unit) * 5);       /* 40px */
+            --space-2xl: calc(var(--space-unit) * 8);      /* 64px */
+
+            /* Shapes */
+            --radius-default: 12px;
+            --shadow-default: 0 4px 12px rgba(47, 139, 126, 0.15);
+            --shadow-hard: 0 6px 16px rgba(0, 0, 0, 0.2);
+
+            /* Type scale (golden ratio: 1.618) */
+            --size-body: 16px;
+            --size-h4: calc(var(--size-body) * 1.618);     /* 26px */
+            --size-h3: calc(var(--size-h4) * 1.618);       /* 42px */
+            --size-h2: calc(var(--size-h3) * 1.618);       /* 68px */
+            --size-h1: calc(var(--size-h2) * 1.618);       /* 110px */
+        }
+
+        /* Fabric texture background */
+        @supports (background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.02) 1px, transparent 1px)) {
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image:
+                    repeating-linear-gradient(0deg, rgba(0,0,0,.02) 1px, transparent 1px),
+                    repeating-linear-gradient(90deg, rgba(0,0,0,.02) 1px, transparent 1px);
+                background-size: 2px 2px;
+                pointer-events: none;
+                z-index: -1;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--size-body);
+            line-height: 1.4;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Header / Navigation */
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, rgba(47, 139, 126, 0.95) 100%);
+            color: white;
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            box-shadow: var(--shadow-hard);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-family: var(--font-heading);
+            font-size: var(--size-h2);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: var(--space-sm);
+            line-height: 1.1;
+        }
+
+        header p {
+            font-size: var(--size-body);
+            font-weight: 400;
+            opacity: 0.95;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main container - two column layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+        }
+
+        /* Section styles */
+        section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        section h2 {
+            font-family: var(--font-heading);
+            font-size: var(--size-h3);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            letter-spacing: 2px;
+            border-bottom: 3px solid var(--color-accent);
+            padding-bottom: var(--space-md);
+        }
+
+        /* Card component - skeuomorphic */
+        .card {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hard);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-family: var(--font-heading);
+            font-size: var(--size-h4);
+            text-transform: uppercase;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Color palette grid */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .color-swatch {
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            border: 2px solid var(--color-border);
+        }
+
+        .color-swatch-color {
+            height: 80px;
+            width: 100%;
+        }
+
+        .color-swatch-label {
+            padding: var(--space-sm) var(--space-md);
+            background: white;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--color-text);
+            text-align: center;
+        }
+
+        /* Typography showcase */
+        .type-sample {
+            margin-bottom: var(--space-lg);
+            padding: var(--space-lg);
+            background: var(--color-surface);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius-default);
+        }
+
+        .type-sample h4 {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+        }
+
+        .type-sample-text {
+            font-family: var(--font-body);
+            color: var(--color-text);
+        }
+
+        .h1-sample {
+            font-size: var(--size-h1);
+            line-height: 1.1;
+        }
+
+        .h2-sample {
+            font-size: var(--size-h2);
+            line-height: 1.1;
+        }
+
+        .h3-sample {
+            font-size: var(--size-h3);
+            line-height: 1.2;
+        }
+
+        .h4-sample {
+            font-size: var(--size-h4);
+            line-height: 1.2;
+        }
+
+        .body-sample {
+            font-size: var(--size-body);
+            line-height: 1.6;
+        }
+
+        /* Components showcase */
+        .components {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .button {
+            padding: var(--space-md) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-align: center;
+            box-shadow: var(--shadow-default);
+            display: inline-block;
+        }
+
+        .button-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #1f6a62;
+            box-shadow: var(--shadow-hard);
+            transform: translateY(-2px);
+        }
+
+        .button-primary:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .button-secondary {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .button-secondary:hover {
+            background: #c29560;
+            box-shadow: var(--shadow-hard);
+            transform: translateY(-2px);
+        }
+
+        .button-secondary:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .button-outline {
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .button-outline:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .button-outline:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Input styles */
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--size-body);
+            background: white;
+            color: var(--color-text);
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(47, 139, 126, 0.1);
+        }
+
+        /* Food grid - Japanese-inspired layout */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .food-item {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .food-item:hover {
+            box-shadow: var(--shadow-hard);
+            transform: scale(1.02);
+        }
+
+        .food-item-visual {
+            height: 120px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .food-item-content {
+            padding: var(--space-lg);
+        }
+
+        .food-item-title {
+            font-family: var(--font-heading);
+            font-size: var(--size-h4);
+            text-transform: uppercase;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .food-item-desc {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Spacing tokens */
+        .spacing-showcase {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .space-demo {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .space-box {
+            background: linear-gradient(135deg, var(--color-accent) 0%, rgba(212, 165, 116, 0.7) 100%);
+            border-radius: var(--radius-default);
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dense layout adjustments */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            header h1 {
+                font-size: var(--size-h3);
+            }
+
+            section h2 {
+                font-size: var(--size-h3);
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .type-sample-text.h1-sample {
+                font-size: 48px;
+            }
+
+            .type-sample-text.h2-sample {
+                font-size: 36px;
+            }
+        }
+
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus indicators for keyboard navigation */
+        *:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            margin-top: var(--space-2xl);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer p {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mizu Blue</h1>
+        <p>Earth Vibes for Food</p>
+    </header>
+
+    <div class="container">
+        <!-- Left Column: Colors & Typography -->
+        <section>
+            <h2>Color Palette</h2>
+            <div class="card">
+                <p>Split-complementary earth tones inspired by water (mizu) and harvest. Cool temperature with vivid saturation for maximum food appeal.</p>
+                <div class="color-grid" style="margin-top: var(--space-lg);">
+                    <div class="color-swatch">
+                        <div class="color-swatch-color" style="background: #2F8B7E;"></div>
+                        <div class="color-swatch-label">Primary<br>#2F8B7E</div>
+                    </div>
+                    <div class="color-swatch">
+                        <div class="color-swatch-color" style="background: #D4A574;"></div>
+                        <div class="color-swatch-label">Accent<br>#D4A574</div>
+                    </div>
+                    <div class="color-swatch">
+                        <div class="color-swatch-color" style="background: #B8D4A3;"></div>
+                        <div class="color-swatch-label">Secondary<br>#B8D4A3</div>
+                    </div>
+                    <div class="color-swatch">
+                        <div class="color-swatch-color" style="background: #F5F3EF;"></div>
+                        <div class="color-swatch-label">Background<br>#F5F3EF</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Typography</h2>
+            <div class="type-sample">
+                <h4>Heading 1 (Golden Ratio)</h4>
+                <div class="type-sample-text h1-sample">MIZU</div>
+            </div>
+            <div class="type-sample">
+                <h4>Heading 2</h4>
+                <div class="type-sample-text h2-sample">DESIGN</div>
+            </div>
+            <div class="type-sample">
+                <h4>Heading 3</h4>
+                <div class="type-sample-text h3-sample">SYSTEM</div>
+            </div>
+            <div class="type-sample">
+                <h4>Heading 4</h4>
+                <div class="type-sample-text h4-sample">Components</div>
+            </div>
+            <div class="type-sample">
+                <h4>Body Text (16px)</h4>
+                <div class="type-sample-text body-sample">Geometric sans headings with display serif body. Uppercase emphasis throughout. Tight line-height for dense layouts.</div>
+            </div>
+        </section>
+
+        <!-- Right Column: Components & Food Items -->
+        <section>
+            <h2>Components</h2>
+            <div class="card">
+                <h3>Buttons</h3>
+                <div class="components" style="margin-top: var(--space-md);">
+                    <button class="button button-primary">PRIMARY ACTION</button>
+                    <button class="button button-secondary">SECONDARY ACTION</button>
+                    <button class="button button-outline">OUTLINE STYLE</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Form Elements</h3>
+                <input type="text" placeholder="Name" style="margin-bottom: var(--space-md);">
+                <input type="email" placeholder="Email" style="margin-bottom: var(--space-md);">
+                <textarea placeholder="Your message..." rows="4"></textarea>
+            </div>
+
+            <h2>Featured Foods</h2>
+            <div class="food-grid">
+                <div class="food-item">
+                    <div class="food-item-visual">🍜</div>
+                    <div class="food-item-content">
+                        <div class="food-item-title">NOODLES</div>
+                        <div class="food-item-desc">Comfort in a bowl, crafted with care</div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="food-item-visual">🍵</div>
+                    <div class="food-item-content">
+                        <div class="food-item-title">TEA</div>
+                        <div class="food-item-desc">Zen moments in every sip</div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="food-item-visual">🍚</div>
+                    <div class="food-item-content">
+                        <div class="food-item-title">RICE</div>
+                        <div class="food-item-desc">Simple, nourishing, essential</div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="food-item-visual">🥢</div>
+                    <div class="food-item-content">
+                        <div class="food-item-title">CRAFTED</div>
+                        <div class="food-item-desc">Tradition meets modern design</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Spacing System</h2>
+            <div class="card">
+                <p>Base unit: 8px (golden ratio escalation)</p>
+                <div class="spacing-showcase" style="margin-top: var(--space-lg);">
+                    <div class="space-demo">
+                        <div class="space-box" style="height: calc(var(--space-unit) * 2);">XS (4px)</div>
+                    </div>
+                    <div class="space-demo">
+                        <div class="space-box" style="height: var(--space-unit);">SM (8px)</div>
+                    </div>
+                    <div class="space-demo">
+                        <div class="space-box" style="height: var(--space-md);">MD (13px)</div>
+                    </div>
+                    <div class="space-demo">
+                        <div class="space-box" style="height: var(--space-lg);">LG (24px)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Mizu Blue Design System | Dense, Skeuomorphic, Mid-Century Modern | Design #17</p>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 17; // Design #17
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

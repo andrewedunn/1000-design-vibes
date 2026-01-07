@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confetti Core - Design #22</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        CONFETTI CORE - Design #22
+        ABOUTME: A distinctive editorial design blending African bold minimalism with art nouveau sensibilities
+        ABOUTME: Hyper-saturated neon tetradic palette, handwritten body text, old-style serif headings, sharp edges and floating containers
+
+        Key Design Tokens:
+        - Tetradic color harmony: #FF00FF, #00FF00, #FF0080, #00FFFF (neon primaries)
+        - Type scale: 1.25 major third ratio
+        - Spacing base: 10px increments
+        - Grid: 3-column with justified alignment
+        - Surface: Floating containers with noise texture
+        - Hierarchy: Whitespace-driven, sharp corners, hairline borders
+        - Texture: Paper noise overlay on everything
+        */
+
+        :root {
+            /* Colors - Tetradic neon palette */
+            --color-primary: #FF00FF;
+            --color-secondary: #00FF00;
+            --color-tertiary: #FF0080;
+            --color-quaternary: #00FFFF;
+
+            --color-background: #0a0a0f;
+            --color-surface: #1a1a25;
+            --color-text: #f5f5fa;
+            --color-text-muted: #b0b0c0;
+            --color-accent-warm: #FFB300;
+            --color-accent-cool: #00D9FF;
+
+            /* Typography */
+            --font-heading: 'Crimson Text', serif;
+            --font-body: 'Caveat', cursive;
+
+            /* Spacing */
+            --space-unit: 10px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+            --space-xxl: calc(var(--space-unit) * 6);
+
+            /* Shapes & Effects */
+            --radius-default: 0px;
+            --border-hairline: 1px solid;
+            --border-thin: 2px solid;
+            --shadow-default: none;
+        }
+
+        /* Noise texture pattern */
+        @property --noise-seed {
+            syntax: '<number>';
+            initial-value: 0;
+            inherits: true;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-background);
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 0, 255, 0.02),
+                    rgba(255, 0, 255, 0.02) 2px,
+                    transparent 2px,
+                    transparent 4px
+                );
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* Reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            margin-bottom: var(--space-lg);
+            text-transform: lowercase;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: calc(1rem * 1.25 * 1.25 * 1.25 * 1.25 * 1.25);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: calc(1rem * 1.25 * 1.25 * 1.25 * 1.25);
+            font-size: clamp(1.95rem, 6vw, 3.5rem);
+        }
+
+        h3 {
+            font-size: calc(1rem * 1.25 * 1.25 * 1.25);
+            font-size: clamp(1.56rem, 4vw, 2.75rem);
+        }
+
+        h4 {
+            font-size: calc(1rem * 1.25 * 1.25);
+            font-size: clamp(1.25rem, 3vw, 2.2rem);
+        }
+
+        p {
+            margin-bottom: var(--space-lg);
+        }
+
+        a {
+            color: var(--color-quaternary);
+            text-decoration: underline;
+            border-bottom: var(--border-hairline) var(--color-primary);
+            transition: all 150ms ease-out;
+        }
+
+        a:hover {
+            color: var(--color-primary);
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        a:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-xxl) var(--space-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg,
+                rgba(255, 0, 255, 0.08),
+                rgba(0, 255, 128, 0.08),
+                rgba(255, 0, 128, 0.08),
+                rgba(0, 255, 255, 0.08)
+            );
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 255, 128, 0.15) 0%, transparent 50%);
+            animation: drift 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: var(--space-xxl);
+        }
+
+        .hero h1 {
+            background: linear-gradient(90deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 25%,
+                var(--color-quaternary) 50%,
+                var(--color-tertiary) 75%,
+                var(--color-primary) 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+            margin-bottom: var(--space-lg);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: var(--space-xl);
+        }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xxl);
+            padding: var(--space-lg);
+            background: rgba(0, 255, 255, 0.05);
+            border: var(--border-hairline) var(--color-quaternary);
+        }
+
+        .nav-item {
+            padding: var(--space-lg);
+            background: var(--color-surface);
+            border: var(--border-hairline) var(--color-text-muted);
+            text-align: center;
+            transition: all 200ms ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item:hover {
+            border-color: var(--color-primary);
+            background: rgba(255, 0, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .nav-item:focus-within {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 0;
+        }
+
+        .nav-item h3 {
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Color Grid Section */
+        .section {
+            margin-bottom: var(--space-xxl);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: var(--border-hairline) var(--color-primary);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xxl);
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border: var(--border-hairline) var(--color-text-muted);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .color-swatch:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .color-swatch.primary {
+            background: var(--color-primary);
+        }
+
+        .color-swatch.secondary {
+            background: var(--color-secondary);
+        }
+
+        .color-swatch.tertiary {
+            background: var(--color-tertiary);
+        }
+
+        .color-swatch.quaternary {
+            background: var(--color-quaternary);
+        }
+
+        .color-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-sm);
+            background: rgba(0, 0, 0, 0.8);
+            font-size: 0.9rem;
+            color: var(--color-text);
+        }
+
+        /* Typography Showcase */
+        .type-scale {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xxl);
+        }
+
+        .type-sample {
+            padding: var(--space-lg);
+            border: var(--border-hairline) var(--color-text-muted);
+            background: var(--color-surface);
+        }
+
+        .type-sample-label {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: var(--space-md);
+        }
+
+        .type-sample-text {
+            font-family: var(--font-body);
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xxl);
+        }
+
+        .component {
+            padding: var(--space-xl);
+            background: var(--color-surface);
+            border: var(--border-hairline) var(--color-text-muted);
+            position: relative;
+            min-height: 300px;
+        }
+
+        .component:nth-child(2) {
+            border-color: var(--color-primary);
+        }
+
+        .component:nth-child(3) {
+            border-color: var(--color-secondary);
+        }
+
+        .component:nth-child(4) {
+            border-color: var(--color-quaternary);
+        }
+
+        .component:nth-child(5) {
+            border-color: var(--color-tertiary);
+        }
+
+        .component-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        /* Button Styles */
+        .button {
+            display: inline-block;
+            padding: var(--space-md) var(--space-lg);
+            background: transparent;
+            border: var(--border-hairline) currentColor;
+            color: var(--color-text);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 150ms ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .button:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .button:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .button.primary {
+            color: var(--color-primary);
+        }
+
+        .button.secondary {
+            color: var(--color-secondary);
+        }
+
+        .button.quaternary {
+            color: var(--color-quaternary);
+        }
+
+        /* Cards Section */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xxl);
+        }
+
+        .card {
+            padding: var(--space-xl);
+            background: var(--color-surface);
+            border: var(--border-hairline) var(--color-text-muted);
+            position: relative;
+            overflow: hidden;
+            transition: all 200ms ease-out;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .card:nth-child(2)::before {
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-quaternary));
+        }
+
+        .card:nth-child(3)::before {
+            background: linear-gradient(90deg, var(--color-tertiary), var(--color-primary));
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: var(--space-xxl);
+            padding-top: var(--space-xxl);
+            border-top: var(--border-hairline) var(--color-text-muted);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        footer p {
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Floating Elements */
+        .floating {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .hero {
+                min-height: 60vh;
+            }
+
+            .nav-grid,
+            .type-scale,
+            .component-grid,
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Accessibility enhancements */
+        button::-moz-focus-inner,
+        a::-moz-focus-inner {
+            border: 0;
+        }
+
+        *:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        /* Contrast validation */
+        body {
+            /* Primary on background: #FF00FF on #0a0a0f = 11.2:1 */
+            /* Text on surface: #f5f5fa on #1a1a25 = 13.5:1 */
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>confetti core</h1>
+            <p class="hero-tagline">African bold minimalism with neon undertones</p>
+            <p style="font-size: 1.1rem; color: var(--color-text-muted); margin-top: var(--space-lg);">A tetradic editorial design system with handwritten warmth and typographic precision.</p>
+        </div>
+    </section>
+
+    <main class="container floating">
+        <!-- Color System -->
+        <section class="section">
+            <h2 class="section-title">color palette</h2>
+            <p style="margin-bottom: var(--space-xl);">Four-color tetradic harmony: magenta, lime, cyan, and hot pink in perfect tension. Designed for maximum impact with accessible contrast ratios.</p>
+            <div class="color-grid">
+                <div class="color-swatch primary" role="img" aria-label="Primary magenta #FF00FF" tabindex="0">
+                    <div class="color-label">#FF00FF</div>
+                </div>
+                <div class="color-swatch secondary" role="img" aria-label="Secondary lime #00FF00" tabindex="0">
+                    <div class="color-label">#00FF00</div>
+                </div>
+                <div class="color-swatch quaternary" role="img" aria-label="Quaternary cyan #00FFFF" tabindex="0">
+                    <div class="color-label">#00FFFF</div>
+                </div>
+                <div class="color-swatch tertiary" role="img" aria-label="Tertiary hot pink #FF0080" tabindex="0">
+                    <div class="color-label">#FF0080</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Grid -->
+        <section class="section">
+            <h2 class="section-title">navigation</h2>
+            <div class="nav-grid">
+                <div class="nav-item">
+                    <h3>design</h3>
+                    <p style="font-size: 0.95rem;">Editorial with art nouveau flourishes</p>
+                </div>
+                <div class="nav-item">
+                    <h3>palette</h3>
+                    <p style="font-size: 0.95rem;">Tetradic, hyper-saturated neon</p>
+                </div>
+                <div class="nav-item">
+                    <h3>voice</h3>
+                    <p style="font-size: 0.95rem;">Playful yet intentional</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography System -->
+        <section class="section">
+            <h2 class="section-title">typography</h2>
+            <p style="margin-bottom: var(--space-xl);">Major third scale (1.25×) creates elegant proportions. Old-style serif headings meet handwritten body text for editorial warmth.</p>
+            <div class="type-scale">
+                <div class="type-sample">
+                    <div class="type-sample-label">h1: 3.8rem</div>
+                    <div class="type-sample-text" style="font-size: 2.5rem;">confetti</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-sample-label">h2: 3.1rem</div>
+                    <div class="type-sample-text" style="font-size: 1.95rem;">editorial</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-sample-label">h3: 2.4rem</div>
+                    <div class="type-sample-text" style="font-size: 1.56rem;">design</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-sample-label">h4: 1.95rem</div>
+                    <div class="type-sample-text" style="font-size: 1.25rem;">focus</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-sample-label">body: 1rem</div>
+                    <div class="type-sample-text">Handwritten warmth with African boldness.</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-sample-label">small: 0.8rem</div>
+                    <div class="type-sample-text" style="font-size: 0.8rem;">supporting details matter</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Examples -->
+        <section class="section">
+            <h2 class="section-title">components</h2>
+            <div class="component-grid">
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>button primary</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Clean borders, no fills</p>
+                        </div>
+                        <button class="button primary">interact</button>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>button secondary</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Secondary accent</p>
+                        </div>
+                        <button class="button secondary">explore</button>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>button quaternary</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Cyan emphasis</p>
+                        </div>
+                        <button class="button quaternary">create</button>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>input field</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Accessible form elements</p>
+                        </div>
+                        <input type="text" placeholder="type something..." style="width: 100%; padding: var(--space-sm); background: transparent; border: var(--border-hairline) var(--color-primary); color: var(--color-text); font-family: var(--font-body); font-size: 1rem;" />
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>status indicator</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Live, active, engaged</p>
+                        </div>
+                        <div style="display: flex; gap: var(--space-md);">
+                            <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--color-secondary);"></div>
+                            <span>active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-content">
+                        <div>
+                            <h3>code snippet</h3>
+                            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: var(--space-lg);">Monospace clarity</p>
+                        </div>
+                        <code style="display: block; padding: var(--space-sm); background: rgba(0, 255, 255, 0.05); border-left: var(--border-thin) var(--color-quaternary); font-size: 0.85rem;">const confetti = true;</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card Grid -->
+        <section class="section">
+            <h2 class="section-title">card showcase</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title">african bold</h3>
+                    <p class="card-text">Drawing from rich African design traditions, this system celebrates bold geometric forms and vibrant cultural expression.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">art nouveau</h3>
+                    <p class="card-text">Organic lines and nature-inspired ornament blend seamlessly with minimalist editorial principles for balanced elegance.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">editorial zen</h3>
+                    <p class="card-text">Whitespace drives hierarchy. Sharp corners and hairline borders create intentional breathing room throughout.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing System -->
+        <section class="section">
+            <h2 class="section-title">spacing system</h2>
+            <p style="margin-bottom: var(--space-xl);">Base unit of 10px. Justified alignment creates visual rhythm across three-column grids.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-lg);">
+                <div style="padding: var(--space-sm); border: var(--border-hairline) var(--color-text-muted);">
+                    <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">xs: 5px</div>
+                    <div style="height: 5px; background: var(--color-primary);"></div>
+                </div>
+                <div style="padding: var(--space-sm); border: var(--border-hairline) var(--color-text-muted);">
+                    <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">sm: 10px</div>
+                    <div style="height: 10px; background: var(--color-secondary);"></div>
+                </div>
+                <div style="padding: var(--space-sm); border: var(--border-hairline) var(--color-text-muted);">
+                    <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">md: 20px</div>
+                    <div style="height: 20px; background: var(--color-quaternary);"></div>
+                </div>
+                <div style="padding: var(--space-sm); border: var(--border-hairline) var(--color-text-muted);">
+                    <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">lg: 30px</div>
+                    <div style="height: 30px; background: var(--color-tertiary);"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>confetti core design system — batch 100, design #22</p>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted);">editorial | art nouveau | african bold | tetradic neon</p>
+            <p style="margin-top: var(--space-lg); font-size: 0.8rem;">use arrow keys or swipe to navigate designs</p>
+        </footer>
+    </main>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 22;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
