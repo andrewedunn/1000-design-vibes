@@ -403,7 +403,7 @@ def build_index(output_path: Path, manifest: dict, run_name: str = None, model: 
 <body>
     <header>
         <nav class="breadcrumb">
-            <a href="../../index.html">All Runs</a> / {run_name}
+            <a href="../../../index.html">All Runs</a> / {run_name}
         </nav>
         <h1>{run_name}</h1>
         <p class="subtitle">Generated {formatted_date}</p>
