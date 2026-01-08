@@ -144,6 +144,13 @@ def generate_viewer_html(designs: list[dict]) -> str:
 
         .design-info {{
             text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }}
+
+        .design-text {{
+            text-align: right;
         }}
 
         .design-name {{
@@ -154,6 +161,69 @@ def generate_viewer_html(designs: list[dict]) -> str:
         .design-meta {{
             font-size: 0.75rem;
             color: var(--text-muted);
+        }}
+
+        .prompt-toggle {{
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }}
+
+        .prompt-toggle:hover {{
+            border-color: var(--accent);
+            color: var(--text);
+        }}
+
+        .prompt-toggle.active {{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }}
+
+        .prompt-panel {{
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }}
+
+        .prompt-panel.open {{
+            max-height: 400px;
+            overflow-y: auto;
+        }}
+
+        .prompt-content {{
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }}
+
+        .dim-group {{
+            background: var(--bg);
+            border-radius: 6px;
+            padding: 0.75rem;
+        }}
+
+        .dim-label {{
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }}
+
+        .dim-value {{
+            font-size: 0.875rem;
+            color: var(--text);
         }}
 
         .viewer-container {{
@@ -228,10 +298,17 @@ def generate_viewer_html(designs: list[dict]) -> str:
             </div>
         </div>
         <div class="design-info">
-            <div class="design-name" id="designName">Loading...</div>
-            <div class="design-meta" id="designMeta"></div>
+            <div class="design-text">
+                <div class="design-name" id="designName">Loading...</div>
+                <div class="design-meta" id="designMeta"></div>
+            </div>
+            <button class="prompt-toggle" id="promptToggle">Show Prompt</button>
         </div>
     </header>
+
+    <div class="prompt-panel" id="promptPanel">
+        <div class="prompt-content" id="promptContent"></div>
+    </div>
 
     <div class="viewer-container">
         <div class="loading" id="loading">Loading design...</div>
@@ -253,6 +330,22 @@ def generate_viewer_html(designs: list[dict]) -> str:
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const loading = document.getElementById('loading');
+        const promptToggle = document.getElementById('promptToggle');
+        const promptPanel = document.getElementById('promptPanel');
+        const promptContent = document.getElementById('promptContent');
+
+        function renderDimensions(dims) {{
+            if (!dims || Object.keys(dims).length === 0) {{
+                return '<div class="dim-group"><div class="dim-value" style="color: var(--text-muted)">No dimension data available</div></div>';
+            }}
+            return Object.entries(dims)
+                .map(([key, value]) => `
+                    <div class="dim-group">
+                        <div class="dim-label">${{key.replace(/_/g, ' ')}}</div>
+                        <div class="dim-value">${{value}}</div>
+                    </div>
+                `).join('');
+        }}
 
         function loadDesign(index) {{
             if (index < 0 || index >= designs.length) return;
@@ -276,9 +369,19 @@ def generate_viewer_html(designs: list[dict]) -> str:
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === designs.length - 1;
 
+            // Update prompt panel content
+            promptContent.innerHTML = renderDimensions(design.dimensions);
+
             // Update URL hash for bookmarking
             history.replaceState(null, '', `#${{design.batch}}/${{design.id}}`);
         }}
+
+        // Prompt toggle
+        promptToggle.addEventListener('click', () => {{
+            promptPanel.classList.toggle('open');
+            promptToggle.classList.toggle('active');
+            promptToggle.textContent = promptPanel.classList.contains('open') ? 'Hide Prompt' : 'Show Prompt';
+        }});
 
         function next() {{
             if (currentIndex < designs.length - 1) {{
