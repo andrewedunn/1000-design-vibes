@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Prime - Neutral palette, natural spirit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Protocol Prime - Neutral palette, natural spirit
+        ABOUTME: This design implements recipe_card in neo_brutalist style.
+        ABOUTME: Emotional tone: serious | Industry: government
+
+        MY DESIGN CHOICES:
+        - UI Paradigm: Standardized grid system with official government documentation aesthetic
+        - Color approach: Stark monochrome (black/white/grays) with amber accent for critical info, high contrast for readability
+        - Typography: Monospace fonts throughout (IBM Plex Mono for data, Space Mono for headers) - echoes typewriter/terminal government documents
+        - Shape language: Sharp corners, thick borders everywhere, no curves - raw neo_brutalist geometry
+        - Density: High density information presentation appropriate for serious government documentation
+
+        QUICK START - Copy these variables:
+        --color-primary: #ffb300;
+        --color-background: #0a0a0a;
+        --color-surface: #1a1a1a;
+        --color-text: #ffffff;
+        --color-text-muted: #888888;
+        --font-heading: 'Space Mono', monospace;
+        --font-body: 'IBM Plex Mono', monospace;
+        --radius-default: 0px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Brutal honesty - thick borders, no decoration, raw structure exposed
+        2. Official standardization - monospace, grid-based, authoritative presentation
+        3. Maximum contrast - dark backgrounds with pure white text, amber alerts
+
+        FUNCTIONAL DIRECTION: recipe_card
+        Required elements I included:
+        - Recipe title and metadata (serves, prep time, cook time)
+        - Complete ingredient list with quantities and units
+        - Step-by-step instructions numbered clearly
+        - Difficulty level and category classification
+        - Nutritional information panel
+        - Equipment requirements list
+        - Notes and warnings section
+        -->
+
+        :root {
+            /* Colors - stark monochrome with amber accent */
+            --color-primary: #ffb300;
+            --color-background: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-surface-raised: #252525;
+            --color-border: #ffffff;
+            --color-border-muted: #444444;
+            --color-text: #ffffff;
+            --color-text-muted: #888888;
+            --color-warning: #ffb300;
+            --color-success: #00ff00;
+            --color-error: #ff0000;
+
+            /* Typography - monospace throughout */
+            --font-heading: 'Space Mono', monospace;
+            --font-body: 'IBM Plex Mono', monospace;
+
+            /* Spacing - dense grid */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes - no curves, thick borders */
+            --radius-default: 0px;
+            --border-width: 4px;
+            --border-thin: 2px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            padding: var(--space-lg);
+            min-height: 100vh;
+        }
+
+        /* Header - official government document style */
+        .recipe-header {
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: var(--border-thin) solid var(--color-border-muted);
+        }
+
+        .doc-number {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            color: var(--color-text-muted);
+            letter-spacing: 2px;
+        }
+
+        .classification {
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: var(--space-xs) var(--space-sm);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            color: var(--color-text-muted);
+            font-size: 14px;
+            margin-bottom: var(--space-lg);
+            font-style: italic;
+        }
+
+        /* Metadata grid */
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--border-width);
+            background: var(--color-border);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .metadata-item {
+            background: var(--color-surface);
+            padding: var(--space-sm);
+            text-align: center;
+        }
+
+        .metadata-label {
+            display: block;
+            font-size: 10px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .metadata-value {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        /* Main layout - two column grid */
+        .recipe-main {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-lg);
+        }
+
+        /* Left column - ingredients and equipment */
+        .recipe-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .section {
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .section-header {
+            background: var(--color-border);
+            color: var(--color-background);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            padding: var(--space-md);
+        }
+
+        /* Ingredients list */
+        .ingredient-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .ingredient-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .ingredient-group-title {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ingredient {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--color-border-muted);
+            font-size: 13px;
+        }
+
+        .ingredient:last-child {
+            border-bottom: none;
+        }
+
+        .ingredient-qty {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .ingredient-name {
+            color: var(--color-text);
+        }
+
+        /* Equipment list */
+        .equipment-list {
+            list-style: none;
+        }
+
+        .equipment-item {
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--color-border-muted);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .equipment-item:last-child {
+            border-bottom: none;
+        }
+
+        .equipment-item::before {
+            content: '■';
+            color: var(--color-primary);
+            margin-right: var(--space-sm);
+            font-size: 8px;
+        }
+
+        /* Right column - instructions */
+        .instructions-section {
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .instruction-step {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-bottom: var(--border-thin) solid var(--color-border-muted);
+        }
+
+        .instruction-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+            padding-top: var(--space-xs);
+        }
+
+        .step-content {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .step-time {
+            display: inline-block;
+            background: var(--color-surface-raised);
+            border: var(--border-thin) solid var(--color-border-muted);
+            padding: var(--space-xs) var(--space-sm);
+            margin-top: var(--space-sm);
+            font-size: 11px;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+        }
+
+        .step-time strong {
+            color: var(--color-primary);
+        }
+
+        /* Warnings and notes */
+        .warnings-section {
+            border: var(--border-width) solid var(--color-primary);
+            background: var(--color-surface);
+            margin-top: var(--space-lg);
+        }
+
+        .warnings-header {
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .warning-item {
+            padding: var(--space-md);
+            border-bottom: var(--border-thin) solid var(--color-border-muted);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .warning-item:last-child {
+            border-bottom: none;
+        }
+
+        .warning-icon {
+            color: var(--color-primary);
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Nutrition panel */
+        .nutrition-section {
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            margin-top: var(--space-lg);
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--border-width);
+            background: var(--color-border);
+        }
+
+        .nutrition-item {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            text-align: center;
+        }
+
+        .nutrition-value {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .nutrition-label {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer - navigation info */
+        .recipe-footer {
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: var(--border-width) solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-hint {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-family: var(--font-heading);
+        }
+
+        .nav-hint kbd {
+            background: var(--color-surface);
+            border: var(--border-thin) solid var(--color-border);
+            padding: 2px 8px;
+            margin: 0 4px;
+            font-family: var(--font-heading);
+            font-size: 11px;
+        }
+
+        /* Focus states */
+        *:focus {
+            outline: var(--border-width) solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-sm);
+            }
+
+            .recipe-main {
+                grid-template-columns: 1fr;
+            }
+
+            .metadata-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+                gap: var(--space-sm);
+            }
+
+            .step-number {
+                font-size: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .nutrition-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="recipe-header">
+        <div class="header-top">
+            <div class="doc-number">PROTOCOL-RCP-2026-009</div>
+            <div class="classification">STANDARD ISSUE</div>
+        </div>
+
+        <h1>Sourdough Bread</h1>
+        <p class="tagline">Natural fermentation protocol for artisan bread production</p>
+
+        <div class="metadata-grid">
+            <div class="metadata-item">
+                <span class="metadata-label">Difficulty</span>
+                <span class="metadata-value">MED</span>
+            </div>
+            <div class="metadata-item">
+                <span class="metadata-label">Serves</span>
+                <span class="metadata-value">8</span>
+            </div>
+            <div class="metadata-item">
+                <span class="metadata-label">Prep Time</span>
+                <span class="metadata-value">48h</span>
+            </div>
+            <div class="metadata-item">
+                <span class="metadata-label">Cook Time</span>
+                <span class="metadata-value">45m</span>
+            </div>
+            <div class="metadata-item">
+                <span class="metadata-label">Active Time</span>
+                <span class="metadata-value">2h</span>
+            </div>
+            <div class="metadata-item">
+                <span class="metadata-label">Category</span>
+                <span class="metadata-value">BREAD</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="recipe-main">
+        <div class="recipe-sidebar">
+            <div class="section">
+                <div class="section-header">Ingredients</div>
+                <div class="section-content">
+                    <div class="ingredient-group">
+                        <div class="ingredient-group-title">Starter Feed</div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">50g</span>
+                            <span class="ingredient-name">Active starter</span>
+                        </div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">50g</span>
+                            <span class="ingredient-name">Water (room temp)</span>
+                        </div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">50g</span>
+                            <span class="ingredient-name">Bread flour</span>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-group">
+                        <div class="ingredient-group-title">Dough Components</div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">500g</span>
+                            <span class="ingredient-name">Bread flour</span>
+                        </div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">350g</span>
+                            <span class="ingredient-name">Water (filtered, 25°C)</span>
+                        </div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">150g</span>
+                            <span class="ingredient-name">Fed starter (active)</span>
+                        </div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">10g</span>
+                            <span class="ingredient-name">Sea salt (fine)</span>
+                        </div>
+                    </div>
+
+                    <div class="ingredient-group">
+                        <div class="ingredient-group-title">Finishing</div>
+                        <div class="ingredient">
+                            <span class="ingredient-qty">As needed</span>
+                            <span class="ingredient-name">Rice flour (for dusting)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">Required Equipment</div>
+                <div class="section-content">
+                    <ul class="equipment-list">
+                        <li class="equipment-item">Large mixing bowl (glass/ceramic)</li>
+                        <li class="equipment-item">Kitchen scale (digital, 1g precision)</li>
+                        <li class="equipment-item">Banneton basket or bowl with liner</li>
+                        <li class="equipment-item">Dutch oven (5-7 quart, cast iron)</li>
+                        <li class="equipment-item">Bench scraper (metal)</li>
+                        <li class="equipment-item">Lame or sharp knife</li>
+                        <li class="equipment-item">Kitchen thermometer</li>
+                        <li class="equipment-item">Damp towel (lint-free)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions-section">
+            <div class="section-header">Preparation Protocol</div>
+
+            <div class="instruction-step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    Feed your sourdough starter 8-12 hours before mixing dough. Combine 50g active starter with 50g water and 50g flour. Mix thoroughly and let sit at room temperature (22-24°C) until doubled in volume and showing vigorous bubbling activity.
+                    <div class="step-time"><strong>TIMING:</strong> 8-12 hours passive</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    Autolyse: Mix 500g bread flour with 350g water in a large bowl. Stir until no dry flour remains. Cover with damp towel and rest for 30-60 minutes. This allows flour to hydrate and begins gluten development without mechanical mixing.
+                    <div class="step-time"><strong>TIMING:</strong> 30-60 minutes passive</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    Add 150g active starter to the autolyse mixture. Use wet hands to squeeze and fold the starter through the dough until fully incorporated. The dough will be very shaggy and sticky at this stage.
+                    <div class="step-time"><strong>TIMING:</strong> 5 minutes active</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">04</div>
+                <div class="step-content">
+                    Sprinkle 10g salt over the dough surface. Using the pincer method, pinch salt through the dough, then perform 50-100 slap-and-fold motions until dough becomes smooth and begins to show some tension. Cover and rest for 30 minutes.
+                    <div class="step-time"><strong>TIMING:</strong> 10 minutes active</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">05</div>
+                <div class="step-content">
+                    Bulk fermentation with stretch-and-folds: Over the next 4 hours, perform 4 sets of stretch-and-folds at 30-minute intervals. For each set, wet hands, stretch one side of dough up and fold over center. Rotate bowl 90° and repeat 4 times. Cover between sets.
+                    <div class="step-time"><strong>TIMING:</strong> 4 hours with periodic attention</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">06</div>
+                <div class="step-content">
+                    Pre-shape: Turn dough onto lightly floured surface. Use bench scraper to gently shape into a round. Let rest uncovered for 20-30 minutes to relax gluten and allow surface to dry slightly.
+                    <div class="step-time"><strong>TIMING:</strong> 20-30 minutes passive</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">07</div>
+                <div class="step-content">
+                    Final shape: Flip dough over so smooth side is down. Fold bottom third up, then fold left and right sides to center, then roll from top down creating tension. Place seam-side up in rice-flour-dusted banneton. Cover tightly.
+                    <div class="step-time"><strong>TIMING:</strong> 5 minutes active</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">08</div>
+                <div class="step-content">
+                    Cold proof: Refrigerate covered dough for 12-24 hours. This slow fermentation develops complex flavor and makes the dough easier to score. Longer proofing yields more sour flavor.
+                    <div class="step-time"><strong>TIMING:</strong> 12-24 hours passive</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">09</div>
+                <div class="step-content">
+                    Preheat: Place Dutch oven with lid in oven and preheat to 250°C (480°F) for 45 minutes minimum. The vessel must be thoroughly heated to create proper oven spring.
+                    <div class="step-time"><strong>TIMING:</strong> 45 minutes passive</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">10</div>
+                <div class="step-content">
+                    Score and bake: Turn dough onto parchment paper. Score with lame in desired pattern (single slash or cross recommended). Carefully transfer on parchment into hot Dutch oven. Cover and bake 20 minutes at 250°C, then remove lid and bake 25 minutes at 230°C until deep golden brown.
+                    <div class="step-time"><strong>TIMING:</strong> 45 minutes active baking</div>
+                </div>
+            </div>
+
+            <div class="instruction-step">
+                <div class="step-number">11</div>
+                <div class="step-content">
+                    Cool completely on wire rack for minimum 2 hours before slicing. Internal temperature should read 93-96°C. Cutting too early will result in gummy crumb structure. Store at room temperature in paper bag or bread box for up to 4 days.
+                    <div class="step-time"><strong>TIMING:</strong> 2+ hours passive cooling</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="warnings-section">
+        <div class="warnings-header">Critical Notes &amp; Warnings</div>
+        <div class="warning-item">
+            <div class="warning-icon">⚠</div>
+            <div class="warning-text">
+                <strong>TEMPERATURE CONTROL:</strong> Maintain ambient temperature between 22-24°C during bulk fermentation. Warmer temperatures accelerate fermentation and may result in over-proofed dough. Cooler temperatures slow the process.
+            </div>
+        </div>
+        <div class="warning-item">
+            <div class="warning-icon">⚠</div>
+            <div class="warning-text">
+                <strong>STARTER VIABILITY:</strong> Only use starter that has doubled in volume and shows vigorous bubbling. A weak or inactive starter will not provide adequate rise and will result in dense bread.
+            </div>
+        </div>
+        <div class="warning-item">
+            <div class="warning-icon">⚠</div>
+            <div class="warning-text">
+                <strong>HYDRATION ADJUSTMENT:</strong> Flour absorption varies by brand and humidity. If dough is excessively sticky after step 4, reduce water by 10-20g in future batches. If too stiff, increase water incrementally.
+            </div>
+        </div>
+        <div class="warning-item">
+            <div class="warning-icon">⚠</div>
+            <div class="warning-text">
+                <strong>SAFETY:</strong> Dutch oven reaches extreme temperatures. Use heavy oven mitts and place hot vessel on heat-safe surface. Steam release when removing lid can cause burns.
+            </div>
+        </div>
+    </div>
+
+    <div class="nutrition-section">
+        <div class="section-header">Nutritional Information (Per 100g Serving)</div>
+        <div class="nutrition-grid">
+            <div class="nutrition-item">
+                <span class="nutrition-value">245</span>
+                <span class="nutrition-label">Calories</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">51g</span>
+                <span class="nutrition-label">Carbohydrates</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">8g</span>
+                <span class="nutrition-label">Protein</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">1g</span>
+                <span class="nutrition-label">Fat</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">2.5g</span>
+                <span class="nutrition-label">Fiber</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">480mg</span>
+                <span class="nutrition-label">Sodium</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">0mg</span>
+                <span class="nutrition-label">Cholesterol</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">2mg</span>
+                <span class="nutrition-label">Iron</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="recipe-footer">
+        <div class="nav-hint">PROTOCOL PRIME DESIGN SYSTEM</div>
+        <div class="nav-hint">NAVIGATE: <kbd>←</kbd> <kbd>→</kbd></div>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 9;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

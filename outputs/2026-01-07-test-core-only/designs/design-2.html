@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spritz Prime - Y2k-inspired design for users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        <!--
+DESIGN: Spritz Prime - Y2k-inspired design for users
+ABOUTME: This design implements design_tool in y2k style.
+ABOUTME: Emotional tone: playful | Industry: fitness
+
+MY DESIGN CHOICES:
+- UI Paradigm: App-based design tool with toolbar, artboard canvas, layers panel, and property inspector
+- Color approach: Y2K cool gradient palette (cyan to pink, purple accents) on light mode with chrome/glass effects
+- Typography: Space Grotesk for headings (geometric, modern), Inter for UI (clean, readable)
+- Shape language: Soft rounded corners (12-16px), pill buttons, glossy gradients, subtle chrome borders
+- Density: Medium spacing (8px unit) - airy enough for playfulness while maintaining tool functionality
+
+QUICK START - Copy these variables:
+--color-primary: linear-gradient(135deg, #00D4FF 0%, #FF00FF 100%);
+--color-background: #F8FAFB;
+--color-surface: #FFFFFF;
+--color-text: #1A1F36;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 12px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Chrome and glass - Y2K glossy surfaces with gradient overlays and subtle reflections
+2. Playful geometry - Soft rounded shapes with occasional circles for fitness energy
+3. Gradient everything - Cool-to-warm gradients on accents, buttons, and highlights
+
+FUNCTIONAL DIRECTION: design_tool
+Required elements I included:
+- Toolbar with design tools (selection, shapes, text, etc.)
+- Canvas/artboard area for creating fitness graphics
+- Layers panel for managing design elements
+- Properties panel for adjusting selected objects
+- Color picker and asset library
+-->
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary-gradient: linear-gradient(135deg, #00D4FF 0%, #FF00FF 100%);
+            --color-accent-cyan: #00D4FF;
+            --color-accent-pink: #FF00FF;
+            --color-accent-purple: #9D4EDD;
+            --color-background: #F8FAFB;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FFFFFF;
+            --color-text: #1A1F36;
+            --color-text-muted: #6B7A99;
+            --color-border: rgba(0, 212, 255, 0.15);
+            --color-border-strong: rgba(0, 212, 255, 0.3);
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+
+            /* Spacing */
+            --space-unit: 8px;
+
+            /* Shapes */
+            --radius-default: 12px;
+            --radius-large: 16px;
+            --radius-pill: 999px;
+            --shadow-default: 0 2px 8px rgba(0, 212, 255, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-elevated: 0 8px 24px rgba(0, 212, 255, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+
+            /* Chrome effects */
+            --chrome-border: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(0,212,255,0.4) 50%, rgba(255,0,255,0.4) 100%);
+            --glass-bg: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 240px 1fr 280px;
+            grid-template-rows: 56px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Top Toolbar */
+        .top-toolbar {
+            grid-column: 1 / -1;
+            background: var(--color-surface);
+            border-bottom: 2px solid;
+            border-image: var(--chrome-border) 1;
+            display: flex;
+            align-items: center;
+            padding: 0 calc(var(--space-unit) * 2);
+            gap: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--color-primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: calc(var(--space-unit) * 0.5);
+            padding: 0 calc(var(--space-unit) * 1.5);
+            border-left: 1px solid var(--color-border);
+            border-right: 1px solid var(--color-border);
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tool-btn:hover {
+            border-color: var(--color-accent-cyan);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+
+        .tool-btn.active {
+            background: var(--color-primary-gradient);
+            border-color: transparent;
+            color: white;
+        }
+
+        .tool-btn:focus {
+            outline: 2px solid var(--color-accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        .action-btn {
+            padding: calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 2.5);
+            border-radius: var(--radius-pill);
+            border: none;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .action-btn.primary {
+            background: var(--color-primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: 1.5px solid var(--color-border-strong);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--color-accent-cyan);
+        }
+
+        .action-btn:focus {
+            outline: 2px solid var(--color-accent-cyan);
+            outline-offset: 2px;
+        }
+
+        /* Layers Panel */
+        .layers-panel {
+            background: var(--color-surface);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+        }
+
+        .layers-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--space-unit) * 1);
+        }
+
+        .layer-item {
+            padding: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+            min-height: 44px;
+        }
+
+        .layer-item:hover {
+            border-color: var(--color-accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .layer-item.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border-color: var(--color-accent-cyan);
+        }
+
+        .layer-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .layer-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .layer-visibility {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .layer-visibility:hover {
+            opacity: 1;
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            background: linear-gradient(135deg, #E8F4F8 0%, #F0E8F8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: auto;
+        }
+
+        .artboard {
+            width: 600px;
+            height: 500px;
+            background: white;
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-elevated);
+            position: relative;
+            border: 2px solid;
+            border-image: var(--chrome-border) 1;
+        }
+
+        .canvas-guide {
+            position: absolute;
+            top: calc(var(--space-unit) * 2);
+            left: calc(var(--space-unit) * 2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: calc(var(--space-unit) * 2);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            max-width: 200px;
+        }
+
+        /* Demo content on artboard */
+        .demo-workout-card {
+            position: absolute;
+            top: 80px;
+            left: 60px;
+            width: 280px;
+            padding: calc(var(--space-unit) * 3);
+            background: var(--color-primary-gradient);
+            border-radius: var(--radius-large);
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .demo-stats {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .demo-stat {
+            flex: 1;
+        }
+
+        .demo-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+
+        .demo-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-shape {
+            position: absolute;
+            bottom: 100px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9D4EDD 0%, #FF00FF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            box-shadow: 0 8px 24px rgba(157, 78, 221, 0.4);
+        }
+
+        /* Properties Panel */
+        .properties-panel {
+            background: var(--color-surface);
+            border-left: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .properties-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .property-section {
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .property-section-title {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .property-field {
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .property-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: calc(var(--space-unit) * 0.75);
+            color: var(--color-text);
+        }
+
+        .property-input {
+            width: 100%;
+            padding: calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 1.5);
+            border-radius: var(--radius-default);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-background);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text);
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .property-input:focus {
+            outline: none;
+            border-color: var(--color-accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .property-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--color-border);
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+
+        .property-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary-gradient);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+        }
+
+        .property-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary-gradient);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+        }
+
+        .color-swatches {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            border-color: white;
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .color-swatch:focus {
+            outline: 2px solid var(--color-accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .swatch-1 { background: linear-gradient(135deg, #00D4FF 0%, #0099FF 100%); }
+        .swatch-2 { background: linear-gradient(135deg, #FF00FF 0%, #CC00CC 100%); }
+        .swatch-3 { background: linear-gradient(135deg, #9D4EDD 0%, #7B2CBF 100%); }
+        .swatch-4 { background: linear-gradient(135deg, #00FFB3 0%, #00CC8F 100%); }
+        .swatch-5 { background: linear-gradient(135deg, #FFD60A 0%, #FFA500 100%); }
+        .swatch-6 { background: linear-gradient(135deg, #FF006E 0%, #CC0055 100%); }
+        .swatch-7 { background: linear-gradient(135deg, #4CC9F0 0%, #3A9FBA 100%); }
+        .swatch-8 { background: linear-gradient(135deg, #B5179E 0%, #8C1277 100%); }
+
+        .asset-library {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 1.5);
+            margin-top: calc(var(--space-unit) * 1.5);
+        }
+
+        .asset-item {
+            aspect-ratio: 1;
+            border-radius: var(--radius-default);
+            background: var(--color-background);
+            border: 1.5px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .asset-item:hover {
+            border-color: var(--color-accent-cyan);
+            transform: scale(1.05);
+        }
+
+        .asset-item:focus {
+            outline: 2px solid var(--color-accent-cyan);
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border-strong);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent-cyan);
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 200px 1fr 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 56px 1fr;
+            }
+
+            .layers-panel,
+            .properties-panel {
+                display: none;
+            }
+
+            .artboard {
+                width: 90%;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Toolbar -->
+        <div class="top-toolbar">
+            <div class="logo">Spritz Prime</div>
+
+            <div class="tool-group">
+                <button class="tool-btn active" aria-label="Select tool" title="Select (V)">↖</button>
+                <button class="tool-btn" aria-label="Rectangle tool" title="Rectangle (R)">▭</button>
+                <button class="tool-btn" aria-label="Circle tool" title="Circle (O)">●</button>
+                <button class="tool-btn" aria-label="Text tool" title="Text (T)">T</button>
+                <button class="tool-btn" aria-label="Pen tool" title="Pen (P)">✏</button>
+            </div>
+
+            <div class="tool-group">
+                <button class="tool-btn" aria-label="Image tool" title="Image (I)">🖼</button>
+                <button class="tool-btn" aria-label="Icon tool" title="Icons (⌘I)">★</button>
+            </div>
+
+            <div class="spacer"></div>
+
+            <button class="action-btn secondary">Preview</button>
+            <button class="action-btn primary">Export Design</button>
+        </div>
+
+        <!-- Layers Panel -->
+        <div class="layers-panel">
+            <div class="panel-header">Layers</div>
+            <div class="layers-list">
+                <div class="layer-item active">
+                    <span class="layer-icon">▭</span>
+                    <span class="layer-name">Workout Card</span>
+                    <button class="layer-visibility" aria-label="Toggle visibility">👁</button>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">●</span>
+                    <span class="layer-name">Stats Badge</span>
+                    <button class="layer-visibility" aria-label="Toggle visibility">👁</button>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">T</span>
+                    <span class="layer-name">Heading Text</span>
+                    <button class="layer-visibility" aria-label="Toggle visibility">👁</button>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">📊</span>
+                    <span class="layer-name">Progress Chart</span>
+                    <button class="layer-visibility" aria-label="Toggle visibility">👁</button>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">🎨</span>
+                    <span class="layer-name">Background</span>
+                    <button class="layer-visibility" aria-label="Toggle visibility">👁</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div class="canvas-guide">
+                <strong>Canvas: 600x500px</strong><br>
+                Design fitness graphics with playful Y2K chrome vibes
+            </div>
+            <div class="artboard">
+                <div class="demo-workout-card">
+                    <div class="demo-title">Morning Sprint</div>
+                    <div>Your best cardio session yet! Keep the momentum going.</div>
+                    <div class="demo-stats">
+                        <div class="demo-stat">
+                            <div class="demo-stat-value">5.2</div>
+                            <div class="demo-stat-label">Miles</div>
+                        </div>
+                        <div class="demo-stat">
+                            <div class="demo-stat-value">32</div>
+                            <div class="demo-stat-label">Minutes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-shape">💪</div>
+            </div>
+        </div>
+
+        <!-- Properties Panel -->
+        <div class="properties-panel">
+            <div class="panel-header">Properties</div>
+            <div class="properties-content">
+                <div class="property-section">
+                    <div class="property-section-title">Position</div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-x">X Position</label>
+                        <input type="number" id="prop-x" class="property-input" value="60" aria-label="X position in pixels">
+                    </div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-y">Y Position</label>
+                        <input type="number" id="prop-y" class="property-input" value="80" aria-label="Y position in pixels">
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="property-section-title">Size</div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-width">Width</label>
+                        <input type="number" id="prop-width" class="property-input" value="280" aria-label="Width in pixels">
+                    </div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-height">Height</label>
+                        <input type="number" id="prop-height" class="property-input" value="auto" aria-label="Height in pixels">
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="property-section-title">Style</div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-opacity">Opacity</label>
+                        <input type="range" id="prop-opacity" class="property-slider" min="0" max="100" value="100" aria-label="Opacity percentage">
+                    </div>
+                    <div class="property-field">
+                        <label class="property-label" for="prop-radius">Corner Radius</label>
+                        <input type="range" id="prop-radius" class="property-slider" min="0" max="32" value="16" aria-label="Corner radius in pixels">
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="property-section-title">Color Palette</div>
+                    <div class="color-swatches">
+                        <button class="color-swatch swatch-1" aria-label="Cyan gradient"></button>
+                        <button class="color-swatch swatch-2" aria-label="Pink gradient"></button>
+                        <button class="color-swatch swatch-3" aria-label="Purple gradient"></button>
+                        <button class="color-swatch swatch-4" aria-label="Mint gradient"></button>
+                        <button class="color-swatch swatch-5" aria-label="Yellow gradient"></button>
+                        <button class="color-swatch swatch-6" aria-label="Hot pink gradient"></button>
+                        <button class="color-swatch swatch-7" aria-label="Sky blue gradient"></button>
+                        <button class="color-swatch swatch-8" aria-label="Magenta gradient"></button>
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="property-section-title">Fitness Icons</div>
+                    <div class="asset-library">
+                        <button class="asset-item" aria-label="Dumbbell icon">🏋</button>
+                        <button class="asset-item" aria-label="Runner icon">🏃</button>
+                        <button class="asset-item" aria-label="Muscle icon">💪</button>
+                        <button class="asset-item" aria-label="Flame icon">🔥</button>
+                        <button class="asset-item" aria-label="Heart icon">❤️</button>
+                        <button class="asset-item" aria-label="Trophy icon">🏆</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 2;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

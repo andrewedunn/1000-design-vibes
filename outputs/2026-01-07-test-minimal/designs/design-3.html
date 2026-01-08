@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antique Hub - Subscription Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Univers:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Antique Hub - Swiss international design with natural neutral tones
+        ABOUTME: A subscription manager for artisanal food providers built with Swiss International Style principles—grid-based layout, Helvetica typography, asymmetric balance, and abundant white space. The natural neutral palette evokes nostalgic warmth while maintaining modernist clarity.
+
+        CSS VARIABLES:
+        --color-primary: #8B7355 (warm taupe - earthy, nostalgic)
+        --color-background: #F5F3EE (warm off-white)
+        --color-surface: #FFFFFF (pure white for cards)
+        --color-text: #2C2C2C (charcoal)
+        --color-text-muted: #6B6B6B (medium gray)
+        --font-heading: 'Helvetica Neue', sans-serif
+        --font-body: 'Helvetica Neue', sans-serif
+        --space-unit: 8px
+        --radius-default: 0px (Swiss style uses rectangles)
+        --shadow-default: 0 1px 3px rgba(0,0,0,0.08)
+
+        DESIGN RATIONALE:
+        Swiss International Style emphasizes objective clarity through mathematical grids, sans-serif typography, and asymmetric layouts. The natural neutral palette (warm taupes, creams, earthy browns) creates nostalgic warmth while honoring the food industry context. Subscription cards use a strict grid with generous spacing. Color blocks provide visual hierarchy without decoration. The design feels timeless, trustworthy, and sophisticated—perfect for artisanal food subscription management.
+        -->
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #8B7355;
+            --color-secondary: #A68A6D;
+            --color-accent: #C4A77D;
+            --color-background: #F5F3EE;
+            --color-surface: #FFFFFF;
+            --color-border: #E0DDD5;
+            --color-text: #2C2C2C;
+            --color-text-muted: #6B6B6B;
+            --color-text-light: #8A8A8A;
+            --color-success: #6B8E5F;
+            --color-warning: #B8935C;
+            --color-error: #A65D5D;
+            --font-heading: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+            --radius-default: 0px;
+            --shadow-default: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-elevated: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-lg) 0;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: var(--color-primary);
+        }
+
+        .nav {
+            display: flex;
+            gap: var(--space-lg);
+            justify-self: end;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--color-text);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            transition: color 0.2s ease;
+            padding: var(--space-xs) 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: var(--color-primary);
+            outline: none;
+        }
+
+        .nav-link.active {
+            border-bottom-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--color-accent);
+            color: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-xl);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            letter-spacing: 0.2px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .stat-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-default);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-change {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .stat-change.positive {
+            color: var(--color-success);
+        }
+
+        .stat-change.negative {
+            color: var(--color-error);
+        }
+
+        /* Subscriptions Section */
+        .subscriptions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+            color: var(--color-text);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .filter-tab {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-body);
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .filter-tab:hover,
+        .filter-tab:focus {
+            color: var(--color-text);
+            outline: none;
+        }
+
+        .filter-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        /* Subscription Grid */
+        .subscription-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .subscription-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subscription-card:hover {
+            box-shadow: var(--shadow-elevated);
+            transform: translateY(-2px);
+        }
+
+        .subscription-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .subscription-vendor {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+        }
+
+        .subscription-name {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .subscription-description {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.5;
+        }
+
+        .subscription-body {
+            padding: var(--space-lg);
+            flex: 1;
+        }
+
+        .subscription-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: var(--color-text);
+            font-weight: 400;
+        }
+
+        .subscription-status {
+            display: inline-block;
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 500;
+            border: 1px solid;
+        }
+
+        .subscription-status.active {
+            background-color: rgba(107, 142, 95, 0.1);
+            border-color: var(--color-success);
+            color: var(--color-success);
+        }
+
+        .subscription-status.paused {
+            background-color: rgba(184, 147, 92, 0.1);
+            border-color: var(--color-warning);
+            color: var(--color-warning);
+        }
+
+        .subscription-status.cancelled {
+            background-color: rgba(166, 93, 93, 0.1);
+            border-color: var(--color-error);
+            color: var(--color-error);
+        }
+
+        .subscription-footer {
+            padding: var(--space-lg);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-lg);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            border: 1px solid;
+            background: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--color-secondary);
+            border-color: var(--color-secondary);
+            outline: none;
+        }
+
+        .btn-secondary {
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            border-color: var(--color-text);
+            background-color: rgba(44, 44, 44, 0.02);
+            outline: none;
+        }
+
+        /* Add Subscription CTA */
+        .add-subscription-cta {
+            background-color: var(--color-surface);
+            border: 2px dashed var(--color-border);
+            padding: var(--space-2xl);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .add-subscription-cta:hover {
+            border-color: var(--color-primary);
+            background-color: rgba(139, 115, 85, 0.02);
+        }
+
+        .cta-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-md);
+            background-color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--color-surface);
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .cta-text {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .nav {
+                justify-self: start;
+                flex-wrap: wrap;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .subscription-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Antique Hub</div>
+            <nav class="nav">
+                <a href="#" class="nav-link active">Subscriptions</a>
+                <a href="#" class="nav-link">Deliveries</a>
+                <a href="#" class="nav-link">Billing</a>
+                <a href="#" class="nav-link">Settings</a>
+            </nav>
+            <div class="user-menu">
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Subscriptions</h1>
+            <p class="page-subtitle">Manage your artisanal food deliveries</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Active Subscriptions</div>
+                <div class="stat-value">8</div>
+                <div class="stat-change positive">+2 this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Monthly Spend</div>
+                <div class="stat-value">$342</div>
+                <div class="stat-change">Average delivery cost</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Next Delivery</div>
+                <div class="stat-value">Jan 12</div>
+                <div class="stat-change">Farmstead Eggs & Dairy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Savings</div>
+                <div class="stat-value">$184</div>
+                <div class="stat-change positive">vs. retail pricing</div>
+            </div>
+        </div>
+
+        <!-- Subscriptions Header -->
+        <div class="subscriptions-header">
+            <h2 class="section-title">Your Subscriptions</h2>
+            <div class="filter-tabs">
+                <button class="filter-tab active">All</button>
+                <button class="filter-tab">Active</button>
+                <button class="filter-tab">Paused</button>
+            </div>
+        </div>
+
+        <!-- Subscription Grid -->
+        <div class="subscription-grid">
+            <!-- Subscription Card 1 -->
+            <article class="subscription-card">
+                <div class="subscription-header">
+                    <div class="subscription-vendor">Valley Harvest Co.</div>
+                    <h3 class="subscription-name">Seasonal Vegetable Box</h3>
+                    <p class="subscription-description">Farm-fresh seasonal produce delivered bi-weekly from local sustainable farms</p>
+                </div>
+                <div class="subscription-body">
+                    <div class="subscription-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Bi-weekly</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Price</span>
+                            <span class="detail-value">$48/box</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Delivery</span>
+                            <span class="detail-value">Jan 15, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="subscription-status active">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="subscription-footer">
+                    <button class="btn btn-secondary">Manage</button>
+                    <button class="btn btn-primary">Skip Next</button>
+                </div>
+            </article>
+
+            <!-- Subscription Card 2 -->
+            <article class="subscription-card">
+                <div class="subscription-header">
+                    <div class="subscription-vendor">Artisan Bread Works</div>
+                    <h3 class="subscription-name">Weekly Sourdough</h3>
+                    <p class="subscription-description">Hand-crafted sourdough loaves baked fresh every week with heritage grains</p>
+                </div>
+                <div class="subscription-body">
+                    <div class="subscription-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Weekly</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Price</span>
+                            <span class="detail-value">$18/week</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Delivery</span>
+                            <span class="detail-value">Jan 09, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="subscription-status active">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="subscription-footer">
+                    <button class="btn btn-secondary">Manage</button>
+                    <button class="btn btn-primary">Skip Next</button>
+                </div>
+            </article>
+
+            <!-- Subscription Card 3 -->
+            <article class="subscription-card">
+                <div class="subscription-header">
+                    <div class="subscription-vendor">Farmstead Dairy</div>
+                    <h3 class="subscription-name">Eggs & Dairy Bundle</h3>
+                    <p class="subscription-description">Pasture-raised eggs and grass-fed dairy products from local family farms</p>
+                </div>
+                <div class="subscription-body">
+                    <div class="subscription-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Weekly</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Price</span>
+                            <span class="detail-value">$32/week</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Delivery</span>
+                            <span class="detail-value">Jan 12, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="subscription-status active">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="subscription-footer">
+                    <button class="btn btn-secondary">Manage</button>
+                    <button class="btn btn-primary">Skip Next</button>
+                </div>
+            </article>
+
+            <!-- Subscription Card 4 -->
+            <article class="subscription-card">
+                <div class="subscription-header">
+                    <div class="subscription-vendor">Heritage Butcher</div>
+                    <h3 class="subscription-name">Monthly Meat Selection</h3>
+                    <p class="subscription-description">Ethically raised, grass-fed meats from regenerative farms and small producers</p>
+                </div>
+                <div class="subscription-body">
+                    <div class="subscription-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Monthly</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Price</span>
+                            <span class="detail-value">$85/month</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Delivery</span>
+                            <span class="detail-value">Jan 20, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="subscription-status paused">Paused</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="subscription-footer">
+                    <button class="btn btn-secondary">Manage</button>
+                    <button class="btn btn-primary">Resume</button>
+                </div>
+            </article>
+
+            <!-- Subscription Card 5 -->
+            <article class="subscription-card">
+                <div class="subscription-header">
+                    <div class="subscription-vendor">Coastal Catch</div>
+                    <h3 class="subscription-name">Sustainable Seafood Box</h3>
+                    <p class="subscription-description">Wild-caught and sustainably farmed seafood delivered fresh from the coast</p>
+                </div>
+                <div class="subscription-body">
+                    <div class="subscription-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Bi-weekly</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Price</span>
+                            <span class="detail-value">$68/box</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Delivery</span>
+                            <span class="detail-value">Jan 18, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="subscription-status active">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="subscription-footer">
+                    <button class="btn btn-secondary">Manage</button>
+                    <button class="btn btn-primary">Skip Next</button>
+                </div>
+            </article>
+
+            <!-- Add New Subscription CTA -->
+            <div class="add-subscription-cta">
+                <div class="cta-icon">+</div>
+                <h3 class="cta-title">Add Subscription</h3>
+                <p class="cta-text">Discover more artisanal food providers</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 3;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Chalk - Fitness Habit Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Vertex Chalk - Precision Fitness Tracking System
+        ABOUTME: A Swiss International Style habit tracker emphasizing grid-based layout,
+        severe typography, and functional minimalism for serious fitness practitioners.
+
+        CSS VARIABLES:
+        --color-primary: #E8E8E8 (chalk white for primary elements)
+        --color-accent: #00D9FF (cyan highlight for active states)
+        --color-background: #0A0A0A (near-black background)
+        --color-surface: #1A1A1A (elevated surface elements)
+        --color-grid: #2A2A2A (subtle grid lines)
+        --color-text: #FAFAFA (high contrast text)
+        --color-text-muted: #888888 (secondary information)
+        --font-heading: 'Inter', -apple-system, sans-serif (geometric precision)
+        --font-body: 'Inter', -apple-system, sans-serif (consistent with Swiss style)
+        --space-unit: 8px (strict 8px grid system)
+        --radius-default: 0px (no rounded corners - pure Swiss)
+        --shadow-default: none (flat design philosophy)
+
+        DESIGN RATIONALE:
+        Swiss International Style prioritizes clarity, hierarchy, and mathematical precision.
+        The dark-only mode with chalk-white typography evokes a gym chalkboard while maintaining
+        severe professionalism. The strict 8px grid system ensures all elements align to a
+        mathematical foundation. Cyan accents provide clinical precision without warmth.
+        Asymmetric grid layout follows Bauhaus principles. Typography is purely sans-serif
+        with extreme weight contrasts (700 vs 400) to create hierarchy without decoration.
+        */
+
+        :root {
+            --color-primary: #E8E8E8;
+            --color-accent: #00D9FF;
+            --color-background: #0A0A0A;
+            --color-surface: #1A1A1A;
+            --color-grid: #2A2A2A;
+            --color-text: #FAFAFA;
+            --color-text-muted: #888888;
+            --color-success: #00D9FF;
+            --color-incomplete: #3A3A3A;
+            --color-border: #2A2A2A;
+            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: calc(var(--space-unit) * 6);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Grid overlay - pure Swiss */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(var(--color-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+            background-size: calc(var(--space-unit) * 8) calc(var(--space-unit) * 8);
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header - asymmetric Swiss layout */
+        header {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--space-unit) * 6);
+            margin-bottom: calc(var(--space-unit) * 10);
+            padding-bottom: calc(var(--space-unit) * 6);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-primary {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            text-transform: uppercase;
+            color: var(--color-primary);
+        }
+
+        .tagline {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: calc(var(--space-unit) * 1);
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 3);
+            align-self: end;
+        }
+
+        .stat-item {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border: 1px solid var(--color-border);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-accent);
+            display: block;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        /* Main grid - habit tracker */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: calc(var(--space-unit) * 6);
+            margin-bottom: calc(var(--space-unit) * 8);
+        }
+
+        /* Habit list sidebar */
+        .habit-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .habit-item {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        .habit-item:hover {
+            border-color: var(--color-accent);
+        }
+
+        .habit-item.active {
+            border-color: var(--color-accent);
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .habit-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .habit-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .habit-streak {
+            color: var(--color-accent);
+        }
+
+        /* Calendar grid - main tracker */
+        .calendar-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 4);
+            padding-bottom: calc(var(--space-unit) * 3);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .calendar-month {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--color-primary);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: var(--font-body);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Calendar grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .day-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            text-align: center;
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            border: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: calc(var(--space-unit) * 2);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .day-cell:hover {
+            border-color: var(--color-accent);
+            transform: scale(1.05);
+        }
+
+        .day-cell.completed {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .day-cell.completed .day-number {
+            color: var(--color-background);
+            font-weight: 700;
+        }
+
+        .day-cell.today {
+            border-width: 2px;
+            border-color: var(--color-primary);
+        }
+
+        .day-cell.other-month {
+            opacity: 0.3;
+        }
+
+        .day-number {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .completion-marker {
+            width: 8px;
+            height: 8px;
+            background: transparent;
+            align-self: flex-end;
+        }
+
+        .day-cell.completed .completion-marker {
+            background: var(--color-background);
+        }
+
+        /* Progress section */
+        .progress-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space-unit) * 6);
+            margin-bottom: calc(var(--space-unit) * 8);
+        }
+
+        .progress-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .progress-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--color-incomplete);
+            margin-bottom: calc(var(--space-unit) * 3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--color-accent);
+            transition: width 0.4s ease;
+        }
+
+        .progress-value {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: calc(var(--space-unit) * 1);
+        }
+
+        /* Weekly overview */
+        .weekly-overview {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 3);
+        }
+
+        .weekly-day {
+            text-align: center;
+        }
+
+        .weekly-day-name {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .weekly-bar {
+            height: 120px;
+            background: var(--color-incomplete);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .weekly-bar-fill {
+            background: var(--color-accent);
+            width: 100%;
+            transition: height 0.4s ease;
+        }
+
+        .weekly-count {
+            position: absolute;
+            top: calc(var(--space-unit) * -4);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: calc(var(--space-unit) * 12);
+            padding-top: calc(var(--space-unit) * 6);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .footer-nav {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states */
+        *:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .progress-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: calc(var(--space-unit) * 3);
+            }
+
+            header {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 40px;
+            }
+
+            .calendar-grid {
+                gap: calc(var(--space-unit) * 1);
+            }
+
+            .day-cell {
+                padding: calc(var(--space-unit) * 1);
+            }
+
+            footer {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 3);
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-primary">
+                <h1>Vertex Chalk</h1>
+                <p class="tagline">Precision Fitness Tracking System</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-value">87%</span>
+                    <span class="stat-label">Completion Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">23</span>
+                    <span class="stat-label">Current Streak</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <aside class="habit-sidebar">
+                <h2 class="section-title">Active Habits</h2>
+                <div class="habit-item active">
+                    <div class="habit-name">Morning Cardio</div>
+                    <div class="habit-meta">
+                        <span>30 min</span>
+                        <span class="habit-streak">23 days</span>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <div class="habit-name">Strength Training</div>
+                    <div class="habit-meta">
+                        <span>60 min</span>
+                        <span class="habit-streak">18 days</span>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <div class="habit-name">Protein Target</div>
+                    <div class="habit-meta">
+                        <span>160g</span>
+                        <span class="habit-streak">27 days</span>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <div class="habit-name">Hydration</div>
+                    <div class="habit-meta">
+                        <span>3L</span>
+                        <span class="habit-streak">31 days</span>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <div class="habit-name">Sleep 8hrs</div>
+                    <div class="habit-meta">
+                        <span>8 hrs</span>
+                        <span class="habit-streak">12 days</span>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <div class="habit-name">Mobility Work</div>
+                    <div class="habit-meta">
+                        <span>15 min</span>
+                        <span class="habit-streak">8 days</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2 class="calendar-month">January 2026</h2>
+                    <div class="calendar-nav">
+                        <button class="nav-btn" aria-label="Previous month">Prev</button>
+                        <button class="nav-btn" aria-label="Next month">Next</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="day-label">Mon</div>
+                    <div class="day-label">Tue</div>
+                    <div class="day-label">Wed</div>
+                    <div class="day-label">Thu</div>
+                    <div class="day-label">Fri</div>
+                    <div class="day-label">Sat</div>
+                    <div class="day-label">Sun</div>
+
+                    <div class="day-cell other-month">
+                        <span class="day-number">29</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell other-month">
+                        <span class="day-number">30</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell other-month">
+                        <span class="day-number">31</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell completed">
+                        <span class="day-number">1</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell completed">
+                        <span class="day-number">2</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell completed">
+                        <span class="day-number">3</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell completed">
+                        <span class="day-number">4</span>
+                        <div class="completion-marker"></div>
+                    </div>
+
+                    <div class="day-cell completed">
+                        <span class="day-number">5</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell completed">
+                        <span class="day-number">6</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell today completed">
+                        <span class="day-number">7</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">8</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">9</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">10</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">11</span>
+                        <div class="completion-marker"></div>
+                    </div>
+
+                    <div class="day-cell">
+                        <span class="day-number">12</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">13</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">14</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">15</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">16</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">17</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">18</span>
+                        <div class="completion-marker"></div>
+                    </div>
+
+                    <div class="day-cell">
+                        <span class="day-number">19</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">20</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">21</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">22</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">23</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">24</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">25</span>
+                        <div class="completion-marker"></div>
+                    </div>
+
+                    <div class="day-cell">
+                        <span class="day-number">26</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">27</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">28</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">29</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">30</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="day-number">31</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                    <div class="day-cell other-month">
+                        <span class="day-number">1</span>
+                        <div class="completion-marker"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="progress-section">
+            <div class="progress-card">
+                <h3 class="progress-title">Monthly Progress</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 87%;"></div>
+                </div>
+                <div class="progress-value">87%</div>
+                <div class="progress-label">Completion Rate</div>
+            </div>
+
+            <div class="progress-card">
+                <h3 class="progress-title">Weekly Average</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 92%;"></div>
+                </div>
+                <div class="progress-value">92%</div>
+                <div class="progress-label">Last 7 Days</div>
+            </div>
+
+            <div class="progress-card">
+                <h3 class="progress-title">Best Streak</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 100%;"></div>
+                </div>
+                <div class="progress-value">31</div>
+                <div class="progress-label">Consecutive Days</div>
+            </div>
+        </section>
+
+        <section class="weekly-overview">
+            <h2 class="section-title">Weekly Activity Distribution</h2>
+            <div class="weekly-grid">
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Mon</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">6</span>
+                        <div class="weekly-bar-fill" style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Tue</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">6</span>
+                        <div class="weekly-bar-fill" style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Wed</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">5</span>
+                        <div class="weekly-bar-fill" style="height: 83%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Thu</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">6</span>
+                        <div class="weekly-bar-fill" style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Fri</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">6</span>
+                        <div class="weekly-bar-fill" style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Sat</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">5</span>
+                        <div class="weekly-bar-fill" style="height: 83%;"></div>
+                    </div>
+                </div>
+                <div class="weekly-day">
+                    <div class="weekly-day-name">Sun</div>
+                    <div class="weekly-bar">
+                        <span class="weekly-count">4</span>
+                        <div class="weekly-bar-fill" style="height: 67%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-info">Vertex Chalk &mdash; Swiss International Fitness Tracking</div>
+            <div class="footer-nav">Design 8 of 10 &mdash; Use Arrow Keys to Navigate</div>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 8;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive calendar functionality
+        const dayCells = document.querySelectorAll('.day-cell:not(.other-month)');
+        dayCells.forEach(cell => {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('completed');
+            });
+        });
+
+        // Habit item selection
+        const habitItems = document.querySelectorAll('.habit-item');
+        habitItems.forEach(item => {
+            item.addEventListener('click', function() {
+                habitItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

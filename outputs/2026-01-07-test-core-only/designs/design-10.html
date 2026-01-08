@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noir Ash - Textbook Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600;6..96,700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Noir Ash - A flat approach meets international sensibility
+ABOUTME: This design implements textbook_reader in art_deco style.
+ABOUTME: Emotional tone: luxurious | Industry: media
+
+MY DESIGN CHOICES:
+- UI Paradigm: Card-based reader with sidebar navigation, emphasizing vertical reading flow
+- Color approach: Sophisticated black/gold/cream palette inspired by 1920s luxury publishing, with both light and dark modes
+- Typography: Bodoni Moda for display (geometric art deco elegance), Cormorant Garamond for body text (readable luxury), Inter for UI elements
+- Shape language: Geometric frames, subtle chevron borders, stepped headers, symmetrical layouts
+- Density: Medium-low density with generous margins for comfortable reading, mimicking high-end printed matter
+
+QUICK START - Copy these variables:
+--color-primary: #D4AF37;
+--color-background: #FDFBF7;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #6B6B6B;
+--color-accent: #8B7355;
+--color-border: #D4AF37;
+--font-heading: 'Bodoni Moda', serif;
+--font-body: 'Cormorant Garamond', serif;
+--font-ui: 'Inter', sans-serif;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Geometric precision - Sharp angles, symmetrical layouts, stepped decorative elements
+2. Luxurious restraint - Gold accents used sparingly, generous whitespace, quality over quantity
+3. Editorial heritage - Typography and spacing that honors premium publishing traditions
+
+FUNCTIONAL DIRECTION: textbook_reader
+Required elements I included:
+- Chapter navigation sidebar with progress tracking
+- Main reading area with clean typography hierarchy
+- Table of contents with chapter/section structure
+- Reading controls (font size, theme toggle, bookmark)
+- Search functionality
+- Annotations/highlights capability
+- Progress indicator
+- Chapter navigation (prev/next)
+-->
+
+<style>
+:root {
+    /* Color System - Light Mode (Default) */
+    --color-primary: #D4AF37;
+    --color-background: #FDFBF7;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6B6B6B;
+    --color-accent: #8B7355;
+    --color-border: #D4AF37;
+    --color-highlight: #FFF4D6;
+    --color-shadow: rgba(0, 0, 0, 0.08);
+
+    /* Typography */
+    --font-heading: 'Bodoni Moda', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-ui: 'Inter', sans-serif;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-width: 1px;
+    --border-thick: 3px;
+
+    /* Shadows */
+    --shadow-subtle: 0 2px 8px var(--color-shadow);
+    --shadow-elevated: 0 4px 16px var(--color-shadow);
+}
+
+[data-theme="dark"] {
+    --color-primary: #D4AF37;
+    --color-background: #0D0D0D;
+    --color-surface: #1A1A1A;
+    --color-text: #E8E8E8;
+    --color-text-muted: #A0A0A0;
+    --color-accent: #B8956A;
+    --color-border: #D4AF37;
+    --color-highlight: #2A2416;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.8;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Art Deco Geometric Border Pattern */
+.deco-border {
+    position: relative;
+}
+
+.deco-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--border-thick);
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--color-border) 20%,
+        var(--color-border) 80%,
+        transparent 100%);
+}
+
+/* Main Layout */
+.reader-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    padding: var(--space-2xl) var(--space-lg);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-elevated);
+}
+
+.sidebar-header {
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    padding-bottom: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.book-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+    line-height: 1.3;
+}
+
+.book-subtitle {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Table of Contents */
+.toc {
+    list-style: none;
+}
+
+.toc-chapter {
+    margin-bottom: var(--space-md);
+}
+
+.chapter-link {
+    display: flex;
+    align-items: baseline;
+    padding: var(--space-sm) var(--space-sm);
+    text-decoration: none;
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 400;
+    border-left: var(--border-thick) solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.chapter-link:hover {
+    background: var(--color-highlight);
+    border-left-color: var(--color-primary);
+}
+
+.chapter-link.active {
+    background: var(--color-highlight);
+    border-left-color: var(--color-primary);
+    font-weight: 500;
+}
+
+.chapter-number {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    color: var(--color-primary);
+    margin-right: var(--space-sm);
+    min-width: 32px;
+}
+
+.chapter-progress {
+    margin-top: var(--space-xs);
+    margin-left: 40px;
+}
+
+.progress-bar {
+    height: 2px;
+    background: var(--color-border);
+    opacity: 0.2;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--color-primary);
+    width: 65%;
+}
+
+/* Main Reading Area */
+.reading-area {
+    padding: var(--space-2xl) var(--space-xl);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Reading Controls */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-xl);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.controls-left,
+.controls-right {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.control-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.control-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.control-btn.active {
+    background: var(--color-highlight);
+    border-color: var(--color-primary);
+}
+
+/* Search Bar */
+.search-container {
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Chapter Content */
+.chapter-content {
+    margin-bottom: var(--space-2xl);
+}
+
+.chapter-header {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    position: relative;
+}
+
+.chapter-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: var(--border-thick);
+    background: var(--color-primary);
+}
+
+.chapter-number-display {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--space-sm);
+}
+
+.chapter-title-display {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+}
+
+.chapter-summary {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* Text Content */
+.text-content {
+    font-size: 19px;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+.text-content p {
+    margin-bottom: var(--space-lg);
+}
+
+.text-content p:first-letter {
+    font-size: 3.5em;
+    line-height: 0.9;
+    float: left;
+    margin-right: 8px;
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.text-content h2 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-lg);
+    letter-spacing: 0.5px;
+}
+
+.text-content h3 {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+
+.text-content blockquote {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg) var(--space-xl);
+    border-left: var(--border-thick) solid var(--color-primary);
+    background: var(--color-highlight);
+    font-style: italic;
+    font-size: 21px;
+}
+
+.text-content .highlight {
+    background: var(--color-highlight);
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.text-content .annotation {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dotted var(--color-primary);
+}
+
+/* Key Concepts Box */
+.key-concepts {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-xl);
+    margin: var(--space-2xl) 0;
+    position: relative;
+}
+
+.key-concepts::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+.key-concepts-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: var(--space-md);
+    margin-left: var(--space-md);
+}
+
+.key-concepts ul {
+    list-style: none;
+    margin-left: var(--space-md);
+}
+
+.key-concepts li {
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-md);
+    position: relative;
+    font-family: var(--font-ui);
+    font-size: 15px;
+}
+
+.key-concepts li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+}
+
+/* Chapter Navigation */
+.chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xl) 0;
+    margin-top: var(--space-2xl);
+    border-top: var(--border-width) solid var(--color-border);
+}
+
+.nav-button {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.nav-button:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.nav-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Bookmark & Progress */
+.reading-metadata {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.metadata-badge {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: var(--shadow-elevated);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reader-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .reading-area {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .chapter-title-display {
+        font-size: 32px;
+    }
+
+    .text-content {
+        font-size: 17px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .controls,
+    .chapter-nav,
+    .reading-metadata {
+        display: none;
+    }
+
+    .reader-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="reader-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="book-title">The Architecture of Cinema</h1>
+            <p class="book-subtitle">A Modern Textbook</p>
+        </div>
+
+        <nav>
+            <ul class="toc">
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link active">
+                        <span class="chapter-number">I</span>
+                        <span>Foundations of Film Theory</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">II</span>
+                        <span>Visual Language & Composition</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">III</span>
+                        <span>The Montage Tradition</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">IV</span>
+                        <span>Sound Design & Score</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">V</span>
+                        <span>Narrative Structures</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">VI</span>
+                        <span>Genre & Convention</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="toc-chapter">
+                    <a href="#" class="chapter-link">
+                        <span class="chapter-number">VII</span>
+                        <span>Auteur Theory & Criticism</span>
+                    </a>
+                    <div class="chapter-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Reading Area -->
+    <main class="reading-area">
+        <!-- Reading Controls -->
+        <div class="controls">
+            <div class="controls-left">
+                <button class="control-btn" title="Decrease font size" aria-label="Decrease font size">A-</button>
+                <button class="control-btn active" title="Default font size" aria-label="Default font size">A</button>
+                <button class="control-btn" title="Increase font size" aria-label="Increase font size">A+</button>
+            </div>
+            <div class="controls-right">
+                <button class="control-btn" title="Toggle theme" aria-label="Toggle theme" onclick="toggleTheme()">◐</button>
+                <button class="control-btn" title="Add bookmark" aria-label="Add bookmark">◊</button>
+                <button class="control-btn" title="Highlight text" aria-label="Highlight text">✓</button>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <input
+                type="search"
+                class="search-input"
+                placeholder="Search within this chapter..."
+                aria-label="Search chapter content"
+            />
+        </div>
+
+        <!-- Chapter Content -->
+        <article class="chapter-content">
+            <header class="chapter-header">
+                <div class="chapter-number-display">Chapter I</div>
+                <h1 class="chapter-title-display">Foundations of Film Theory</h1>
+                <p class="chapter-summary">An exploration of the fundamental principles that govern cinematic expression, from early pioneers to contemporary discourse.</p>
+            </header>
+
+            <div class="text-content">
+                <p>The emergence of cinema as an art form distinct from theater and literature required a theoretical framework capable of articulating its unique properties. From the Lumière brothers' first public screening in 1895, theorists have grappled with the question of what makes moving images a medium worthy of serious aesthetic consideration.</p>
+
+                <p>Early film theorists like Hugo Münsterberg recognized that cinema's power lay not in its reproduction of reality, but in its capacity to externalize mental processes. The close-up became an analogue for attention, the flashback for memory, and parallel editing for the simultaneity of thought. These innovations suggested that film could represent not merely the objective world, but the subjective experience of consciousness itself.</p>
+
+                <h2>The Photographic Ontology</h2>
+
+                <p>André Bazin proposed that cinema's essence derived from photography's indexical relationship to reality. Unlike painting, which interprets the world through human agency, the photographic image bears a direct causal connection to its subject. This "ontology of the photographic image" suggested that cinema possessed an inherent realism that other arts could only approximate.</p>
+
+                <blockquote>
+                    "Photography does not create eternity, as art does; it embalms time, rescuing it simply from its proper corruption."
+                </blockquote>
+
+                <p>Bazin's emphasis on the long take and deep focus as techniques that preserved spatial and temporal integrity contrasted sharply with the Soviet montage theorists, who saw meaning as emerging from the collision of shots rather than residing within them. This fundamental tension—between <span class="highlight">cinema as revelation</span> and <span class="highlight">cinema as construction</span>—continues to animate theoretical discourse.</p>
+
+                <div class="key-concepts">
+                    <h3 class="key-concepts-title">Key Concepts</h3>
+                    <ul>
+                        <li><strong>Indexicality:</strong> The photographic image's direct physical connection to its referent</li>
+                        <li><strong>Montage theory:</strong> Meaning generated through juxtaposition of shots</li>
+                        <li><strong>Realism vs. Formalism:</strong> The central dialectic in early film theory</li>
+                        <li><strong>Apparatus theory:</strong> Cinema as ideological mechanism of representation</li>
+                    </ul>
+                </div>
+
+                <h2>Semiotics and Structuralism</h2>
+
+                <p>Christian Metz's application of Saussurean linguistics to cinema in the 1960s marked a shift toward systematic analysis of film as a language-like system. However, Metz concluded that cinema lacked the <span class="annotation" title="The double articulation of language: phonemes combine to form morphemes, morphemes combine to form sentences">double articulation</span> characteristic of verbal language, instead proposing that the shot functioned as the minimal unit of cinematic meaning.</p>
+
+                <p>The structuralist approach enabled granular analysis of how films generate meaning through codes and conventions, yet critics argued it neglected the phenomenological experience of viewing and the affective dimensions of cinema. The cognitive turn in film theory during the 1980s sought to address these limitations by drawing on psychology and neuroscience to understand how viewers process and comprehend moving images.</p>
+
+                <h2>Contemporary Perspectives</h2>
+
+                <p>Digital cinema has complicated many assumptions of classical film theory. The indexicality that Bazin celebrated becomes attenuated when images can be generated entirely within computers or seamlessly manipulated after capture. The ontological distinction between photography and painting begins to collapse when pixels replace photochemical processes.</p>
+
+                <p>Yet the fundamental questions persist: How do moving images create meaning? What distinguishes cinematic expression from other media? How does technology shape aesthetic possibility? The theoretical frameworks developed over cinema's first century remain essential tools for navigating its rapidly evolving present and future.</p>
+            </div>
+        </article>
+
+        <!-- Chapter Navigation -->
+        <nav class="chapter-nav">
+            <a href="#" class="nav-button">
+                <span>←</span>
+                <span>Introduction</span>
+            </a>
+            <a href="#" class="nav-button">
+                <span>Chapter II</span>
+                <span>→</span>
+            </a>
+        </nav>
+    </main>
+</div>
+
+<!-- Reading Metadata -->
+<div class="reading-metadata">
+    <div class="metadata-badge">65% Complete</div>
+    <div class="metadata-badge">12 min remaining</div>
+</div>
+
+<script>
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+// Navigation Script (Required)
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 10;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+
+// Font size adjustment
+const fontSizeButtons = document.querySelectorAll('.controls-left .control-btn');
+const textContent = document.querySelector('.text-content');
+let currentSize = 19;
+
+fontSizeButtons.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        fontSizeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (index === 0) currentSize = 17; // A-
+        if (index === 1) currentSize = 19; // A (default)
+        if (index === 2) currentSize = 22; // A+
+
+        textContent.style.fontSize = currentSize + 'px';
+    });
+});
+
+// Highlight functionality
+let highlightMode = false;
+const highlightBtn = document.querySelector('[title="Highlight text"]');
+
+highlightBtn.addEventListener('click', () => {
+    highlightMode = !highlightMode;
+    highlightBtn.classList.toggle('active');
+
+    if (highlightMode) {
+        textContent.addEventListener('mouseup', highlightSelection);
+    } else {
+        textContent.removeEventListener('mouseup', highlightSelection);
+    }
+});
+
+function highlightSelection() {
+    const selection = window.getSelection();
+    if (selection.toString().length > 0) {
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
+        span.className = 'highlight';
+        range.surroundContents(span);
+        selection.removeAllRanges();
+    }
+}
+
+// Bookmark functionality
+const bookmarkBtn = document.querySelector('[title="Add bookmark"]');
+bookmarkBtn.addEventListener('click', () => {
+    bookmarkBtn.classList.toggle('active');
+    const bookmarked = bookmarkBtn.classList.contains('active');
+    localStorage.setItem('bookmark-chapter-1', bookmarked);
+    alert(bookmarked ? 'Bookmark added' : 'Bookmark removed');
+});
+
+// Search functionality
+const searchInput = document.querySelector('.search-input');
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const paragraphs = textContent.querySelectorAll('p');
+
+    paragraphs.forEach(p => {
+        const text = p.textContent.toLowerCase();
+        if (searchTerm && text.includes(searchTerm)) {
+            p.style.background = 'var(--color-highlight)';
+        } else {
+            p.style.background = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

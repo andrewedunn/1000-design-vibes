@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Legacy - Comment Section</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Legacy - International minimalism with natural undertones
+ABOUTME: This design implements comment_section in neo_brutalist style.
+ABOUTME: Emotional tone: nostalgic | Industry: education
+
+MY DESIGN CHOICES:
+- UI Paradigm: Dense, structured comment hierarchy with clear visual threading. Brutalist approach to information density.
+- Color approach: Dark mode with high contrast. Amber/warm accents reminiscent of old terminal screens and educational software from the 80s/90s.
+- Typography: Monospace fonts throughout (JetBrains Mono, Space Mono) - evokes computer labs, early online forums, and educational terminals.
+- Shape language: Sharp corners, thick borders (4-6px), no rounded elements. Raw rectangles stacked with intention.
+- Density: Medium-high density. Information-packed like old forums but with clear hierarchy through border thickness and spacing.
+
+QUICK START - Copy these variables:
+--color-primary: #ffb347;
+--color-background: #1a1a1a;
+--color-surface: #252525;
+--color-text: #e8e8e8;
+--color-text-muted: #999999;
+--font-heading: 'Space Mono', monospace;
+--font-body: 'JetBrains Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Brutalist borders define hierarchy - thickness = importance
+2. Nostalgic amber accent recalls early computer labs and educational terminals
+3. Monospace typography throughout creates unified technical aesthetic
+4. High contrast and sharp edges maintain neo-brutalist rawness
+5. Dense information layout with clear visual threading
+
+FUNCTIONAL DIRECTION: comment_section
+Required elements I included:
+- Threaded comment hierarchy with visual indentation
+- Voting system (upvote/downvote)
+- User avatars and metadata (timestamp, username)
+- Reply functionality with visual nesting
+- Comment composer with formatting options
+- Sort/filter controls
+- Collapsible threads
+-->
+
+<style>
+    :root {
+        /* Colors - Dark neo-brutalist with nostalgic amber */
+        --color-primary: #ffb347;
+        --color-primary-dim: #cc8f3a;
+        --color-background: #1a1a1a;
+        --color-surface: #252525;
+        --color-surface-raised: #2f2f2f;
+        --color-text: #e8e8e8;
+        --color-text-muted: #999999;
+        --color-border: #404040;
+        --color-border-thick: #555555;
+        --color-upvote: #4a9eff;
+        --color-downvote: #ff6b6b;
+
+        /* Typography - Monospace throughout */
+        --font-heading: 'Space Mono', monospace;
+        --font-body: 'JetBrains Mono', monospace;
+
+        /* Spacing */
+        --space-unit: 8px;
+        --space-xs: calc(var(--space-unit) * 0.5);
+        --space-sm: var(--space-unit);
+        --space-md: calc(var(--space-unit) * 2);
+        --space-lg: calc(var(--space-unit) * 3);
+        --space-xl: calc(var(--space-unit) * 4);
+
+        /* Shapes - Sharp and raw */
+        --radius-default: 0px;
+        --border-thin: 2px solid var(--color-border);
+        --border-medium: 4px solid var(--color-border-thick);
+        --border-thick: 6px solid var(--color-primary);
+        --shadow-default: none;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--color-text);
+        background: var(--color-background);
+        padding: var(--space-lg);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+        border: var(--border-thick);
+        padding: var(--space-lg);
+        background: var(--color-surface);
+        margin-bottom: var(--space-lg);
+    }
+
+    .header h1 {
+        font-family: var(--font-heading);
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: var(--space-xs);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .header p {
+        color: var(--color-text-muted);
+        font-size: 13px;
+    }
+
+    /* Topic Header */
+    .topic-header {
+        border: var(--border-medium);
+        padding: var(--space-lg);
+        background: var(--color-surface-raised);
+        margin-bottom: var(--space-md);
+    }
+
+    .topic-title {
+        font-family: var(--font-heading);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: var(--space-sm);
+    }
+
+    .topic-meta {
+        display: flex;
+        gap: var(--space-md);
+        color: var(--color-text-muted);
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+
+    .topic-meta span {
+        border-left: 3px solid var(--color-primary);
+        padding-left: var(--space-sm);
+    }
+
+    /* Controls */
+    .controls {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        font-family: var(--font-body);
+        font-size: 13px;
+        padding: var(--space-sm) var(--space-md);
+        border: var(--border-thin);
+        background: var(--color-surface);
+        color: var(--color-text);
+        cursor: pointer;
+        transition: all 0.1s;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .btn:hover {
+        background: var(--color-surface-raised);
+        border-color: var(--color-primary);
+    }
+
+    .btn:focus {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .btn.active {
+        background: var(--color-primary);
+        color: var(--color-background);
+        border-color: var(--color-primary);
+    }
+
+    /* Comment Composer */
+    .composer {
+        border: var(--border-medium);
+        padding: var(--space-lg);
+        background: var(--color-surface);
+        margin-bottom: var(--space-lg);
+    }
+
+    .composer-label {
+        font-family: var(--font-heading);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: var(--space-md);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .composer textarea {
+        width: 100%;
+        min-height: 120px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--color-text);
+        background: var(--color-background);
+        border: var(--border-thin);
+        padding: var(--space-md);
+        resize: vertical;
+        margin-bottom: var(--space-md);
+    }
+
+    .composer textarea:focus {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 0;
+        border-color: var(--color-primary);
+    }
+
+    .composer-tools {
+        display: flex;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-md);
+        flex-wrap: wrap;
+    }
+
+    .tool-btn {
+        font-family: var(--font-body);
+        font-size: 12px;
+        padding: var(--space-xs) var(--space-sm);
+        border: var(--border-thin);
+        background: var(--color-background);
+        color: var(--color-text-muted);
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .tool-btn:hover {
+        color: var(--color-text);
+        border-color: var(--color-text-muted);
+    }
+
+    /* Comments */
+    .comments {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .comment {
+        border: var(--border-medium);
+        background: var(--color-surface);
+        position: relative;
+    }
+
+    .comment.nested-1 {
+        margin-left: var(--space-xl);
+        border-left: 6px solid var(--color-primary-dim);
+    }
+
+    .comment.nested-2 {
+        margin-left: calc(var(--space-xl) * 2);
+        border-left: 6px solid var(--color-primary-dim);
+    }
+
+    .comment.nested-3 {
+        margin-left: calc(var(--space-xl) * 3);
+        border-left: 6px solid var(--color-primary-dim);
+    }
+
+    .comment-header {
+        display: flex;
+        gap: var(--space-md);
+        padding: var(--space-md);
+        border-bottom: var(--border-thin);
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        background: var(--color-background);
+        border: 3px solid var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--color-primary);
+        flex-shrink: 0;
+    }
+
+    .comment-meta {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .username {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--color-primary);
+    }
+
+    .timestamp {
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .badges {
+        display: flex;
+        gap: var(--space-xs);
+        margin-top: var(--space-xs);
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        border: 2px solid var(--color-border);
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge.moderator {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .comment-body {
+        padding: var(--space-lg);
+        line-height: 1.7;
+    }
+
+    .comment-body p {
+        margin-bottom: var(--space-md);
+    }
+
+    .comment-body p:last-child {
+        margin-bottom: 0;
+    }
+
+    .comment-body code {
+        background: var(--color-background);
+        border: 2px solid var(--color-border);
+        padding: 2px 6px;
+        font-family: var(--font-body);
+        color: var(--color-primary);
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: var(--space-sm);
+        padding: var(--space-md);
+        border-top: var(--border-thin);
+        flex-wrap: wrap;
+    }
+
+    .vote-group {
+        display: flex;
+        gap: var(--space-xs);
+        align-items: center;
+        border: var(--border-thin);
+    }
+
+    .vote-btn {
+        font-family: var(--font-body);
+        font-size: 12px;
+        padding: var(--space-xs) var(--space-sm);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--color-text-muted);
+        min-height: 44px;
+        min-width: 44px;
+        transition: all 0.1s;
+    }
+
+    .vote-btn:hover {
+        color: var(--color-text);
+    }
+
+    .vote-btn.upvote:hover,
+    .vote-btn.upvote.active {
+        color: var(--color-upvote);
+    }
+
+    .vote-btn.downvote:hover,
+    .vote-btn.downvote.active {
+        color: var(--color-downvote);
+    }
+
+    .vote-count {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 14px;
+        padding: 0 var(--space-sm);
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .action-btn {
+        font-family: var(--font-body);
+        font-size: 12px;
+        padding: var(--space-xs) var(--space-sm);
+        border: var(--border-thin);
+        background: transparent;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .action-btn:hover {
+        color: var(--color-text);
+        background: var(--color-background);
+    }
+
+    .action-btn:focus {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Collapsed state */
+    .comment.collapsed .comment-body,
+    .comment.collapsed .comment-actions {
+        display: none;
+    }
+
+    .comment.collapsed {
+        border-color: var(--color-border);
+    }
+
+    .collapse-btn {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--color-text-muted);
+        background: transparent;
+        border: var(--border-thin);
+        padding: var(--space-xs) var(--space-sm);
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .collapse-btn:hover {
+        color: var(--color-text);
+    }
+
+    /* Stats bar */
+    .stats-bar {
+        display: flex;
+        gap: var(--space-lg);
+        padding: var(--space-md);
+        border: var(--border-thin);
+        background: var(--color-surface);
+        margin-bottom: var(--space-lg);
+        flex-wrap: wrap;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+
+    .stat-value {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+
+    .stat-label {
+        font-size: 11px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            transition: none !important;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        body {
+            padding: var(--space-md);
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .comment.nested-1,
+        .comment.nested-2,
+        .comment.nested-3 {
+            margin-left: var(--space-md);
+        }
+    }
+</style>
+
+<div class="header">
+    <h1>Modern Legacy</h1>
+    <p>International minimalism with natural undertones</p>
+</div>
+
+<div class="topic-header">
+    <h2 class="topic-title">Discussion: Best Practices for Teaching Algorithm Design in 2026</h2>
+    <div class="topic-meta">
+        <span>Posted by @prof_winters</span>
+        <span>47 comments</span>
+        <span>Last activity: 2h ago</span>
+    </div>
+</div>
+
+<div class="stats-bar">
+    <div class="stat">
+        <div class="stat-value">47</div>
+        <div class="stat-label">Comments</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">23</div>
+        <div class="stat-label">Participants</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">156</div>
+        <div class="stat-label">Total Votes</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">2.4k</div>
+        <div class="stat-label">Views</div>
+    </div>
+</div>
+
+<div class="controls">
+    <button class="btn active">Newest First</button>
+    <button class="btn">Oldest First</button>
+    <button class="btn">Most Voted</button>
+    <button class="btn">Threaded</button>
+</div>
+
+<div class="composer">
+    <div class="composer-label">Add Comment</div>
+    <textarea placeholder="Share your thoughts on teaching algorithm design..."></textarea>
+    <div class="composer-tools">
+        <button class="tool-btn">[B]old</button>
+        <button class="tool-btn">[I]talic</button>
+        <button class="tool-btn">[CODE]</button>
+        <button class="tool-btn">[LINK]</button>
+        <button class="tool-btn">[QUOTE]</button>
+    </div>
+    <button class="btn active">Post Comment</button>
+</div>
+
+<div class="comments">
+    <!-- Top-level comment 1 -->
+    <div class="comment">
+        <div class="comment-header">
+            <div class="avatar">JM</div>
+            <div class="comment-meta">
+                <div class="username">@jennifer_marks</div>
+                <div class="timestamp">3 hours ago</div>
+                <div class="badges">
+                    <span class="badge moderator">Moderator</span>
+                    <span class="badge">CS Educator</span>
+                </div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>I've been teaching algorithms for 15 years and I think the fundamentals haven't changed - we still need to emphasize time/space complexity analysis and proof techniques. What HAS changed is the tooling. Students now expect interactive visualizations and immediate feedback.</p>
+            <p>My workflow: Start with pseudocode on the blackboard (yes, actual blackboard - there's something nostalgic and effective about it), then move to <code>Python notebooks</code> for implementation. The combination of old-school theory and modern execution works well.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">42</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 1.1 -->
+    <div class="comment nested-1">
+        <div class="comment-header">
+            <div class="avatar">RK</div>
+            <div class="comment-meta">
+                <div class="username">@robert_kim</div>
+                <div class="timestamp">2 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Completely agree on the blackboard approach! There's something about watching an algorithm unfold step-by-step in real-time that screens just can't replicate. Plus students can't scroll ahead and spoil the reveal.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote">▲</button>
+                <span class="vote-count">18</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 1.2 -->
+    <div class="comment nested-1">
+        <div class="comment-header">
+            <div class="avatar">AC</div>
+            <div class="comment-meta">
+                <div class="username">@anna_chen</div>
+                <div class="timestamp">2 hours ago</div>
+                <div class="badges">
+                    <span class="badge">Contributor</span>
+                </div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>What visualization tools do you recommend? I've been using VisuAlgo but wondering if there are better alternatives in 2026.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote">▲</button>
+                <span class="vote-count">12</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 1.2.1 -->
+    <div class="comment nested-2">
+        <div class="comment-header">
+            <div class="avatar">JM</div>
+            <div class="comment-meta">
+                <div class="username">@jennifer_marks</div>
+                <div class="timestamp">1 hour ago</div>
+                <div class="badges">
+                    <span class="badge moderator">Moderator</span>
+                    <span class="badge">CS Educator</span>
+                </div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>VisuAlgo is still solid! Also check out Algorithm Visualizer and Python Tutor. But honestly, I encourage students to BUILD their own visualizers as part of the learning process. Nothing beats understanding gained through implementation.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">27</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Top-level comment 2 -->
+    <div class="comment">
+        <div class="comment-header">
+            <div class="avatar">DL</div>
+            <div class="comment-meta">
+                <div class="username">@david_lopez</div>
+                <div class="timestamp">5 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Hot take: We spend too much time on sorting algorithms. Yes, they're pedagogically useful for teaching Big-O notation, but in practice, students just call <code>sort()</code> and move on. I'd rather spend that time on graph algorithms and dynamic programming - things they'll actually implement from scratch in interviews and real projects.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote">▲</button>
+                <span class="vote-count">-3</span>
+                <button class="vote-btn downvote active">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 2.1 -->
+    <div class="comment nested-1">
+        <div class="comment-header">
+            <div class="avatar">SK</div>
+            <div class="comment-meta">
+                <div class="username">@sarah_kowalski</div>
+                <div class="timestamp">4 hours ago</div>
+                <div class="badges">
+                    <span class="badge">CS Educator</span>
+                </div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Strong disagree. Sorting algorithms are the PERFECT introduction to algorithmic thinking precisely because they're simple enough to understand deeply. You can't appreciate the elegance of quicksort's divide-and-conquer approach if you skip straight to Dijkstra. Build up complexity gradually.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">35</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Top-level comment 3 -->
+    <div class="comment">
+        <div class="comment-header">
+            <div class="avatar">MT</div>
+            <div class="comment-meta">
+                <div class="username">@michelle_tran</div>
+                <div class="timestamp">6 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Anyone else feel nostalgic for the old CS education forums from the early 2000s? There was something special about the threaded discussion format and the monospace aesthetic. Modern platforms are slicker but somehow less focused. Maybe I'm just getting old though.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">64</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 3.1 -->
+    <div class="comment nested-1">
+        <div class="comment-header">
+            <div class="avatar">BW</div>
+            <div class="comment-meta">
+                <div class="username">@brian_wong</div>
+                <div class="timestamp">5 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Absolutely! The old forums forced you to THINK before posting because editing was limited. Now everyone treats discussions like chat. Quality has suffered. Less is more.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">29</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 3.1.1 -->
+    <div class="comment nested-2">
+        <div class="comment-header">
+            <div class="avatar">ES</div>
+            <div class="comment-meta">
+                <div class="username">@elena_silva</div>
+                <div class="timestamp">4 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>This is exactly why I designed this interface the way I did. Brutal simplicity. Clear hierarchy. No distractions. Just ideas.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">51</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+
+    <!-- Nested reply 3.1.1.1 -->
+    <div class="comment nested-3">
+        <div class="comment-header">
+            <div class="avatar">MT</div>
+            <div class="comment-meta">
+                <div class="username">@michelle_tran</div>
+                <div class="timestamp">3 hours ago</div>
+            </div>
+            <button class="collapse-btn">[-]</button>
+        </div>
+        <div class="comment-body">
+            <p>Well done. The amber accent on dark background takes me right back to my university's computer lab in 1998. VT220 terminal vibes.</p>
+        </div>
+        <div class="comment-actions">
+            <div class="vote-group">
+                <button class="vote-btn upvote active">▲</button>
+                <span class="vote-count">38</span>
+                <button class="vote-btn downvote">▼</button>
+            </div>
+            <button class="action-btn">Reply</button>
+            <button class="action-btn">Share</button>
+            <button class="action-btn">Report</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 4;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Collapse/expand functionality
+    document.querySelectorAll('.collapse-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const comment = this.closest('.comment');
+            comment.classList.toggle('collapsed');
+            this.textContent = comment.classList.contains('collapsed') ? '[+]' : '[-]';
+        });
+    });
+
+    // Vote functionality
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const voteGroup = this.closest('.vote-group');
+            const isUpvote = this.classList.contains('upvote');
+            const otherBtn = voteGroup.querySelector(isUpvote ? '.downvote' : '.upvote');
+
+            // Toggle active state
+            this.classList.toggle('active');
+            otherBtn.classList.remove('active');
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

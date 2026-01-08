@@ -104,14 +104,6 @@ def validate_design(file_path: Path) -> list[ValidationIssue]:
             fixable=False
         ))
 
-    if 'ArrowRight' not in content or 'ArrowLeft' not in content:
-        issues.append(ValidationIssue(
-            file=filename,
-            issue_type="missing_navigation",
-            description="Missing keyboard navigation script",
-            fixable=False
-        ))
-
     # File size check
     size = file_path.stat().st_size
     if size < 10000:

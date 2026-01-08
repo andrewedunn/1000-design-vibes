@@ -77,7 +77,6 @@ Before moving from staging:
 - File size > 10KB (aim for 25KB+)
 - Contains `<!DOCTYPE html>`
 - Contains `<style>` block with proper CSS comments (/* */, not <!-- -->)
-- Contains `ArrowRight` and `ArrowLeft` navigation handlers
 - Clearly reflects the functional_direction
 
 Run `python design_vibes.py validate --path {batch} --fix` to auto-fix CSS comment issues.

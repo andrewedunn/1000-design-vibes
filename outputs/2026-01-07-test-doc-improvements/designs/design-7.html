@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Prism - Age Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Retro Prism - Where material meets british traditional aesthetics
+ABOUTME: This design system implements age_verification with material aesthetics and grunge era influences.
+ABOUTME: Key characteristics: Layered dark surfaces with textured gradients, double borders for distinction, old-style serif headings in small caps creating nostalgic formality.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #2196F3;
+--color-primary-dark: #1976D2;
+--color-accent: #FF5722;
+--color-background: #1a1a1a;
+--color-surface: #2d2d2d;
+--color-surface-elevated: #383838;
+--color-text: #e8e8e8;
+--color-text-muted: #a0a0a0;
+--color-border: #505050;
+--font-heading: 'Libre Baskerville', Georgia, serif;
+--font-body: 'Open Sans', -apple-system, sans-serif;
+--radius-default: 24px;
+--space-unit: 12px;
+--shadow-layer-1: 0 2px 4px rgba(0,0,0,0.3);
+--shadow-layer-2: 0 4px 8px rgba(0,0,0,0.4);
+--shadow-layer-3: 0 8px 16px rgba(0,0,0,0.5);
+
+AESTHETIC PRINCIPLES:
+1. Layered elevation creates depth through stacked shadows (Material influence)
+2. Grunge textures and gradient meshes add organic imperfection to digital surfaces
+3. Double borders on interactive elements provide clear affordance
+4. Old-style serif small caps headings evoke British traditional formality
+5. High contrast with neutral palette plus primary accent for clarity
+6. Very rounded corners (24px) soften the industrial dark theme
+
+BEST FOR:
+- Age-restricted content portals requiring formal verification
+- Developer tools and platforms targeting mature audiences
+- Services requiring compliance documentation and legal gates
+- British or European-influenced brands with nostalgic positioning
+
+AVOID IF:
+- Target audience is young children (seniors-focused tone)
+- Brand requires bright, cheerful aesthetics
+- Minimalist design without texture is preferred
+- Light mode is a requirement (dark_only)
+
+FUNCTIONAL DIRECTION: age_verification
+This design must clearly function as an age_verification gate. Required elements:
+- Date of birth input fields (month/day/year dropdowns or text inputs)
+- Clear "Enter Site" and "Exit" buttons with distinct visual hierarchy
+- Legal disclaimer text about age requirements and consent
+- Privacy statement or data usage notice
+- Optional brand/site identification
+- Clear messaging about minimum age requirement
+- Accessible error states for invalid dates
+- Remember me checkbox (optional but recommended)
+-->
+
+<style>
+:root {
+    /* Colors - Dark mode with primary accent */
+    --color-primary: #2196F3;
+    --color-primary-dark: #1976D2;
+    --color-primary-light: #42A5F5;
+    --color-accent: #FF5722;
+    --color-background: #1a1a1a;
+    --color-surface: #2d2d2d;
+    --color-surface-elevated: #383838;
+    --color-text: #e8e8e8;
+    --color-text-muted: #a0a0a0;
+    --color-border: #505050;
+    --color-success: #4CAF50;
+    --color-error: #f44336;
+
+    /* Typography */
+    --font-heading: 'Libre Baskerville', Georgia, serif;
+    --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --type-scale: 1.125; /* major second */
+
+    /* Spacing - 12px base */
+    --space-unit: 12px;
+    --space-xs: calc(var(--space-unit) * 0.5);   /* 6px */
+    --space-sm: var(--space-unit);                /* 12px */
+    --space-md: calc(var(--space-unit) * 2);      /* 24px */
+    --space-lg: calc(var(--space-unit) * 3);      /* 36px */
+    --space-xl: calc(var(--space-unit) * 4);      /* 48px */
+
+    /* Shapes */
+    --radius-default: 24px;
+    --radius-small: 12px;
+    --radius-input: 16px;
+
+    /* Layered shadows */
+    --shadow-layer-1: 0 2px 4px rgba(0,0,0,0.3);
+    --shadow-layer-2: 0 4px 8px rgba(0,0,0,0.4);
+    --shadow-layer-3: 0 8px 16px rgba(0,0,0,0.5);
+    --shadow-colored: 0 4px 12px rgba(33, 150, 243, 0.3);
+
+    /* Double borders */
+    --border-double: 4px double var(--color-border);
+    --border-input: 3px double var(--color-border);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.4; /* tight */
+    letter-spacing: -0.01em; /* tight */
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    /* Gradient mesh texture */
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(33, 150, 243, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 87, 34, 0.06) 0%, transparent 50%),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.01) 2px,
+            rgba(255, 255, 255, 0.01) 4px
+        );
+}
+
+/* Split screen layout */
+.split-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    align-items: center;
+}
+
+/* Left side - Brand/Image */
+.brand-panel {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    border-right: var(--border-double);
+
+    /* Textured background */
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.02) 2px,
+            rgba(255, 255, 255, 0.02) 4px
+        ),
+        radial-gradient(circle at 50% 50%, rgba(33, 150, 243, 0.12) 0%, transparent 60%);
+}
+
+.brand-logo {
+    width: 120px;
+    height: 120px;
+    background: var(--color-surface-elevated);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+    border: var(--border-double);
+    box-shadow: var(--shadow-layer-3);
+    font-size: 48px;
+}
+
+.brand-title {
+    font-family: var(--font-heading);
+    font-size: calc(1rem * var(--type-scale) * var(--type-scale) * var(--type-scale));
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.brand-subtitle {
+    font-size: calc(1rem * var(--type-scale));
+    color: var(--color-text-muted);
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.brand-decorative {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    border: var(--border-double);
+    box-shadow: var(--shadow-layer-2);
+    max-width: 360px;
+}
+
+.brand-decorative p {
+    font-family: var(--font-heading);
+    font-variant: small-caps;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+/* Right side - Verification form */
+.verification-panel {
+    padding: var(--space-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.verification-card {
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-default);
+    border: var(--border-double);
+    box-shadow: var(--shadow-layer-3);
+    max-width: 480px;
+    width: 100%;
+
+    /* Elevated surface with subtle gradient */
+    background-image: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+}
+
+/* Tab navigation */
+.verification-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    border-bottom: var(--border-input);
+    padding-bottom: var(--space-sm);
+}
+
+.tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-heading);
+    font-variant: small-caps;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-small) var(--radius-small) 0 0;
+    transition: all 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+}
+
+.tab.active {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-colored);
+}
+
+.tab:focus {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: calc(1rem * var(--type-scale) * var(--type-scale) * var(--type-scale));
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.age-requirement {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(33, 150, 243, 0.1);
+    border-radius: var(--radius-small);
+    border: 2px solid rgba(33, 150, 243, 0.3);
+}
+
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+label {
+    display: block;
+    font-family: var(--font-heading);
+    font-variant: small-caps;
+    font-size: 0.85rem;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+    letter-spacing: 0.05em;
+}
+
+.date-inputs {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+    gap: var(--space-sm);
+}
+
+select, input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-background);
+    border: var(--border-input);
+    border-radius: var(--radius-input);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    min-height: 44px; /* Touch target */
+}
+
+select:hover, input:hover {
+    border-color: var(--color-primary);
+    background: rgba(33, 150, 243, 0.05);
+}
+
+select:focus, input:focus {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-colored);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-small);
+}
+
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    min-height: auto;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
+.checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-variant: normal;
+    font-size: 0.9rem;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+button {
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading);
+    font-variant: small-caps;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: var(--border-double);
+    min-height: 56px; /* Touch target */
+    box-shadow: var(--shadow-layer-2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border-color: var(--color-primary-dark);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-layer-3), var(--shadow-colored);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-layer-1);
+}
+
+.btn-primary:focus {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 3px;
+}
+
+.btn-secondary {
+    background: var(--color-surface-elevated);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+    background: var(--color-background);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-layer-3);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-layer-1);
+}
+
+.btn-secondary:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+.legal-disclaimer {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-small);
+    border: 1px solid var(--color-border);
+}
+
+.legal-disclaimer a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.legal-disclaimer a:hover {
+    color: var(--color-primary-light);
+}
+
+.legal-disclaimer a:focus {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.error-message {
+    background: rgba(244, 67, 54, 0.15);
+    color: var(--color-error);
+    padding: var(--space-md);
+    border-radius: var(--radius-small);
+    border: 2px solid var(--color-error);
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+    display: none;
+}
+
+.error-message.visible {
+    display: block;
+}
+
+/* Hand-drawn icon style */
+.icon {
+    display: inline-block;
+    font-style: normal;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .split-container {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-panel {
+        border-right: none;
+        border-bottom: var(--border-double);
+        min-height: 40vh;
+    }
+
+    .verification-panel {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .date-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-border: #808080;
+        --color-text: #ffffff;
+    }
+
+    select, input {
+        border-width: 2px;
+    }
+}
+</style>
+
+<div class="split-container">
+    <!-- Left Panel - Brand -->
+    <div class="brand-panel">
+        <div class="brand-logo">
+            <span class="icon">🏛️</span>
+        </div>
+        <h2 class="brand-title">The Vault Collection</h2>
+        <p class="brand-subtitle">
+            Curated experiences for discerning individuals. Premium content requiring age verification for legal compliance.
+        </p>
+
+        <div class="brand-decorative">
+            <p>
+                "Excellence in curation demands responsibility in access. We verify age to protect both our community and our commitment to quality."
+            </p>
+        </div>
+    </div>
+
+    <!-- Right Panel - Verification -->
+    <div class="verification-panel">
+        <div class="verification-card">
+            <!-- Tabs -->
+            <div class="verification-tabs" role="tablist">
+                <button class="tab active" role="tab" aria-selected="true" aria-controls="verify-panel">
+                    <span class="icon">📅</span> Verify Age
+                </button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="info-panel">
+                    <span class="icon">ℹ️</span> Information
+                </button>
+            </div>
+
+            <div id="verify-panel" role="tabpanel">
+                <h1>Age Verification Required</h1>
+
+                <div class="age-requirement">
+                    <strong>You must be 21 years or older</strong> to access this site. Please enter your date of birth to continue.
+                </div>
+
+                <div class="error-message" id="error-message" role="alert">
+                    <strong>Invalid Date:</strong> Please enter a valid date of birth. You must be at least 21 years old to access this content.
+                </div>
+
+                <form id="age-verification-form">
+                    <div class="form-group">
+                        <label for="dob-month">Date of Birth</label>
+                        <div class="date-inputs">
+                            <select id="dob-month" name="month" required aria-required="true">
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <input
+                                type="number"
+                                id="dob-day"
+                                name="day"
+                                placeholder="Day"
+                                min="1"
+                                max="31"
+                                required
+                                aria-required="true"
+                                aria-label="Day of birth"
+                            >
+
+                            <input
+                                type="number"
+                                id="dob-year"
+                                name="year"
+                                placeholder="Year"
+                                min="1900"
+                                max="2026"
+                                required
+                                aria-required="true"
+                                aria-label="Year of birth"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember my age on this device</label>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">
+                            <span class="icon">✓</span> Enter Site
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="window.history.back()">
+                            <span class="icon">✕</span> Exit
+                        </button>
+                    </div>
+
+                    <div class="legal-disclaimer">
+                        By entering this site, you certify that you are of legal age in your jurisdiction to access age-restricted content. We collect your date of birth solely for age verification purposes in compliance with applicable laws. Your data is processed according to our <a href="#privacy">Privacy Policy</a> and is not shared with third parties. This site uses cookies to remember your verification status. For more information, see our <a href="#terms">Terms of Service</a>.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Age verification logic
+(function() {
+    const form = document.getElementById('age-verification-form');
+    const errorMessage = document.getElementById('error-message');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const month = document.getElementById('dob-month').value;
+        const day = parseInt(document.getElementById('dob-day').value);
+        const year = parseInt(document.getElementById('dob-year').value);
+
+        // Validate inputs
+        if (!month || !day || !year) {
+            showError('Please complete all date fields.');
+            return;
+        }
+
+        // Calculate age
+        const birthDate = new Date(year, parseInt(month) - 1, day);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        // Check if 21 or older
+        if (age >= 21) {
+            errorMessage.classList.remove('visible');
+
+            // Handle remember me
+            if (document.getElementById('remember').checked) {
+                localStorage.setItem('age_verified', 'true');
+            }
+
+            alert('Age verified! You would now be granted access to the site.');
+        } else {
+            showError('You must be at least 21 years old to access this content.');
+        }
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.add('visible');
+        errorMessage.focus();
+    }
+
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            this.classList.add('active');
+            this.setAttribute('aria-selected', 'true');
+
+            if (index === 1) {
+                document.getElementById('verify-panel').innerHTML = `
+                    <h1>Why We Verify</h1>
+                    <div style="padding: var(--space-md); background: rgba(255,255,255,0.03); border-radius: var(--radius-small); margin-bottom: var(--space-md);">
+                        <h3 style="font-family: var(--font-heading); font-variant: small-caps; margin-bottom: var(--space-sm);">Legal Compliance</h3>
+                        <p style="color: var(--color-text-muted); line-height: 1.6;">Age verification is required by law in many jurisdictions for content restricted to adults.</p>
+                    </div>
+                    <div style="padding: var(--space-md); background: rgba(255,255,255,0.03); border-radius: var(--radius-small); margin-bottom: var(--space-md);">
+                        <h3 style="font-family: var(--font-heading); font-variant: small-caps; margin-bottom: var(--space-sm);">Your Privacy</h3>
+                        <p style="color: var(--color-text-muted); line-height: 1.6;">Your date of birth is used only for verification and is not stored beyond this session unless you choose to remember your verification.</p>
+                    </div>
+                    <div style="padding: var(--space-md); background: rgba(255,255,255,0.03); border-radius: var(--radius-small);">
+                        <h3 style="font-family: var(--font-heading); font-variant: small-caps; margin-bottom: var(--space-sm);">Responsible Access</h3>
+                        <p style="color: var(--color-text-muted); line-height: 1.6;">We take our responsibility seriously to ensure age-appropriate content access.</p>
+                    </div>
+                `;
+            } else {
+                location.reload();
+            }
+        });
+    });
+})();
+
+// Navigation script
+(function() {
+    const TOTAL = 760;
+    const CURRENT = 7;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breeze Core - User Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Breeze Core - Crafted for users with international roots
+ABOUTME: This design implements user_profile in swiss_international style.
+ABOUTME: Emotional tone: friendly | Industry: developer
+
+MY DESIGN CHOICES:
+- UI Paradigm: Grid-based layout with clean information hierarchy. Swiss precision meets developer needs.
+- Color approach: Monochromatic blue-gray palette with warm accent (coral) for approachability. Light mode only.
+- Typography: Inter for body (neo-grotesque, swiss heritage), IBM Plex Mono for code/technical details
+- Shape language: Subtle 4px corners - not completely sharp (too cold) but restrained (swiss discipline)
+- Density: Medium-high - efficient use of space without feeling cramped. Developers appreciate information density.
+
+QUICK START - Copy these variables:
+--color-primary: #FF6B5A;
+--color-background: #F8F9FA;
+--color-surface: #FFFFFF;
+--color-text: #1A2332;
+--color-text-muted: #6B7280;
+--color-border: #E5E7EB;
+--color-accent-bg: #F0F9FF;
+--font-heading: 'Inter', -apple-system, system-ui, sans-serif;
+--font-body: 'Inter', -apple-system, system-ui, sans-serif;
+--font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+--radius-default: 4px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Grid precision with human warmth - Swiss structure softened with friendly color and spacing
+2. Information clarity over decoration - let content breathe, use whitespace deliberately
+3. Developer-first details - monospace for technical info, clean data display, scannable sections
+
+FUNCTIONAL DIRECTION: user_profile
+Required elements I included:
+- Profile header with avatar, name, username, bio
+- Activity/stats overview with numerical metrics
+- Skills/technologies list with visual tags
+- Recent contributions/projects grid
+- Social links and contact methods
+- Account settings access
+- Edit profile capability
+- Followers/following counts
+- Location and timezone information
+- GitHub-style contribution activity
+-->
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        /* Colors */
+        --color-primary: #FF6B5A;
+        --color-background: #F8F9FA;
+        --color-surface: #FFFFFF;
+        --color-text: #1A2332;
+        --color-text-muted: #6B7280;
+        --color-border: #E5E7EB;
+        --color-accent-bg: #F0F9FF;
+        --color-green: #10B981;
+        --color-blue: #3B82F6;
+
+        /* Typography */
+        --font-heading: 'Inter', -apple-system, system-ui, sans-serif;
+        --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+        --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+        /* Spacing */
+        --space-unit: 8px;
+        --space-xs: 4px;
+        --space-sm: 8px;
+        --space-md: 16px;
+        --space-lg: 24px;
+        --space-xl: 32px;
+        --space-2xl: 48px;
+
+        /* Shapes */
+        --radius-default: 4px;
+        --radius-sm: 2px;
+        --radius-lg: 8px;
+        --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-xl) var(--space-lg);
+    }
+
+    /* Header */
+    .profile-header {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-default);
+    }
+
+    .header-grid {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--space-lg);
+        align-items: start;
+    }
+
+    .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 600;
+        color: white;
+        border: 2px solid var(--color-border);
+    }
+
+    .profile-info h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: var(--space-xs);
+        letter-spacing: -0.02em;
+    }
+
+    .username {
+        font-family: var(--font-mono);
+        color: var(--color-text-muted);
+        font-size: 16px;
+        margin-bottom: var(--space-md);
+    }
+
+    .bio {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: var(--space-md);
+        max-width: 600px;
+    }
+
+    .meta-info {
+        display: flex;
+        gap: var(--space-lg);
+        flex-wrap: wrap;
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+    }
+
+    .meta-item svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .btn {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: var(--radius-default);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .btn-secondary {
+        background: var(--color-surface);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-background);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+    }
+
+    .stat-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-default);
+    }
+
+    .stat-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-muted);
+        font-weight: 600;
+        margin-bottom: var(--space-xs);
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--color-text);
+        line-height: 1.2;
+    }
+
+    .stat-sublabel {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin-top: var(--space-xs);
+    }
+
+    /* Main Content Grid */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-lg);
+    }
+
+    .section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-default);
+        margin-bottom: var(--space-lg);
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .section-link {
+        font-size: 14px;
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .section-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Skills */
+    .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+
+    .skill-tag {
+        background: var(--color-accent-bg);
+        color: var(--color-text);
+        padding: var(--space-xs) var(--space-md);
+        border-radius: var(--radius-default);
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid #DBEAFE;
+    }
+
+    /* Projects */
+    .project-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .project-item {
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        transition: all 0.2s;
+    }
+
+    .project-item:hover {
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .project-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-sm);
+    }
+
+    .project-name {
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .project-language {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .project-description {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-sm);
+    }
+
+    .project-stats {
+        display: flex;
+        gap: var(--space-md);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .project-stat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* Activity Chart */
+    .activity-chart {
+        display: grid;
+        grid-template-columns: repeat(53, 1fr);
+        gap: 3px;
+        margin-top: var(--space-md);
+    }
+
+    .activity-cell {
+        aspect-ratio: 1;
+        background: var(--color-border);
+        border-radius: var(--radius-sm);
+    }
+
+    .activity-cell.level-1 {
+        background: #9BE9A8;
+    }
+
+    .activity-cell.level-2 {
+        background: #40C463;
+    }
+
+    .activity-cell.level-3 {
+        background: #30A14E;
+    }
+
+    .activity-cell.level-4 {
+        background: #216E39;
+    }
+
+    /* Social Links */
+    .social-links {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm);
+        border-radius: var(--radius-default);
+        text-decoration: none;
+        color: var(--color-text);
+        transition: all 0.2s;
+    }
+
+    .social-link:hover {
+        background: var(--color-background);
+    }
+
+    .social-link:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .social-icon {
+        width: 20px;
+        height: 20px;
+        color: var(--color-text-muted);
+    }
+
+    /* Follow Stats */
+    .follow-stats {
+        display: flex;
+        gap: var(--space-lg);
+        padding: var(--space-md);
+        background: var(--color-background);
+        border-radius: var(--radius-default);
+        margin-bottom: var(--space-md);
+    }
+
+    .follow-item {
+        text-align: center;
+        flex: 1;
+    }
+
+    .follow-count {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-text);
+    }
+
+    .follow-label {
+        display: block;
+        font-size: 12px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .header-grid {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .avatar {
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .meta-info {
+            justify-content: center;
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Focus visible */
+    *:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+</style>
+
+<div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="header-grid">
+            <div class="avatar">SK</div>
+            <div class="profile-info">
+                <h1>Sarah Kim</h1>
+                <div class="username">@sarahkim_dev</div>
+                <p class="bio">Full-stack engineer crafting accessible web experiences. Open source contributor. Coffee enthusiast and occasional photographer. Based between Seoul and San Francisco.</p>
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                        </svg>
+                        Seoul, South Korea
+                    </div>
+                    <div class="meta-item">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        UTC+9 (KST)
+                    </div>
+                    <div class="meta-item">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                        </svg>
+                        sarah@example.dev
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: var(--space-sm);">
+                <button class="btn">Edit Profile</button>
+                <button class="btn btn-secondary">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Contributions</div>
+            <div class="stat-value">2,847</div>
+            <div class="stat-sublabel">Past 12 months</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Repositories</div>
+            <div class="stat-value">47</div>
+            <div class="stat-sublabel">18 public, 29 private</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Pull Requests</div>
+            <div class="stat-value">324</div>
+            <div class="stat-sublabel">92% merge rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Streak</div>
+            <div class="stat-value">47</div>
+            <div class="stat-sublabel">days active</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-grid">
+        <!-- Left Column -->
+        <div>
+            <!-- Activity Chart -->
+            <div class="section">
+                <div class="section-title">
+                    Contribution Activity
+                    <span style="font-size: 14px; color: var(--color-text-muted); font-weight: 400;">Last 365 days</span>
+                </div>
+                <div class="activity-chart">
+                    <!-- Generate 365 cells with random activity levels -->
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <!-- Additional cells to reach 365 -->
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell level-4"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-3"></div>
+                    <div class="activity-cell level-2"></div>
+                    <div class="activity-cell level-1"></div>
+                    <div class="activity-cell"></div>
+                    <div class="activity-cell level-4"></div>
+                </div>
+            </div>
+
+            <!-- Recent Projects -->
+            <div class="section">
+                <div class="section-title">
+                    Recent Projects
+                    <a href="#" class="section-link">View all →</a>
+                </div>
+                <div class="project-list">
+                    <div class="project-item">
+                        <div class="project-header">
+                            <span class="project-name">accessible-components</span>
+                            <span class="project-language">TypeScript</span>
+                        </div>
+                        <p class="project-description">A library of fully accessible React components with comprehensive WCAG 2.1 AA compliance testing.</p>
+                        <div class="project-stats">
+                            <span class="project-stat">⭐ 234</span>
+                            <span class="project-stat">🔄 18</span>
+                            <span class="project-stat">Updated 2 days ago</span>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-header">
+                            <span class="project-name">i18n-manager</span>
+                            <span class="project-language">JavaScript</span>
+                        </div>
+                        <p class="project-description">Lightweight internationalization utility for multi-language web applications with RTL support.</p>
+                        <div class="project-stats">
+                            <span class="project-stat">⭐ 89</span>
+                            <span class="project-stat">🔄 7</span>
+                            <span class="project-stat">Updated 5 days ago</span>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-header">
+                            <span class="project-name">dev-portfolio</span>
+                            <span class="project-language">Svelte</span>
+                        </div>
+                        <p class="project-description">Personal portfolio site built with SvelteKit, optimized for performance and accessibility.</p>
+                        <div class="project-stats">
+                            <span class="project-stat">⭐ 12</span>
+                            <span class="project-stat">🔄 2</span>
+                            <span class="project-stat">Updated 1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <!-- Follow Stats -->
+            <div class="section">
+                <div class="follow-stats">
+                    <div class="follow-item">
+                        <span class="follow-count">487</span>
+                        <span class="follow-label">Followers</span>
+                    </div>
+                    <div class="follow-item">
+                        <span class="follow-count">312</span>
+                        <span class="follow-label">Following</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="section">
+                <div class="section-title">Skills & Technologies</div>
+                <div class="skills-list">
+                    <span class="skill-tag">TypeScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">Svelte</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">GraphQL</span>
+                    <span class="skill-tag">Accessibility</span>
+                    <span class="skill-tag">i18n</span>
+                    <span class="skill-tag">Testing</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">CI/CD</span>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="section">
+                <div class="section-title">Connect</div>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        github.com/sarahkim
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                        twitter.com/sarahkim_dev
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        linkedin.com/in/sarahkim
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/>
+                        </svg>
+                        pinterest.com/sarahkim
+                    </a>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="section">
+                <div class="section-title">Account</div>
+                <div style="display: flex; flex-direction: column; gap: var(--space-sm); font-size: 14px;">
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Edit Profile
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                        </svg>
+                        Security Settings
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        Notifications
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg class="social-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Preferences
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 1;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

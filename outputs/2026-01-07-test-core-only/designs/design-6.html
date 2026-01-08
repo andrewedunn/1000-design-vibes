@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Carbon - Subscription Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Metro Carbon - Natural meets neutral: a flat 2010s perspective
+ABOUTME: This design implements subscription_manager in flat_2010s style.
+ABOUTME: Emotional tone: mysterious | Industry: healthcare
+
+MY DESIGN CHOICES:
+- UI Paradigm: Minimal card-based interface with strong horizontal organization, inspired by Windows Phone Metro design principles
+- Color approach: Monochromatic charcoal/carbon palette with muted teal accents, creating a subdued, clinical yet mysterious atmosphere
+- Typography: Roboto for clean geometric readability (flat design era staple), Roboto Mono for data display (healthcare precision)
+- Shape language: Pure rectangles with no border radius - absolutely flat, using color blocks and whitespace for visual separation
+- Density: Medium-high density to display multiple subscription tiers and medical plan details efficiently
+
+QUICK START - Copy these variables:
+--color-primary: #4a9d9c;
+--color-secondary: #2d4545;
+--color-background: #1a1a1a;
+--color-surface: #2a2a2a;
+--color-surface-variant: #353535;
+--color-text: #e8e8e8;
+--color-text-muted: #999999;
+--font-heading: 'Roboto', sans-serif;
+--font-body: 'Roboto', sans-serif;
+--font-mono: 'Roboto Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Absolute flatness - no shadows, gradients, or depth effects
+2. Color blocking with strong contrast between sections
+3. Data-forward presentation with clinical precision
+4. Mysterious through darkness and selective information revelation
+
+FUNCTIONAL DIRECTION: subscription_manager
+Required elements I included:
+- Multiple subscription tier cards with pricing
+- Feature comparison matrix
+- Current plan status indicator
+- Billing cycle toggle (monthly/annual)
+- Usage metrics and limits
+- Upgrade/downgrade action buttons
+- Payment method display
+- Next billing date information
+-->
+
+<style>
+    :root {
+        /* Color System - Monochromatic carbon with muted teal */
+        --color-primary: #4a9d9c;
+        --color-primary-hover: #5ebdbc;
+        --color-secondary: #2d4545;
+        --color-background: #1a1a1a;
+        --color-surface: #2a2a2a;
+        --color-surface-variant: #353535;
+        --color-text: #e8e8e8;
+        --color-text-muted: #999999;
+        --color-border: #404040;
+        --color-success: #4a9d9c;
+        --color-warning: #9d824a;
+        --color-error: #9d4a4a;
+
+        /* Typography */
+        --font-heading: 'Roboto', sans-serif;
+        --font-body: 'Roboto', sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+
+        /* Spacing */
+        --space-unit: 8px;
+        --space-xs: calc(var(--space-unit) * 1);
+        --space-sm: calc(var(--space-unit) * 2);
+        --space-md: calc(var(--space-unit) * 3);
+        --space-lg: calc(var(--space-unit) * 4);
+        --space-xl: calc(var(--space-unit) * 6);
+
+        /* Shapes - Completely Flat */
+        --radius-default: 0px;
+        --shadow-default: none;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+        background-color: var(--color-surface);
+        border-bottom: 4px solid var(--color-primary);
+        padding: var(--space-lg) var(--space-xl);
+    }
+
+    .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--color-primary);
+        letter-spacing: 1px;
+    }
+
+    .account-info {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    /* Main Container */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--space-xl);
+    }
+
+    /* Current Plan Banner */
+    .current-plan-banner {
+        background-color: var(--color-secondary);
+        border-left: 8px solid var(--color-primary);
+        padding: var(--space-lg);
+        margin-bottom: var(--space-xl);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--space-lg);
+        align-items: center;
+    }
+
+    .plan-status h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: var(--space-xs);
+    }
+
+    .plan-details {
+        font-family: var(--font-mono);
+        color: var(--color-text-muted);
+        font-size: 14px;
+    }
+
+    .usage-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .usage-stat {
+        text-align: right;
+    }
+
+    .usage-label {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .usage-value {
+        font-family: var(--font-mono);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+
+    .usage-limit {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    /* Billing Toggle */
+    .billing-toggle-section {
+        text-align: center;
+        margin-bottom: var(--space-xl);
+    }
+
+    .billing-toggle {
+        display: inline-flex;
+        background-color: var(--color-surface);
+        border: 2px solid var(--color-border);
+    }
+
+    .billing-option {
+        padding: var(--space-sm) var(--space-lg);
+        background-color: transparent;
+        border: none;
+        color: var(--color-text-muted);
+        font-family: var(--font-body);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 120px;
+    }
+
+    .billing-option.active {
+        background-color: var(--color-primary);
+        color: var(--color-background);
+    }
+
+    .billing-option:hover:not(.active) {
+        color: var(--color-text);
+    }
+
+    .billing-option:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: -2px;
+    }
+
+    /* Subscription Tiers Grid */
+    .tiers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
+    }
+
+    .tier-card {
+        background-color: var(--color-surface);
+        border: 2px solid var(--color-border);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tier-card.current {
+        border-color: var(--color-primary);
+        border-width: 4px;
+    }
+
+    .tier-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: var(--color-primary);
+        color: var(--color-background);
+        padding: var(--space-xs) var(--space-md);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .tier-header {
+        background-color: var(--color-surface-variant);
+        padding: var(--space-lg);
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .tier-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: var(--space-xs);
+    }
+
+    .tier-description {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    .tier-pricing {
+        padding: var(--space-lg);
+        text-align: center;
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .price {
+        font-family: var(--font-mono);
+        font-size: 48px;
+        font-weight: 700;
+        color: var(--color-primary);
+        line-height: 1;
+    }
+
+    .price-period {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin-top: var(--space-xs);
+    }
+
+    .tier-features {
+        padding: var(--space-lg);
+        list-style: none;
+    }
+
+    .tier-features li {
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+    }
+
+    .tier-features li:last-child {
+        border-bottom: none;
+    }
+
+    .feature-name {
+        color: var(--color-text);
+    }
+
+    .feature-value {
+        font-family: var(--font-mono);
+        color: var(--color-primary);
+        font-weight: 700;
+    }
+
+    .tier-action {
+        padding: var(--space-lg);
+    }
+
+    .btn {
+        width: 100%;
+        padding: var(--space-md) var(--space-lg);
+        border: none;
+        font-family: var(--font-body);
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        min-height: 44px;
+    }
+
+    .btn-primary {
+        background-color: var(--color-primary);
+        color: var(--color-background);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        color: var(--color-text-muted);
+        border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--color-text-muted);
+        color: var(--color-text);
+    }
+
+    .btn-current {
+        background-color: var(--color-surface-variant);
+        color: var(--color-text-muted);
+        cursor: default;
+    }
+
+    .btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Payment Info Section */
+    .payment-section {
+        background-color: var(--color-surface);
+        border: 2px solid var(--color-border);
+        padding: var(--space-lg);
+        margin-bottom: var(--space-xl);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        padding-bottom: var(--space-sm);
+        border-bottom: 2px solid var(--color-primary);
+    }
+
+    .payment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--space-lg);
+    }
+
+    .payment-info-block {
+        background-color: var(--color-background);
+        padding: var(--space-md);
+    }
+
+    .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+    }
+
+    .info-value {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        color: var(--color-text);
+    }
+
+    /* Feature Comparison Matrix */
+    .comparison-section {
+        background-color: var(--color-surface);
+        border: 2px solid var(--color-border);
+        padding: var(--space-lg);
+        margin-bottom: var(--space-xl);
+    }
+
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--space-md);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: var(--space-md);
+        text-align: left;
+        border: 1px solid var(--color-border);
+    }
+
+    .comparison-table th {
+        background-color: var(--color-surface-variant);
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .comparison-table td {
+        font-family: var(--font-mono);
+        font-size: 14px;
+    }
+
+    .comparison-table tr:hover {
+        background-color: var(--color-background);
+    }
+
+    .check {
+        color: var(--color-success);
+        font-weight: 700;
+    }
+
+    .cross {
+        color: var(--color-text-muted);
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--color-surface);
+        border-top: 4px solid var(--color-primary);
+        padding: var(--space-lg) var(--space-xl);
+        margin-top: var(--space-xl);
+        text-align: center;
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: var(--space-md);
+        }
+
+        .header-content {
+            flex-direction: column;
+            gap: var(--space-md);
+            text-align: center;
+        }
+
+        .current-plan-banner {
+            grid-template-columns: 1fr;
+        }
+
+        .usage-stats {
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+        }
+
+        .usage-stat {
+            text-align: left;
+        }
+
+        .tiers-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .comparison-table {
+            font-size: 12px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--space-sm);
+        }
+    }
+</style>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo">METRO CARBON</div>
+        <div class="account-info">ACCOUNT: HC-847392 | STATUS: ACTIVE</div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Current Plan Status -->
+    <section class="current-plan-banner">
+        <div class="plan-status">
+            <h2>Professional Healthcare Plan</h2>
+            <div class="plan-details">
+                RENEWAL: 2026-02-07 | BILLING: ANNUAL | METHOD: •••• 4892
+            </div>
+        </div>
+        <div class="usage-stats">
+            <div class="usage-stat">
+                <div class="usage-label">Patients</div>
+                <div class="usage-value">847</div>
+                <div class="usage-limit">/ 1000</div>
+            </div>
+            <div class="usage-stat">
+                <div class="usage-label">Records</div>
+                <div class="usage-value">12.4K</div>
+                <div class="usage-limit">/ 20K</div>
+            </div>
+            <div class="usage-stat">
+                <div class="usage-label">Storage</div>
+                <div class="usage-value">184GB</div>
+                <div class="usage-limit">/ 250GB</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Billing Cycle Toggle -->
+    <section class="billing-toggle-section">
+        <div class="billing-toggle">
+            <button class="billing-option" id="monthlyBtn">Monthly</button>
+            <button class="billing-option active" id="annualBtn">Annual</button>
+        </div>
+    </section>
+
+    <!-- Subscription Tiers -->
+    <section class="tiers-grid">
+        <!-- Basic Tier -->
+        <article class="tier-card">
+            <div class="tier-header">
+                <h3 class="tier-name">Basic</h3>
+                <p class="tier-description">Essential practice management</p>
+            </div>
+            <div class="tier-pricing">
+                <div class="price">$79</div>
+                <div class="price-period">per month, billed annually</div>
+            </div>
+            <ul class="tier-features">
+                <li>
+                    <span class="feature-name">Patient Records</span>
+                    <span class="feature-value">250</span>
+                </li>
+                <li>
+                    <span class="feature-name">Storage</span>
+                    <span class="feature-value">50GB</span>
+                </li>
+                <li>
+                    <span class="feature-name">Users</span>
+                    <span class="feature-value">3</span>
+                </li>
+                <li>
+                    <span class="feature-name">Compliance Reports</span>
+                    <span class="feature-value">Basic</span>
+                </li>
+                <li>
+                    <span class="feature-name">Support</span>
+                    <span class="feature-value">Email</span>
+                </li>
+            </ul>
+            <div class="tier-action">
+                <button class="btn btn-secondary">Downgrade</button>
+            </div>
+        </article>
+
+        <!-- Professional Tier (Current) -->
+        <article class="tier-card current">
+            <div class="tier-badge">CURRENT</div>
+            <div class="tier-header">
+                <h3 class="tier-name">Professional</h3>
+                <p class="tier-description">Advanced clinical workflows</p>
+            </div>
+            <div class="tier-pricing">
+                <div class="price">$189</div>
+                <div class="price-period">per month, billed annually</div>
+            </div>
+            <ul class="tier-features">
+                <li>
+                    <span class="feature-name">Patient Records</span>
+                    <span class="feature-value">1,000</span>
+                </li>
+                <li>
+                    <span class="feature-name">Storage</span>
+                    <span class="feature-value">250GB</span>
+                </li>
+                <li>
+                    <span class="feature-name">Users</span>
+                    <span class="feature-value">10</span>
+                </li>
+                <li>
+                    <span class="feature-name">Compliance Reports</span>
+                    <span class="feature-value">Advanced</span>
+                </li>
+                <li>
+                    <span class="feature-name">Support</span>
+                    <span class="feature-value">Priority</span>
+                </li>
+            </ul>
+            <div class="tier-action">
+                <button class="btn btn-current">Current Plan</button>
+            </div>
+        </article>
+
+        <!-- Enterprise Tier -->
+        <article class="tier-card">
+            <div class="tier-header">
+                <h3 class="tier-name">Enterprise</h3>
+                <p class="tier-description">Hospital-grade infrastructure</p>
+            </div>
+            <div class="tier-pricing">
+                <div class="price">$449</div>
+                <div class="price-period">per month, billed annually</div>
+            </div>
+            <ul class="tier-features">
+                <li>
+                    <span class="feature-name">Patient Records</span>
+                    <span class="feature-value">Unlimited</span>
+                </li>
+                <li>
+                    <span class="feature-name">Storage</span>
+                    <span class="feature-value">1TB</span>
+                </li>
+                <li>
+                    <span class="feature-name">Users</span>
+                    <span class="feature-value">Unlimited</span>
+                </li>
+                <li>
+                    <span class="feature-name">Compliance Reports</span>
+                    <span class="feature-value">Custom</span>
+                </li>
+                <li>
+                    <span class="feature-name">Support</span>
+                    <span class="feature-value">24/7 Dedicated</span>
+                </li>
+            </ul>
+            <div class="tier-action">
+                <button class="btn btn-primary">Upgrade</button>
+            </div>
+        </article>
+    </section>
+
+    <!-- Payment Information -->
+    <section class="payment-section">
+        <h2 class="section-title">Payment Information</h2>
+        <div class="payment-grid">
+            <div class="payment-info-block">
+                <div class="info-label">Payment Method</div>
+                <div class="info-value">Visa •••• 4892</div>
+            </div>
+            <div class="payment-info-block">
+                <div class="info-label">Next Billing Date</div>
+                <div class="info-value">February 07, 2026</div>
+            </div>
+            <div class="payment-info-block">
+                <div class="info-label">Billing Amount</div>
+                <div class="info-value">$2,268.00 USD</div>
+            </div>
+            <div class="payment-info-block">
+                <div class="info-label">Invoice History</div>
+                <div class="info-value">12 invoices available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Comparison -->
+    <section class="comparison-section">
+        <h2 class="section-title">Feature Comparison Matrix</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Basic</th>
+                    <th>Professional</th>
+                    <th>Enterprise</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HIPAA Compliance</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td>HL7 Integration</td>
+                    <td class="cross">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td>Custom Workflows</td>
+                    <td class="cross">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td>API Access</td>
+                    <td class="cross">—</td>
+                    <td>Basic</td>
+                    <td>Full</td>
+                </tr>
+                <tr>
+                    <td>Audit Logs</td>
+                    <td>30 days</td>
+                    <td>1 year</td>
+                    <td>Unlimited</td>
+                </tr>
+                <tr>
+                    <td>Data Encryption</td>
+                    <td>Transit</td>
+                    <td>Transit + Rest</td>
+                    <td>End-to-End</td>
+                </tr>
+                <tr>
+                    <td>Backup Retention</td>
+                    <td>7 days</td>
+                    <td>30 days</td>
+                    <td>90 days</td>
+                </tr>
+                <tr>
+                    <td>SSO / SAML</td>
+                    <td class="cross">—</td>
+                    <td class="cross">—</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td>White-Label Option</td>
+                    <td class="cross">—</td>
+                    <td class="cross">—</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td>SLA Guarantee</td>
+                    <td>95%</td>
+                    <td>99%</td>
+                    <td>99.9%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>Metro Carbon Healthcare Solutions | Secure. Compliant. Reliable.</p>
+    <p style="margin-top: 8px; font-family: var(--font-mono); font-size: 12px;">
+        SYSTEM STATUS: OPERATIONAL | LAST SYNC: 2026-01-07 14:23:47 UTC
+    </p>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 6;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Billing toggle functionality
+    const monthlyBtn = document.getElementById('monthlyBtn');
+    const annualBtn = document.getElementById('annualBtn');
+
+    monthlyBtn.addEventListener('click', () => {
+        monthlyBtn.classList.add('active');
+        annualBtn.classList.remove('active');
+        // In a real app, would update pricing display
+    });
+
+    annualBtn.addEventListener('click', () => {
+        annualBtn.classList.add('active');
+        monthlyBtn.classList.remove('active');
+        // In a real app, would update pricing display
+    });
+})();
+</script>
+
+</body>
+</html>

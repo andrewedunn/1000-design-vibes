@@ -172,34 +172,6 @@ Use these as creative inspiration:
 - Focus indicators on all interactive elements
 - Include `@media (prefers-reduced-motion: reduce)` block
 
-### Navigation Script (Required)
-Include this exact script at the end of your `<body>`, updating CURRENT_DESIGN to match the design ID:
-
-```javascript
-<script>
-(function() {
-    const TOTAL = 10;
-    const CURRENT = 1; // UPDATE THIS to match design ID
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
-        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
-    });
-
-    let startX;
-    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-    document.addEventListener('touchend', e => {
-        const diff = startX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 50) {
-            window.location.href = diff > 0
-                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
-                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
-        }
-    });
-})();
-</script>
-```
-
 ---
 
 ## Documentation Block (Required)
@@ -269,6 +241,4 @@ Your design will be validated for:
 - [ ] File size > 10KB (aim for 25KB+)
 - [ ] Contains `<!DOCTYPE html>`
 - [ ] Contains `<style>` block
-- [ ] Contains `ArrowRight` and `ArrowLeft` navigation handlers
-- [ ] Navigation actually works (functions are defined, not just listeners)
 - [ ] Clearly reflects the assigned functional_direction

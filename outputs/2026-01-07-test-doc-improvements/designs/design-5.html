@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortress Shift - Editorial Survey Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Crimson+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Fortress Shift - The editorial way to creative
+        ABOUTME: This design system implements survey_form with editorial aesthetics.
+        ABOUTME: Key characteristics: ultra-airy spacing with dramatic shadows, sharp corners, and magazine-quality typography.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #8B6F47;
+        --color-secondary: #2D5F5D;
+        --color-accent-warm: #C4856E;
+        --color-accent-cool: #5A7A96;
+        --color-background: #FAF8F3;
+        --color-surface: #FFFFFF;
+        --color-text: #2A2419;
+        --color-text-muted: #706B62;
+        --color-border: #D4CFC4;
+        --font-heading: 'Jost', sans-serif;
+        --font-body: 'Crimson Pro', serif;
+        --radius-default: 0px;
+        --space-unit: 10px;
+
+        AESTHETIC PRINCIPLES:
+        1. Editorial spacing - Generous whitespace creates a magazine-like reading experience
+        2. Sharp geometry - Zero border radius emphasizes the crafted, intentional nature
+        3. Dramatic depth - Layered shadows provide clear visual hierarchy and interactivity
+        4. Natural palette - Tetradic color scheme with muted, nature-inspired tones
+        5. Typographic contrast - Geometric sans headings paired with display serif body
+
+        BEST FOR:
+        - Research surveys and questionnaires
+        - Customer feedback forms
+        - Product research and user studies
+        - Professional assessment tools
+        - Market research instruments
+        - Brand perception surveys
+
+        AVOID IF:
+        - You need ultra-dense information display
+        - Mobile-first minimal interfaces are required
+        - You prefer soft, rounded aesthetics
+        - Speed over thoughtful consideration is the goal
+
+        FUNCTIONAL DIRECTION: survey_form
+        This design must clearly function as a survey_form. Required elements:
+        - Multiple question types (multiple choice, rating scales, text input)
+        - Clear progress indicator showing survey completion
+        - Question numbering and section organization
+        - Submit button and navigation between questions
+        - Visual hierarchy distinguishing questions from answers
+        - Form validation states
+        - Clear labels and instructions
+        -->
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Tetradic color scheme - natural mood, muted saturation */
+            --color-primary: #8B6F47;
+            --color-secondary: #2D5F5D;
+            --color-accent-warm: #C4856E;
+            --color-accent-cool: #5A7A96;
+            --color-background: #FAF8F3;
+            --color-surface: #FFFFFF;
+            --color-text: #2A2419;
+            --color-text-muted: #706B62;
+            --color-border: #D4CFC4;
+            --color-success: #4A6741;
+            --color-error: #8B4A47;
+
+            /* Typography - Geometric sans + Display serif */
+            --font-heading: 'Jost', sans-serif;
+            --font-body: 'Crimson Pro', serif;
+
+            /* Minor second scale (1.067) */
+            --text-xs: 0.878rem;
+            --text-sm: 0.937rem;
+            --text-base: 1rem;
+            --text-lg: 1.067rem;
+            --text-xl: 1.138rem;
+            --text-2xl: 1.215rem;
+            --text-3xl: 1.296rem;
+            --text-4xl: 1.383rem;
+            --text-5xl: 1.476rem;
+
+            /* Spacing - ultra_airy (base 10px, generous multipliers) */
+            --space-unit: 10px;
+            --space-1: 10px;
+            --space-2: 20px;
+            --space-3: 30px;
+            --space-4: 40px;
+            --space-5: 60px;
+            --space-6: 80px;
+            --space-7: 100px;
+            --space-8: 140px;
+
+            /* Shapes - sharp corners, dramatic shadows, medium borders */
+            --radius-default: 0px;
+            --border-width: 2px;
+            --shadow-default: 8px 8px 0px rgba(42, 36, 25, 0.15);
+            --shadow-hover: 12px 12px 0px rgba(42, 36, 25, 0.2);
+            --shadow-inset: inset 4px 4px 8px rgba(42, 36, 25, 0.1);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            line-height: 1.8;
+            color: var(--color-text);
+            background: var(--color-background);
+            letter-spacing: 0.02em;
+            overflow-x: hidden;
+        }
+
+        /* Editorial pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(139, 111, 71, 0.03) 35px, rgba(139, 111, 71, 0.03) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(45, 95, 93, 0.03) 35px, rgba(45, 95, 93, 0.03) 70px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .survey-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Side persistent navigation */
+        .sidebar {
+            width: 320px;
+            background: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-border);
+            padding: var(--space-6);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--space-6);
+            letter-spacing: 0.05em;
+        }
+
+        .progress-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .progress-label {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+            letter-spacing: 0.08em;
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            position: relative;
+            margin-bottom: var(--space-1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--color-primary);
+            width: 40%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            margin-top: var(--space-1);
+            letter-spacing: 0.05em;
+        }
+
+        .nav-sections {
+            flex: 1;
+            margin-top: var(--space-4);
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-5);
+        }
+
+        .nav-section-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--space-2);
+            letter-spacing: 0.08em;
+            padding-bottom: var(--space-1);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2);
+            margin-bottom: var(--space-1);
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--color-background);
+        }
+
+        .nav-item.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .nav-item.active .nav-number,
+        .nav-item.active .nav-text {
+            color: var(--color-surface);
+        }
+
+        .nav-number {
+            font-family: var(--font-heading);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            width: 24px;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-text {
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            letter-spacing: 0.02em;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            padding: var(--space-7) var(--space-6);
+            max-width: 900px;
+        }
+
+        .survey-header {
+            margin-bottom: var(--space-7);
+        }
+
+        .survey-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-5xl);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-3);
+            letter-spacing: 0.05em;
+            line-height: 1.3;
+        }
+
+        .survey-description {
+            font-size: var(--text-lg);
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        /* Question card */
+        .question-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-5);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-default);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .question-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .question-header {
+            margin-bottom: var(--space-4);
+        }
+
+        .question-number {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--space-1);
+            letter-spacing: 0.1em;
+        }
+
+        .question-text {
+            font-family: var(--font-body);
+            font-size: var(--text-xl);
+            font-weight: 500;
+            color: var(--color-text);
+            line-height: 1.6;
+            margin-bottom: var(--space-1);
+        }
+
+        .question-help {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Multiple choice options */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .option-item {
+            position: relative;
+        }
+
+        .option-input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .option-label {
+            display: block;
+            padding: var(--space-3) var(--space-4);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: var(--text-base);
+            position: relative;
+            padding-left: var(--space-5);
+        }
+
+        .option-label::before {
+            content: '';
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .option-input[type="radio"] + .option-label::before {
+            border-radius: 50%;
+        }
+
+        .option-input:checked + .option-label {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: var(--color-surface);
+            box-shadow: var(--shadow-default);
+        }
+
+        .option-input:checked + .option-label::before {
+            background: var(--color-surface);
+            border-color: var(--color-surface);
+        }
+
+        .option-input:checked[type="checkbox"] + .option-label::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-sm);
+            color: var(--color-secondary);
+            font-weight: bold;
+        }
+
+        .option-input:checked[type="radio"] + .option-label::before {
+            box-shadow: inset 0 0 0 4px var(--color-secondary);
+        }
+
+        .option-label:hover {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .option-input:focus + .option-label {
+            outline: 3px solid var(--color-accent-cool);
+            outline-offset: 2px;
+        }
+
+        /* Rating scale */
+        .rating-scale {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .rating-option {
+            position: relative;
+        }
+
+        .rating-input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .rating-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--color-text);
+            transition: all 0.2s ease;
+        }
+
+        .rating-input:checked + .rating-label {
+            background: var(--color-accent-warm);
+            border-color: var(--color-accent-warm);
+            color: var(--color-surface);
+            box-shadow: var(--shadow-default);
+        }
+
+        .rating-label:hover {
+            border-color: var(--color-accent-warm);
+            transform: translateY(-2px);
+        }
+
+        .rating-input:focus + .rating-label {
+            outline: 3px solid var(--color-accent-cool);
+            outline-offset: 2px;
+        }
+
+        /* Text input */
+        .text-input,
+        .textarea-input {
+            width: 100%;
+            padding: var(--space-3);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--color-text);
+            transition: all 0.2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .textarea-input {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.8;
+        }
+
+        .text-input:focus,
+        .textarea-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+            background: var(--color-surface);
+        }
+
+        /* Navigation buttons */
+        .button-group {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-7);
+            padding-top: var(--space-5);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-5);
+            font-family: var(--font-heading);
+            font-size: var(--text-base);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .btn:hover {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-default);
+            transform: translate(-2px, -2px);
+        }
+
+        .btn:active {
+            transform: translate(0, 0);
+            box-shadow: 4px 4px 0px rgba(42, 36, 25, 0.15);
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-accent-cool);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: var(--color-surface);
+        }
+
+        /* Section divider */
+        .section-divider {
+            margin: var(--space-7) 0;
+            padding: var(--space-5);
+            background: var(--color-accent-cool);
+            border: var(--border-width) solid var(--color-accent-cool);
+            color: var(--color-surface);
+        }
+
+        .section-divider-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            letter-spacing: 0.05em;
+        }
+
+        .section-divider-description {
+            font-size: var(--text-base);
+            opacity: 0.95;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+                padding: var(--space-4);
+            }
+
+            .main-content {
+                padding: var(--space-5) var(--space-4);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .survey-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: var(--border-width) solid var(--color-border);
+            }
+
+            .nav-sections {
+                display: none;
+            }
+
+            .main-content {
+                padding: var(--space-4) var(--space-3);
+            }
+
+            .rating-scale {
+                flex-wrap: wrap;
+            }
+
+            .rating-label {
+                width: 56px;
+                height: 56px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Touch targets */
+        @media (hover: none) and (pointer: coarse) {
+            .option-label,
+            .rating-label,
+            .btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <!-- Side persistent navigation -->
+        <aside class="sidebar">
+            <div class="logo">fortress shift</div>
+
+            <div class="progress-section">
+                <div class="progress-label">survey progress</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-text">4 of 10 questions completed</div>
+            </div>
+
+            <nav class="nav-sections">
+                <div class="nav-section">
+                    <div class="nav-section-title">demographics</div>
+                    <div class="nav-item">
+                        <span class="nav-number">01</span>
+                        <span class="nav-text">age & location</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">02</span>
+                        <span class="nav-text">occupation</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">preferences</div>
+                    <div class="nav-item active">
+                        <span class="nav-number">03</span>
+                        <span class="nav-text">product usage</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">04</span>
+                        <span class="nav-text">brand perception</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">05</span>
+                        <span class="nav-text">satisfaction rating</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">feedback</div>
+                    <div class="nav-item">
+                        <span class="nav-number">06</span>
+                        <span class="nav-text">open response</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">07</span>
+                        <span class="nav-text">suggestions</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <header class="survey-header">
+                <h1 class="survey-title">creative professional survey 2026</h1>
+                <p class="survey-description">help us understand how creative professionals approach their work, tools, and inspirations. your insights shape the future of design education and tools.</p>
+            </header>
+
+            <!-- Question 1: Multiple choice (single) -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 03</div>
+                    <h2 class="question-text">how often do you use design tools in your daily workflow?</h2>
+                    <p class="question-help">select the option that best describes your usage pattern</p>
+                </div>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="q3" id="q3-a" class="option-input">
+                        <label for="q3-a" class="option-label">every day, multiple times throughout the day</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" id="q3-b" class="option-input" checked>
+                        <label for="q3-b" class="option-label">daily, but only for specific tasks</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" id="q3-c" class="option-input">
+                        <label for="q3-c" class="option-label">a few times per week</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" id="q3-d" class="option-input">
+                        <label for="q3-d" class="option-label">occasionally, as needed</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" id="q3-e" class="option-input">
+                        <label for="q3-e" class="option-label">rarely or never</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 2: Multiple choice (multiple) -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 04</div>
+                    <h2 class="question-text">which creative disciplines do you practice?</h2>
+                    <p class="question-help">select all that apply to your work</p>
+                </div>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-a" id="q4-a" class="option-input" checked>
+                        <label for="q4-a" class="option-label">graphic design & visual identity</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-b" id="q4-b" class="option-input">
+                        <label for="q4-b" class="option-label">user interface & experience design</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-c" id="q4-c" class="option-input" checked>
+                        <label for="q4-c" class="option-label">typography & type design</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-d" id="q4-d" class="option-input">
+                        <label for="q4-d" class="option-label">illustration & visual art</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-e" id="q4-e" class="option-input" checked>
+                        <label for="q4-e" class="option-label">photography & image editing</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" name="q4-f" id="q4-f" class="option-input">
+                        <label for="q4-f" class="option-label">motion design & animation</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section divider -->
+            <div class="section-divider">
+                <h2 class="section-divider-title">section 2: brand perception</h2>
+                <p class="section-divider-description">now we'd like to understand your thoughts on contemporary design trends and industry practices</p>
+            </div>
+
+            <!-- Question 3: Rating scale -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 05</div>
+                    <h2 class="question-text">how would you rate the importance of sustainable design practices?</h2>
+                    <p class="question-help">1 = not important, 5 = extremely important</p>
+                </div>
+                <div class="rating-labels">
+                    <span>not important</span>
+                    <span>extremely important</span>
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-option">
+                        <input type="radio" name="q5" id="q5-1" class="rating-input">
+                        <label for="q5-1" class="rating-label">1</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q5" id="q5-2" class="rating-input">
+                        <label for="q5-2" class="rating-label">2</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q5" id="q5-3" class="rating-input">
+                        <label for="q5-3" class="rating-label">3</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q5" id="q5-4" class="rating-input" checked>
+                        <label for="q5-4" class="rating-label">4</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q5" id="q5-5" class="rating-input">
+                        <label for="q5-5" class="rating-label">5</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4: Rating scale -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 06</div>
+                    <h2 class="question-text">how satisfied are you with current design education resources?</h2>
+                    <p class="question-help">rate from 1 (very dissatisfied) to 5 (very satisfied)</p>
+                </div>
+                <div class="rating-labels">
+                    <span>very dissatisfied</span>
+                    <span>very satisfied</span>
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-option">
+                        <input type="radio" name="q6" id="q6-1" class="rating-input">
+                        <label for="q6-1" class="rating-label">1</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q6" id="q6-2" class="rating-input">
+                        <label for="q6-2" class="rating-label">2</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q6" id="q6-3" class="rating-input" checked>
+                        <label for="q6-3" class="rating-label">3</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q6" id="q6-4" class="rating-input">
+                        <label for="q6-4" class="rating-label">4</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q6" id="q6-5" class="rating-input">
+                        <label for="q6-5" class="rating-label">5</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 5: Text input -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 07</div>
+                    <h2 class="question-text">what design trend do you believe will define the next five years?</h2>
+                    <p class="question-help">share your perspective in a few sentences</p>
+                </div>
+                <textarea class="textarea-input" placeholder="the intersection of sustainable materials and digital fabrication will reshape how we think about product design. physical and digital will blur even further..."></textarea>
+            </div>
+
+            <!-- Question 6: Text input -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">question 08</div>
+                    <h2 class="question-text">what is your primary email for professional correspondence?</h2>
+                    <p class="question-help">we'll only use this to send you survey results</p>
+                </div>
+                <input type="email" class="text-input" placeholder="designer@studio.com" value="">
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="button-group">
+                <button class="btn" type="button">previous section</button>
+                <button class="btn btn-secondary" type="button">save progress</button>
+                <button class="btn btn-primary" type="button">continue to next section</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 760;
+        const CURRENT = 5;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

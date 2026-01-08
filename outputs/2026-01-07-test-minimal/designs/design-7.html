@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Ash - Arts & Crafts Invoice System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Metro Ash - Handcrafted Invoicing for Purpose-Driven Organizations
+        ABOUTME: An Arts & Crafts inspired invoice system combining handmade elegance with mysterious depth,
+        designed for nonprofit organizations. Features ornamental borders, earth-toned palette, and craftsman details.
+
+        CSS VARIABLES:
+        --color-primary: #8B6F47 (Saddle brown - artisan leather)
+        --color-accent: #4A6741 (Deep moss - mysterious forest)
+        --color-background: #F5F1E8 (Aged parchment)
+        --color-surface: #FFFFFF (Clean canvas)
+        --color-text: #2C2416 (Charcoal ink)
+        --color-text-muted: #6B5D4F (Faded script)
+        --color-border: #D4C4A8 (Antiqued gold)
+        --font-heading: 'Cinzel', serif (Arts & Crafts inspired)
+        --font-body: 'Crimson Text', serif (Handcrafted readability)
+        --space-unit: 1.5rem
+        --radius-default: 2px
+        --shadow-default: 0 4px 12px rgba(44, 36, 22, 0.15)
+
+        DESIGN RATIONALE:
+        Arts & Crafts movement emphasized quality craftsmanship, natural materials, and handmade beauty.
+        This invoice design honors those principles through ornamental borders reminiscent of William Morris,
+        earth-toned palette suggesting natural dyes and materials, and typography that balances elegance
+        with readability. The mysterious tone emerges through deep shadows, subtle gradients, and decorative
+        elements that hint at hidden depth. Nonprofit context drives emphasis on transparency and clarity
+        while maintaining artistic integrity. Dual color mode adapts the parchment aesthetic to moonlit reading.
+        */
+
+        :root {
+            --color-primary: #8B6F47;
+            --color-accent: #4A6741;
+            --color-background: #F5F1E8;
+            --color-surface: #FFFFFF;
+            --color-text: #2C2416;
+            --color-text-muted: #6B5D4F;
+            --color-border: #D4C4A8;
+            --color-ornament: #9D8764;
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Crimson Text', serif;
+            --space-unit: 1.5rem;
+            --radius-default: 2px;
+            --shadow-default: 0 4px 12px rgba(44, 36, 22, 0.15);
+            --shadow-subtle: 0 2px 6px rgba(44, 36, 22, 0.08);
+            --shadow-deep: 0 6px 20px rgba(44, 36, 22, 0.25);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #B89968;
+                --color-accent: #7A9B6D;
+                --color-background: #1A1510;
+                --color-surface: #2C2416;
+                --color-text: #E8DCC8;
+                --color-text-muted: #A8957D;
+                --color-border: #4A3F2F;
+                --color-ornament: #6B5D4F;
+                --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.4);
+                --shadow-subtle: 0 2px 6px rgba(0, 0, 0, 0.2);
+                --shadow-deep: 0 6px 20px rgba(0, 0, 0, 0.6);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: calc(var(--space-unit) * 2);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 111, 71, 0.02) 2px,
+                    rgba(139, 111, 71, 0.02) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            box-shadow: var(--shadow-deep);
+            border: 3px solid var(--color-border);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Ornamental corner decorations */
+        .corner-ornament {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-style: solid;
+            border-color: var(--color-ornament);
+            opacity: 0.6;
+        }
+
+        .corner-ornament.top-left {
+            top: -3px;
+            left: -3px;
+            border-width: 3px 0 0 3px;
+        }
+
+        .corner-ornament.top-left::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--color-ornament);
+            border-radius: 50%;
+        }
+
+        .corner-ornament.top-right {
+            top: -3px;
+            right: -3px;
+            border-width: 3px 3px 0 0;
+        }
+
+        .corner-ornament.top-right::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--color-ornament);
+            border-radius: 50%;
+        }
+
+        .corner-ornament.bottom-left {
+            bottom: -3px;
+            left: -3px;
+            border-width: 0 0 3px 3px;
+        }
+
+        .corner-ornament.bottom-left::after {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--color-ornament);
+            border-radius: 50%;
+        }
+
+        .corner-ornament.bottom-right {
+            bottom: -3px;
+            right: -3px;
+            border-width: 0 3px 3px 0;
+        }
+
+        .corner-ornament.bottom-right::after {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--color-ornament);
+            border-radius: 50%;
+        }
+
+        .invoice-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            padding: calc(var(--space-unit) * 2);
+            color: #F5F1E8;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px double var(--color-border);
+        }
+
+        .invoice-header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: var(--color-ornament);
+            opacity: 0.5;
+        }
+
+        .invoice-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .invoice-subtitle {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.9;
+            letter-spacing: 0.03em;
+        }
+
+        .invoice-body {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+            margin: calc(var(--space-unit) * 1.5) 0;
+            position: relative;
+        }
+
+        .section-divider::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-surface);
+            color: var(--color-ornament);
+            padding: 0 1rem;
+            font-size: 0.75rem;
+        }
+
+        .invoice-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .meta-box {
+            background: var(--color-background);
+            padding: var(--space-unit);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-primary);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .meta-label {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            color: var(--color-text);
+        }
+
+        .meta-value.large {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+        }
+
+        .org-info {
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .org-name {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .org-details {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: calc(var(--space-unit) * 1.5) 0;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .items-table thead {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: #F5F1E8;
+        }
+
+        .items-table th {
+            padding: 1rem;
+            text-align: left;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            border-bottom: 2px solid var(--color-ornament);
+        }
+
+        .items-table th:last-child {
+            text-align: right;
+        }
+
+        .items-table tbody tr {
+            border-bottom: 1px solid var(--color-border);
+            transition: background 0.2s ease;
+        }
+
+        .items-table tbody tr:hover {
+            background: var(--color-background);
+        }
+
+        .items-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .items-table td {
+            padding: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .items-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            font-family: var(--font-heading);
+        }
+
+        .item-description {
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+
+        .totals-section {
+            margin-top: calc(var(--space-unit) * 2);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .totals-box {
+            min-width: 350px;
+            border: 2px solid var(--color-border);
+            background: var(--color-background);
+            box-shadow: var(--shadow-default);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .total-row:last-child {
+            border-bottom: none;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: #F5F1E8;
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 1rem 1.5rem;
+        }
+
+        .total-label {
+            font-weight: 600;
+        }
+
+        .total-value {
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .notes-section {
+            margin-top: calc(var(--space-unit) * 2);
+            padding: var(--space-unit);
+            background: var(--color-background);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .notes-title {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .notes-content {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .invoice-footer {
+            margin-top: calc(var(--space-unit) * 2);
+            padding-top: var(--space-unit);
+            border-top: 2px solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+        }
+
+        .payment-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-unit);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .payment-method {
+            padding: var(--space-unit);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .payment-method-title {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .payment-method-details {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--color-accent);
+            color: #F5F1E8;
+            font-size: 0.75rem;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        .badge.paid {
+            background: #4A6741;
+        }
+
+        .badge.pending {
+            background: #8B6F47;
+        }
+
+        /* Focus styles */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-unit);
+            }
+
+            .invoice-title {
+                font-size: 1.75rem;
+            }
+
+            .invoice-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .items-table {
+                font-size: 0.85rem;
+            }
+
+            .items-table th,
+            .items-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .totals-box {
+                min-width: 100%;
+            }
+
+            .payment-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="corner-ornament top-left"></div>
+        <div class="corner-ornament top-right"></div>
+        <div class="corner-ornament bottom-left"></div>
+        <div class="corner-ornament bottom-right"></div>
+
+        <header class="invoice-header">
+            <h1 class="invoice-title">Metro Ash Foundation</h1>
+            <p class="invoice-subtitle">Handcrafted Invoicing for Purpose-Driven Impact</p>
+        </header>
+
+        <main class="invoice-body">
+            <div class="invoice-meta">
+                <div class="meta-box">
+                    <div class="meta-label">Invoice Number</div>
+                    <div class="meta-value large">INV-2024-0847</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">Issue Date</div>
+                    <div class="meta-value">January 7, 2026</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">Due Date</div>
+                    <div class="meta-value">February 6, 2026</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">Status</div>
+                    <div class="meta-value"><span class="badge pending">Pending Payment</span></div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="org-info">
+                <h2 class="org-name">The Artisan Collective</h2>
+                <div class="org-details">
+                    142 Heritage Lane, Studio B<br>
+                    Portland, OR 97214<br>
+                    contact@artisancollective.org<br>
+                    Tax ID: 93-1847629
+                </div>
+            </div>
+
+            <div class="org-info">
+                <div class="meta-label">Billed To</div>
+                <h2 class="org-name">Silverlake Community Center</h2>
+                <div class="org-details">
+                    789 Oak Street<br>
+                    Los Angeles, CA 90026<br>
+                    finance@silverlakecenter.org
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th style="width: 100px;">Quantity</th>
+                        <th style="width: 120px;">Unit Price</th>
+                        <th style="width: 120px;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Youth Arts Workshop Series</strong>
+                            <div class="item-description">12-week program covering ceramics, woodworking, and textile arts for ages 12-18</div>
+                        </td>
+                        <td>1</td>
+                        <td>$4,200.00</td>
+                        <td>$4,200.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Instructor Training & Development</strong>
+                            <div class="item-description">Professional development for three community educators in Arts & Crafts pedagogy</div>
+                        </td>
+                        <td>3</td>
+                        <td>$850.00</td>
+                        <td>$2,550.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Materials & Supplies Kit</strong>
+                            <div class="item-description">Natural materials, hand tools, and sustainable supplies for 25 participants</div>
+                        </td>
+                        <td>25</td>
+                        <td>$95.00</td>
+                        <td>$2,375.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Exhibition Space Rental</strong>
+                            <div class="item-description">Gallery space for student showcase event including setup and staffing</div>
+                        </td>
+                        <td>1</td>
+                        <td>$1,200.00</td>
+                        <td>$1,200.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Documentation & Impact Report</strong>
+                            <div class="item-description">Photography, video documentation, and comprehensive program evaluation</div>
+                        </td>
+                        <td>1</td>
+                        <td>$675.00</td>
+                        <td>$675.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="totals-section">
+                <div class="totals-box">
+                    <div class="total-row">
+                        <span class="total-label">Subtotal</span>
+                        <span class="total-value">$11,000.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">Nonprofit Discount (10%)</span>
+                        <span class="total-value">-$1,100.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">Tax Exempt</span>
+                        <span class="total-value">$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">Total Amount Due</span>
+                        <span class="total-value">$9,900.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="payment-info">
+                <div class="payment-method">
+                    <div class="payment-method-title">Bank Transfer</div>
+                    <div class="payment-method-details">
+                        Metro Ash Foundation<br>
+                        Bank: Heritage Credit Union<br>
+                        Account: 4892-7163-2847<br>
+                        Routing: 123456789
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <div class="payment-method-title">Check Payment</div>
+                    <div class="payment-method-details">
+                        Make checks payable to:<br>
+                        Metro Ash Foundation<br>
+                        142 Heritage Lane, Studio B<br>
+                        Portland, OR 97214
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <div class="payment-method-title">Online Payment</div>
+                    <div class="payment-method-details">
+                        Visit our secure portal:<br>
+                        pay.metroash.org<br>
+                        Reference: INV-2024-0847<br>
+                        ACH, credit cards accepted
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes-section">
+                <div class="notes-title">Program Notes</div>
+                <div class="notes-content">
+                    This invoice represents our collaboration to bring meaningful arts education to underserved youth
+                    in the Silverlake community. All materials are ethically sourced and programs emphasize sustainable
+                    practices aligned with Arts & Crafts movement principles. Payment terms: Net 30 days.
+                    For questions regarding this invoice or program details, please contact our Program Director
+                    at programs@metroash.org or (503) 847-2901.
+                </div>
+            </div>
+
+            <footer class="invoice-footer">
+                <p>Metro Ash Foundation is a 501(c)(3) nonprofit organization dedicated to preserving traditional crafts and supporting community-based arts education.</p>
+                <p style="margin-top: 0.5rem; font-style: italic;">Thank you for supporting handcrafted excellence and purposeful impact.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 7;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

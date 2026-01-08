@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Marble - Natural vibes for ecommerce</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        <!--
+        DESIGN: Prime Marble - Natural vibes for ecommerce
+        ABOUTME: This design implements exam_interface in art_deco style.
+        ABOUTME: Emotional tone: calm | Industry: ecommerce
+
+        MY DESIGN CHOICES:
+        - UI Paradigm: Card-based exam interface with elegant progress tracking and geometric Art Deco patterns
+        - Color approach: Muted bronze/gold (#B8956A) with deep charcoal, soft cream backgrounds for calm luxury
+        - Typography: Playfair Display (display serif) for elegant headings, Work Sans (humanist sans) for readable body text
+        - Shape language: Geometric chevrons and stepped patterns from Art Deco, but with 8px radius for approachability
+        - Density: Medium spacing (16px base) - calm and breathable while maintaining structure
+
+        QUICK START - Copy these variables:
+        --color-primary: #B8956A;
+        --color-background: #FAF7F2;
+        --color-surface: #FFFFFF;
+        --color-text: #2C2C2C;
+        --color-text-muted: #6B6B6B;
+        --color-accent: #8B7355;
+        --color-success: #7A9B76;
+        --font-heading: 'Playfair Display', serif;
+        --font-body: 'Work Sans', sans-serif;
+        --radius-default: 8px;
+        --space-unit: 16px;
+
+        AESTHETIC PRINCIPLES:
+        1. Art Deco geometry meets calm ecommerce professionalism
+        2. Symmetrical layouts with stepped geometric ornaments
+        3. Muted metallic palette for luxurious restraint
+        4. Generous whitespace for a calming, focused exam experience
+
+        FUNCTIONAL DIRECTION: exam_interface
+        Required elements I included:
+        - Multiple choice questions with radio buttons
+        - Question counter and progress indicator
+        - Timer display
+        - Navigation between questions
+        - Submit button
+        - Score/feedback section
+        - Review mode capability
+        -->
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Art Deco meets calm ecommerce */
+            --color-primary: #B8956A;
+            --color-background: #FAF7F2;
+            --color-surface: #FFFFFF;
+            --color-text: #2C2C2C;
+            --color-text-muted: #6B6B6B;
+            --color-accent: #8B7355;
+            --color-success: #7A9B76;
+            --color-error: #A67373;
+            --color-border: #E5DED0;
+            --color-hover: #D4B88F;
+
+            /* Typography - Elegant Art Deco serif + clean sans */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Work Sans', sans-serif;
+
+            /* Spacing - Medium density for calm */
+            --space-unit: 16px;
+
+            /* Shapes - Soft geometric */
+            --radius-default: 8px;
+            --shadow-default: 0 4px 16px rgba(44, 44, 44, 0.08);
+            --shadow-strong: 0 8px 24px rgba(44, 44, 44, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #D4B88F;
+                --color-background: #1A1815;
+                --color-surface: #2C2822;
+                --color-text: #F0EBE3;
+                --color-text-muted: #A39A8C;
+                --color-accent: #B8956A;
+                --color-success: #8FAB8A;
+                --color-error: #C48A8A;
+                --color-border: #3F3A32;
+                --color-hover: #E5D4B8;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Art Deco decorative header */
+        .header {
+            background: var(--color-surface);
+            border-bottom: 3px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before,
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(135deg,
+                transparent 0%,
+                transparent 40%,
+                var(--color-primary) 40%,
+                var(--color-primary) 45%,
+                transparent 45%,
+                transparent 55%,
+                var(--color-primary) 55%,
+                var(--color-primary) 60%,
+                transparent 60%);
+            opacity: 0.1;
+        }
+
+        .header::before {
+            left: -50px;
+        }
+
+        .header::after {
+            right: -50px;
+            transform: scaleX(-1);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: 0.02em;
+            text-align: center;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .exam-subtitle {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* Main exam container */
+        .exam-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 2) var(--space-unit);
+            flex: 1;
+        }
+
+        /* Progress and timer bar */
+        .exam-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 2);
+            flex-wrap: wrap;
+        }
+
+        .progress-section,
+        .timer-section {
+            flex: 1;
+            min-width: 250px;
+            background: var(--color-surface);
+            padding: var(--space-unit);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-border);
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            background: var(--color-border);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+            width: 30%;
+            transition: width 0.4s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            margin-top: calc(var(--space-unit) * 0.5);
+            font-size: 0.9rem;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .timer-display {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        /* Question card */
+        .question-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-strong);
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 2);
+            border: 2px solid var(--color-border);
+            position: relative;
+        }
+
+        /* Art Deco corner ornaments */
+        .question-card::before,
+        .question-card::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--color-primary);
+            opacity: 0.4;
+        }
+
+        .question-card::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: var(--radius-default);
+        }
+
+        .question-card::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: var(--radius-default);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--color-primary);
+            color: var(--color-surface);
+            padding: calc(var(--space-unit) * 0.25) calc(var(--space-unit) * 0.75);
+            border-radius: calc(var(--radius-default) * 0.5);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-unit);
+        }
+
+        .question-text {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            line-height: 1.5;
+        }
+
+        /* Answer options */
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-unit);
+        }
+
+        .answer-option {
+            position: relative;
+        }
+
+        .answer-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .answer-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-unit);
+            padding: var(--space-unit);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .answer-label:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface);
+            transform: translateX(4px);
+        }
+
+        .answer-label:focus-within {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .answer-option input[type="radio"]:checked + .answer-label {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+            border-width: 3px;
+            padding: calc(var(--space-unit) - 1px);
+        }
+
+        .radio-custom {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-border);
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+            background: var(--color-surface);
+        }
+
+        .answer-option input[type="radio"]:checked + .answer-label .radio-custom {
+            border-color: var(--color-primary);
+            border-width: 3px;
+        }
+
+        .answer-option input[type="radio"]:checked + .answer-label .radio-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: var(--color-primary);
+            border-radius: 50%;
+        }
+
+        .answer-text {
+            flex: 1;
+            font-size: 1rem;
+            color: var(--color-text);
+            font-weight: 400;
+        }
+
+        /* Navigation buttons */
+        .exam-navigation {
+            display: flex;
+            gap: var(--space-unit);
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: var(--font-body);
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 2);
+            border: none;
+            border-radius: var(--radius-default);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            min-height: 44px;
+            min-width: 120px;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: 2px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+        }
+
+        /* Submit section */
+        .submit-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-strong);
+            border: 2px solid var(--color-primary);
+            margin-top: calc(var(--space-unit) * 2);
+            text-align: center;
+        }
+
+        .submit-section h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-text);
+            margin-bottom: var(--space-unit);
+        }
+
+        .submit-section p {
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .btn-submit {
+            background: var(--color-success);
+            color: white;
+            font-size: 1.1rem;
+            padding: var(--space-unit) calc(var(--space-unit) * 3);
+            min-width: 200px;
+        }
+
+        .btn-submit:hover {
+            background: #6B8A68;
+            transform: scale(1.05);
+        }
+
+        /* Results section */
+        .results-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-strong);
+            text-align: center;
+            border: 3px solid var(--color-success);
+        }
+
+        .results-section h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--color-success);
+            margin-bottom: var(--space-unit);
+        }
+
+        .score-display {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: calc(var(--space-unit) * 2) 0;
+            line-height: 1;
+        }
+
+        .results-text {
+            font-size: 1.1rem;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        /* Review list */
+        .review-list {
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            margin: calc(var(--space-unit) * 2) 0;
+            text-align: left;
+        }
+
+        .review-item {
+            padding: var(--space-unit);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item.correct {
+            color: var(--color-success);
+        }
+
+        .review-item.incorrect {
+            color: var(--color-error);
+        }
+
+        .review-icon {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Question overview grid */
+        .question-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: calc(var(--space-unit) * 0.5);
+            background: var(--color-surface);
+            padding: var(--space-unit);
+            border-radius: var(--radius-default);
+            margin-bottom: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+        }
+
+        .question-nav-btn {
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: calc(var(--radius-default) * 0.5);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .question-nav-btn:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface);
+            transform: scale(1.05);
+        }
+
+        .question-nav-btn.active {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .question-nav-btn.answered {
+            background: var(--color-surface);
+            border-color: var(--color-success);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-surface);
+            border-top: 3px solid var(--color-primary);
+            padding: var(--space-unit);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .exam-meta {
+                flex-direction: column;
+            }
+
+            .exam-navigation {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .score-display {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Prime Marble Certification Exam</h1>
+            <p class="exam-subtitle">Ecommerce Excellence Assessment</p>
+        </div>
+    </header>
+
+    <main class="exam-container">
+        <!-- Exam meta information -->
+        <div class="exam-meta">
+            <div class="progress-section">
+                <div class="meta-label">Progress</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-text">Question 3 of 10</div>
+            </div>
+            <div class="timer-section">
+                <div class="meta-label">Time Remaining</div>
+                <div class="timer-display">24:35</div>
+            </div>
+        </div>
+
+        <!-- Question overview grid -->
+        <div class="question-overview">
+            <button class="question-nav-btn answered">1</button>
+            <button class="question-nav-btn answered">2</button>
+            <button class="question-nav-btn active">3</button>
+            <button class="question-nav-btn">4</button>
+            <button class="question-nav-btn">5</button>
+            <button class="question-nav-btn">6</button>
+            <button class="question-nav-btn">7</button>
+            <button class="question-nav-btn">8</button>
+            <button class="question-nav-btn">9</button>
+            <button class="question-nav-btn">10</button>
+        </div>
+
+        <!-- Question card -->
+        <div class="question-card">
+            <span class="question-number">Question 3</span>
+            <h2 class="question-text">Which metric is most critical for measuring customer satisfaction in luxury ecommerce?</h2>
+
+            <div class="answers">
+                <div class="answer-option">
+                    <input type="radio" id="q3a" name="q3" value="a">
+                    <label for="q3a" class="answer-label">
+                        <span class="radio-custom"></span>
+                        <span class="answer-text">Net Promoter Score (NPS) reflecting brand advocacy</span>
+                    </label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q3b" name="q3" value="b">
+                    <label for="q3b" class="answer-label">
+                        <span class="radio-custom"></span>
+                        <span class="answer-text">Average order value over time</span>
+                    </label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q3c" name="q3" value="c">
+                    <label for="q3c" class="answer-label">
+                        <span class="radio-custom"></span>
+                        <span class="answer-text">Shopping cart abandonment rate</span>
+                    </label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q3d" name="q3" value="d">
+                    <label for="q3d" class="answer-label">
+                        <span class="radio-custom"></span>
+                        <span class="answer-text">Website bounce rate on product pages</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="exam-navigation">
+            <button class="btn btn-secondary">Previous Question</button>
+            <button class="btn btn-secondary">Mark for Review</button>
+            <button class="btn btn-primary">Next Question</button>
+        </div>
+
+        <!-- Submit section (shown after answering all questions) -->
+        <div class="submit-section" style="display: none;">
+            <h2>Ready to Submit?</h2>
+            <p>You have answered all 10 questions. Review your answers or submit your exam.</p>
+            <button class="btn btn-submit">Submit Exam</button>
+        </div>
+
+        <!-- Results section (shown after submission) -->
+        <div class="results-section" style="display: none;">
+            <h2>Exam Complete!</h2>
+            <div class="score-display">85%</div>
+            <p class="results-text">Congratulations! You've passed the Prime Marble Certification Exam.</p>
+
+            <div class="review-list">
+                <div class="review-item correct">
+                    <span>Question 1: Product Photography Standards</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 2: Sustainable Sourcing Practices</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item incorrect">
+                    <span>Question 3: Customer Satisfaction Metrics</span>
+                    <span class="review-icon">✗</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 4: Brand Voice Guidelines</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 5: Packaging Requirements</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 6: Return Policy Standards</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 7: Email Marketing Best Practices</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 8: Product Description Format</span>
+                    <span class="review-icon">✓</span>
+                </div>
+                <div class="review-item incorrect">
+                    <span>Question 9: Inventory Management</span>
+                    <span class="review-icon">✗</span>
+                </div>
+                <div class="review-item correct">
+                    <span>Question 10: Customer Service Response Time</span>
+                    <span class="review-icon">✓</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary">Download Certificate</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Prime Marble Ecommerce Certification &copy; 2026 | Use arrow keys or swipe to navigate</p>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 3;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

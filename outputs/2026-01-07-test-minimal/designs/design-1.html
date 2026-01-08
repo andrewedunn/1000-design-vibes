@@ -1,0 +1,763 @@
+<!--
+DESIGN: Pure Nexus - Punk-inspired design for users
+ABOUTME: A dark-mode component library for luxury finance, blending punk rebellion with sophisticated financial interfaces. Raw edges meet premium materials.
+
+CSS VARIABLES:
+--color-primary: #FF10F0 (electric magenta)
+--color-background: #0A0A0F (near black)
+--color-surface: #1A1A24 (dark slate)
+--color-text: #FFFFFF (pure white)
+--color-text-muted: #8888AA (muted purple-gray)
+--font-heading: 'Six Caps', sans-serif (punk condensed)
+--font-body: 'Space Grotesk', monospace (technical)
+--space-unit: 8px
+--radius-default: 0px (hard punk edges)
+--shadow-default: 0 0 20px rgba(255, 16, 240, 0.3)
+
+DESIGN RATIONALE:
+Punk aesthetic (sharp angles, high contrast, rebellious magenta) contrasts with luxury finance (premium typography, sophisticated spacing, polished components). Dark-only mode creates exclusive nightclub atmosphere. Component library structure showcases buttons, cards, forms, and data displays with documentation. Electric magenta against deep blacks creates visceral energy while maintaining professional polish.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Nexus - Component Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Six+Caps&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #FF10F0;
+            --color-secondary: #10FFFF;
+            --color-accent: #FFE600;
+            --color-background: #0A0A0F;
+            --color-surface: #1A1A24;
+            --color-surface-elevated: #242433;
+            --color-text: #FFFFFF;
+            --color-text-muted: #8888AA;
+            --color-border: #333344;
+            --font-heading: 'Six Caps', sans-serif;
+            --font-body: 'Space Grotesk', monospace;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 0 0 20px rgba(255, 16, 240, 0.3);
+            --shadow-intense: 0 0 40px rgba(255, 16, 240, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 120px;
+            line-height: 0.9;
+            color: var(--color-primary);
+            text-shadow: 0 0 30px rgba(255, 16, 240, 0.6);
+        }
+
+        h2 {
+            font-size: 72px;
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        h3 {
+            font-size: 48px;
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        h4 {
+            font-size: 32px;
+            line-height: 1.1;
+        }
+
+        /* Header */
+        header {
+            padding: calc(var(--space-unit) * 8) calc(var(--space-unit) * 4);
+            border-bottom: 3px solid var(--color-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .header-description {
+            font-size: 16px;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-top: calc(var(--space-unit) * 3);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 4);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: calc(var(--space-unit) * 12);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 6);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        .component-card {
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+            transform: translateY(-4px);
+        }
+
+        .component-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .component-card:hover::before {
+            opacity: 1;
+        }
+
+        .component-title {
+            font-size: 24px;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-primary);
+        }
+
+        .component-description {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 3);
+            line-height: 1.5;
+        }
+
+        .component-example {
+            margin-top: calc(var(--space-unit) * 3);
+            padding-top: calc(var(--space-unit) * 3);
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Buttons */
+        .btn {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            border: 2px solid transparent;
+            background: transparent;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-intense);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .btn-ghost {
+            border-color: var(--color-border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            flex-wrap: wrap;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+            transition: all 0.3s ease;
+        }
+
+        .card-premium {
+            border-color: var(--color-primary);
+            position: relative;
+        }
+
+        .card-premium::after {
+            content: 'PREMIUM';
+            position: absolute;
+            top: calc(var(--space-unit) * 2);
+            right: calc(var(--space-unit) * 2);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--color-primary);
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            border: 1px solid var(--color-primary);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .card-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: calc(var(--space-unit) * 1);
+            color: var(--color-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 14px;
+            padding: calc(var(--space-unit) * 2);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            color: var(--color-text);
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        /* Data Display */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: left;
+            padding: calc(var(--space-unit) * 2);
+            border-bottom: 2px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .data-table td {
+            padding: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .data-table tr:hover {
+            background: var(--color-surface-elevated);
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            border: 1px solid;
+        }
+
+        .status-active {
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .status-pending {
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .status-closed {
+            color: var(--color-text-muted);
+            border-color: var(--color-border);
+        }
+
+        /* Charts */
+        .chart-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: calc(var(--space-unit) * 2);
+            height: 200px;
+            margin-top: calc(var(--space-unit) * 3);
+        }
+
+        .chart-bar-item {
+            flex: 1;
+            background: linear-gradient(to top, var(--color-primary), rgba(255, 16, 240, 0.3));
+            position: relative;
+            border: 2px solid var(--color-primary);
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar-item:hover {
+            box-shadow: var(--shadow-default);
+            transform: translateY(-4px);
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+        }
+
+        /* Focus States */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 72px;
+            }
+
+            h2 {
+                font-size: 48px;
+            }
+
+            h3 {
+                font-size: 36px;
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-bar {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="tagline">Component Library // Finance Edition</div>
+            <h1>PURE NEXUS</h1>
+            <p class="header-description">
+                Punk-inspired design for users. A rebellious component library for luxury finance platforms.
+                Sharp edges, electric energy, and uncompromising precision.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Buttons Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>BUTTONS</h2>
+                <span class="section-label">Interactive Elements</span>
+            </div>
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4 class="component-title">Primary Actions</h4>
+                    <p class="component-description">
+                        High-impact buttons for primary actions. Electric magenta with intense glow effects.
+                    </p>
+                    <div class="component-example">
+                        <div class="button-group">
+                            <button class="btn btn-primary">Execute Trade</button>
+                            <button class="btn btn-primary">Transfer Funds</button>
+                            <button class="btn btn-primary">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4 class="component-title">Secondary Actions</h4>
+                    <p class="component-description">
+                        Ghost-style buttons with punk edges. Transforms on hover with electric fill.
+                    </p>
+                    <div class="component-example">
+                        <div class="button-group">
+                            <button class="btn btn-secondary">View Details</button>
+                            <button class="btn btn-secondary">Edit Portfolio</button>
+                            <button class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4 class="component-title">Ghost Buttons</h4>
+                    <p class="component-description">
+                        Subtle interactions for tertiary actions. Minimal until activated.
+                    </p>
+                    <div class="component-example">
+                        <div class="button-group">
+                            <button class="btn btn-ghost">Learn More</button>
+                            <button class="btn btn-ghost">Documentation</button>
+                            <button class="btn btn-ghost">Support</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>CARDS</h2>
+                <span class="section-label">Content Containers</span>
+            </div>
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4 class="component-title">Data Cards</h4>
+                    <p class="component-description">
+                        Display financial metrics with luxury and edge. Premium tier highlighted.
+                    </p>
+                    <div class="component-example">
+                        <div class="card card-premium">
+                            <div class="card-title">Portfolio Value</div>
+                            <div class="card-value">$2.4M</div>
+                            <div class="card-label">+12.4% This Quarter</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4 class="component-title">Standard Cards</h4>
+                    <p class="component-description">
+                        Clean data presentation with punk aesthetic. Sharp borders, no compromises.
+                    </p>
+                    <div class="component-example">
+                        <div class="card">
+                            <div class="card-title">Active Positions</div>
+                            <div class="card-value">47</div>
+                            <div class="card-label">Across 12 Markets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4 class="component-title">Interactive Cards</h4>
+                    <p class="component-description">
+                        Hover states reveal electric energy. Cards lift and glow on interaction.
+                    </p>
+                    <div class="component-example">
+                        <div class="card">
+                            <div class="card-title">Risk Score</div>
+                            <div class="card-value">6.8</div>
+                            <div class="card-label">Moderate Risk Profile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forms Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>FORMS</h2>
+                <span class="section-label">Data Input</span>
+            </div>
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4 class="component-title">Input Fields</h4>
+                    <p class="component-description">
+                        High-contrast inputs with electric focus states. Precision meets rebellion.
+                    </p>
+                    <div class="component-example">
+                        <div class="form-group">
+                            <label class="form-label">Account Number</label>
+                            <input type="text" class="form-input" placeholder="Enter account number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (USD)</label>
+                            <input type="text" class="form-input" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reference</label>
+                            <input type="text" class="form-input" placeholder="Optional reference">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4 class="component-title">Form Layout</h4>
+                    <p class="component-description">
+                        Complete form example with punk-inspired labels and luxury spacing.
+                    </p>
+                    <div class="component-example">
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">Recipient</label>
+                                <input type="text" class="form-input" placeholder="Search contacts">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Transfer Amount</label>
+                                <input type="text" class="form-input" placeholder="0.00 USD">
+                            </div>
+                            <button class="btn btn-primary">Execute Transfer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Display Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>DATA DISPLAY</h2>
+                <span class="section-label">Tables & Charts</span>
+            </div>
+            <div class="component-grid">
+                <div class="component-card" style="grid-column: 1 / -1;">
+                    <h4 class="component-title">Transaction Table</h4>
+                    <p class="component-description">
+                        Financial data table with punk-inspired headers and status badges.
+                    </p>
+                    <div class="component-example">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TXN-847291</td>
+                                    <td>2026-01-07</td>
+                                    <td>$45,200.00</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TXN-847290</td>
+                                    <td>2026-01-06</td>
+                                    <td>$12,800.00</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TXN-847289</td>
+                                    <td>2026-01-06</td>
+                                    <td>$8,500.00</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TXN-847288</td>
+                                    <td>2026-01-05</td>
+                                    <td>$92,400.00</td>
+                                    <td><span class="status-badge status-closed">Closed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="component-card" style="grid-column: 1 / -1;">
+                    <h4 class="component-title">Bar Chart</h4>
+                    <p class="component-description">
+                        Data visualization with electric gradients and sharp edges. Interactive hover states.
+                    </p>
+                    <div class="component-example">
+                        <div class="chart-bar">
+                            <div class="chart-bar-item" style="height: 60%;">
+                                <div class="chart-bar-label">Q1</div>
+                            </div>
+                            <div class="chart-bar-item" style="height: 85%;">
+                                <div class="chart-bar-label">Q2</div>
+                            </div>
+                            <div class="chart-bar-item" style="height: 70%;">
+                                <div class="chart-bar-label">Q3</div>
+                            </div>
+                            <div class="chart-bar-item" style="height: 95%;">
+                                <div class="chart-bar-label">Q4</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 1;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

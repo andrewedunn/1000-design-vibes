@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Graphite - Shipping Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Urban Graphite - Y2K Shipping Command Center
+ABOUTME: A dark-themed shipping tracker with Y2K-era cyber aesthetics featuring metallic gradients,
+angular geometry, and tech-forward typography. Designed for serious enterprise logistics operations.
+
+CSS VARIABLES:
+--color-primary: #00D9FF (Cyan accent, quintessential Y2K)
+--color-background: #0A0E14 (Deep charcoal)
+--color-surface: #1A1F2E (Elevated dark surface)
+--color-text: #E8ECEF (Cool white)
+--color-text-muted: #6B7A8F (Muted blue-gray)
+--font-heading: 'Orbitron' (Futuristic, geometric)
+--font-body: 'Rajdhani' (Technical, clean)
+--space-unit: 8px
+--radius-default: 2px (Sharp, minimal)
+--shadow-default: 0 4px 16px rgba(0, 217, 255, 0.15) (Cyan glow)
+
+DESIGN RATIONALE:
+Y2K design emphasized cyber-futurism, metallics, and digital optimism. This shipping tracker uses:
+- Orbitron for that iconic early-2000s tech aesthetic
+- Cyan/blue accent colors characteristic of the era
+- Angular shapes and hard edges (not the rounded corners of modern design)
+- Metallic gradients and glowing effects
+- Status indicators with bright, saturated colors
+- Grid-based layouts with clear technical information hierarchy
+- Dark theme reflecting enterprise/professional SaaS context
+- Serious tone through restrained animation and professional data presentation
+-->
+
+<style>
+:root {
+    --color-primary: #00D9FF;
+    --color-background: #0A0E14;
+    --color-surface: #1A1F2E;
+    --color-text: #E8ECEF;
+    --color-text-muted: #6B7A8F;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: 0 4px 16px rgba(0, 217, 255, 0.15);
+
+    --color-success: #00FF94;
+    --color-warning: #FFB800;
+    --color-danger: #FF0055;
+    --color-info: #8B5CF6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 3);
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #1A1F2E 0%, #0F1419 100%);
+    border-bottom: 2px solid var(--color-primary);
+    padding: calc(var(--space-unit) * 3) 0;
+    box-shadow: 0 4px 24px rgba(0, 217, 255, 0.2);
+    position: relative;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 calc(var(--space-unit) * 3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), #0099CC);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--color-primary), #E8ECEF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-meta {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.meta-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+}
+
+.meta-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Main Dashboard */
+.dashboard {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: calc(var(--space-unit) * 3);
+    margin-top: calc(var(--space-unit) * 3);
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.filter-panel {
+    background: var(--color-surface);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+}
+
+.filter-panel h3 {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: calc(var(--space-unit) * 2);
+    color: var(--color-primary);
+    border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+    padding-bottom: calc(var(--space-unit));
+}
+
+.filter-group {
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.filter-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit));
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit));
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit));
+    padding: calc(var(--space-unit)) calc(var(--space-unit) * 1.5);
+    background: rgba(0, 217, 255, 0.05);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-option:hover {
+    background: rgba(0, 217, 255, 0.15);
+    border-color: var(--color-primary);
+}
+
+.filter-option input[type="checkbox"] {
+    accent-color: var(--color-primary);
+}
+
+.stats-panel {
+    background: linear-gradient(135deg, #1A1F2E, #0F1419);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--space-unit) * 1.5);
+    margin-bottom: calc(var(--space-unit));
+    background: rgba(0, 217, 255, 0.05);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-default);
+}
+
+.stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.search-bar {
+    background: var(--color-surface);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 500;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary);
+}
+
+/* Shipment Cards */
+.shipments-container {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.shipment-card {
+    background: var(--color-surface);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+    box-shadow: var(--shadow-default);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.shipment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--status-color);
+}
+
+.shipment-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 32px rgba(0, 217, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.shipment-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 120px;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.tracking-number {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+}
+
+.shipment-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--space-unit));
+    padding: calc(var(--space-unit)) calc(var(--space-unit) * 2);
+    background: rgba(var(--status-rgb), 0.15);
+    border: 1px solid rgba(var(--status-rgb), 0.5);
+    border-radius: var(--radius-default);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--status-color);
+}
+
+.status-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--status-color);
+    box-shadow: 0 0 8px var(--status-color);
+}
+
+.shipment-card[data-status="in-transit"] {
+    --status-color: var(--color-primary);
+    --status-rgb: 0, 217, 255;
+}
+
+.shipment-card[data-status="delivered"] {
+    --status-color: var(--color-success);
+    --status-rgb: 0, 255, 148;
+}
+
+.shipment-card[data-status="pending"] {
+    --status-color: var(--color-warning);
+    --status-rgb: 255, 184, 0;
+}
+
+.shipment-card[data-status="delayed"] {
+    --status-color: var(--color-danger);
+    --status-rgb: 255, 0, 85;
+}
+
+.shipment-card[data-status="processing"] {
+    --status-color: var(--color-info);
+    --status-rgb: 139, 92, 246;
+}
+
+/* Progress Track */
+.progress-track {
+    margin-top: calc(var(--space-unit) * 2);
+    padding-top: calc(var(--space-unit) * 2);
+    border-top: 1px solid rgba(0, 217, 255, 0.1);
+}
+
+.track-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+    position: relative;
+}
+
+.track-point {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.track-point::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 217, 255, 0.2);
+    z-index: -1;
+}
+
+.track-point:first-child::before {
+    left: 50%;
+    width: 50%;
+}
+
+.track-point:last-child::before {
+    width: 50%;
+}
+
+.track-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: calc(var(--space-unit));
+    position: relative;
+    z-index: 1;
+}
+
+.track-point.completed .track-icon {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 16px rgba(0, 217, 255, 0.6);
+}
+
+.track-point.active .track-icon {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+    box-shadow: 0 0 16px rgba(255, 184, 0, 0.6);
+    animation: pulse 2s infinite;
+}
+
+.track-date {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+}
+
+.track-location {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 16px rgba(255, 184, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 24px rgba(255, 184, 0, 0.9);
+    }
+}
+
+/* Footer */
+footer {
+    margin-top: calc(var(--space-unit) * 6);
+    padding: calc(var(--space-unit) * 3) 0;
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.footer-nav a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+    transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+    color: var(--color-primary);
+}
+
+/* Accessibility */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .shipment-header {
+        grid-template-columns: 1fr;
+        gap: calc(var(--space-unit));
+    }
+
+    .track-timeline {
+        grid-template-columns: 1fr;
+    }
+
+    .track-point::before {
+        display: none;
+    }
+}
+</style>
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <h1>Urban Graphite</h1>
+        </div>
+        <div class="header-meta">
+            <div class="meta-item">
+                <span class="meta-label">Last Updated</span>
+                <span class="meta-value">14:32:18</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Active Shipments</span>
+                <span class="meta-value">47</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="filter-panel">
+                <h3>Filter By Status</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" checked>
+                        <span>In Transit</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" checked>
+                        <span>Delivered</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" checked>
+                        <span>Pending</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox">
+                        <span>Delayed</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox">
+                        <span>Processing</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h3>Overview</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-value">47</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">On Time</span>
+                    <span class="stat-value">42</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Delayed</span>
+                    <span class="stat-value">5</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Today</span>
+                    <span class="stat-value">12</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="search-bar">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search tracking number, destination, or customer...">
+            </div>
+
+            <div class="shipments-container">
+                <!-- Shipment 1 -->
+                <div class="shipment-card" data-status="in-transit">
+                    <div class="shipment-header">
+                        <div class="shipment-info">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="tracking-number">UG-2026-847392</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Origin</span>
+                            <span class="info-value">Los Angeles, CA</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Destination</span>
+                            <span class="info-value">New York, NY</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">ETA</span>
+                            <span class="info-value">Jan 9, 2026</span>
+                        </div>
+                        <span class="status-badge">In Transit</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="track-timeline">
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 7, 08:15</div>
+                                <div class="track-location">Los Angeles</div>
+                            </div>
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 7, 12:30</div>
+                                <div class="track-location">Phoenix</div>
+                            </div>
+                            <div class="track-point active">
+                                <div class="track-icon">◉</div>
+                                <div class="track-date">Jan 8, 14:20</div>
+                                <div class="track-location">Dallas</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 9, 09:00</div>
+                                <div class="track-location">New York</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment 2 -->
+                <div class="shipment-card" data-status="delivered">
+                    <div class="shipment-header">
+                        <div class="shipment-info">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="tracking-number">UG-2026-847391</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Origin</span>
+                            <span class="info-value">Seattle, WA</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Destination</span>
+                            <span class="info-value">Portland, OR</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Delivered</span>
+                            <span class="info-value">Jan 7, 2026</span>
+                        </div>
+                        <span class="status-badge">Delivered</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="track-timeline">
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 6, 14:00</div>
+                                <div class="track-location">Seattle</div>
+                            </div>
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 7, 08:30</div>
+                                <div class="track-location">Tacoma</div>
+                            </div>
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 7, 11:45</div>
+                                <div class="track-location">Portland</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment 3 -->
+                <div class="shipment-card" data-status="delayed">
+                    <div class="shipment-header">
+                        <div class="shipment-info">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="tracking-number">UG-2026-847390</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Origin</span>
+                            <span class="info-value">Chicago, IL</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Destination</span>
+                            <span class="info-value">Miami, FL</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">ETA</span>
+                            <span class="info-value">Jan 11, 2026</span>
+                        </div>
+                        <span class="status-badge">Delayed</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="track-timeline">
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 5, 10:00</div>
+                                <div class="track-location">Chicago</div>
+                            </div>
+                            <div class="track-point completed">
+                                <div class="track-icon">✓</div>
+                                <div class="track-date">Jan 6, 14:15</div>
+                                <div class="track-location">Indianapolis</div>
+                            </div>
+                            <div class="track-point active">
+                                <div class="track-icon">!</div>
+                                <div class="track-date">Jan 8, 09:00</div>
+                                <div class="track-location">Atlanta (Delayed)</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 11, 15:00</div>
+                                <div class="track-location">Miami</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment 4 -->
+                <div class="shipment-card" data-status="processing">
+                    <div class="shipment-header">
+                        <div class="shipment-info">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="tracking-number">UG-2026-847389</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Origin</span>
+                            <span class="info-value">Denver, CO</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Destination</span>
+                            <span class="info-value">Boston, MA</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">ETA</span>
+                            <span class="info-value">Jan 10, 2026</span>
+                        </div>
+                        <span class="status-badge">Processing</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="track-timeline">
+                            <div class="track-point active">
+                                <div class="track-icon">◉</div>
+                                <div class="track-date">Jan 7, 16:00</div>
+                                <div class="track-location">Denver Facility</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 8, 12:00</div>
+                                <div class="track-location">Kansas City</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 9, 18:00</div>
+                                <div class="track-location">Cleveland</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 10, 10:00</div>
+                                <div class="track-location">Boston</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment 5 -->
+                <div class="shipment-card" data-status="pending">
+                    <div class="shipment-header">
+                        <div class="shipment-info">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="tracking-number">UG-2026-847388</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Origin</span>
+                            <span class="info-value">San Francisco, CA</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">Destination</span>
+                            <span class="info-value">Austin, TX</span>
+                        </div>
+                        <div class="shipment-info">
+                            <span class="info-label">ETA</span>
+                            <span class="info-value">Jan 12, 2026</span>
+                        </div>
+                        <span class="status-badge">Pending</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="track-timeline">
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 8, 08:00</div>
+                                <div class="track-location">San Francisco</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 10, 14:00</div>
+                                <div class="track-location">El Paso</div>
+                            </div>
+                            <div class="track-point">
+                                <div class="track-icon"></div>
+                                <div class="track-date">Jan 12, 11:00</div>
+                                <div class="track-location">Austin</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer>
+    <nav class="footer-nav">
+        <a href="#documentation">Documentation</a>
+        <a href="#api">API Access</a>
+        <a href="#support">Support</a>
+        <a href="#terms">Terms of Service</a>
+    </nav>
+    <p>&copy; 2026 Urban Graphite Logistics. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 2;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

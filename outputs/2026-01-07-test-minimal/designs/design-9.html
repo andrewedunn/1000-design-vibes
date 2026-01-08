@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Pewter - Gaming Ride Share Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Global Pewter - Gaming Community Ride Share
+ABOUTME: A pop art inspired ride-sharing platform for gaming convention attendees and esports events, featuring bold graphic elements, halftone patterns, and comic book aesthetics with a calming pastel palette.
+
+CSS VARIABLES:
+--color-primary: #FF6B9D (vibrant pink, pop art energy)
+--color-secondary: #4ECDC4 (calming cyan)
+--color-accent: #FFE66D (bright yellow highlight)
+--color-background: #F7F7F2 (soft cream)
+--color-surface: #FFFFFF (pure white)
+--color-text: #2D3142 (dark blue-gray)
+--color-text-muted: #9094A0 (muted gray)
+--font-heading: 'Bebas Neue' (bold pop art style)
+--font-body: 'Space Grotesk' (clean geometric sans-serif)
+--space-unit: 1rem
+--radius-default: 16px
+--shadow-default: 4px 4px 0px rgba(45, 49, 66, 0.1)
+
+DESIGN RATIONALE:
+Pop art aesthetic achieved through bold typography, halftone dot patterns, comic book speech bubbles, and high-contrast color blocks. The calm emotional tone is maintained through soft pastels, generous white space, and gentle transitions. Gaming industry context reflected in pixel-perfect UI elements, achievement badges, and gaming convention-specific features. The ride-sharing functional direction drives the core interface: live driver map, booking flow, ride history, and driver profiles styled as collectible cards.
+-->
+
+<style>
+:root {
+    --color-primary: #FF6B9D;
+    --color-secondary: #4ECDC4;
+    --color-accent: #FFE66D;
+    --color-background: #F7F7F2;
+    --color-surface: #FFFFFF;
+    --color-text: #2D3142;
+    --color-text-muted: #9094A0;
+    --font-heading: 'Bebas Neue', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --space-unit: 1rem;
+    --radius-default: 16px;
+    --shadow-default: 4px 4px 0px rgba(45, 49, 66, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Halftone background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle, var(--color-primary) 1px, transparent 1px),
+        radial-gradient(circle, var(--color-secondary) 1px, transparent 1px);
+    background-size: 20px 20px, 25px 25px;
+    background-position: 0 0, 10px 10px;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Header */
+header {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+    box-shadow: var(--shadow-default);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 4px solid var(--color-primary);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.75);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    color: white;
+    box-shadow: var(--shadow-default);
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--color-text);
+}
+
+.logo-text p {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-unit);
+    align-items: center;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.5);
+    background: var(--color-background);
+    padding: calc(var(--space-unit) * 0.5) var(--space-unit);
+    border-radius: 100px;
+    border: 2px solid var(--color-text);
+    box-shadow: var(--shadow-default);
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.user-level {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+/* Main Layout */
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 2);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: calc(var(--space-unit) * 2);
+}
+
+/* Booking Section */
+.booking-section {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.card {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-default);
+    border: 3px solid var(--color-text);
+}
+
+.card-header {
+    margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    letter-spacing: 1px;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.title-badge {
+    background: var(--color-primary);
+    color: white;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-weight: 700;
+}
+
+/* Ride Request Form */
+.ride-form {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.form-label {
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text);
+}
+
+.form-input, .form-select {
+    padding: calc(var(--space-unit) * 0.75) var(--space-unit);
+    border: 3px solid var(--color-text);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    background: var(--color-background);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+}
+
+.location-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-unit);
+}
+
+.speech-bubble {
+    background: var(--color-accent);
+    padding: var(--space-unit);
+    border-radius: 12px;
+    border: 3px solid var(--color-text);
+    position: relative;
+    margin-top: calc(var(--space-unit) * 1.5);
+    font-weight: 500;
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid var(--color-text);
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 33px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid var(--color-accent);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-text);
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+    border-radius: 12px;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: var(--shadow-default);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(45, 49, 66, 0.2);
+}
+
+.btn-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(45, 49, 66, 0.1);
+}
+
+/* Live Map */
+.map-container {
+    height: 400px;
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    border-radius: var(--radius-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.map-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(var(--color-text-muted) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-text-muted) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.1;
+}
+
+.map-pin {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    border: 3px solid var(--color-text);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: var(--shadow-default);
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.map-pin::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+}
+
+.pin-1 { top: 20%; left: 30%; animation-delay: 0s; }
+.pin-2 { top: 50%; left: 60%; background: var(--color-secondary); animation-delay: 0.5s; }
+.pin-3 { top: 70%; left: 25%; background: var(--color-accent); animation-delay: 1s; }
+
+.map-route {
+    position: absolute;
+    top: 22%;
+    left: 32%;
+    width: 200px;
+    height: 2px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-primary),
+        var(--color-primary) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    transform: rotate(25deg);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: rotate(-45deg) translateY(0); }
+    50% { transform: rotate(-45deg) translateY(-8px); }
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+/* Available Drivers */
+.drivers-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-unit);
+}
+
+.driver-card {
+    background: var(--color-background);
+    padding: var(--space-unit);
+    border: 3px solid var(--color-text);
+    border-radius: 12px;
+    display: flex;
+    gap: var(--space-unit);
+    align-items: center;
+    box-shadow: var(--shadow-default);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.driver-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(45, 49, 66, 0.2);
+}
+
+.driver-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    border: 3px solid var(--color-text);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    color: white;
+}
+
+.driver-info {
+    flex: 1;
+}
+
+.driver-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.driver-meta {
+    display: flex;
+    gap: calc(var(--space-unit) * 0.5);
+    align-items: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+.rating::before {
+    content: '★';
+    color: var(--color-accent);
+}
+
+.driver-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-badge {
+    background: var(--color-primary);
+    color: white;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Recent Rides */
+.rides-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 0.75);
+}
+
+.ride-item {
+    background: var(--color-background);
+    padding: calc(var(--space-unit) * 0.75);
+    border: 2px solid var(--color-text);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ride-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ride-route {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.ride-date {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.ride-price {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    color: var(--color-primary);
+}
+
+/* Status Banner */
+.status-banner {
+    background: var(--color-secondary);
+    color: white;
+    padding: var(--space-unit);
+    border-radius: 12px;
+    border: 3px solid var(--color-text);
+    box-shadow: var(--shadow-default);
+    text-align: center;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.status-pulse {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Achievements */
+.achievements {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(var(--space-unit) * 0.75);
+}
+
+.achievement-badge {
+    aspect-ratio: 1;
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 0.25);
+    padding: calc(var(--space-unit) * 0.5);
+    box-shadow: var(--shadow-default);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.achievement-badge:hover {
+    transform: rotate(-5deg) scale(1.05);
+}
+
+.achievement-icon {
+    font-size: 32px;
+}
+
+.achievement-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .location-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .header-content {
+        flex-direction: column;
+        gap: var(--space-unit);
+    }
+
+    .achievements {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+</style>
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">GP</div>
+            <div class="logo-text">
+                <h1>Global Pewter</h1>
+                <p>Gaming Community Rides</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="user-badge">
+                <div class="avatar">NK</div>
+                <div class="user-info">
+                    <div class="user-name">NeonKnight</div>
+                    <div class="user-level">Level 42 Rider</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="booking-section">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Request a Ride
+                    <span class="title-badge">Live</span>
+                </h2>
+            </div>
+
+            <form class="ride-form">
+                <div class="location-group">
+                    <div class="form-group">
+                        <label class="form-label" for="pickup">Pickup Location</label>
+                        <select class="form-select" id="pickup">
+                            <option>GameCon Center - Hall A</option>
+                            <option>GameCon Center - Hall B</option>
+                            <option>Esports Arena</option>
+                            <option>Retro Gaming Museum</option>
+                            <option>Convention Hotel - Main Lobby</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="dropoff">Drop-off Location</label>
+                        <select class="form-select" id="dropoff">
+                            <option>Downtown Gaming Lounge</option>
+                            <option>Airport Terminal 2</option>
+                            <option>Train Station West</option>
+                            <option>Hotel District</option>
+                            <option>Convention Center South</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ride-type">Ride Type</label>
+                    <select class="form-select" id="ride-type">
+                        <option>Solo Ride - Just You</option>
+                        <option>Party Ride - Up to 4 Players</option>
+                        <option>Raid Ride - Full Squad (6+)</option>
+                        <option>Speedrun - Fastest Route</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="schedule">When?</label>
+                    <input type="text" class="form-input" id="schedule" placeholder="Now / Schedule for later" value="Now">
+                </div>
+
+                <div class="speech-bubble">
+                    💡 Tip: Book a Party Ride to split costs with fellow gamers heading to the same event!
+                </div>
+
+                <button type="button" class="btn-primary">Find Your Ride</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Live Driver Map</h2>
+            </div>
+
+            <div class="map-container">
+                <div class="map-grid"></div>
+                <div class="map-pin pin-1"></div>
+                <div class="map-pin pin-2"></div>
+                <div class="map-pin pin-3"></div>
+                <div class="map-route"></div>
+            </div>
+
+            <div class="status-banner" style="margin-top: 1rem;">
+                <div class="status-pulse"></div>
+                12 Drivers Online Near You
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Available Now</h2>
+            </div>
+
+            <div class="drivers-list">
+                <div class="driver-card">
+                    <div class="driver-avatar">DK</div>
+                    <div class="driver-info">
+                        <div class="driver-name">DragonKart</div>
+                        <div class="driver-meta">
+                            <span class="rating">4.9</span>
+                            <span>•</span>
+                            <span>2 min away</span>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat-badge">5,234 rides</div>
+                    </div>
+                </div>
+
+                <div class="driver-card">
+                    <div class="driver-avatar">PS</div>
+                    <div class="driver-info">
+                        <div class="driver-name">PixelSpeeder</div>
+                        <div class="driver-meta">
+                            <span class="rating">5.0</span>
+                            <span>•</span>
+                            <span>4 min away</span>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat-badge">8,102 rides</div>
+                    </div>
+                </div>
+
+                <div class="driver-card">
+                    <div class="driver-avatar">TR</div>
+                    <div class="driver-info">
+                        <div class="driver-name">TurboRacer</div>
+                        <div class="driver-meta">
+                            <span class="rating">4.8</span>
+                            <span>•</span>
+                            <span>6 min away</span>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat-badge">3,567 rides</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Recent Rides</h2>
+            </div>
+
+            <div class="rides-list">
+                <div class="ride-item">
+                    <div class="ride-info">
+                        <div class="ride-route">Hotel → Convention</div>
+                        <div class="ride-date">Today, 9:30 AM</div>
+                    </div>
+                    <div class="ride-price">$12</div>
+                </div>
+
+                <div class="ride-item">
+                    <div class="ride-info">
+                        <div class="ride-route">Arena → Downtown</div>
+                        <div class="ride-date">Yesterday, 11:15 PM</div>
+                    </div>
+                    <div class="ride-price">$18</div>
+                </div>
+
+                <div class="ride-item">
+                    <div class="ride-info">
+                        <div class="ride-route">Convention → Airport</div>
+                        <div class="ride-date">Jan 5, 3:45 PM</div>
+                    </div>
+                    <div class="ride-price">$35</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Your Achievements</h2>
+            </div>
+
+            <div class="achievements">
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #FFE66D, #FFA07A);">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-label">100 Rides</div>
+                </div>
+
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-label">5-Star Rider</div>
+                </div>
+
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #FF6B9D, #C06C84);">
+                    <div class="achievement-icon">🎮</div>
+                    <div class="achievement-label">Con Veteran</div>
+                </div>
+
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #A8E6CF, #56AB91);">
+                    <div class="achievement-icon">🌟</div>
+                    <div class="achievement-label">Party Host</div>
+                </div>
+
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #FFD3B6, #FFAAA5);">
+                    <div class="achievement-icon">⚡</div>
+                    <div class="achievement-label">Speedrunner</div>
+                </div>
+
+                <div class="achievement-badge" style="background: linear-gradient(135deg, #B4A7D6, #8E7CC3);">
+                    <div class="achievement-icon">🎯</div>
+                    <div class="achievement-label">On Time Pro</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+(function() {
+    const TOTAL = 10;
+    const CURRENT = 9;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

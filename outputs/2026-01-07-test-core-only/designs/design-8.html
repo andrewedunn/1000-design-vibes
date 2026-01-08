@@ -1,0 +1,694 @@
+<!--
+DESIGN: Steady Marble - Natural meets neutral: a swiss international perspective
+ABOUTME: This design implements review_site in swiss_international style.
+ABOUTME: Emotional tone: trustworthy | Industry: real_estate
+
+MY DESIGN CHOICES:
+- UI Paradigm: Grid-based card layout with dense information hierarchy - Swiss precision applied to property reviews
+- Color approach: Monochromatic dark palette with neutral grays and subtle warm accent for credibility markers (ratings, verified badges)
+- Typography: Neo-grotesque sans (Helvetica Neue) throughout - clean, objective, highly legible at all sizes
+- Shape language: Sharp corners (0-2px radius max), precise alignment, geometric rating stars, strict grid adherence
+- Density: High - maximizing information per screen while maintaining breathing room through systematic whitespace
+
+QUICK START - Copy these variables:
+--color-primary: #d4a574;
+--color-background: #0f0f0f;
+--color-surface: #1a1a1a;
+--color-text: #e8e8e8;
+--color-text-muted: #999999;
+--font-heading: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+--font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Objectivity through neutrality - no decorative elements, only functional information design
+2. Grid precision - everything aligns to 8px baseline grid
+3. Trustworthy density - comprehensive data presented clearly without overwhelming
+
+FUNCTIONAL DIRECTION: review_site
+Required elements I included:
+- Review cards with ratings, reviewer info, and detailed content
+- Star rating system (5-star with half-star precision)
+- Filter controls for review sorting/filtering
+- Aggregate rating display with breakdown
+- Verified reviewer badges
+- Helpful/not helpful voting mechanism
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steady Marble - Property Reviews</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        /* CSS Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Monochromatic dark with warm accent */
+            --color-primary: #d4a574;
+            --color-background: #0f0f0f;
+            --color-surface: #1a1a1a;
+            --color-surface-elevated: #222222;
+            --color-border: #333333;
+            --color-text: #e8e8e8;
+            --color-text-muted: #999999;
+            --color-text-subtle: #666666;
+
+            /* Typography - Neo-grotesque */
+            --font-heading: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+            /* Spacing - 8px grid */
+            --space-unit: 8px;
+
+            /* Shapes - Minimal radius, precise borders */
+            --radius-default: 0px;
+            --radius-subtle: 1px;
+            --shadow-default: none;
+            --border-width: 1px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            font-size: 15px;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding-bottom: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 5);
+        }
+
+        .property-title {
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .property-meta {
+            color: var(--color-text-muted);
+            font-size: 14px;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        /* Aggregate Rating Section */
+        .rating-summary {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: calc(var(--space-unit) * 6);
+            padding: calc(var(--space-unit) * 4);
+            background-color: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            margin-bottom: calc(var(--space-unit) * 5);
+        }
+
+        .rating-overall {
+            text-align: center;
+            border-right: var(--border-width) solid var(--color-border);
+            padding-right: calc(var(--space-unit) * 6);
+        }
+
+        .rating-score {
+            font-size: 72px;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .rating-count {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .rating-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .rating-bar-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .rating-bar-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-align: right;
+        }
+
+        .rating-bar-container {
+            height: 6px;
+            background-color: var(--color-border);
+            position: relative;
+        }
+
+        .rating-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: var(--color-primary);
+        }
+
+        .rating-bar-count {
+            font-size: 13px;
+            color: var(--color-text-subtle);
+        }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 4);
+            padding-bottom: calc(var(--space-unit) * 3);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .filter-btn {
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            background-color: transparent;
+            color: var(--color-text-muted);
+            border: var(--border-width) solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+        }
+
+        .filter-btn.active {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        .filter-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Review Cards */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .review-card {
+            background-color: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .review-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 3);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .reviewer-info {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        .reviewer-name {
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .reviewer-meta {
+            font-size: 12px;
+            color: var(--color-text-subtle);
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 4px;
+        }
+
+        .star {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+
+        .star svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .star-filled {
+            fill: var(--color-primary);
+        }
+
+        .star-empty {
+            fill: var(--color-border);
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+
+        .review-content {
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .review-title {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .review-text {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: calc(var(--space-unit) * 3);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .helpful-section {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .helpful-label {
+            font-size: 13px;
+            color: var(--color-text-subtle);
+        }
+
+        .helpful-actions {
+            display: flex;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .helpful-btn {
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            background-color: transparent;
+            color: var(--color-text-muted);
+            border: var(--border-width) solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            min-width: 60px;
+        }
+
+        .helpful-btn:hover {
+            background-color: var(--color-surface-elevated);
+            color: var(--color-text);
+        }
+
+        .helpful-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .review-attributes {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            font-size: 12px;
+            color: var(--color-text-subtle);
+        }
+
+        .attribute {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus states for keyboard navigation */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .rating-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .rating-overall {
+                border-right: none;
+                border-bottom: var(--border-width) solid var(--color-border);
+                padding-right: 0;
+                padding-bottom: calc(var(--space-unit) * 4);
+            }
+
+            .filter-bar {
+                flex-wrap: wrap;
+            }
+
+            .review-header {
+                grid-template-columns: 1fr;
+            }
+
+            .review-date {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="property-title">The Meridian Residences</h1>
+            <div class="property-meta">Downtown Financial District • Luxury High-Rise • Built 2022</div>
+        </header>
+
+        <!-- Aggregate Rating Summary -->
+        <section class="rating-summary">
+            <div class="rating-overall">
+                <div class="rating-score">4.3</div>
+                <div class="rating-stars" style="display: flex; justify-content: center; gap: 4px; margin-bottom: 8px;">
+                    <span class="star">
+                        <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg>
+                    </span>
+                    <span class="star">
+                        <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg>
+                    </span>
+                    <span class="star">
+                        <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg>
+                    </span>
+                    <span class="star">
+                        <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg>
+                    </span>
+                    <span class="star">
+                        <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-empty"/></svg>
+                    </span>
+                </div>
+                <div class="rating-count">287 Reviews</div>
+            </div>
+            <div class="rating-breakdown">
+                <div class="rating-bar-row">
+                    <div class="rating-bar-label">5 Stars</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 58%;"></div>
+                    </div>
+                    <div class="rating-bar-count">166</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-bar-label">4 Stars</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 24%;"></div>
+                    </div>
+                    <div class="rating-bar-count">69</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-bar-label">3 Stars</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 12%;"></div>
+                    </div>
+                    <div class="rating-bar-count">34</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-bar-label">2 Stars</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 4%;"></div>
+                    </div>
+                    <div class="rating-bar-count">12</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-bar-label">1 Star</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 2%;"></div>
+                    </div>
+                    <div class="rating-bar-count">6</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Controls -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <button class="filter-btn active">Most Recent</button>
+                <button class="filter-btn">Most Helpful</button>
+                <button class="filter-btn">Highest Rated</button>
+                <button class="filter-btn">Lowest Rated</button>
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn">All Reviews</button>
+                <button class="filter-btn">Verified Only</button>
+            </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="reviews-list">
+            <!-- Review 1 -->
+            <article class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">
+                            Sarah Mitchell
+                            <span class="verified-badge">Verified Resident</span>
+                        </div>
+                        <div class="reviewer-meta">Resident since Jan 2023 • Unit 2407</div>
+                    </div>
+                    <div class="review-rating">
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                    </div>
+                    <div class="review-date">December 18, 2025</div>
+                </div>
+                <div class="review-content">
+                    <h3 class="review-title">Exceptional Build Quality and Amenities</h3>
+                    <p class="review-text">The Meridian has exceeded all expectations. The floor-to-ceiling windows provide stunning city views, and the attention to detail in the finishes is remarkable. The building management is responsive and professional. The rooftop terrace and fitness center are world-class. Minor noise from construction nearby, but that's temporary. Overall, an outstanding place to call home.</p>
+                </div>
+                <div class="review-footer">
+                    <div class="helpful-section">
+                        <span class="helpful-label">Helpful?</span>
+                        <div class="helpful-actions">
+                            <button class="helpful-btn">Yes (43)</button>
+                            <button class="helpful-btn">No (2)</button>
+                        </div>
+                    </div>
+                    <div class="review-attributes">
+                        <span class="attribute">1 Bedroom</span>
+                        <span class="attribute">•</span>
+                        <span class="attribute">North Tower</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Review 2 -->
+            <article class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">
+                            Marcus Chen
+                            <span class="verified-badge">Verified Resident</span>
+                        </div>
+                        <div class="reviewer-meta">Resident since Sept 2024 • Unit 1802</div>
+                    </div>
+                    <div class="review-rating">
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-empty"/></svg></span>
+                    </div>
+                    <div class="review-date">December 12, 2025</div>
+                </div>
+                <div class="review-content">
+                    <h3 class="review-title">Great Location, Minor Issues</h3>
+                    <p class="review-text">Location is unbeatable for professionals working downtown. Walking distance to everything. The smart home integration works well, and the package room system is efficient. However, elevator wait times during peak hours can be frustrating. The parking garage is tight for larger vehicles. Despite these issues, I'm happy with my decision to move here.</p>
+                </div>
+                <div class="review-footer">
+                    <div class="helpful-section">
+                        <span class="helpful-label">Helpful?</span>
+                        <div class="helpful-actions">
+                            <button class="helpful-btn">Yes (38)</button>
+                            <button class="helpful-btn">No (5)</button>
+                        </div>
+                    </div>
+                    <div class="review-attributes">
+                        <span class="attribute">2 Bedrooms</span>
+                        <span class="attribute">•</span>
+                        <span class="attribute">South Tower</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Review 3 -->
+            <article class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Alexandra Rodriguez</div>
+                        <div class="reviewer-meta">Prospective Resident</div>
+                    </div>
+                    <div class="review-rating">
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                    </div>
+                    <div class="review-date">December 8, 2025</div>
+                </div>
+                <div class="review-content">
+                    <h3 class="review-title">Impressive Tour Experience</h3>
+                    <p class="review-text">Toured three units last week and was thoroughly impressed. The leasing team was knowledgeable and not pushy. The units are exactly as advertised - no hidden surprises. Finishes are premium quality, and the building feels solid and well-constructed. The amenity spaces are beautifully designed and appear well-maintained. Planning to submit an application for a spring move-in.</p>
+                </div>
+                <div class="review-footer">
+                    <div class="helpful-section">
+                        <span class="helpful-label">Helpful?</span>
+                        <div class="helpful-actions">
+                            <button class="helpful-btn">Yes (29)</button>
+                            <button class="helpful-btn">No (1)</button>
+                        </div>
+                    </div>
+                    <div class="review-attributes">
+                        <span class="attribute">Studio</span>
+                        <span class="attribute">•</span>
+                        <span class="attribute">Tour</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Review 4 -->
+            <article class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">
+                            Jennifer Park
+                            <span class="verified-badge">Verified Resident</span>
+                        </div>
+                        <div class="reviewer-meta">Resident since Mar 2023 • Unit 3105</div>
+                    </div>
+                    <div class="review-rating">
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-filled"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-empty"/></svg></span>
+                        <span class="star"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,10 13,15 8,12 3,15 5,10 1,6 6,6" class="star-empty"/></svg></span>
+                    </div>
+                    <div class="review-date">November 30, 2025</div>
+                </div>
+                <div class="review-content">
+                    <h3 class="review-title">Good Value with Some Compromises</h3>
+                    <p class="review-text">For the price point, this is solid. The units are spacious and modern. Climate control works well. My main gripes are soundproofing between units (I can occasionally hear neighbors) and the gym gets overcrowded in evenings. The concierge service is excellent though, and maintenance requests are handled promptly. Would recommend for young professionals who aren't home much.</p>
+                </div>
+                <div class="review-footer">
+                    <div class="helpful-section">
+                        <span class="helpful-label">Helpful?</span>
+                        <div class="helpful-actions">
+                            <button class="helpful-btn">Yes (52)</button>
+                            <button class="helpful-btn">No (8)</button>
+                        </div>
+                    </div>
+                    <div class="review-attributes">
+                        <span class="attribute">1 Bedroom</span>
+                        <span class="attribute">•</span>
+                        <span class="attribute">North Tower</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 10;
+        const CURRENT = 8;
+
+        document.addEventListener('keydown', (e) => {
+
+});
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

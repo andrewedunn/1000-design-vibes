@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Ember - The claymorphic way to travel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Global Ember - The claymorphic way to travel
+ABOUTME: This design system implements audio_visualizer with claymorphic aesthetics.
+ABOUTME: Key characteristics: soft puffy forms with subtle shadows, warm metallic tones, ultra-airy spacing
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4856A;
+--color-secondary: #6A9FD4;
+--color-accent: #C9A86A;
+--color-background: #F5F1ED;
+--color-surface: #EBE5DF;
+--color-text: #4A3F38;
+--color-text-muted: #8B7F76;
+--font-heading: 'Inter', -apple-system, sans-serif;
+--font-body: 'JetBrains Mono', 'Courier New', monospace;
+--radius-default: 48% 52% 45% 55% / 50% 48% 52% 50%;
+--space-unit: 10px;
+
+AESTHETIC PRINCIPLES:
+1. Claymorphic depth through soft shadows and rounded organic forms creates tactile interface
+2. Ultra-airy spacing (4x-8x base unit) gives each element room to breathe
+3. Warm metallic palette with desaturated tones provides sophisticated, muted elegance
+4. Monospace body text contrasts with humanist sans headings for technical-meets-approachable feel
+5. Hairline borders and paper texture add subtle dimension without overwhelming
+
+BEST FOR:
+- Audio/music applications requiring visual playback representation
+- Creative tools where playful aesthetics match creative workflows
+- Media players targeting design-conscious audiences
+- Applications where warmth and approachability are key brand attributes
+
+AVOID IF:
+- You need high information density (ultra-airy spacing limits content)
+- Sharp, corporate professionalism is required
+- Performance is critical (claymorphic effects can be rendering-intensive)
+- Your brand requires saturated, vibrant colors
+
+FUNCTIONAL DIRECTION: audio_visualizer
+This design must clearly function as an audio_visualizer. Required elements:
+- Waveform visualization display
+- Frequency spectrum bars (real-time visualization)
+- Playback controls (play/pause, skip, volume)
+- Track information display (title, artist, album, duration)
+- Progress bar with time indicators
+- Playlist or track list
+- Visual effects that respond to audio properties
+- Level meters or amplitude indicators
+
+DESIGN DIMENSIONS:
+UI Paradigm: claymorphic (soft extruded forms, monochromatic depth)
+Design Era: flat_2010s (clean modern aesthetic)
+Density: ultra_airy (generous spacing throughout)
+Color Theory: split_complementary (#D4856A, #6A9FD4, #C9A86A)
+Color Temperature: warm (orange/coral primary)
+Color Saturation: desaturated (muted, sophisticated)
+Color Mood: metallic (bronze, copper, brushed metal tones)
+Typography Heading: humanist_sans (Inter - friendly, readable)
+Typography Body: monospace (JetBrains Mono - technical precision)
+Typography Scale: minor_second (1.067 ratio - subtle hierarchy)
+Corner Radius: organic (irregular, blob-like shapes)
+Spacing Base: 10px (ultra_airy = 40-80px common gaps)
+Border Style: hairline (delicate 1px borders)
+Shadow Style: none (claymorphic uses inner/outer subtle shadows instead)
+Surface Texture: paper (subtle grain)
+Gradient Usage: duotone (two-color gradients)
+Icon Style: hand_drawn (imperfect, human touch)
+Page Structure: sidebar_main (persistent sidebar + main content area)
+Navigation Pattern: breadcrumb_only (minimal navigation chrome)
+Hero Style: full_viewport (100vh hero section)
+Content Flow: masonry (varied heights, organic layout)
+Industry: travel (though applied to audio visualizer)
+Target Audience: enterprise (professional, polished)
+Emotional Tone: edgy (bold, unconventional)
+Cultural Influence: german_industrial (precision, function-first)
+-->
+
+<style>
+:root {
+    /* Colors - Split Complementary: Warm coral, cool blue, warm gold */
+    --color-primary: #D4856A;
+    --color-secondary: #6A9FD4;
+    --color-accent: #C9A86A;
+    --color-background: #F5F1ED;
+    --color-surface: #EBE5DF;
+    --color-surface-raised: #F2ECE6;
+    --color-text: #4A3F38;
+    --color-text-muted: #8B7F76;
+    --color-border: rgba(74, 63, 56, 0.15);
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'JetBrains Mono', 'Courier New', Consolas, monospace;
+    --type-scale: 1.067; /* minor_second */
+    --type-base: 14px;
+    --type-sm: calc(var(--type-base) / var(--type-scale));
+    --type-lg: calc(var(--type-base) * var(--type-scale));
+    --type-xl: calc(var(--type-lg) * var(--type-scale));
+    --type-2xl: calc(var(--type-xl) * var(--type-scale));
+    --type-3xl: calc(var(--type-2xl) * var(--type-scale));
+
+    /* Spacing - Ultra Airy */
+    --space-unit: 10px;
+    --space-xs: calc(var(--space-unit) * 2);
+    --space-sm: calc(var(--space-unit) * 3);
+    --space-md: calc(var(--space-unit) * 5);
+    --space-lg: calc(var(--space-unit) * 8);
+    --space-xl: calc(var(--space-unit) * 12);
+
+    /* Shapes - Organic */
+    --radius-sm: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    --radius-default: 48% 52% 45% 55% / 50% 48% 52% 50%;
+    --radius-lg: 45% 55% 48% 52% / 52% 48% 52% 48%;
+    --radius-pill: 50%;
+
+    /* Claymorphic shadows */
+    --shadow-clay-out:
+        6px 6px 12px rgba(139, 127, 118, 0.15),
+        -6px -6px 12px rgba(255, 255, 255, 0.7);
+    --shadow-clay-in:
+        inset 4px 4px 8px rgba(139, 127, 118, 0.1),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+    --shadow-clay-flat:
+        2px 2px 6px rgba(139, 127, 118, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--type-base);
+    line-height: 1.4;
+    color: var(--color-text);
+    background: var(--color-background);
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(212, 133, 106, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(106, 159, 212, 0.08) 0%, transparent 50%);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Paper texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    border-right: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: var(--type-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+}
+
+.breadcrumb {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.breadcrumb span {
+    opacity: 0.5;
+}
+
+.playlist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+.playlist-header {
+    font-family: var(--font-heading);
+    font-size: var(--type-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.track-item {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-sm);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-clay-out);
+}
+
+.track-item:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        8px 8px 16px rgba(139, 127, 118, 0.2),
+        -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.track-item:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-clay-in);
+}
+
+.track-item.active {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    border-color: transparent;
+}
+
+.track-item.active .track-artist {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.track-title {
+    font-size: var(--type-base);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.track-artist {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+}
+
+.track-duration {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+/* Main Content */
+.main-content {
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+/* Hero Visualizer */
+.hero-visualizer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin: calc(var(--space-xl) * -1);
+    padding: var(--space-xl);
+    background: linear-gradient(135deg,
+        rgba(212, 133, 106, 0.1) 0%,
+        rgba(106, 159, 212, 0.1) 100%);
+}
+
+.now-playing {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.now-playing-label {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-sm);
+}
+
+.now-playing-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.now-playing-artist {
+    font-size: var(--type-xl);
+    color: var(--color-text-muted);
+}
+
+/* Waveform Visualizer */
+.waveform-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-clay-out);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 100%;
+    width: 100%;
+}
+
+.waveform-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
+    border-radius: var(--radius-pill);
+    transition: height 0.1s ease-out;
+    min-width: 3px;
+    max-width: 8px;
+    box-shadow: var(--shadow-clay-flat);
+}
+
+/* Frequency Spectrum */
+.spectrum-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-clay-out);
+    height: 300px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 6px;
+}
+
+.spectrum-bar {
+    flex: 1;
+    max-width: 20px;
+    background: linear-gradient(180deg, var(--color-secondary), var(--color-primary));
+    border-radius: var(--radius-default);
+    transition: height 0.05s ease-out;
+    box-shadow: var(--shadow-clay-out);
+    position: relative;
+}
+
+.spectrum-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: inherit;
+}
+
+/* Playback Controls */
+.controls-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-clay-out);
+}
+
+.progress-section {
+    margin-bottom: var(--space-lg);
+}
+
+.progress-bar-container {
+    position: relative;
+    height: 12px;
+    background: var(--color-background);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-clay-in);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    border-radius: var(--radius-pill);
+    width: 35%;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+.progress-handle {
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-clay-out);
+    cursor: grab;
+}
+
+.progress-handle:active {
+    cursor: grabbing;
+    box-shadow: var(--shadow-clay-in);
+}
+
+.progress-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+}
+
+.playback-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.control-btn {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-clay-out);
+    font-size: var(--type-lg);
+    color: var(--color-text);
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        8px 8px 16px rgba(139, 127, 118, 0.2),
+        -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-clay-in);
+}
+
+.control-btn.primary {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    border-color: transparent;
+    font-size: var(--type-2xl);
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.control-btn.primary svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Level Meters */
+.meters-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+.level-meter {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-clay-out);
+}
+
+.meter-label {
+    font-family: var(--font-heading);
+    font-size: var(--type-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+}
+
+.meter-bars {
+    display: flex;
+    gap: 4px;
+    height: 120px;
+    align-items: flex-end;
+}
+
+.meter-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--color-accent), var(--color-primary));
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-clay-flat);
+    transition: height 0.1s ease-out;
+}
+
+/* Volume Control */
+.volume-section {
+    margin-top: var(--space-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-clay-out);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.volume-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-clay-out);
+}
+
+.volume-slider {
+    flex: 1;
+    height: 8px;
+    background: var(--color-background);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-clay-in);
+    position: relative;
+    cursor: pointer;
+}
+
+.volume-fill {
+    height: 100%;
+    width: 65%;
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+    border-radius: var(--radius-pill);
+    position: relative;
+}
+
+.volume-value {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Stats Display */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-clay-out);
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--type-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+    font-size: var(--type-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Focus states */
+.control-btn:focus,
+.track-item:focus,
+.progress-bar-container:focus,
+.volume-slider:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .waveform-bar,
+    .spectrum-bar,
+    .meter-bar,
+    .progress-bar {
+        transition: none;
+    }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .hero-visualizer {
+        height: auto;
+        min-height: 80vh;
+    }
+
+    .meters-section {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">Global Ember</div>
+
+    <nav class="breadcrumb">
+        <span>Audio</span>
+        <span>/</span>
+        <span>Visualizer</span>
+        <span>/</span>
+        <span>Now Playing</span>
+    </nav>
+
+    <div class="playlist">
+        <div class="playlist-header">Queue</div>
+
+        <div class="track-item active" tabindex="0">
+            <div class="track-title">Wanderlust Frequencies</div>
+            <div class="track-artist">The Journey Collective</div>
+            <div class="track-duration">4:32</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Copper Horizons</div>
+            <div class="track-artist">Metallic Dawn</div>
+            <div class="track-duration">3:48</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Industrial Ambience</div>
+            <div class="track-artist">Berlin Soundscapes</div>
+            <div class="track-duration">5:15</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Soft Machine Dreams</div>
+            <div class="track-artist">Claymore Audio</div>
+            <div class="track-duration">4:01</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Global Transit</div>
+            <div class="track-artist">The Journey Collective</div>
+            <div class="track-duration">3:27</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Bronze Reflections</div>
+            <div class="track-artist">Warm Signal</div>
+            <div class="track-duration">4:44</div>
+        </div>
+
+        <div class="track-item" tabindex="0">
+            <div class="track-title">Departure Gate</div>
+            <div class="track-artist">Terminal B</div>
+            <div class="track-duration">3:58</div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <section class="hero-visualizer">
+        <div class="now-playing">
+            <div class="now-playing-label">Now Playing</div>
+            <h1 class="now-playing-title">Wanderlust Frequencies</h1>
+            <div class="now-playing-artist">The Journey Collective</div>
+        </div>
+
+        <!-- Waveform Visualizer -->
+        <div class="waveform-container">
+            <div class="waveform" id="waveform">
+                <!-- Dynamically generated bars -->
+            </div>
+        </div>
+
+        <!-- Frequency Spectrum -->
+        <div class="spectrum-container">
+            <div class="spectrum-bar" style="height: 45%;"></div>
+            <div class="spectrum-bar" style="height: 62%;"></div>
+            <div class="spectrum-bar" style="height: 78%;"></div>
+            <div class="spectrum-bar" style="height: 85%;"></div>
+            <div class="spectrum-bar" style="height: 92%;"></div>
+            <div class="spectrum-bar" style="height: 88%;"></div>
+            <div class="spectrum-bar" style="height: 75%;"></div>
+            <div class="spectrum-bar" style="height: 68%;"></div>
+            <div class="spectrum-bar" style="height: 55%;"></div>
+            <div class="spectrum-bar" style="height: 48%;"></div>
+            <div class="spectrum-bar" style="height: 42%;"></div>
+            <div class="spectrum-bar" style="height: 38%;"></div>
+            <div class="spectrum-bar" style="height: 35%;"></div>
+            <div class="spectrum-bar" style="height: 32%;"></div>
+            <div class="spectrum-bar" style="height: 28%;"></div>
+            <div class="spectrum-bar" style="height: 25%;"></div>
+            <div class="spectrum-bar" style="height: 22%;"></div>
+            <div class="spectrum-bar" style="height: 20%;"></div>
+            <div class="spectrum-bar" style="height: 18%;"></div>
+            <div class="spectrum-bar" style="height: 15%;"></div>
+        </div>
+
+        <!-- Playback Controls -->
+        <div class="controls-container">
+            <div class="progress-section">
+                <div class="progress-bar-container" tabindex="0" role="slider" aria-label="Track progress" aria-valuemin="0" aria-valuemax="272" aria-valuenow="95">
+                    <div class="progress-bar">
+                        <div class="progress-handle"></div>
+                    </div>
+                </div>
+                <div class="progress-time">
+                    <span>1:35</span>
+                    <span>4:32</span>
+                </div>
+            </div>
+
+            <div class="playback-controls">
+                <button class="control-btn" aria-label="Previous track" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                    </svg>
+                </button>
+
+                <button class="control-btn" aria-label="Rewind 10 seconds" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        <text x="9" y="15" font-size="8" fill="currentColor">10</text>
+                    </svg>
+                </button>
+
+                <button class="control-btn primary" aria-label="Play" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+
+                <button class="control-btn" aria-label="Forward 10 seconds" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+                        <text x="9.5" y="15" font-size="8" fill="currentColor">10</text>
+                    </svg>
+                </button>
+
+                <button class="control-btn" aria-label="Next track" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Level Meters -->
+    <section class="meters-section">
+        <div class="level-meter">
+            <div class="meter-label">Left Channel</div>
+            <div class="meter-bars">
+                <div class="meter-bar" style="height: 45%;"></div>
+                <div class="meter-bar" style="height: 62%;"></div>
+                <div class="meter-bar" style="height: 78%;"></div>
+                <div class="meter-bar" style="height: 85%;"></div>
+                <div class="meter-bar" style="height: 92%;"></div>
+                <div class="meter-bar" style="height: 88%;"></div>
+                <div class="meter-bar" style="height: 75%;"></div>
+                <div class="meter-bar" style="height: 68%;"></div>
+            </div>
+        </div>
+
+        <div class="level-meter">
+            <div class="meter-label">Right Channel</div>
+            <div class="meter-bars">
+                <div class="meter-bar" style="height: 42%;"></div>
+                <div class="meter-bar" style="height: 58%;"></div>
+                <div class="meter-bar" style="height: 72%;"></div>
+                <div class="meter-bar" style="height: 81%;"></div>
+                <div class="meter-bar" style="height: 89%;"></div>
+                <div class="meter-bar" style="height: 85%;"></div>
+                <div class="meter-bar" style="height: 71%;"></div>
+                <div class="meter-bar" style="height: 64%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volume Control -->
+    <div class="volume-section">
+        <div class="volume-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        </div>
+        <div class="volume-slider" tabindex="0" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">
+            <div class="volume-fill"></div>
+        </div>
+        <div class="volume-value">65%</div>
+    </div>
+
+    <!-- Audio Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">44.1kHz</div>
+            <div class="stat-label">Sample Rate</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-value">16-bit</div>
+            <div class="stat-label">Bit Depth</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-value">320kbps</div>
+            <div class="stat-label">Bitrate</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-value">-12dB</div>
+            <div class="stat-label">Peak Level</div>
+        </div>
+    </div>
+</main>
+
+<script>
+// Generate waveform bars
+(function() {
+    const waveform = document.getElementById('waveform');
+    const barCount = 80;
+
+    for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'waveform-bar';
+        const height = Math.random() * 60 + 20;
+        bar.style.height = height + '%';
+        waveform.appendChild(bar);
+    }
+
+    // Animate waveform
+    function animateWaveform() {
+        const bars = waveform.querySelectorAll('.waveform-bar');
+        bars.forEach((bar, i) => {
+            const time = Date.now() / 1000;
+            const wave = Math.sin(time * 2 + i * 0.2) * 0.5 + 0.5;
+            const height = 20 + wave * 60;
+            bar.style.height = height + '%';
+        });
+        requestAnimationFrame(animateWaveform);
+    }
+
+    // Animate spectrum
+    function animateSpectrum() {
+        const bars = document.querySelectorAll('.spectrum-bar');
+        bars.forEach((bar, i) => {
+            const time = Date.now() / 1000;
+            const decay = 0.8 + (i / bars.length) * 0.2;
+            const freq = Math.sin(time * 3 + i * 0.5) * 0.5 + 0.5;
+            const height = 15 + freq * 80 * decay;
+            bar.style.height = height + '%';
+        });
+        requestAnimationFrame(animateSpectrum);
+    }
+
+    // Animate level meters
+    function animateMeters() {
+        const meters = document.querySelectorAll('.meter-bar');
+        meters.forEach((bar, i) => {
+            const time = Date.now() / 1000;
+            const wave = Math.sin(time * 4 + i * 0.3) * 0.5 + 0.5;
+            const height = 30 + wave * 65;
+            bar.style.height = height + '%';
+        });
+        requestAnimationFrame(animateMeters);
+    }
+
+    // Start animations
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        animateWaveform();
+        animateSpectrum();
+        animateMeters();
+    }
+
+    // Progress bar animation
+    let progress = 95;
+    setInterval(() => {
+        progress += 0.5;
+        if (progress > 272) progress = 0;
+        const progressBar = document.querySelector('.progress-bar');
+        const percentage = (progress / 272) * 100;
+        progressBar.style.width = percentage + '%';
+
+        const currentTime = document.querySelector('.progress-time span:first-child');
+        const minutes = Math.floor(progress / 60);
+        const seconds = Math.floor(progress % 60);
+        currentTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+})();
+
+// Navigation script
+(function() {
+    const TOTAL = 760;
+    const CURRENT = 8;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

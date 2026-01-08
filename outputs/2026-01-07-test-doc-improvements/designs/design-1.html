@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Shift - Spreadsheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Riot Shift - Crafted for smb with german industrial roots
+ABOUTME: This design system implements a spreadsheet application with glassmorphic aesthetics.
+ABOUTME: Key characteristics: Ultra-dense information display, extreme contrast cyber palette, psychedelic-era visual energy
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00ffff;
+--color-background: #0a0a0f;
+--color-surface: rgba(20, 20, 35, 0.7);
+--color-text: #ffffff;
+--color-text-muted: #a0a0b8;
+--font-heading: 'Libre Baskerville', serif;
+--font-body: 'Shadows Into Light', cursive;
+--radius-default: 16px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Glassmorphic surfaces with frosted blur create layered depth over dark cyber backgrounds
+2. Extreme contrast between neon cyan accents and deep black creates psychedelic energy
+3. Ultra-dense layout maximizes information density while maintaining German industrial precision
+4. Double borders and very rounded corners soften the technical spreadsheet interface
+5. Monochromatic cyan palette with noise texture adds analog warmth to digital precision
+
+BEST FOR:
+- Data-intensive healthcare applications requiring high information density
+- SMB financial tracking and analysis tools
+- Technical dashboards where precision meets creative expression
+- Applications where edgy aesthetics meet professional functionality
+
+AVOID IF:
+- You need traditional corporate spreadsheet aesthetics
+- Your audience prefers minimal, flat design languages
+- Accessibility requires low visual complexity
+- You're targeting conservative enterprise users
+
+FUNCTIONAL DIRECTION: spreadsheet
+This design must clearly function as a spreadsheet. Required elements:
+- Cell grid with row and column headers
+- Formula bar for editing cell contents
+- Sheet tabs for multiple worksheet navigation
+- Toolbar with common spreadsheet functions (format, insert, data tools)
+- Cell selection and highlighting
+- Row/column resizing controls
+- Status bar with cell information
+- Freeze panes capability
+- Sort and filter controls
+- Formula autocomplete
+- Cell formatting options (numbers, currency, dates)
+- Chart/graph insertion tools
+- Collaborative editing indicators (for healthcare team workflows)
+
+CULTURAL INFLUENCES:
+The design merges German industrial precision (clean grids, functional hierarchy) with
+psychedelic-era experimentation (vibrant cyan, noise textures, unconventional typography pairing).
+The glassmorphic treatment adds contemporary digital sophistication to what could be rigid
+spreadsheet mechanics, making data entry feel less corporate and more creative.
+-->
+
+<style>
+:root {
+    /* Colors - Monochromatic Cyber Palette */
+    --color-primary: #00ffff;
+    --color-primary-dim: #00cccc;
+    --color-primary-bright: #66ffff;
+    --color-background: #0a0a0f;
+    --color-surface: rgba(20, 20, 35, 0.7);
+    --color-surface-solid: #141423;
+    --color-glass: rgba(30, 30, 50, 0.6);
+    --color-text: #ffffff;
+    --color-text-muted: #a0a0b8;
+    --color-border: #00ffff;
+    --color-border-dim: rgba(0, 255, 255, 0.3);
+    --color-cell-selected: rgba(0, 255, 255, 0.2);
+    --color-cell-hover: rgba(0, 255, 255, 0.1);
+
+    /* Typography */
+    --font-heading: 'Libre Baskerville', serif;
+    --font-body: 'Shadows Into Light', cursive;
+    --type-scale: 1.2; /* minor third */
+
+    /* Spacing - 8px base */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+
+    /* Shapes */
+    --radius-default: 16px;
+    --radius-small: 8px;
+    --shadow-default: 0 8px 32px rgba(0, 255, 255, 0.15);
+    --shadow-intense: 0 12px 48px rgba(0, 255, 255, 0.3);
+
+    /* Glassmorphic */
+    --blur-amount: 12px;
+    --glass-border: 2px double var(--color-border-dim);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* Noise texture background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Main container - split screen layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* Sidebar - collapsible */
+.sidebar {
+    width: 280px;
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border-right: var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-280px);
+}
+
+.sidebar-header {
+    padding: var(--space-md);
+    border-bottom: var(--glass-border);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.44rem; /* minor third scale */
+    color: var(--color-primary);
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+}
+
+.nav-section {
+    margin-bottom: var(--space-lg);
+}
+
+.nav-section-title {
+    font-family: var(--font-heading);
+    font-size: 0.833rem;
+    color: var(--color-text-muted);
+    text-transform: lowercase;
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.01em;
+}
+
+.nav-item {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
+    background: var(--color-surface);
+    border: var(--glass-border);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    text-transform: lowercase;
+}
+
+.nav-item:hover {
+    background: var(--color-cell-hover);
+    box-shadow: var(--shadow-default);
+    transform: translateX(4px);
+}
+
+.nav-item:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.nav-item.active {
+    background: var(--color-cell-selected);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* Main content area */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Toolbar */
+.toolbar {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border-bottom: var(--glass-border);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: var(--space-xs);
+    padding-right: var(--space-md);
+    border-right: 1px solid var(--color-border-dim);
+}
+
+.toolbar-group:last-child {
+    border-right: none;
+}
+
+.toolbar-btn {
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-surface);
+    border: 2px double var(--color-border-dim);
+    border-radius: var(--radius-small);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: lowercase;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-btn:hover {
+    background: var(--color-cell-hover);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-default);
+}
+
+.toolbar-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.toolbar-btn:active {
+    transform: translateY(1px);
+}
+
+/* Formula bar */
+.formula-bar {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border-bottom: var(--glass-border);
+    padding: var(--space-md);
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.cell-reference {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface-solid);
+    border: var(--glass-border);
+    border-radius: var(--radius-small);
+    min-width: 80px;
+    text-align: center;
+    text-transform: lowercase;
+}
+
+.formula-input {
+    flex: 1;
+    background: var(--color-surface);
+    border: var(--glass-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.formula-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-default);
+}
+
+/* Spreadsheet area */
+.spreadsheet-container {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.spreadsheet-scroll {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+}
+
+/* Grid */
+.spreadsheet-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(12, minmax(120px, 1fr));
+    background: var(--color-surface);
+    backdrop-filter: blur(var(--blur-amount));
+}
+
+/* Column headers */
+.column-header {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border: 1px solid var(--color-border-dim);
+    padding: var(--space-sm);
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-transform: lowercase;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.column-header:hover {
+    background: var(--color-cell-hover);
+    border-color: var(--color-primary);
+}
+
+/* Row headers */
+.row-header {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border: 1px solid var(--color-border-dim);
+    padding: var(--space-sm);
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    position: sticky;
+    left: 0;
+    z-index: 9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.row-header:hover {
+    background: var(--color-cell-hover);
+    border-color: var(--color-primary);
+}
+
+/* Cells */
+.cell {
+    background: rgba(10, 10, 15, 0.4);
+    border: 1px solid var(--color-border-dim);
+    padding: var(--space-sm);
+    min-height: 44px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    cursor: cell;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    outline: none;
+}
+
+.cell:hover {
+    background: var(--color-cell-hover);
+}
+
+.cell:focus {
+    background: var(--color-cell-selected);
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--shadow-default);
+    z-index: 5;
+}
+
+.cell.selected {
+    background: var(--color-cell-selected);
+    border: 2px solid var(--color-primary);
+}
+
+.cell.formula {
+    color: var(--color-primary-bright);
+}
+
+.cell.number {
+    justify-content: flex-end;
+    font-family: var(--font-heading);
+}
+
+.cell.header-cell {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* Sheet tabs */
+.sheet-tabs {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border-top: var(--glass-border);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    gap: var(--space-xs);
+    overflow-x: auto;
+}
+
+.sheet-tab {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--glass-border);
+    border-radius: var(--radius-default) var(--radius-default) 0 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+    text-transform: lowercase;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sheet-tab:hover {
+    background: var(--color-cell-hover);
+    color: var(--color-text);
+}
+
+.sheet-tab:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.sheet-tab.active {
+    background: var(--color-cell-selected);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.sheet-tab-add {
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: 2px dashed var(--color-border-dim);
+    border-radius: var(--radius-default);
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sheet-tab-add:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.sheet-tab-add:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Status bar */
+.status-bar {
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border-top: var(--glass-border);
+    padding: var(--space-xs) var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+}
+
+.status-item {
+    display: flex;
+    gap: var(--space-md);
+}
+
+/* Toggle sidebar button */
+.toggle-sidebar {
+    position: fixed;
+    top: var(--space-md);
+    left: var(--space-md);
+    z-index: 100;
+    background: var(--color-glass);
+    backdrop-filter: blur(var(--blur-amount));
+    border: var(--glass-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-sm);
+    cursor: pointer;
+    color: var(--color-primary);
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-sidebar:hover {
+    box-shadow: var(--shadow-intense);
+    transform: scale(1.05);
+}
+
+.toggle-sidebar:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-surface-solid);
+    border-radius: var(--radius-small);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border-dim);
+    border-radius: var(--radius-small);
+    border: 2px solid var(--color-surface-solid);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        z-index: 50;
+        height: 100vh;
+        transform: translateX(-280px);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .toolbar {
+        overflow-x: auto;
+    }
+
+    .spreadsheet-grid {
+        grid-template-columns: 50px repeat(12, minmax(100px, 1fr));
+    }
+}
+</style>
+
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="logo">riot shift</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h2 class="nav-section-title">workbooks</h2>
+                <div class="nav-item active" tabindex="0">q1 healthcare data</div>
+                <div class="nav-item" tabindex="0">patient analytics</div>
+                <div class="nav-item" tabindex="0">budget forecast</div>
+                <div class="nav-item" tabindex="0">staff schedules</div>
+            </div>
+            <div class="nav-section">
+                <h2 class="nav-section-title">templates</h2>
+                <div class="nav-item" tabindex="0">financial model</div>
+                <div class="nav-item" tabindex="0">inventory tracker</div>
+                <div class="nav-item" tabindex="0">project timeline</div>
+            </div>
+            <div class="nav-section">
+                <h2 class="nav-section-title">shared</h2>
+                <div class="nav-item" tabindex="0">team dashboard</div>
+                <div class="nav-item" tabindex="0">monthly reports</div>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-btn" tabindex="0" aria-label="New">new</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Open">open</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Save">save</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-btn" tabindex="0" aria-label="Cut">cut</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Copy">copy</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Paste">paste</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-btn" tabindex="0" aria-label="Bold">b</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Italic">i</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Underline">u</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-btn" tabindex="0" aria-label="Sort ascending">sort ↑</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Filter">filter</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Insert chart">chart</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-btn" tabindex="0" aria-label="Freeze panes">freeze</button>
+                <button class="toolbar-btn" tabindex="0" aria-label="Conditional formatting">format</button>
+            </div>
+        </div>
+
+        <div class="formula-bar">
+            <div class="cell-reference">c4</div>
+            <input type="text" class="formula-input" value="=SUM(C2:C3) * 1.15" aria-label="Formula bar">
+        </div>
+
+        <div class="spreadsheet-container">
+            <div class="spreadsheet-scroll">
+                <div class="spreadsheet-grid">
+                    <!-- Corner cell -->
+                    <div class="column-header"></div>
+                    <!-- Column headers -->
+                    <div class="column-header" tabindex="0">a</div>
+                    <div class="column-header" tabindex="0">b</div>
+                    <div class="column-header" tabindex="0">c</div>
+                    <div class="column-header" tabindex="0">d</div>
+                    <div class="column-header" tabindex="0">e</div>
+                    <div class="column-header" tabindex="0">f</div>
+                    <div class="column-header" tabindex="0">g</div>
+                    <div class="column-header" tabindex="0">h</div>
+                    <div class="column-header" tabindex="0">i</div>
+                    <div class="column-header" tabindex="0">j</div>
+                    <div class="column-header" tabindex="0">k</div>
+                    <div class="column-header" tabindex="0">l</div>
+
+                    <!-- Row 1 -->
+                    <div class="row-header" tabindex="0">1</div>
+                    <div class="cell header-cell" tabindex="0">department</div>
+                    <div class="cell header-cell" tabindex="0">patient count</div>
+                    <div class="cell header-cell" tabindex="0">revenue</div>
+                    <div class="cell header-cell" tabindex="0">costs</div>
+                    <div class="cell header-cell" tabindex="0">margin</div>
+                    <div class="cell header-cell" tabindex="0">beds</div>
+                    <div class="cell header-cell" tabindex="0">utilization</div>
+                    <div class="cell header-cell" tabindex="0">avg stay</div>
+                    <div class="cell header-cell" tabindex="0">readmit %</div>
+                    <div class="cell header-cell" tabindex="0">satisfaction</div>
+                    <div class="cell header-cell" tabindex="0">staff count</div>
+                    <div class="cell header-cell" tabindex="0">efficiency</div>
+
+                    <!-- Row 2 -->
+                    <div class="row-header" tabindex="0">2</div>
+                    <div class="cell" tabindex="0">cardiology</div>
+                    <div class="cell number" tabindex="0">847</div>
+                    <div class="cell number" tabindex="0">$2,450,000</div>
+                    <div class="cell number" tabindex="0">$1,820,000</div>
+                    <div class="cell number formula" tabindex="0">25.7%</div>
+                    <div class="cell number" tabindex="0">45</div>
+                    <div class="cell number" tabindex="0">87%</div>
+                    <div class="cell number" tabindex="0">4.2</div>
+                    <div class="cell number" tabindex="0">8.1%</div>
+                    <div class="cell number" tabindex="0">4.3/5</div>
+                    <div class="cell number" tabindex="0">32</div>
+                    <div class="cell number formula" tabindex="0">92%</div>
+
+                    <!-- Row 3 -->
+                    <div class="row-header" tabindex="0">3</div>
+                    <div class="cell" tabindex="0">orthopedics</div>
+                    <div class="cell number" tabindex="0">1,203</div>
+                    <div class="cell number" tabindex="0">$3,890,000</div>
+                    <div class="cell number" tabindex="0">$2,940,000</div>
+                    <div class="cell number formula" tabindex="0">24.4%</div>
+                    <div class="cell number" tabindex="0">58</div>
+                    <div class="cell number" tabindex="0">91%</div>
+                    <div class="cell number" tabindex="0">3.8</div>
+                    <div class="cell number" tabindex="0">6.2%</div>
+                    <div class="cell number" tabindex="0">4.5/5</div>
+                    <div class="cell number" tabindex="0">41</div>
+                    <div class="cell number formula" tabindex="0">94%</div>
+
+                    <!-- Row 4 -->
+                    <div class="row-header" tabindex="0">4</div>
+                    <div class="cell" tabindex="0">neurology</div>
+                    <div class="cell number" tabindex="0">562</div>
+                    <div class="cell number" tabindex="0">$1,780,000</div>
+                    <div class="cell number" tabindex="0">$1,390,000</div>
+                    <div class="cell number formula selected" tabindex="0">21.9%</div>
+                    <div class="cell number" tabindex="0">28</div>
+                    <div class="cell number" tabindex="0">79%</div>
+                    <div class="cell number" tabindex="0">5.1</div>
+                    <div class="cell number" tabindex="0">11.3%</div>
+                    <div class="cell number" tabindex="0">4.1/5</div>
+                    <div class="cell number" tabindex="0">24</div>
+                    <div class="cell number formula" tabindex="0">88%</div>
+
+                    <!-- Row 5 -->
+                    <div class="row-header" tabindex="0">5</div>
+                    <div class="cell" tabindex="0">oncology</div>
+                    <div class="cell number" tabindex="0">418</div>
+                    <div class="cell number" tabindex="0">$2,120,000</div>
+                    <div class="cell number" tabindex="0">$1,680,000</div>
+                    <div class="cell number formula" tabindex="0">20.8%</div>
+                    <div class="cell number" tabindex="0">35</div>
+                    <div class="cell number" tabindex="0">84%</div>
+                    <div class="cell number" tabindex="0">6.7</div>
+                    <div class="cell number" tabindex="0">9.8%</div>
+                    <div class="cell number" tabindex="0">4.6/5</div>
+                    <div class="cell number" tabindex="0">28</div>
+                    <div class="cell number formula" tabindex="0">91%</div>
+
+                    <!-- Row 6 -->
+                    <div class="row-header" tabindex="0">6</div>
+                    <div class="cell" tabindex="0">emergency</div>
+                    <div class="cell number" tabindex="0">2,847</div>
+                    <div class="cell number" tabindex="0">$4,560,000</div>
+                    <div class="cell number" tabindex="0">$3,920,000</div>
+                    <div class="cell number formula" tabindex="0">14.0%</div>
+                    <div class="cell number" tabindex="0">72</div>
+                    <div class="cell number" tabindex="0">96%</div>
+                    <div class="cell number" tabindex="0">0.8</div>
+                    <div class="cell number" tabindex="0">4.5%</div>
+                    <div class="cell number" tabindex="0">3.9/5</div>
+                    <div class="cell number" tabindex="0">67</div>
+                    <div class="cell number formula" tabindex="0">86%</div>
+
+                    <!-- Row 7 -->
+                    <div class="row-header" tabindex="0">7</div>
+                    <div class="cell" tabindex="0">pediatrics</div>
+                    <div class="cell number" tabindex="0">1,092</div>
+                    <div class="cell number" tabindex="0">$2,340,000</div>
+                    <div class="cell number" tabindex="0">$1,870,000</div>
+                    <div class="cell number formula" tabindex="0">20.1%</div>
+                    <div class="cell number" tabindex="0">42</div>
+                    <div class="cell number" tabindex="0">88%</div>
+                    <div class="cell number" tabindex="0">3.2</div>
+                    <div class="cell number" tabindex="0">5.7%</div>
+                    <div class="cell number" tabindex="0">4.7/5</div>
+                    <div class="cell number" tabindex="0">38</div>
+                    <div class="cell number formula" tabindex="0">95%</div>
+
+                    <!-- Row 8 -->
+                    <div class="row-header" tabindex="0">8</div>
+                    <div class="cell header-cell" tabindex="0">total</div>
+                    <div class="cell number formula" tabindex="0">6,969</div>
+                    <div class="cell number formula" tabindex="0">$17,140,000</div>
+                    <div class="cell number formula" tabindex="0">$13,620,000</div>
+                    <div class="cell number formula" tabindex="0">20.5%</div>
+                    <div class="cell number formula" tabindex="0">280</div>
+                    <div class="cell number formula" tabindex="0">88%</div>
+                    <div class="cell number formula" tabindex="0">3.8</div>
+                    <div class="cell number formula" tabindex="0">7.2%</div>
+                    <div class="cell number formula" tabindex="0">4.3/5</div>
+                    <div class="cell number formula" tabindex="0">230</div>
+                    <div class="cell number formula" tabindex="0">91%</div>
+
+                    <!-- Rows 9-20 for scrolling -->
+                    <div class="row-header" tabindex="0">9</div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+
+                    <div class="row-header" tabindex="0">10</div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+
+                    <div class="row-header" tabindex="0">11</div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+
+                    <div class="row-header" tabindex="0">12</div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                    <div class="cell" tabindex="0"></div>
+                </div>
+            </div>
+
+            <div class="sheet-tabs">
+                <div class="sheet-tab active" tabindex="0">q1 summary</div>
+                <div class="sheet-tab" tabindex="0">monthly details</div>
+                <div class="sheet-tab" tabindex="0">staff metrics</div>
+                <div class="sheet-tab" tabindex="0">budget vs actual</div>
+                <div class="sheet-tab-add" tabindex="0" aria-label="Add sheet">+</div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span>average: 21.9%</span>
+                <span>count: 7</span>
+                <span>sum: $17,140,000</span>
+            </div>
+            <div class="status-item">
+                <span>ready</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<button class="toggle-sidebar" id="toggleSidebar" aria-label="Toggle sidebar">☰</button>
+
+<script>
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggleSidebar');
+
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+});
+
+// Cell selection simulation
+const cells = document.querySelectorAll('.cell');
+const cellReference = document.querySelector('.cell-reference');
+const formulaInput = document.querySelector('.formula-input');
+
+cells.forEach((cell, index) => {
+    cell.addEventListener('click', () => {
+        cells.forEach(c => c.classList.remove('selected'));
+        cell.classList.add('selected');
+
+        // Update cell reference (simplified)
+        const row = Math.floor(index / 13) + 1;
+        const col = String.fromCharCode(97 + (index % 13));
+        if (col !== '`') {
+            cellReference.textContent = col + row;
+        }
+    });
+});
+
+// Navigation script
+(function() {
+    const TOTAL = 760;
+    const CURRENT = 1;
+
+    document.addEventListener('keydown', (e) => {
+
+});
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
