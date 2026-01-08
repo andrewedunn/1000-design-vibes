@@ -62,5 +62,19 @@ def validate(path: str, fix: bool):
     show_validation_report(results)
 
 
+@cli.command()
+def build_viewer():
+    """Build unified viewer for browsing all designs."""
+    from pathlib import Path
+    from src.viewer import build_viewer
+
+    outputs_path = Path("outputs")
+    if not outputs_path.exists():
+        click.echo("No outputs directory found")
+        return
+
+    build_viewer(outputs_path)
+
+
 if __name__ == "__main__":
     cli()

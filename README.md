@@ -4,27 +4,35 @@ Generate unique, self-contained design system showcases using Claude Code subage
 
 **Live Gallery:** [andrewedunn.github.io/1000-design-vibes](https://andrewedunn.github.io/1000-design-vibes)
 
-**Current Status:** 240 designs generated across 6 batches. 760 to go.
+**Current Status:** 370 designs generated. 630 to go.
 
 ## What is this?
 
-This project generates design systems by combining 35 visual dimensions:
-- **Functional direction**: 158 options (dashboard, admin panel, dating profile, Windows 95, vaporwave...)
-- **UI paradigm**: flat, material, glassmorphic, brutalist, organic...
-- **Design era**: art deco, bauhaus, y2k, neo-brutalist, punk...
-- **Layout**: page structure, navigation pattern, hero style, content flow
-- **Color, typography, spacing, shadows, and 25+ more dimensions**
+I was working on a project and hated the design because I'm a terrible designer. I asked Claude to generate a few options. That worked well enough that I wondered: what if I described a design using a bunch of different dimensions and let Claude go nuts?
 
-Each combination produces a unique design with its own personality, creative name, and complete component library. All designs are self-contained HTML files that work offline.
+Turns out you can. And once you have a few options why not make a thousand?
 
-## Browse the Gallery
+## The Plot Twist
 
-Visit [the live gallery](https://andrewedunn.github.io/1000-design-vibes) or open `index.html` locally. Each design page includes:
-- Full component library (buttons, forms, cards, navigation)
-- Complete CSS custom properties for all design tokens
-- LLM-readable documentation for applying the design to your project
-- Keyboard navigation (← →) to browse designs
-- Mobile touch/swipe support
+I started with 35 dimensions—color theory, typography, visual density, cultural influence, you name it. Figured more control meant better results. I was wrong.
+
+Randomly combining 35 dimensions produces chaos. "Brutalist + playful + corporate + neon + Japanese minimalist" is not a coherent design brief.
+
+**The insight:** Less is more. Give the LLM 5 core constraints and let it be the expert designer.
+
+| Approach | Result |
+|----------|--------|
+| 35 random dimensions | Wacky, conflicting designs |
+| 5 core dimensions | Coherent, polished designs |
+
+The 5 dimensions that matter:
+- **functional_direction** - What the page IS (dashboard, blog, quiz app, Windows 95 throwback)
+- **design_era** - Aesthetic period (swiss international, art deco, y2k, neo-brutalist)
+- **emotional_tone** - How it should feel (calm, energetic, mysterious, playful)
+- **industry** - Business context (tech, healthcare, entertainment, finance)
+- **color_mode** - Light, dark, or both
+
+Everything else—typography, spacing, colors, shapes—the agent picks to support these five.
 
 ## Quick Start
 
@@ -36,62 +44,32 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Generate 20 unique design seeds
+# Generate 20 designs with 5 core dimensions (recommended)
+python design_vibes.py manifest --count 20 --name "my-batch" --core-only
+
+# Or go nuts with all 35 dimensions
 python design_vibes.py manifest --count 20 --name "my-batch"
 
-# Generate designs using Claude Code (see below)
+# Generate designs using Claude Code
+# Open in Claude Code and say: "Generate designs for outputs/2026-01-07-my-batch"
 ```
-
-## Workflow
-
-### 1. Create a manifest
-
-```bash
-python design_vibes.py manifest --count 100 --name "batch1"
-```
-
-Creates a `manifest.json` with unique dimension combinations and creative names.
-
-### 2. Generate designs with Claude Code
-
-Open the project in Claude Code and run:
-
-```
-Generate designs for outputs/2026-01-07-batch1
-```
-
-Claude Code reads the manifest and spawns Sonnet subagents to generate each design. Designs are written to `.staging/` first, then moved to `designs/` after validation.
-
-### 3. Check progress
-
-```bash
-python design_vibes.py status --path outputs/2026-01-07-batch1
-```
-
-Shows completed, in-progress, and pending designs. Also suggests the next batch range and provides a resume prompt for Claude.
-
-### 4. Browse your designs
-
-```bash
-python design_vibes.py build-indexes
-open outputs/2026-01-07-batch1/designs/index.html
-```
-
-## Large Batch Execution
-
-For batches of 500+ designs executed over multiple sessions, see [docs/BATCH_EXECUTION.md](docs/BATCH_EXECUTION.md). The `status` command provides resume prompts for continuing where you left off.
 
 ## Commands
 
 ### `manifest` - Create design seeds
 
 ```bash
-python design_vibes.py manifest --count 100 --name "my-batch"
+# Recommended: 5 core dimensions, agent picks the rest
+python design_vibes.py manifest --count 100 --name "batch1" --core-only
+
+# All 35 dimensions (for experimentation)
+python design_vibes.py manifest --count 100 --name "batch1"
 ```
 
 Options:
 - `--count` - Number of designs to generate (default: 20)
-- `--name` - Optional suffix for the output folder
+- `--name` - Suffix for the output folder
+- `--core-only` - Only specify 5 core dimensions, let agent choose the rest
 
 ### `status` - Check progress
 
@@ -99,21 +77,60 @@ Options:
 python design_vibes.py status --path outputs/2026-01-07-my-batch
 ```
 
-Shows:
-- Completed designs (in `designs/`)
-- Staging designs (in `.staging/`)
-- Failed designs (in `failures.json`)
-- Pending designs (not yet started)
-- Suggested next batch range
-- Resume prompt for Claude
+Shows completed, in-progress, and pending designs. Also provides a resume prompt for Claude.
 
-### `build-indexes` - Rebuild gallery pages
+### `build-indexes` - Rebuild batch galleries
 
 ```bash
 python design_vibes.py build-indexes
 ```
 
-Regenerates the index.html for each run with updated stats and design cards.
+Regenerates the index.html for each batch with updated stats and design cards.
+
+### `build-viewer` - Rebuild main gallery
+
+```bash
+python design_vibes.py build-viewer
+```
+
+Regenerates the main index.html with all designs from all batches.
+
+### `validate` - Check for issues
+
+```bash
+# Check for CSS comment issues and other problems
+python design_vibes.py validate --path outputs/2026-01-07-my-batch
+
+# Auto-fix fixable issues
+python design_vibes.py validate --path outputs/2026-01-07-my-batch --fix
+```
+
+## Generating Designs with Claude Code
+
+1. Create a manifest:
+   ```bash
+   python design_vibes.py manifest --count 100 --name "my-batch" --core-only
+   ```
+
+2. Open the project in Claude Code and run:
+   ```
+   Generate designs for outputs/2026-01-07-my-batch
+   ```
+
+3. Claude Code reads the manifest and spawns Sonnet subagents in parallel to generate each design. Designs are validated and moved from `.staging/` to `designs/`.
+
+4. Check progress:
+   ```bash
+   python design_vibes.py status --path outputs/2026-01-07-my-batch
+   ```
+
+5. Rebuild the galleries:
+   ```bash
+   python design_vibes.py build-indexes
+   python design_vibes.py build-viewer
+   ```
+
+For large batches (500+) executed over multiple sessions, see [docs/BATCH_EXECUTION.md](docs/BATCH_EXECUTION.md).
 
 ## Output Structure
 
@@ -136,30 +153,42 @@ Each HTML file is completely self-contained (except for Google Fonts) and includ
 - LLM-readable documentation for recreating the style
 - Keyboard/touch navigation to browse designs
 
-## How It Works
-
-1. **Manifest generation** (Python) - Creates unique combinations of 35 dimensions
-2. **Design generation** (Claude Code) - Spawns parallel Sonnet subagents to generate HTML
-3. **Validation** - Checks designs before moving to final folder
-4. **Index building** - Creates gallery with all designs
-
 ## Project Structure
 
 ```
-├── design_vibes.py          # CLI entry point
-├── DESIGN_GUIDE_LOOSE.md    # Instructions for design agents
-├── index.html               # Main gallery
+├── design_vibes.py              # CLI entry point
+├── DESIGN_GUIDE_MINIMAL.md      # Agent instructions (5 core dimensions)
+├── DESIGN_GUIDE_LOOSE.md        # Agent instructions (all dimensions)
+├── index.html                   # Main gallery (generated)
+├── about.html                   # Project info and run list
+├── all-designs.json             # All designs metadata (generated)
 ├── src/
-│   ├── dimensions.py        # 35 dimension definitions (412 values)
-│   ├── manifest.py          # Manifest generation
-│   ├── naming.py            # Creative name generation
-│   ├── index.py             # Gallery builder
-│   └── status.py            # Progress reporting
+│   ├── dimensions.py            # 35 dimension definitions (412 values)
+│   ├── manifest.py              # Manifest generation
+│   ├── naming.py                # Creative name generation
+│   ├── index.py                 # Batch gallery builder
+│   ├── viewer.py                # Main gallery builder
+│   ├── validate.py              # Design validation
+│   └── status.py                # Progress reporting
 ├── docs/
-│   ├── ROADMAP.md           # Project roadmap and experiments log
-│   └── BATCH_EXECUTION.md   # Multi-session batch guide
-└── outputs/                 # Generated designs
+│   ├── ROADMAP.md               # Project roadmap and experiments log
+│   └── BATCH_EXECUTION.md       # Multi-session batch guide
+└── outputs/                     # Generated designs
 ```
+
+## The 35 Dimensions (if you want to go nuts)
+
+You can still use all 35 dimensions if you want to experiment:
+
+- **Visual Style**: UI Paradigm, Design Era, Density
+- **Color System**: Color Theory, Temperature, Saturation, Contrast, Palette Mood, Light/Dark Mode
+- **Typography**: Heading Font Class, Body Font Class, Scale Ratio, Case Treatment, Letter Spacing, Line Height
+- **Shape & Space**: Corner Radius, Spacing Base, Border Style, Shadow Style, Container Style
+- **Layout**: Grid System, Alignment, Hierarchy Approach, Page Structure, Navigation Pattern
+- **Texture & Detail**: Surface Texture, Gradient Usage, Icon Style
+- **Context**: Industry, Target Audience, Emotional Tone, Cultural Influence, Functional Direction (158 options!)
+
+412 possible values total. More combinations than I'll ever generate.
 
 ## Requirements
 
