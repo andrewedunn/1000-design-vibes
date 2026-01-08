@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Slate - The flat way to travel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Classic Slate - The flat way to travel
+        ABOUTME: A vaporwave-inspired travel interface blending art deco geometric precision with nostalgic retrofuturistic aesthetics
+
+        CSS VARIABLES:
+        --color-primary: #FF71CE (hot pink - vaporwave signature)
+        --color-secondary: #01CDFE (cyan - vaporwave complement)
+        --color-accent: #FFD700 (gold - art deco luxury)
+        --color-background: #FFF5F8 (soft blush white)
+        --color-surface: #FFFFFF (pure white cards)
+        --color-text: #2D1B2E (deep purple-black)
+        --color-text-muted: #7B6B7D (muted purple-gray)
+        --color-grid: #FFE5F1 (subtle pink grid)
+        --font-heading: 'Poiret One' (art deco elegance)
+        --font-body: 'Montserrat' (geometric sans)
+
+        DESIGN RATIONALE:
+        Vaporwave meets art deco through geometric shapes, pastel gradients, and nostalgic travel imagery.
+        The functional_direction (vaporwave) drives the aesthetic with grid overlays, pastel colors, and retrofuturistic elements.
+        Art deco contributes geometric precision, stepped forms, and elegant typography.
+        Travel context expressed through destination cards, journey planning, and exploration themes.
+        Light-only mode uses soft pastels and gentle contrasts for a dreamy, nostalgic atmosphere.
+        */
+
+        :root {
+            --color-primary: #FF71CE;
+            --color-secondary: #01CDFE;
+            --color-accent: #FFD700;
+            --color-background: #FFF5F8;
+            --color-surface: #FFFFFF;
+            --color-text: #2D1B2E;
+            --color-text-muted: #7B6B7D;
+            --color-grid: #FFE5F1;
+            --font-heading: 'Poiret One', cursive;
+            --font-body: 'Montserrat', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 2px;
+            --shadow-default: 0 8px 24px rgba(255, 113, 206, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Vaporwave grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(var(--color-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Vaporwave gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 113, 206, 0.05) 0%,
+                rgba(1, 205, 254, 0.05) 50%,
+                rgba(255, 215, 0, 0.05) 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Art Deco Header */
+        header {
+            text-align: center;
+            padding: calc(var(--space-unit) * 4) 0;
+            position: relative;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--color-primary) 20%,
+                var(--color-accent) 50%,
+                var(--color-secondary) 80%,
+                transparent
+            );
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: lowercase;
+            margin-top: calc(var(--space-unit) * 1.5);
+        }
+
+        /* Art Deco stepped navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 0.5);
+            margin: calc(var(--space-unit) * 3) 0;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.5);
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            clip-path: polygon(
+                8px 0, calc(100% - 8px) 0,
+                100% 8px, 100% calc(100% - 8px),
+                calc(100% - 8px) 100%, 8px 100%,
+                0 calc(100% - 8px), 0 8px
+            );
+        }
+
+        nav button::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            clip-path: polygon(
+                8px 0, calc(100% - 8px) 0,
+                100% 8px, 100% calc(100% - 8px),
+                calc(100% - 8px) 100%, 8px 100%,
+                0 calc(100% - 8px), 0 8px
+            );
+        }
+
+        nav button:hover,
+        nav button.active {
+            color: var(--color-primary);
+        }
+
+        nav button:hover::before,
+        nav button.active::before {
+            opacity: 1;
+        }
+
+        nav button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Featured destinations - vaporwave cards */
+        .featured {
+            margin: calc(var(--space-unit) * 4) 0;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: calc(var(--space-unit) * 3);
+            color: var(--color-text);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .destination-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .destination-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+        }
+
+        .destination-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(255, 113, 206, 0.25);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(135deg,
+                rgba(255, 113, 206, 0.3),
+                rgba(1, 205, 254, 0.3),
+                rgba(255, 215, 0, 0.3)
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .destination-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.1) 2px,
+                    rgba(255, 255, 255, 0.1) 4px
+                );
+        }
+
+        .destination-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            opacity: 0.6;
+        }
+
+        .destination-info {
+            padding: calc(var(--space-unit) * 1.5);
+        }
+
+        .destination-name {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-text);
+            letter-spacing: 0.1em;
+        }
+
+        .destination-desc {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1);
+            font-weight: 300;
+        }
+
+        .destination-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: calc(var(--space-unit) * 1.5);
+            padding-top: calc(var(--space-unit) * 1);
+            border-top: 1px solid var(--color-grid);
+        }
+
+        .destination-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .destination-cta {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: calc(var(--space-unit) * 0.6) calc(var(--space-unit) * 1.2);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+        }
+
+        .destination-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255, 113, 206, 0.4);
+        }
+
+        .destination-cta:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Journey planner section */
+        .journey-planner {
+            margin: calc(var(--space-unit) * 5) 0;
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .journey-planner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 33%,
+                var(--color-accent) 66%,
+                var(--color-primary) 100%
+            );
+            border-radius: var(--radius-default) var(--radius-default) 0 0;
+        }
+
+        .journey-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: calc(var(--space-unit) * 1.5);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .form-group input,
+        .form-group select {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding: calc(var(--space-unit) * 0.75);
+            background: var(--color-background);
+            border: 2px solid transparent;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: white;
+        }
+
+        .journey-submit {
+            grid-column: 1 / -1;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: calc(var(--space-unit) * 1.2);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: calc(var(--space-unit) * 1);
+            transition: all 0.3s ease;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+
+        .journey-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 113, 206, 0.4);
+        }
+
+        .journey-submit:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 4px;
+        }
+
+        /* Stats section - art deco stepped design */
+        .stats {
+            margin: calc(var(--space-unit) * 5) 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 2);
+            text-align: center;
+            position: relative;
+            clip-path: polygon(
+                16px 0, calc(100% - 16px) 0,
+                100% 16px, 100% calc(100% - 16px),
+                calc(100% - 16px) 100%, 16px 100%,
+                0 calc(100% - 16px), 0 16px
+            );
+            box-shadow: var(--shadow-default);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--color-primary),
+                var(--color-accent),
+                var(--color-secondary),
+                transparent
+            );
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: calc(var(--space-unit) * 6);
+            padding: calc(var(--space-unit) * 3) 0;
+            text-align: center;
+            border-top: 1px solid var(--color-grid);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 1.5);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-links a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+                letter-spacing: 0.2em;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .destinations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-form {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">Classic Slate</h1>
+            <p class="tagline">the flat way to travel</p>
+        </header>
+
+        <nav>
+            <button class="active">Destinations</button>
+            <button>Experiences</button>
+            <button>Journeys</button>
+            <button>About</button>
+            <button>Contact</button>
+        </nav>
+
+        <section class="featured">
+            <h2 class="section-title">Featured Destinations</h2>
+            <div class="destinations-grid">
+                <article class="destination-card">
+                    <div class="destination-image">
+                        <div class="destination-icon">🌴</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Miami Nights</h3>
+                        <p class="destination-desc">Neon-lit beaches and endless summer vibes. Experience the retro-future of coastal paradise.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$899</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="destination-card">
+                    <div class="destination-image" style="background: linear-gradient(135deg, rgba(1, 205, 254, 0.3), rgba(255, 113, 206, 0.3));">
+                        <div class="destination-icon">🏙️</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Tokyo Dreams</h3>
+                        <p class="destination-desc">Where ancient traditions meet digital tomorrow. A nostalgic journey through neon streets.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$1,299</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="destination-card">
+                    <div class="destination-image" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 113, 206, 0.3));">
+                        <div class="destination-icon">🏔️</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Alpine Echoes</h3>
+                        <p class="destination-desc">Geometric peaks and crystal air. Art deco elegance meets mountain majesty.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$1,099</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="destination-card">
+                    <div class="destination-image" style="background: linear-gradient(135deg, rgba(255, 113, 206, 0.3), rgba(255, 215, 0, 0.3));">
+                        <div class="destination-icon">🌊</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Azure Coast</h3>
+                        <p class="destination-desc">Mediterranean serenity in pastel hues. Where every sunset feels like a memory.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$999</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="destination-card">
+                    <div class="destination-image" style="background: linear-gradient(135deg, rgba(1, 205, 254, 0.3), rgba(255, 215, 0, 0.3));">
+                        <div class="destination-icon">🏛️</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Marble Cities</h3>
+                        <p class="destination-desc">Classical grandeur reimagined. Walk through history with a retrofuturistic lens.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$1,199</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="destination-card">
+                    <div class="destination-image" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(1, 205, 254, 0.3));">
+                        <div class="destination-icon">🌸</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-name">Cherry Bloom</h3>
+                        <p class="destination-desc">Spring eternal in geometric gardens. A journey to serene beauty and timeless grace.</p>
+                        <div class="destination-meta">
+                            <span class="destination-price">$1,399</span>
+                            <button class="destination-cta">Explore</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="journey-planner">
+            <h2 class="section-title">Plan Your Journey</h2>
+            <form class="journey-form">
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <input type="text" id="from" placeholder="Your city">
+                </div>
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <input type="text" id="to" placeholder="Destination">
+                </div>
+                <div class="form-group">
+                    <label for="departure">Departure</label>
+                    <input type="date" id="departure">
+                </div>
+                <div class="form-group">
+                    <label for="return">Return</label>
+                    <input type="date" id="return">
+                </div>
+                <div class="form-group">
+                    <label for="travelers">Travelers</label>
+                    <select id="travelers">
+                        <option>1 person</option>
+                        <option>2 people</option>
+                        <option>3 people</option>
+                        <option>4+ people</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="class">Travel Class</label>
+                    <select id="class">
+                        <option>Economy</option>
+                        <option>Premium Economy</option>
+                        <option>Business</option>
+                        <option>First Class</option>
+                    </select>
+                </div>
+                <button type="button" class="journey-submit">Search Journeys</button>
+            </form>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-value">127</div>
+                <div class="stat-label">Destinations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24K</div>
+                <div class="stat-label">Travelers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">98%</div>
+                <div class="stat-label">Satisfaction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">365</div>
+                <div class="stat-label">Days Open</div>
+            </div>
+        </section>
+
+        <footer>
+            <p class="footer-text">Classic Slate © 2026 - The flat way to travel</p>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#terms">Terms</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#contact">Contact</a>
+                <a href="#careers">Careers</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 68;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

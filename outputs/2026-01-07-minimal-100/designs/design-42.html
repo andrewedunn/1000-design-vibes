@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Stone - Neo Brutalist Live Chat Widget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Nexus Stone - Neo brutalist-inspired design for users
+        ABOUTME: A bold, friendly live chat widget for fashion brands featuring raw geometric shapes,
+        thick borders, and an approachable personality that balances brutalist aesthetics with warmth.
+
+        CSS VARIABLES:
+        --color-primary: #FF3366 (vibrant pink for fashion energy)
+        --color-background: #FAFAFA (soft off-white)
+        --color-surface: #FFFFFF (clean white cards)
+        --color-text: #1A1A1A (near-black for contrast)
+        --color-text-muted: #666666 (medium gray)
+        --font-heading: 'Space Grotesk' (geometric, brutalist)
+        --font-body: 'DM Sans' (friendly, readable)
+        --space-unit: 8px (systematic spacing)
+        --radius-default: 0px (brutalist hard edges)
+        --shadow-default: 8px 8px 0px rgba(0,0,0,0.15) (offset brutalist shadow)
+
+        DESIGN RATIONALE:
+        Neo-brutalism meets fashion-forward friendliness through vibrant pink accents against
+        stark black and white. Thick 4px borders, hard edges, and offset shadows create the
+        brutalist foundation while rounded profile images, friendly copy, and generous spacing
+        maintain approachability. The live chat widget design showcases agent profiles,
+        typing indicators, quick replies, and conversation history in a bold, memorable style.
+        -->
+
+        */
+        :root {
+            --color-primary: #FF3366;
+            --color-secondary: #FFD700;
+            --color-background: #FAFAFA;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-border: #1A1A1A;
+            --color-success: #00CC88;
+            --color-accent: #6B4EFF;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 8px 8px 0px rgba(0, 0, 0, 0.15);
+            --border-width: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: calc(var(--space-unit) * 4);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--space-unit) * 2);
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        .highlight {
+            background: var(--color-primary);
+            color: white;
+            padding: 0 calc(var(--space-unit) * 2);
+            display: inline-block;
+            transform: rotate(-1deg);
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            max-width: 600px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: calc(var(--space-unit) * 4);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        /* Live Chat Widget */
+        .chat-widget {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            box-shadow: var(--shadow-default);
+            display: flex;
+            flex-direction: column;
+            height: 680px;
+        }
+
+        .chat-header {
+            background: var(--color-primary);
+            color: white;
+            padding: calc(var(--space-unit) * 3);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .agent-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: var(--border-width) solid white;
+            background: var(--color-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .agent-info h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit));
+            font-size: 0.875rem;
+            opacity: 0.95;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--space-unit) * 3);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .message {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: flex-start;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 3px solid var(--color-border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--color-primary);
+        }
+
+        .message-bubble {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2);
+            max-width: 75%;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-bubble {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: calc(var(--space-unit));
+        }
+
+        .message.user .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: calc(var(--space-unit));
+            padding: calc(var(--space-unit) * 2);
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-text);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .quick-replies {
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+            border-top: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        .quick-replies-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit));
+            letter-spacing: 0.05em;
+        }
+
+        .quick-reply-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(var(--space-unit));
+        }
+
+        .quick-reply-btn {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: calc(var(--space-unit)) calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-reply-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .quick-reply-btn:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .chat-input-area {
+            padding: calc(var(--space-unit) * 3);
+            border-top: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            background: var(--color-background);
+            box-shadow: inset 3px 3px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: inset 3px 3px 0px rgba(255, 51, 102, 0.1);
+        }
+
+        .send-btn {
+            background: var(--color-primary);
+            color: white;
+            border: 3px solid var(--color-border);
+            padding: 0 calc(var(--space-unit) * 4);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .send-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .send-btn:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Info Panels */
+        .info-panel {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .info-panel h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 2);
+            letter-spacing: -0.01em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .stat-card {
+            background: var(--color-background);
+            border: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2);
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit));
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .agent-card {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            padding: calc(var(--space-unit) * 2);
+            background: var(--color-background);
+            border: 3px solid var(--color-border);
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.08);
+            align-items: center;
+        }
+
+        .agent-card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--color-border);
+            background: var(--color-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .agent-card:nth-child(2) .agent-card-avatar {
+            background: var(--color-primary);
+        }
+
+        .agent-card:nth-child(3) .agent-card-avatar {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .agent-card-info {
+            flex: 1;
+        }
+
+        .agent-card-name {
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .agent-card-role {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .agent-card-status {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit));
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-success);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .feature-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-primary);
+            border: 3px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: white;
+            font-weight: 700;
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: var(--color-accent);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: var(--color-success);
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit));
+            text-transform: uppercase;
+        }
+
+        .feature-card p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: calc(var(--space-unit) * 8);
+            padding-top: calc(var(--space-unit) * 4);
+            border-top: var(--border-width) solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-widget {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-widget {
+                height: 600px;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .status-dot,
+            .typing-dot {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="highlight">Nexus</span> Stone</h1>
+            <p class="tagline">Neo brutalist-inspired design for users — Bold live chat that breaks the mold</p>
+        </header>
+
+        <div class="main-grid">
+            <div>
+                <div class="info-panel">
+                    <h2>Live Support Stats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">2.3m</div>
+                            <div class="stat-label">Response Time</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">98%</div>
+                            <div class="stat-label">Satisfaction</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Availability</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">8+</div>
+                            <div class="stat-label">Languages</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <h2>Available Agents</h2>
+                    <div class="agent-list">
+                        <div class="agent-card">
+                            <div class="agent-card-avatar">SK</div>
+                            <div class="agent-card-info">
+                                <div class="agent-card-name">Sophie Kim</div>
+                                <div class="agent-card-role">Style Consultant</div>
+                            </div>
+                            <div class="agent-card-status">
+                                <div class="status-dot"></div>
+                                Online
+                            </div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-card-avatar">MR</div>
+                            <div class="agent-card-info">
+                                <div class="agent-card-name">Marcus Rivera</div>
+                                <div class="agent-card-role">Order Support</div>
+                            </div>
+                            <div class="agent-card-status">
+                                <div class="status-dot"></div>
+                                Online
+                            </div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-card-avatar">AL</div>
+                            <div class="agent-card-info">
+                                <div class="agent-card-name">Amara Lee</div>
+                                <div class="agent-card-role">Returns Specialist</div>
+                            </div>
+                            <div class="agent-card-status">
+                                <div class="status-dot"></div>
+                                Online
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-widget">
+                <div class="chat-header">
+                    <div class="agent-avatar">SK</div>
+                    <div class="agent-info">
+                        <h3>Sophie Kim</h3>
+                        <div class="agent-status">
+                            <div class="status-dot"></div>
+                            <span>Online • Responds in ~2 mins</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-messages">
+                    <div class="message">
+                        <div class="message-avatar">SK</div>
+                        <div class="message-bubble">
+                            <div>Hey there! Welcome to Nexus Stone. I'm Sophie, your style consultant. How can I help you today?</div>
+                            <div class="message-time">2:14 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-avatar">You</div>
+                        <div class="message-bubble">
+                            <div>Hi! I'm looking for sizing info on the oversized blazer from your spring collection.</div>
+                            <div class="message-time">2:15 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="message-avatar">SK</div>
+                        <div class="message-bubble">
+                            <div>Great choice! That blazer runs slightly oversized for that relaxed fit. What's your usual size?</div>
+                            <div class="message-time">2:16 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-avatar">You</div>
+                        <div class="message-bubble">
+                            <div>Usually a medium, but I like a more fitted look.</div>
+                            <div class="message-time">2:17 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="typing-indicator">
+                        <div class="message-avatar">SK</div>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-replies">
+                    <div class="quick-replies-label">Quick Replies</div>
+                    <div class="quick-reply-buttons">
+                        <button class="quick-reply-btn">Track My Order</button>
+                        <button class="quick-reply-btn">Size Guide</button>
+                        <button class="quick-reply-btn">Returns</button>
+                        <button class="quick-reply-btn">New Arrivals</button>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <input type="text" class="chat-input" placeholder="Type your message...">
+                        <button class="send-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Connect</h3>
+                <p>Get matched with a fashion expert in seconds. No waiting, no frustration, just fast help when you need it.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👗</div>
+                <h3>Style Experts</h3>
+                <p>Our team lives and breathes fashion. Get personalized recommendations tailored to your taste and body type.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure Chat</h3>
+                <p>End-to-end encryption keeps your conversations and personal information completely private and protected.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Nexus Stone. Design #42 of 1000 Design Vibes — A neo-brutalist approach to live chat</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 42;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Steel - Food Quiz Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Urban Steel - Where flat meets international aesthetics
+ABOUTME: A quiz interface for food discovery using flat 2010s design principles with dark mode,
+clean typography, and trustworthy professional aesthetics reminiscent of Material Design era.
+
+CSS VARIABLES:
+--color-primary: #4CAF50 (vibrant green for food/fresh theme)
+--color-background: #1a1a1a (deep charcoal background)
+--color-surface: #2d2d2d (elevated surface gray)
+--color-text: #ffffff (clean white text)
+--color-text-muted: #b0b0b0 (muted gray for secondary text)
+--font-heading: 'Montserrat' (geometric sans-serif, flat design staple)
+--font-body: 'Open Sans' (readable, trustworthy body font)
+--space-unit: 8px (consistent spacing rhythm)
+--radius-default: 2px (minimal, flat design characteristic)
+--shadow-default: 0 1px 3px rgba(0,0,0,0.3) (subtle flat elevation)
+
+DESIGN RATIONALE:
+Flat 2010s design emphasized clean lines, bold colors, and minimal shadows. This quiz interface
+uses the classic Material Design-era aesthetic with a food industry focus. The trustworthy tone
+is achieved through clear hierarchy, ample whitespace, professional typography, and a consistent
+green accent that evokes freshness and health. Progress indicators and question cards use subtle
+shadows to create depth without skeuomorphism. The dark mode palette reduces eye strain while
+maintaining strong contrast for accessibility.
+-->
+
+<style>
+:root {
+    --color-primary: #4CAF50;
+    --color-primary-dark: #45a049;
+    --color-accent: #8BC34A;
+    --color-background: #1a1a1a;
+    --color-surface: #2d2d2d;
+    --color-surface-light: #383838;
+    --color-text: #ffffff;
+    --color-text-muted: #b0b0b0;
+    --color-border: #404040;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Open Sans', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-hover: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-default);
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    font-weight: 400;
+}
+
+/* Progress Bar */
+.progress-container {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: calc(var(--space-unit) * 2);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.progress-step {
+    color: var(--color-text-muted);
+}
+
+.progress-percentage {
+    color: var(--color-primary);
+}
+
+.progress-bar-bg {
+    background: var(--color-surface-light);
+    height: 8px;
+    border-radius: var(--radius-default);
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    height: 100%;
+    width: 60%;
+    border-radius: var(--radius-default);
+    transition: width 0.3s ease;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 4);
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Quiz Card */
+.quiz-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 5);
+    box-shadow: var(--shadow-default);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.question-number {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.question-text {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 4);
+    line-height: 1.4;
+}
+
+/* Answer Options */
+.answer-options {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.answer-option {
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.answer-option:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-light);
+    box-shadow: var(--shadow-hover);
+}
+
+.answer-option:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.answer-option.selected {
+    border-color: var(--color-primary);
+    background: var(--color-surface-light);
+}
+
+.option-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.answer-option:hover .option-radio,
+.answer-option.selected .option-radio {
+    border-color: var(--color-primary);
+}
+
+.answer-option.selected .option-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+.option-text {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Action Buttons */
+.quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: calc(var(--space-unit) * 2);
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+    border: none;
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 2px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface-light);
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+}
+
+.btn-secondary:focus {
+    outline: 2px solid var(--color-text-muted);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: var(--shadow-default);
+    flex: 1;
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-primary:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Info Section */
+.quiz-info {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 4);
+    box-shadow: var(--shadow-default);
+}
+
+.info-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 2);
+    color: var(--color-primary);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--space-unit) * 3);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Footer */
+footer {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.footer-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: var(--color-primary);
+}
+
+.footer-link:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-default);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    .question-text {
+        font-size: 18px;
+    }
+
+    .quiz-card {
+        padding: calc(var(--space-unit) * 3);
+    }
+
+    .quiz-actions {
+        flex-direction: column;
+    }
+
+    .btn-secondary {
+        order: 2;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+
+<header>
+    <div class="header-content">
+        <h1>Urban Steel</h1>
+        <p class="subtitle">Where flat meets international aesthetics</p>
+    </div>
+</header>
+
+<div class="progress-container">
+    <div class="progress-wrapper">
+        <div class="progress-label">
+            <span class="progress-step">Question 3 of 5</span>
+            <span class="progress-percentage">60%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+<main>
+    <div class="quiz-card">
+        <div class="question-number">Question 3</div>
+        <h2 class="question-text">What's your primary dietary preference when exploring new cuisines?</h2>
+
+        <div class="answer-options">
+            <div class="answer-option" tabindex="0" role="button" aria-pressed="false">
+                <div class="option-radio"></div>
+                <span class="option-text">I enjoy trying everything - no restrictions</span>
+            </div>
+
+            <div class="answer-option selected" tabindex="0" role="button" aria-pressed="true">
+                <div class="option-radio"></div>
+                <span class="option-text">Primarily plant-based options</span>
+            </div>
+
+            <div class="answer-option" tabindex="0" role="button" aria-pressed="false">
+                <div class="option-radio"></div>
+                <span class="option-text">High-protein, low-carb choices</span>
+            </div>
+
+            <div class="answer-option" tabindex="0" role="button" aria-pressed="false">
+                <div class="option-radio"></div>
+                <span class="option-text">Gluten-free and allergen-conscious</span>
+            </div>
+
+            <div class="answer-option" tabindex="0" role="button" aria-pressed="false">
+                <div class="option-radio"></div>
+                <span class="option-text">Traditional and authentic preparations</span>
+            </div>
+        </div>
+
+        <div class="quiz-actions">
+            <button class="btn btn-secondary">Previous</button>
+            <button class="btn btn-primary">Continue</button>
+        </div>
+    </div>
+
+    <div class="quiz-info">
+        <h3 class="info-title">Your Food Profile</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Cuisine Interest</div>
+                <div class="info-value">Global Fusion</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Spice Level</div>
+                <div class="info-value">Medium-High</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Dining Style</div>
+                <div class="info-value">Fast Casual</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Price Range</div>
+                <div class="info-value">$$-$$$</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <nav class="footer-nav">
+            <a href="#" class="footer-link">About</a>
+            <a href="#" class="footer-link">Privacy</a>
+            <a href="#" class="footer-link">Support</a>
+            <a href="#" class="footer-link">Contact</a>
+        </nav>
+        <p>&copy; 2024 Urban Steel. Powered by food passion and design excellence.</p>
+    </div>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 39;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Quiz interactivity
+    const options = document.querySelectorAll('.answer-option');
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                opt.setAttribute('aria-pressed', 'false');
+            });
+            this.classList.add('selected');
+            this.setAttribute('aria-pressed', 'true');
+        });
+
+        option.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

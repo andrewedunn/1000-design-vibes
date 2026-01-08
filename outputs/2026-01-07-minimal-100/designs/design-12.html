@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>True Hub - Crafted for users with international roots</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: True Hub - Crafted for users with international roots
+        ABOUTME: A government onboarding flow with flat 2010s design, emphasizing trust and accessibility for international users
+
+        CSS VARIABLES:
+        --color-primary: #4A90E2 (Accessible blue for government trust)
+        --color-background: #1a1d23 (Deep dark background)
+        --color-surface: #252931 (Elevated surface color)
+        --color-text: #e8eaed (High contrast light text)
+        --color-text-muted: #9aa0a6 (Muted text for secondary content)
+        --font-heading: 'Roboto', sans-serif (Clean, authoritative)
+        --font-body: 'Open Sans', sans-serif (Readable, friendly)
+        --space-unit: 1rem
+        --radius-default: 2px (Minimal, flat aesthetic)
+        --shadow-default: none (Flat design principle)
+
+        DESIGN RATIONALE:
+        This onboarding flow embodies the flat 2010s aesthetic with bold colors, minimal shadows, and clean typography.
+        The government context demands clarity and trustworthiness, achieved through high-contrast dark mode, accessible
+        blue accents, and straightforward language. Multi-step progress indicators and language selection honor the
+        international roots of users. The layout uses a centered card-based approach typical of the era, with clear
+        CTAs and helpful microcopy to guide users through account setup.
+        */
+
+        :root {
+            --color-primary: #4A90E2;
+            --color-primary-hover: #3a7bc8;
+            --color-secondary: #2ecc71;
+            --color-background: #1a1d23;
+            --color-surface: #252931;
+            --color-surface-hover: #2d323c;
+            --color-border: #383d47;
+            --color-text: #e8eaed;
+            --color-text-muted: #9aa0a6;
+            --color-success: #2ecc71;
+            --color-error: #e74c3c;
+            --font-heading: 'Roboto', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 2px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .language-selector {
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .language-selector:hover {
+            border-color: var(--color-primary);
+        }
+
+        .language-selector:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--space-unit) * 3) var(--space-unit);
+        }
+
+        .onboarding-container {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        /* Progress Indicator */
+        .progress-wrapper {
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: var(--color-surface);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-primary);
+            width: 40%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        .step.active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .step.completed {
+            color: var(--color-success);
+        }
+
+        /* Card */
+        .card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .card-header {
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.9375rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .form-label .required {
+            color: var(--color-error);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:hover {
+            border-color: var(--color-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .form-help {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+            margin-top: 0.375rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.375rem;
+        }
+
+        .form-help::before {
+            content: "ℹ";
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 0.125rem;
+            accent-color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            flex: 1;
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: var(--color-text);
+        }
+
+        .checkbox-label a {
+            color: var(--color-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .checkbox-label a:hover {
+            border-bottom-color: var(--color-primary);
+        }
+
+        .checkbox-label a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+            border-radius: 1px;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .button {
+            padding: 0.875rem 1.75rem;
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .button-primary {
+            background-color: var(--color-primary);
+            color: white;
+            flex: 1;
+        }
+
+        .button-primary:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .button-primary:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            color: var(--color-text-muted);
+            border: 1px solid var(--color-border);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--color-surface-hover);
+            color: var(--color-text);
+        }
+
+        .button-secondary:focus {
+            outline: 2px solid var(--color-text-muted);
+            outline-offset: 2px;
+        }
+
+        /* Info Banner */
+        .info-banner {
+            background-color: rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            border-radius: var(--radius-default);
+            padding: 1rem;
+            margin-bottom: calc(var(--space-unit) * 2);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .info-banner-icon {
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .info-banner-content {
+            flex: 1;
+        }
+
+        .info-banner-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--color-text);
+        }
+
+        .info-banner-text {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-link:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+            border-radius: 1px;
+        }
+
+        /* Country Select */
+        .country-select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .country-select:hover {
+            border-color: var(--color-primary);
+        }
+
+        .country-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .country-select option {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .card {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .progress-steps {
+                font-size: 0.6875rem;
+            }
+
+            .button-group {
+                flex-direction: column-reverse;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">TH</div>
+                True Hub
+            </div>
+            <select class="language-selector" aria-label="Select language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ar">العربية</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="onboarding-container">
+            <div class="progress-wrapper">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step completed">1. Welcome</div>
+                    <div class="step active">2. Personal Info</div>
+                    <div class="step">3. Verification</div>
+                    <div class="step">4. Security</div>
+                    <div class="step">5. Complete</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Tell us about yourself</h1>
+                    <p class="card-description">
+                        We need some basic information to create your secure True Hub account. Your information is protected and will never be shared without your consent.
+                    </p>
+                </div>
+
+                <div class="info-banner">
+                    <div class="info-banner-icon">🌍</div>
+                    <div class="info-banner-content">
+                        <div class="info-banner-title">International Verification</div>
+                        <div class="info-banner-text">
+                            We support documents from over 190 countries. You can upload documents in your native language.
+                        </div>
+                    </div>
+                </div>
+
+                <form>
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">
+                            Full Name <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            class="form-input"
+                            placeholder="Enter your full legal name"
+                            required
+                            aria-required="true"
+                        >
+                        <div class="form-help">Enter your name exactly as it appears on official documents</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            Email Address <span class="required">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-input"
+                            placeholder="your.email@example.com"
+                            required
+                            aria-required="true"
+                        >
+                        <div class="form-help">We'll send verification codes to this address</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country" class="form-label">
+                            Country of Residence <span class="required">*</span>
+                        </label>
+                        <select
+                            id="country"
+                            class="country-select"
+                            required
+                            aria-required="true"
+                        >
+                            <option value="">Select your country</option>
+                            <option value="us">United States</option>
+                            <option value="ca">Canada</option>
+                            <option value="mx">Mexico</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="de">Germany</option>
+                            <option value="fr">France</option>
+                            <option value="es">Spain</option>
+                            <option value="it">Italy</option>
+                            <option value="cn">China</option>
+                            <option value="jp">Japan</option>
+                            <option value="kr">South Korea</option>
+                            <option value="in">India</option>
+                            <option value="br">Brazil</option>
+                            <option value="ar">Argentina</option>
+                            <option value="au">Australia</option>
+                            <option value="nz">New Zealand</option>
+                            <option value="za">South Africa</option>
+                            <option value="ng">Nigeria</option>
+                            <option value="eg">Egypt</option>
+                            <option value="sa">Saudi Arabia</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthCountry" class="form-label">
+                            Country of Birth
+                        </label>
+                        <select
+                            id="birthCountry"
+                            class="country-select"
+                        >
+                            <option value="">Select country (optional)</option>
+                            <option value="us">United States</option>
+                            <option value="ca">Canada</option>
+                            <option value="mx">Mexico</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="de">Germany</option>
+                            <option value="fr">France</option>
+                            <option value="es">Spain</option>
+                            <option value="it">Italy</option>
+                            <option value="cn">China</option>
+                            <option value="jp">Japan</option>
+                            <option value="kr">South Korea</option>
+                            <option value="in">India</option>
+                            <option value="br">Brazil</option>
+                            <option value="ar">Argentina</option>
+                            <option value="au">Australia</option>
+                            <option value="nz">New Zealand</option>
+                            <option value="za">South Africa</option>
+                            <option value="ng">Nigeria</option>
+                            <option value="eg">Egypt</option>
+                            <option value="sa">Saudi Arabia</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="form-help">This helps us verify your identity for international services</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                class="checkbox-input"
+                                required
+                                aria-required="true"
+                            >
+                            <label for="terms" class="checkbox-label">
+                                I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>, and confirm that all information provided is accurate.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="button button-secondary">Back</button>
+                        <button type="submit" class="button button-primary">Continue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text">Your data is encrypted and protected by government-grade security</p>
+        <div class="footer-links">
+            <a href="#help" class="footer-link">Help Center</a>
+            <a href="#accessibility" class="footer-link">Accessibility</a>
+            <a href="#privacy" class="footer-link">Privacy Policy</a>
+            <a href="#contact" class="footer-link">Contact Support</a>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 12;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

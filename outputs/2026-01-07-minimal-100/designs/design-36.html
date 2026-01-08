@@ -1,0 +1,1082 @@
+<!--
+DESIGN: Sunny Graphite - Crafted for users with international roots
+ABOUTME: A friendly expense tracker with web2 glossy aesthetics for media industry professionals tracking international expenses across multiple currencies.
+
+CSS VARIABLES:
+--color-primary: #FF6B35 (vibrant coral orange for energy and friendliness)
+--color-background: #FAFBFC (soft off-white for comfort)
+--color-surface: #FFFFFF (clean white cards with glossy shadows)
+--color-text: #2C3E50 (graphite for readability)
+--color-text-muted: #7F8C8D (medium gray)
+--font-heading: 'Outfit', sans-serif (modern, friendly geometric)
+--font-body: 'Inter', sans-serif (clean, international)
+--space-unit: 8px
+--radius-default: 12px
+--shadow-default: 0 4px 16px rgba(0,0,0,0.08)
+
+DESIGN RATIONALE:
+Sunny Graphite combines the warmth of web2 glossy design with modern expense tracking functionality. The vibrant coral primary color paired with graphite text creates an approachable yet professional atmosphere. Glossy card surfaces with soft shadows evoke the tactile depth of mid-2000s web design while maintaining contemporary usability. The interface emphasizes international currency support with clear exchange rate displays and multi-currency summaries. Friendly iconography, rounded corners, and generous spacing create an inviting experience for managing complex financial data.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny Graphite - Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #FF6B35;
+            --color-primary-dark: #E65A2A;
+            --color-primary-light: #FFE8E0;
+            --color-secondary: #4ECDC4;
+            --color-accent: #FFD93D;
+            --color-success: #6BCF7F;
+            --color-warning: #F4A261;
+            --color-background: #FAFBFC;
+            --color-surface: #FFFFFF;
+            --color-surface-hover: #F8F9FA;
+            --color-text: #2C3E50;
+            --color-text-muted: #7F8C8D;
+            --color-text-light: #BDC3C7;
+            --color-border: #E1E8ED;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 12px;
+            --radius-small: 8px;
+            --radius-large: 16px;
+            --shadow-default: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-large: 0 12px 32px rgba(0,0,0,0.1);
+            --gradient-glossy: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-default);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-glossy);
+            border-radius: var(--radius-default);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-text);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .currency-selector {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit));
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-weight: 600;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .currency-selector:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn-primary {
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-default);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-glossy);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .summary-card {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .summary-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .summary-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .summary-card-amount {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit));
+            letter-spacing: -1px;
+        }
+
+        .summary-card-detail {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.5);
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit));
+            background: rgba(107, 207, 127, 0.1);
+            color: var(--color-success);
+            border-radius: var(--radius-small);
+            font-weight: 600;
+            font-size: 12px;
+            margin-top: calc(var(--space-unit));
+        }
+
+        .trend.negative {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--color-primary);
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-default);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: calc(var(--space-unit) * 3);
+            border-bottom: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: calc(var(--space-unit));
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-small);
+            border: 2px solid var(--color-border);
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--color-text-muted);
+        }
+
+        .btn-icon:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: var(--color-primary-light);
+        }
+
+        /* Expense List */
+        .expense-list {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .expense-item {
+            padding: calc(var(--space-unit) * 2);
+            border-radius: var(--radius-default);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+        }
+
+        .expense-item:hover {
+            background: var(--color-surface-hover);
+            box-shadow: var(--shadow-default);
+        }
+
+        .expense-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, rgba(78, 205, 196, 0.1) 100%);
+            position: relative;
+        }
+
+        .expense-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-glossy);
+            border-radius: var(--radius-default);
+        }
+
+        .expense-info h3 {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .expense-meta {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .expense-category {
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.5);
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-radius: calc(var(--radius-small) / 2);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expense-amount {
+            text-align: right;
+        }
+
+        .expense-amount-primary {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .expense-amount-secondary {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: calc(var(--space-unit) * 0.5);
+        }
+
+        /* Currency Breakdown */
+        .currency-breakdown {
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .currency-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        }
+
+        .currency-flag {
+            font-size: 32px;
+            margin-right: calc(var(--space-unit) * 1.5);
+        }
+
+        .currency-info h4 {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .currency-info p {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .currency-amount {
+            text-align: right;
+        }
+
+        .currency-amount-value {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .currency-amount-rate {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            margin-top: calc(var(--space-unit) * 0.5);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: calc(var(--space-unit) * 1.5);
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit));
+            border-radius: var(--radius-default);
+            transition: background 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: var(--color-surface-hover);
+        }
+
+        .activity-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            margin-top: calc(var(--space-unit) * 0.5);
+            flex-shrink: 0;
+            box-shadow: 0 0 0 4px var(--color-primary-light);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .activity-content p {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--color-text-light);
+            white-space: nowrap;
+        }
+
+        /* Charts */
+        .chart-container {
+            padding: calc(var(--space-unit) * 3);
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: var(--radius-small) var(--radius-small) 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+        }
+
+        .chart-bar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-glossy);
+            border-radius: var(--radius-small) var(--radius-small) 0 0;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: translateY(-8px);
+        }
+
+        .chart-label {
+            text-align: center;
+            margin-top: calc(var(--space-unit) * 1.5);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            padding: calc(var(--space-unit) * 3);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: calc(var(--space-unit));
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: calc(var(--space-unit) * 1.5);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text);
+            background: var(--color-surface);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                justify-content: space-between;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">☀️</div>
+                <div class="logo-text">
+                    <h1>Sunny Graphite</h1>
+                    <p>International Expense Tracker</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="currency-selector">
+                    <span>💵 USD</span>
+                    <span>▼</span>
+                </div>
+                <button class="btn-primary">+ Add Expense</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-card-header">
+                    <span class="summary-card-title">Total Spent</span>
+                    <div class="summary-card-icon">💰</div>
+                </div>
+                <div class="summary-card-amount">$24,856</div>
+                <div class="summary-card-detail">Across 4 currencies</div>
+                <div class="trend negative">↑ 12% vs last month</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card-header">
+                    <span class="summary-card-title">This Month</span>
+                    <div class="summary-card-icon">📅</div>
+                </div>
+                <div class="summary-card-amount">$8,420</div>
+                <div class="summary-card-detail">142 transactions</div>
+                <div class="trend">↓ 5% vs average</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card-header">
+                    <span class="summary-card-title">Categories</span>
+                    <div class="summary-card-icon">📊</div>
+                </div>
+                <div class="summary-card-amount">12</div>
+                <div class="summary-card-detail">Top: Media Production</div>
+                <div class="trend">+2 new categories</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card-header">
+                    <span class="summary-card-title">Exchange Impact</span>
+                    <div class="summary-card-icon">🌍</div>
+                </div>
+                <div class="summary-card-amount">-$234</div>
+                <div class="summary-card-detail">Currency fluctuations</div>
+                <div class="trend negative">EUR/USD variance</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <div class="filter-label">Date Range</div>
+                <select class="filter-select">
+                    <option>Last 30 Days</option>
+                    <option>Last 7 Days</option>
+                    <option>This Month</option>
+                    <option>Last Month</option>
+                    <option>Custom Range</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Category</div>
+                <select class="filter-select">
+                    <option>All Categories</option>
+                    <option>Media Production</option>
+                    <option>Equipment</option>
+                    <option>Travel</option>
+                    <option>Software</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Currency</div>
+                <select class="filter-select">
+                    <option>All Currencies</option>
+                    <option>USD</option>
+                    <option>EUR</option>
+                    <option>GBP</option>
+                    <option>JPY</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Sort By</div>
+                <select class="filter-select">
+                    <option>Date (Newest)</option>
+                    <option>Date (Oldest)</option>
+                    <option>Amount (High to Low)</option>
+                    <option>Amount (Low to High)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Recent Expenses -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Expenses</h2>
+                    <div class="card-actions">
+                        <button class="btn-icon">🔍</button>
+                        <button class="btn-icon">⚙️</button>
+                    </div>
+                </div>
+                <div class="expense-list">
+                    <div class="expense-item">
+                        <div class="expense-icon">🎬</div>
+                        <div class="expense-info">
+                            <h3>Film Equipment Rental</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">🎥 Production</span>
+                                <span>Jan 6, 2026</span>
+                                <span>📍 London, UK</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">£2,450</div>
+                            <div class="expense-amount-secondary">$3,185 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">✈️</div>
+                        <div class="expense-info">
+                            <h3>International Flight</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">🌍 Travel</span>
+                                <span>Jan 5, 2026</span>
+                                <span>📍 Tokyo, JP</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">¥156,000</div>
+                            <div class="expense-amount-secondary">$1,240 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">💻</div>
+                        <div class="expense-info">
+                            <h3>Adobe Creative Cloud Annual</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">💾 Software</span>
+                                <span>Jan 4, 2026</span>
+                                <span>📍 Online</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">$599</div>
+                            <div class="expense-amount-secondary">$599 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">🎤</div>
+                        <div class="expense-info">
+                            <h3>Studio Recording Session</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">🎵 Audio</span>
+                                <span>Jan 3, 2026</span>
+                                <span>📍 Paris, FR</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">€850</div>
+                            <div class="expense-amount-secondary">$925 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">📱</div>
+                        <div class="expense-info">
+                            <h3>Mobile Data Plan</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">📡 Services</span>
+                                <span>Jan 2, 2026</span>
+                                <span>📍 New York, US</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">$85</div>
+                            <div class="expense-amount-secondary">$85 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">🏨</div>
+                        <div class="expense-info">
+                            <h3>Hotel Accommodation</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">🌍 Travel</span>
+                                <span>Jan 1, 2026</span>
+                                <span>📍 Berlin, DE</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">€420</div>
+                            <div class="expense-amount-secondary">$457 USD</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-icon">📸</div>
+                        <div class="expense-info">
+                            <h3>Camera Lens Purchase</h3>
+                            <div class="expense-meta">
+                                <span class="expense-category">🎥 Equipment</span>
+                                <span>Dec 30, 2025</span>
+                                <span>📍 Singapore, SG</span>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="expense-amount-primary">$1,899</div>
+                            <div class="expense-amount-secondary">$1,899 USD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+                <!-- Currency Breakdown -->
+                <div class="card" style="margin-bottom: calc(var(--space-unit) * 3);">
+                    <div class="card-header">
+                        <h2 class="card-title">Currency Breakdown</h2>
+                    </div>
+                    <div class="currency-breakdown">
+                        <div class="currency-item">
+                            <div style="display: flex; align-items: center;">
+                                <span class="currency-flag">🇺🇸</span>
+                                <div class="currency-info">
+                                    <h4>US Dollar</h4>
+                                    <p>USD</p>
+                                </div>
+                            </div>
+                            <div class="currency-amount">
+                                <div class="currency-amount-value">$12,450</div>
+                                <div class="currency-amount-rate">Base currency</div>
+                            </div>
+                        </div>
+
+                        <div class="currency-item">
+                            <div style="display: flex; align-items: center;">
+                                <span class="currency-flag">🇪🇺</span>
+                                <div class="currency-info">
+                                    <h4>Euro</h4>
+                                    <p>EUR</p>
+                                </div>
+                            </div>
+                            <div class="currency-amount">
+                                <div class="currency-amount-value">€6,820</div>
+                                <div class="currency-amount-rate">1 EUR = $1.09</div>
+                            </div>
+                        </div>
+
+                        <div class="currency-item">
+                            <div style="display: flex; align-items: center;">
+                                <span class="currency-flag">🇬🇧</span>
+                                <div class="currency-info">
+                                    <h4>British Pound</h4>
+                                    <p>GBP</p>
+                                </div>
+                            </div>
+                            <div class="currency-amount">
+                                <div class="currency-amount-value">£3,240</div>
+                                <div class="currency-amount-rate">1 GBP = $1.30</div>
+                            </div>
+                        </div>
+
+                        <div class="currency-item">
+                            <div style="display: flex; align-items: center;">
+                                <span class="currency-flag">🇯🇵</span>
+                                <div class="currency-info">
+                                    <h4>Japanese Yen</h4>
+                                    <p>JPY</p>
+                                </div>
+                            </div>
+                            <div class="currency-amount">
+                                <div class="currency-amount-value">¥468,000</div>
+                                <div class="currency-amount-rate">1 JPY = $0.008</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Activity</h2>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-dot"></div>
+                            <div class="activity-content">
+                                <h4>Expense Added</h4>
+                                <p>Film Equipment Rental - £2,450</p>
+                            </div>
+                            <div class="activity-time">2h ago</div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-dot" style="background: var(--color-secondary);"></div>
+                            <div class="activity-content">
+                                <h4>Currency Updated</h4>
+                                <p>EUR/USD rate changed to 1.09</p>
+                            </div>
+                            <div class="activity-time">5h ago</div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-dot"></div>
+                            <div class="activity-content">
+                                <h4>Category Created</h4>
+                                <p>New category: Audio Production</p>
+                            </div>
+                            <div class="activity-time">1d ago</div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-dot" style="background: var(--color-accent);"></div>
+                            <div class="activity-content">
+                                <h4>Report Generated</h4>
+                                <p>Q4 2025 Expense Summary</p>
+                            </div>
+                            <div class="activity-time">2d ago</div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-dot" style="background: var(--color-success);"></div>
+                            <div class="activity-content">
+                                <h4>Budget Alert</h4>
+                                <p>Travel budget 80% utilized</p>
+                            </div>
+                            <div class="activity-time">3d ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spending Chart -->
+        <div class="card" style="margin-top: calc(var(--space-unit) * 3);">
+            <div class="card-header">
+                <h2 class="card-title">Monthly Spending Trend</h2>
+                <div class="card-actions">
+                    <button class="btn-icon">📊</button>
+                    <button class="btn-icon">📥</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 45%;"></div>
+                    <div class="chart-label">Jul</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 65%;"></div>
+                    <div class="chart-label">Aug</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 55%;"></div>
+                    <div class="chart-label">Sep</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 80%;"></div>
+                    <div class="chart-label">Oct</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 70%;"></div>
+                    <div class="chart-label">Nov</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 90%;"></div>
+                    <div class="chart-label">Dec</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="chart-bar" style="height: 40%; opacity: 0.5;"></div>
+                    <div class="chart-label">Jan</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 36;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

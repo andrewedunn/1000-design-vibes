@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeless Cosmo - Appointment Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Timeless Cosmo - Natural meets neutral: a scandinavian modern perspective
+        ABOUTME: An appointment booking interface for a fashion atelier combining Scandinavian minimalism
+        with nostalgic warmth. Features clean lines, ample whitespace, natural materials aesthetic, and
+        a muted earth-tone palette that evokes timeless elegance.
+
+        CSS VARIABLES:
+        --color-primary: #8B7355 (warm taupe)
+        --color-background: #FAF8F5 / #2B2520 (warm off-white / deep charcoal)
+        --color-surface: #FFFFFF / #3A3330 (pure white / warm dark gray)
+        --color-text: #2B2520 / #FAF8F5 (inverted for modes)
+        --color-text-muted: #857567 / #B5A89A (warm gray)
+        --font-heading: 'Cormorant Garamond' (elegant serif)
+        --font-body: 'Work Sans' (clean sans-serif)
+        --space-unit: 1.5rem
+        --radius-default: 2px (minimal, subtle)
+        --shadow-default: soft, warm shadows
+
+        DESIGN RATIONALE:
+        Scandinavian modern emphasizes function, simplicity, and natural materials. The nostalgic tone
+        comes through warm earth tones reminiscent of vintage fashion ateliers, combined with generous
+        whitespace and refined typography. The appointment booking flow is streamlined and calming,
+        with clear visual hierarchy. Both light and dark modes maintain the warm, natural aesthetic
+        rather than stark contrasts. Fashion industry context reflected in elegant typography and
+        sophisticated layout inspired by high-end boutique experiences.
+        */
+
+        :root {
+            --color-primary: #8B7355;
+            --color-primary-light: #A38970;
+            --color-primary-dark: #6D5940;
+            --color-background: #FAF8F5;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FFFFFF;
+            --color-text: #2B2520;
+            --color-text-muted: #857567;
+            --color-border: #E8E3DC;
+            --color-success: #7A9B76;
+            --color-accent: #C4A570;
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Work Sans', sans-serif;
+            --space-unit: 1.5rem;
+            --space-xs: calc(var(--space-unit) * 0.25);
+            --space-sm: calc(var(--space-unit) * 0.5);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2.5);
+            --radius-default: 2px;
+            --shadow-default: 0 2px 12px rgba(43, 37, 32, 0.08);
+            --shadow-elevated: 0 4px 24px rgba(43, 37, 32, 0.12);
+            --transition-default: 0.2s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #2B2520;
+                --color-surface: #3A3330;
+                --color-surface-elevated: #4A4340;
+                --color-text: #FAF8F5;
+                --color-text-muted: #B5A89A;
+                --color-border: #4A4340;
+                --shadow-default: 0 2px 12px rgba(0, 0, 0, 0.3);
+                --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            transition: background-color var(--transition-default);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .brand {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        /* Main Grid */
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 768px) {
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: var(--space-md);
+            color: var(--color-text);
+        }
+
+        .service-list {
+            list-style: none;
+        }
+
+        .service-item {
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all var(--transition-default);
+        }
+
+        .service-item:hover,
+        .service-item.active {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 1px var(--color-primary);
+        }
+
+        .service-item.active {
+            background: var(--color-surface-elevated);
+        }
+
+        .service-name {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+        }
+
+        .service-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .step.active {
+            color: var(--color-primary);
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            transition: all var(--transition-default);
+        }
+
+        .step.active .step-number {
+            border-color: var(--color-primary);
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .step.completed .step-number {
+            border-color: var(--color-success);
+            background: var(--color-success);
+            color: white;
+        }
+
+        /* Calendar */
+        .calendar {
+            margin-bottom: var(--space-lg);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .calendar-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-text);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .calendar-nav button {
+            background: none;
+            border: 1px solid var(--color-border);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            color: var(--color-text);
+            transition: all var(--transition-default);
+        }
+
+        .calendar-nav button:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+        }
+
+        .calendar-day-label {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: var(--space-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all var(--transition-default);
+            font-size: 0.875rem;
+            background: var(--color-background);
+        }
+
+        .calendar-day:hover:not(.disabled):not(.selected) {
+            border-color: var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .calendar-day.selected {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .calendar-day.disabled {
+            color: var(--color-text-muted);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        /* Time Slots */
+        .time-slots {
+            margin-bottom: var(--space-lg);
+        }
+
+        .time-slots-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: var(--space-md);
+            color: var(--color-text);
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: var(--space-sm);
+        }
+
+        .time-slot {
+            padding: var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-default);
+            background: var(--color-background);
+            font-family: var(--font-heading);
+        }
+
+        .time-slot:hover:not(.unavailable) {
+            border-color: var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .time-slot.selected {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .time-slot.unavailable {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Form */
+        .booking-form {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .form-input,
+        .form-textarea {
+            padding: var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text);
+            background: var(--color-background);
+            transition: all var(--transition-default);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 1px var(--color-primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--color-surface-elevated);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-lg);
+        }
+
+        .summary-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: var(--space-md);
+            color: var(--color-text);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .summary-value {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .button {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--transition-default);
+            background: var(--color-background);
+            color: var(--color-text);
+        }
+
+        .button:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.primary {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .button.primary:hover {
+            background: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+        }
+
+        .button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: var(--space-xl);
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-link {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color var(--transition-default);
+        }
+
+        .footer-link:hover {
+            color: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus visible */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="brand">Timeless Cosmo</h1>
+            <p class="tagline">Natural meets neutral: a scandinavian modern perspective</p>
+        </header>
+
+        <div class="booking-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h2 class="section-title">Services</h2>
+                <ul class="service-list">
+                    <li class="service-item active">
+                        <div class="service-name">Personal Styling</div>
+                        <div class="service-details">
+                            <span>90 min</span>
+                            <span>€150</span>
+                        </div>
+                    </li>
+                    <li class="service-item">
+                        <div class="service-name">Wardrobe Consultation</div>
+                        <div class="service-details">
+                            <span>120 min</span>
+                            <span>€200</span>
+                        </div>
+                    </li>
+                    <li class="service-item">
+                        <div class="service-name">Alterations Fitting</div>
+                        <div class="service-details">
+                            <span>45 min</span>
+                            <span>€75</span>
+                        </div>
+                    </li>
+                    <li class="service-item">
+                        <div class="service-name">Seasonal Refresh</div>
+                        <div class="service-details">
+                            <span>60 min</span>
+                            <span>€120</span>
+                        </div>
+                    </li>
+                    <li class="service-item">
+                        <div class="service-name">Special Occasion</div>
+                        <div class="service-details">
+                            <span>180 min</span>
+                            <span>€350</span>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="step-indicator">
+                    <div class="step completed">
+                        <div class="step-number">1</div>
+                        <span>Service</span>
+                    </div>
+                    <div class="step active">
+                        <div class="step-number">2</div>
+                        <span>Date & Time</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <span>Details</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <span>Confirm</span>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <section class="calendar">
+                    <div class="calendar-header">
+                        <h3 class="calendar-title">January 2026</h3>
+                        <div class="calendar-nav">
+                            <button aria-label="Previous month">← Prev</button>
+                            <button aria-label="Next month">Next →</button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-label">Mon</div>
+                        <div class="calendar-day-label">Tue</div>
+                        <div class="calendar-day-label">Wed</div>
+                        <div class="calendar-day-label">Thu</div>
+                        <div class="calendar-day-label">Fri</div>
+                        <div class="calendar-day-label">Sat</div>
+                        <div class="calendar-day-label">Sun</div>
+
+                        <div class="calendar-day other-month">29</div>
+                        <div class="calendar-day other-month">30</div>
+                        <div class="calendar-day other-month">31</div>
+                        <div class="calendar-day disabled">1</div>
+                        <div class="calendar-day disabled">2</div>
+                        <div class="calendar-day disabled">3</div>
+                        <div class="calendar-day disabled">4</div>
+
+                        <div class="calendar-day disabled">5</div>
+                        <div class="calendar-day disabled">6</div>
+                        <div class="calendar-day disabled">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day selected">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                        <div class="calendar-day other-month">1</div>
+                    </div>
+                </section>
+
+                <!-- Time Slots -->
+                <section class="time-slots">
+                    <h3 class="time-slots-title">Available Times</h3>
+                    <div class="time-grid">
+                        <div class="time-slot unavailable">09:00</div>
+                        <div class="time-slot unavailable">10:00</div>
+                        <div class="time-slot">11:00</div>
+                        <div class="time-slot">12:00</div>
+                        <div class="time-slot unavailable">13:00</div>
+                        <div class="time-slot selected">14:00</div>
+                        <div class="time-slot">15:00</div>
+                        <div class="time-slot">16:00</div>
+                        <div class="time-slot">17:00</div>
+                        <div class="time-slot unavailable">18:00</div>
+                    </div>
+                </section>
+
+                <!-- Summary Card -->
+                <div class="summary-card">
+                    <h3 class="summary-title">Booking Summary</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Service</span>
+                        <span class="summary-value">Personal Styling</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Date</span>
+                        <span class="summary-value">January 14, 2026</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Time</span>
+                        <span class="summary-value">14:00 (90 minutes)</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Price</span>
+                        <span class="summary-value">€150</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button class="button">Back</button>
+                    <button class="button primary">Continue to Details</button>
+                </div>
+            </main>
+        </div>
+
+        <footer>
+            <nav class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Us</a>
+                <a href="#" class="footer-link">About</a>
+            </nav>
+            <p>&copy; 2026 Timeless Cosmo. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 49;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive elements
+        const serviceItems = document.querySelectorAll('.service-item');
+        serviceItems.forEach(item => {
+            item.addEventListener('click', () => {
+                serviceItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        const calendarDays = document.querySelectorAll('.calendar-day:not(.disabled):not(.other-month)');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', () => {
+                calendarDays.forEach(d => d.classList.remove('selected'));
+                day.classList.add('selected');
+            });
+        });
+
+        const timeSlots = document.querySelectorAll('.time-slot:not(.unavailable)');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

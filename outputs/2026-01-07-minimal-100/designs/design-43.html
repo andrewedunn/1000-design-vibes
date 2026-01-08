@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo Steel - Public Health Symptom Checker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Cosmo Steel - Flat 2010s-inspired design for users
+ABOUTME: A government health symptom checker with flat 2010s aesthetics - bold colors, geometric shapes, strong typography, and energetic interactions
+
+CSS VARIABLES:
+--color-primary: #00BCD4 (vibrant cyan)
+--color-secondary: #FF6B6B (energetic coral)
+--color-accent: #4CAF50 (success green)
+--color-warning: #FFC107 (warning amber)
+--color-background: #1a1a1a (deep dark)
+--color-surface: #2d2d2d (elevated dark)
+--color-surface-raised: #3a3a3a (cards/panels)
+--color-text: #ffffff (pure white)
+--color-text-muted: #b0b0b0 (muted gray)
+--font-heading: 'Montserrat' (bold geometric sans)
+--font-body: 'Open Sans' (clean readable)
+--space-unit: 8px
+--radius-default: 2px (minimal, flat aesthetic)
+--shadow-default: none (flat 2010s avoid shadows)
+
+DESIGN RATIONALE:
+Flat 2010s design emphasized vibrant colors, geometric shapes, minimal shadows, and bold typography. This symptom checker uses:
+- Bright cyan/coral color scheme for energetic feel
+- Flat geometric cards with sharp corners
+- Bold Montserrat headings (popular in 2010s)
+- Step-by-step interaction with progress indicators
+- Icon-based symptom selection with tap/click states
+- Clear hierarchy with color-coded severity levels
+- Government-appropriate information architecture
+- Metro/Material Design influences (pre-shadows era)
+-->
+
+<style>
+:root {
+    --color-primary: #00BCD4;
+    --color-secondary: #FF6B6B;
+    --color-accent: #4CAF50;
+    --color-warning: #FFC107;
+    --color-background: #1a1a1a;
+    --color-surface: #2d2d2d;
+    --color-surface-raised: #3a3a3a;
+    --color-text: #ffffff;
+    --color-text-muted: #b0b0b0;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Open Sans', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: var(--color-surface);
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+    border-bottom: 4px solid var(--color-primary);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #0097A7 100%);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 24px;
+}
+
+.site-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--color-text);
+}
+
+.site-subtitle {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.emergency-button {
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: var(--radius-default);
+    transition: background-color 0.2s;
+}
+
+.emergency-button:hover {
+    background-color: #ff5252;
+}
+
+.emergency-button:focus {
+    outline: 3px solid rgba(255, 107, 107, 0.5);
+    outline-offset: 2px;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 4);
+}
+
+.progress-bar {
+    background-color: var(--color-surface);
+    height: 8px;
+    border-radius: var(--radius-default);
+    margin-bottom: calc(var(--space-unit) * 6);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary) 0%, #4CAF50 100%);
+    width: 33%;
+    transition: width 0.4s ease;
+}
+
+.step-indicator {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    padding: calc(var(--space-unit) * 2);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-default);
+    border-top: 4px solid transparent;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step.active {
+    border-top-color: var(--color-primary);
+    background-color: var(--color-surface-raised);
+}
+
+.step.completed {
+    border-top-color: var(--color-accent);
+    opacity: 0.6;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 36px;
+    margin-bottom: calc(var(--space-unit) * 2);
+    color: var(--color-text);
+}
+
+.subtitle {
+    font-size: 18px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 5);
+}
+
+.symptom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+.symptom-card {
+    background-color: var(--color-surface-raised);
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.symptom-card:hover {
+    border-color: var(--color-primary);
+    background-color: #454545;
+}
+
+.symptom-card:focus {
+    outline: 3px solid rgba(0, 188, 212, 0.5);
+    outline-offset: 2px;
+}
+
+.symptom-card.selected {
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.2) 0%, rgba(0, 188, 212, 0.1) 100%);
+}
+
+.symptom-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto calc(var(--space-unit) * 2);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.symptom-card.selected .symptom-icon {
+    background-color: var(--color-primary);
+}
+
+.symptom-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.severity-section {
+    background-color: var(--color-surface-raised);
+    padding: calc(var(--space-unit) * 4);
+    border-radius: var(--radius-default);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.severity-section h2 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: calc(var(--space-unit) * 3);
+}
+
+.severity-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+}
+
+.severity-option {
+    background-color: var(--color-surface);
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.severity-option:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.severity-option.selected {
+    border-color: var(--color-primary);
+}
+
+.severity-mild {
+    border-left: 4px solid var(--color-accent);
+}
+
+.severity-moderate {
+    border-left: 4px solid var(--color-warning);
+}
+
+.severity-severe {
+    border-left: 4px solid var(--color-secondary);
+}
+
+.severity-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: calc(var(--space-unit));
+}
+
+.severity-description {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.info-panel {
+    background-color: var(--color-surface);
+    padding: calc(var(--space-unit) * 4);
+    border-radius: var(--radius-default);
+    border-left: 4px solid var(--color-primary);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.info-panel h3 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: calc(var(--space-unit) * 2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-list {
+    list-style: none;
+}
+
+.info-list li {
+    padding: calc(var(--space-unit)) 0;
+    padding-left: calc(var(--space-unit) * 3);
+    position: relative;
+    color: var(--color-text-muted);
+}
+
+.info-list li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.action-buttons {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    justify-content: flex-end;
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #00ACC1;
+}
+
+.btn-primary:focus {
+    outline: 3px solid rgba(0, 188, 212, 0.5);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border: 2px solid var(--color-surface-raised);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-text-muted);
+    color: var(--color-text);
+}
+
+.btn-secondary:focus {
+    outline: 3px solid rgba(255, 255, 255, 0.3);
+    outline-offset: 2px;
+}
+
+.results-panel {
+    background: linear-gradient(135deg, var(--color-surface-raised) 0%, var(--color-surface) 100%);
+    padding: calc(var(--space-unit) * 5);
+    border-radius: var(--radius-default);
+    border-top: 4px solid var(--color-primary);
+}
+
+.results-header {
+    text-align: center;
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.results-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    margin: 0 auto calc(var(--space-unit) * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.results-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: calc(var(--space-unit));
+}
+
+.recommendation-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: calc(var(--space-unit) * 3);
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.recommendation-card {
+    background-color: var(--color-surface);
+    padding: calc(var(--space-unit) * 4);
+    border-radius: var(--radius-default);
+    border-left: 4px solid var(--color-accent);
+}
+
+.recommendation-card h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.recommendation-card p {
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--space-unit));
+}
+
+.tag {
+    background-color: rgba(0, 188, 212, 0.2);
+    color: var(--color-primary);
+    padding: calc(var(--space-unit) / 2) calc(var(--space-unit) * 1.5);
+    border-radius: var(--radius-default);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.disclaimer {
+    background-color: rgba(255, 193, 7, 0.1);
+    border: 2px solid var(--color-warning);
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    margin-top: calc(var(--space-unit) * 4);
+    text-align: center;
+}
+
+.disclaimer-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-warning);
+    margin-bottom: calc(var(--space-unit));
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.disclaimer-text {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.footer {
+    background-color: var(--color-surface);
+    padding: calc(var(--space-unit) * 4);
+    text-align: center;
+    margin-top: calc(var(--space-unit) * 8);
+    border-top: 4px solid var(--color-surface-raised);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.footer-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: #00ACC1;
+}
+
+.footer-link:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.footer-text {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+        text-align: center;
+    }
+
+    .step-indicator {
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .symptom-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .recommendation-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-content">
+        <div class="logo-section">
+            <div class="logo">C</div>
+            <div>
+                <div class="site-title">Cosmo Steel Health Portal</div>
+                <div class="site-subtitle">National Public Health Service</div>
+            </div>
+        </div>
+        <button class="emergency-button">Emergency: Call 911</button>
+    </div>
+</header>
+
+<main class="main-container">
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <div class="step-indicator">
+        <div class="step active">1. Select Symptoms</div>
+        <div class="step">2. Severity & Duration</div>
+        <div class="step">3. Get Recommendations</div>
+    </div>
+
+    <h1>What symptoms are you experiencing?</h1>
+    <p class="subtitle">Select all symptoms that apply. You can choose multiple options.</p>
+
+    <div class="symptom-grid">
+        <div class="symptom-card selected" tabindex="0">
+            <div class="symptom-icon">🤒</div>
+            <div class="symptom-name">Fever</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">😷</div>
+            <div class="symptom-name">Cough</div>
+        </div>
+        <div class="symptom-card selected" tabindex="0">
+            <div class="symptom-icon">🤧</div>
+            <div class="symptom-name">Runny Nose</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">😫</div>
+            <div class="symptom-name">Headache</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">😩</div>
+            <div class="symptom-name">Fatigue</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">🤢</div>
+            <div class="symptom-name">Nausea</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">💪</div>
+            <div class="symptom-name">Muscle Pain</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">🌡️</div>
+            <div class="symptom-name">Chills</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">😮‍💨</div>
+            <div class="symptom-name">Shortness of Breath</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">👃</div>
+            <div class="symptom-name">Loss of Smell</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">😖</div>
+            <div class="symptom-name">Sore Throat</div>
+        </div>
+        <div class="symptom-card" tabindex="0">
+            <div class="symptom-icon">🤮</div>
+            <div class="symptom-name">Vomiting</div>
+        </div>
+    </div>
+
+    <div class="severity-section">
+        <h2>How severe are your symptoms?</h2>
+        <div class="severity-options">
+            <div class="severity-option severity-mild" tabindex="0">
+                <div class="severity-title">Mild</div>
+                <div class="severity-description">Symptoms are noticeable but not interfering with daily activities</div>
+            </div>
+            <div class="severity-option severity-moderate selected" tabindex="0">
+                <div class="severity-title">Moderate</div>
+                <div class="severity-description">Symptoms are affecting daily activities and causing discomfort</div>
+            </div>
+            <div class="severity-option severity-severe" tabindex="0">
+                <div class="severity-title">Severe</div>
+                <div class="severity-description">Symptoms are significantly impacting ability to function</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <h3>When to Seek Immediate Care</h3>
+        <ul class="info-list">
+            <li>Difficulty breathing or shortness of breath</li>
+            <li>Persistent chest pain or pressure</li>
+            <li>Confusion or inability to stay awake</li>
+            <li>Bluish lips or face</li>
+            <li>Severe or persistent vomiting</li>
+        </ul>
+    </div>
+
+    <div class="results-panel">
+        <div class="results-header">
+            <div class="results-icon">✓</div>
+            <h2 class="results-title">Your Assessment Results</h2>
+            <p class="subtitle">Based on your symptoms, here are our recommendations</p>
+        </div>
+
+        <div class="recommendation-cards">
+            <div class="recommendation-card">
+                <h4>Self-Care at Home</h4>
+                <p>Your symptoms suggest a common viral infection. Rest and self-care should help you recover.</p>
+                <div class="tag-list">
+                    <span class="tag">Rest</span>
+                    <span class="tag">Hydration</span>
+                    <span class="tag">Monitor</span>
+                </div>
+            </div>
+
+            <div class="recommendation-card">
+                <h4>Contact Your Provider</h4>
+                <p>Schedule a telehealth or in-person appointment if symptoms worsen or persist beyond 7 days.</p>
+                <div class="tag-list">
+                    <span class="tag">Telehealth</span>
+                    <span class="tag">Appointment</span>
+                </div>
+            </div>
+
+            <div class="recommendation-card">
+                <h4>Prevention Tips</h4>
+                <p>Wash hands frequently, avoid close contact with others, and wear a mask in public spaces.</p>
+                <div class="tag-list">
+                    <span class="tag">Hygiene</span>
+                    <span class="tag">Isolation</span>
+                    <span class="tag">PPE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <div class="disclaimer-title">⚠ Medical Disclaimer</div>
+            <div class="disclaimer-text">
+                This tool provides general health information and is not a substitute for professional medical advice, diagnosis, or treatment.
+                Always consult with a qualified healthcare provider for medical concerns.
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-secondary">Start Over</button>
+        <button class="btn btn-primary">Find Care Near You</button>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Accessibility</a>
+        <a href="#" class="footer-link">Contact Us</a>
+        <a href="#" class="footer-link">FAQs</a>
+    </div>
+    <p class="footer-text">© 2026 National Public Health Service. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 43;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Interactive symptom card selection
+    document.querySelectorAll('.symptom-card').forEach(card => {
+        card.addEventListener('click', function() {
+            this.classList.toggle('selected');
+        });
+        card.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.classList.toggle('selected');
+            }
+        });
+    });
+
+    // Severity option selection
+    document.querySelectorAll('.severity-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.severity-option').forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+        option.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.querySelectorAll('.severity-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            }
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

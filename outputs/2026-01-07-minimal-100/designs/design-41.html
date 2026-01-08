@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo Quartz - Online Course Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Cosmo Quartz - A flat approach meets international sensibility
+        ABOUTME: Swiss International style online course platform for media industry with mysterious, minimal aesthetic
+
+        CSS VARIABLES:
+        --color-primary: Deep cosmic purple (#2D1B4E)
+        --color-secondary: Quartz pink accent (#D4A5D8)
+        --color-background: Soft off-white (#F8F7F5)
+        --color-surface: Pure white (#FFFFFF)
+        --color-text: Near black (#1A1A1A)
+        --color-text-muted: Medium gray (#6B6B6B)
+        --font-heading: 'Space Grotesk' - Modern grotesque
+        --font-body: -apple-system, sans-serif - System neutral
+        --space-unit: 8px grid system
+        --radius-default: 2px - Minimal Swiss corners
+        --shadow-default: Subtle elevation only
+
+        DESIGN RATIONALE:
+        Swiss International style prioritizes grid systems, asymmetric layouts, and sans-serif typography.
+        The mysterious tone is achieved through deep cosmic purple, restrained animations, and enigmatic content hints.
+        Course structure uses strict grid alignment with clear hierarchy. Media industry context reflected in
+        visual storytelling emphasis and production-focused course modules. Light/dark mode toggle provides
+        accessibility while maintaining the minimalist aesthetic. Flat design with precise spacing creates
+        international sophistication.
+        -->
+
+        */
+        :root {
+            --color-primary: #2D1B4E;
+            --color-secondary: #D4A5D8;
+            --color-accent: #8B5CF6;
+            --color-background: #F8F7F5;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #6B6B6B;
+            --color-border: #E0E0E0;
+            --font-heading: 'Space Grotesk', -apple-system, sans-serif;
+            --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(45, 27, 78, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #E8DEFF;
+            --color-secondary: #D4A5D8;
+            --color-accent: #A78BFA;
+            --color-background: #0F0A1A;
+            --color-surface: #1A1426;
+            --color-text: #F8F7F5;
+            --color-text-muted: #A0A0A0;
+            --color-border: #2D2640;
+            --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 3);
+        }
+
+        /* Header - Swiss Grid Layout */
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: calc(var(--space-unit) * 3);
+            padding: calc(var(--space-unit) * 2.5) calc(var(--space-unit) * 3);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 3px;
+            background: var(--color-border);
+            position: relative;
+            border-radius: var(--radius-default);
+        }
+
+        .progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 35%;
+            background: var(--color-accent);
+            border-radius: var(--radius-default);
+            transition: width 0.4s ease;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .theme-toggle:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Main Layout - Asymmetric Swiss Grid */
+        main {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: calc(var(--space-unit) * 4);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 4) calc(var(--space-unit) * 3);
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar - Course Navigation */
+        .sidebar {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            height: fit-content;
+            position: sticky;
+            top: calc(70px + var(--space-unit) * 4);
+            box-shadow: var(--shadow-default);
+        }
+
+        .sidebar h2 {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .module-list {
+            list-style: none;
+        }
+
+        .module-item {
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .module-item button {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: none;
+            padding: calc(var(--space-unit) * 1.5);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-item button:hover {
+            background: var(--color-background);
+            color: var(--color-text);
+        }
+
+        .module-item button:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .module-item.active button {
+            border-left-color: var(--color-accent);
+            background: var(--color-background);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .module-duration {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--color-text-muted);
+        }
+
+        /* Main Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        /* Hero Section - Swiss Typography */
+        .hero {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 5);
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--color-secondary), transparent);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 2);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .hero-tagline {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .btn {
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            border-radius: var(--radius-default);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 3px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        .btn-secondary:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Current Lesson */
+        .current-lesson {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 4);
+            box-shadow: var(--shadow-default);
+        }
+
+        .lesson-header {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 3);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .lesson-number {
+            width: 48px;
+            height: 48px;
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .lesson-info h2 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-text);
+        }
+
+        .lesson-meta {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: calc(var(--space-unit) * 3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 20px 0 20px 35px;
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.9);
+            position: relative;
+            left: 5px;
+        }
+
+        .lesson-content {
+            display: grid;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .lesson-content h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit));
+        }
+
+        .lesson-content p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--color-text);
+        }
+
+        .lesson-objectives {
+            background: var(--color-background);
+            padding: calc(var(--space-unit) * 3);
+            border-radius: var(--radius-default);
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .lesson-objectives ul {
+            list-style: none;
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .lesson-objectives li {
+            padding-left: calc(var(--space-unit) * 3);
+            position: relative;
+            margin-bottom: calc(var(--space-unit));
+            font-size: 14px;
+        }
+
+        .lesson-objectives li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* Resources Grid */
+        .resources-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 4);
+            box-shadow: var(--shadow-default);
+        }
+
+        .resources-section h2 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .resource-card {
+            background: var(--color-background);
+            padding: calc(var(--space-unit) * 3);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .resource-card:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+            font-size: 18px;
+        }
+
+        .resource-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit));
+        }
+
+        .resource-card p {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+            margin-top: calc(var(--space-unit) * 6);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-links a:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+            border-radius: var(--radius-default);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                grid-template-columns: 1fr auto;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+
+            .hero {
+                padding: calc(var(--space-unit) * 3);
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero-tagline {
+                font-size: 16px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --color-border: #000000;
+            }
+
+            [data-theme="dark"] {
+                --color-border: #FFFFFF;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Cosmo Quartz</div>
+            <div class="progress-indicator">
+                <span>Module 3 of 8</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            <button class="theme-toggle" aria-label="Toggle dark mode">
+                <span class="theme-label">Light</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <h2>Course Modules</h2>
+            <ul class="module-list">
+                <li class="module-item">
+                    <button>
+                        <span>01. Foundations</span>
+                        <span class="module-duration">45m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>02. Visual Language</span>
+                        <span class="module-duration">62m</span>
+                    </button>
+                </li>
+                <li class="module-item active">
+                    <button>
+                        <span>03. The Hidden Frame</span>
+                        <span class="module-duration">38m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>04. Temporal Design</span>
+                        <span class="module-duration">51m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>05. Sound & Silence</span>
+                        <span class="module-duration">44m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>06. Narrative Systems</span>
+                        <span class="module-duration">57m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>07. Production Praxis</span>
+                        <span class="module-duration">69m</span>
+                    </button>
+                </li>
+                <li class="module-item">
+                    <button>
+                        <span>08. Final Project</span>
+                        <span class="module-duration">120m</span>
+                    </button>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="content-area">
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="course-meta">
+                        <span>Advanced Media Design</span>
+                        <span>•</span>
+                        <span>8 Weeks</span>
+                    </div>
+                    <h1>Mysteries of Visual Composition</h1>
+                    <p class="hero-tagline">A flat approach meets international sensibility—explore the enigmatic principles that govern compelling visual narratives in modern media production.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary">Continue Learning</button>
+                        <button class="btn btn-secondary">View Syllabus</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="current-lesson">
+                <div class="lesson-header">
+                    <div class="lesson-number">3.2</div>
+                    <div class="lesson-info">
+                        <h2>Compositional Enigmas: What Lies Beyond the Grid</h2>
+                        <p class="lesson-meta">12 minutes · Video Lecture</p>
+                    </div>
+                </div>
+
+                <div class="video-placeholder">
+                    <div class="play-icon"></div>
+                </div>
+
+                <div class="lesson-content">
+                    <div class="lesson-objectives">
+                        <h3>Learning Objectives</h3>
+                        <ul>
+                            <li>Understand the psychological impact of asymmetric balance in visual composition</li>
+                            <li>Identify hidden geometric relationships that create visual tension</li>
+                            <li>Apply international typography principles to media layouts</li>
+                            <li>Recognize the role of negative space in narrative pacing</li>
+                        </ul>
+                    </div>
+
+                    <p>
+                        Swiss International design emerged from a desire to communicate with absolute clarity,
+                        yet paradoxically it reveals depths that resist immediate understanding. This lesson
+                        explores the mysterious relationship between strict grid systems and organic visual flow,
+                        examining how minimalist approaches can evoke profound emotional responses in viewers.
+                    </p>
+
+                    <p>
+                        Through case studies of influential media designers, we'll uncover the subtle techniques
+                        that transform flat compositions into dimensional experiences. You'll learn to see beyond
+                        the surface—to recognize the invisible forces that guide the eye and shape perception
+                        across time-based media.
+                    </p>
+                </div>
+            </section>
+
+            <section class="resources-section">
+                <h2>Course Resources</h2>
+                <div class="resources-grid">
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">📐</div>
+                        <h3>Grid Systems PDF</h3>
+                        <p>Comprehensive guide to Swiss grid methodology and modern adaptations</p>
+                    </div>
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">🎨</div>
+                        <h3>Color Theory Module</h3>
+                        <p>Interactive exercises exploring minimalist color palettes in media</p>
+                    </div>
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">📹</div>
+                        <h3>Production Templates</h3>
+                        <p>After Effects & Premiere templates demonstrating key principles</p>
+                    </div>
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">💬</div>
+                        <h3>Discussion Forum</h3>
+                        <p>Connect with peers and share compositional discoveries</p>
+                    </div>
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">📚</div>
+                        <h3>Reading List</h3>
+                        <p>Curated selection of design theory texts and visual essays</p>
+                    </div>
+                    <div class="resource-card" tabindex="0">
+                        <div class="resource-icon">✏️</div>
+                        <h3>Practice Assignments</h3>
+                        <p>Hands-on exercises to reinforce compositional techniques</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Cosmo Quartz Learning Platform</p>
+            <div class="footer-links">
+                <a href="#help">Help Center</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 41;
+
+        // Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Theme Toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        const themeLabel = document.querySelector('.theme-label');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeLabel.textContent = 'Dark';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeLabel.textContent = newTheme === 'dark' ? 'Dark' : 'Light';
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Module navigation (simulate)
+        const moduleButtons = document.querySelectorAll('.module-item button');
+        moduleButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                moduleButtons.forEach(b => b.parentElement.classList.remove('active'));
+                e.target.closest('.module-item').classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

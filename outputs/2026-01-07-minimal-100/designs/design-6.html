@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilded Hub - File Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Gilded Hub - Natural meets neutral: a pop art perspective
+        ABOUTME: A luxurious file manager for media professionals with bold pop art aesthetics,
+        featuring high-contrast colors, graphic shapes, and comic book-inspired visual elements.
+
+        CSS VARIABLES:
+        --color-primary: #FFD700 (gilded gold)
+        --color-secondary: #FF1493 (deep pink)
+        --color-accent: #00CED1 (dark turquoise)
+        --color-background: #FFFEF0 (cream)
+        --color-surface: #FFFFFF
+        --color-text: #1A1A1A
+        --color-text-muted: #666666
+        --font-heading: 'Bebas Neue' (bold, condensed pop art style)
+        --font-body: 'Poppins' (clean, modern)
+
+        DESIGN RATIONALE:
+        Pop art celebrates bold colors and graphic elements. I chose a gilded gold primary color
+        to reflect the "luxurious" tone, paired with vibrant pop art pink and turquoise accents.
+        The file manager uses a classic three-column layout with Ben-Day dot patterns, thick
+        borders, and comic book-style shadows to create that iconic Lichtenstein/Warhol aesthetic.
+        Media file types are represented with colorful, graphic icons. The cream background keeps
+        it sophisticated while the bold typography and shapes maintain pop art energy.
+        */
+
+        :root {
+            --color-primary: #FFD700;
+            --color-secondary: #FF1493;
+            --color-accent: #00CED1;
+            --color-background: #FFFEF0;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-border: #1A1A1A;
+            --font-heading: 'Bebas Neue', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 0;
+            --shadow-default: 6px 6px 0 rgba(0, 0, 0, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ben-Day dot pattern overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+            background-size: 4px 4px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Header */
+        header {
+            background: var(--color-primary);
+            border-bottom: 4px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
+            text-transform: uppercase;
+            position: relative;
+            line-height: 1;
+        }
+
+        .tagline {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            color: var(--color-text);
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: calc(var(--space-unit) * 0.75);
+        }
+
+        .btn-header {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn-header:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-header:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: var(--color-surface);
+            border-bottom: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 0.75) var(--space-unit);
+        }
+
+        .breadcrumb-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .breadcrumb-item {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--color-secondary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--color-text);
+        }
+
+        .breadcrumb-separator {
+            color: var(--color-text-muted);
+            font-weight: 700;
+        }
+
+        /* Main Layout */
+        main {
+            flex: 1;
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            border-left: 3px solid var(--color-border);
+            border-right: 3px solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: 3px solid var(--color-border);
+            padding: var(--space-unit);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .sidebar-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: calc(var(--space-unit) * 0.75);
+            color: var(--color-text);
+            text-transform: uppercase;
+        }
+
+        .folder-tree {
+            list-style: none;
+        }
+
+        .folder-item {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .folder-item:hover {
+            background: var(--color-primary);
+            border-color: var(--color-border);
+        }
+
+        .folder-item.active {
+            background: var(--color-accent);
+            border-color: var(--color-border);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 1);
+        }
+
+        .folder-item::before {
+            content: '📁 ';
+            margin-right: 0.5rem;
+        }
+
+        .folder-nested {
+            margin-left: calc(var(--space-unit) * 1.5);
+            margin-top: 0.25rem;
+        }
+
+        /* File Grid */
+        .file-area {
+            flex: 1;
+            padding: var(--space-unit);
+            overflow-y: auto;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: calc(var(--space-unit) * 0.5);
+            margin-bottom: var(--space-unit);
+            padding-bottom: var(--space-unit);
+            border-bottom: 3px solid var(--color-border);
+        }
+
+        .btn-toolbar {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn-toolbar:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-toolbar.primary {
+            background: var(--color-secondary);
+            color: var(--color-surface);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .file-card {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.25);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            box-shadow: var(--shadow-default);
+        }
+
+        .file-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+        }
+
+        .file-card.selected {
+            background: var(--color-primary);
+            border-color: var(--color-border);
+        }
+
+        .file-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto calc(var(--space-unit) * 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 3px solid var(--color-border);
+            background: linear-gradient(135deg, var(--icon-color-1) 0%, var(--icon-color-2) 100%);
+        }
+
+        .file-card[data-type="video"] .file-icon {
+            --icon-color-1: #FF1493;
+            --icon-color-2: #FF69B4;
+        }
+
+        .file-card[data-type="image"] .file-icon {
+            --icon-color-1: #00CED1;
+            --icon-color-2: #7FFFD4;
+        }
+
+        .file-card[data-type="audio"] .file-icon {
+            --icon-color-1: #FFD700;
+            --icon-color-2: #FFA500;
+        }
+
+        .file-card[data-type="document"] .file-icon {
+            --icon-color-1: #9370DB;
+            --icon-color-2: #BA55D3;
+        }
+
+        .file-card[data-type="folder"] .file-icon {
+            --icon-color-1: #32CD32;
+            --icon-color-2: #7FFF00;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            word-break: break-word;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            width: 360px;
+            background: var(--color-surface);
+            border-left: 3px solid var(--color-border);
+            padding: var(--space-unit);
+            overflow-y: auto;
+        }
+
+        .preview-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-unit);
+            color: var(--color-text);
+            text-transform: uppercase;
+        }
+
+        .preview-content {
+            background: var(--color-background);
+            border: 3px solid var(--color-border);
+            padding: var(--space-unit);
+            margin-bottom: var(--space-unit);
+        }
+
+        .preview-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
+            border: 3px solid var(--color-border);
+            margin-bottom: var(--space-unit);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .preview-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .info-label {
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .preview-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-preview {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            padding: 0.75rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+            transition: transform 0.1s, box-shadow 0.1s;
+            text-align: center;
+        }
+
+        .btn-preview:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-preview.primary {
+            background: var(--color-primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: 3px solid var(--color-border);
+            padding: calc(var(--space-unit) * 0.75) var(--space-unit);
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .storage-bar {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 calc(var(--space-unit) * 2);
+        }
+
+        .storage-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .storage-progress {
+            height: 24px;
+            background: var(--color-background);
+            border: 3px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-secondary) 50%, var(--color-primary) 100%);
+            width: 68%;
+            position: relative;
+        }
+
+        /* Focus styles */
+        button:focus-visible,
+        .file-card:focus-visible,
+        .folder-item:focus-visible {
+            outline: 3px dashed var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .preview-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            main {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 3px solid var(--color-border);
+            }
+
+            .file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Gilded Hub</h1>
+                <div class="tagline">Natural meets neutral: a pop art perspective</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-header">Upload</button>
+                <button class="btn-header">New Folder</button>
+                <button class="btn-header">Share</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="#" class="breadcrumb-item">Home</a>
+            <span class="breadcrumb-separator">▶</span>
+            <a href="#" class="breadcrumb-item">Media Assets</a>
+            <span class="breadcrumb-separator">▶</span>
+            <span class="breadcrumb-item active">2026 Projects</span>
+        </div>
+    </nav>
+
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h2 class="sidebar-title">Folders</h2>
+                <ul class="folder-tree">
+                    <li class="folder-item">Recent Files</li>
+                    <li class="folder-item">Starred</li>
+                    <li class="folder-item active">Media Assets
+                        <ul class="folder-nested">
+                            <li class="folder-item">2025 Projects</li>
+                            <li class="folder-item active">2026 Projects</li>
+                            <li class="folder-item">Archive</li>
+                        </ul>
+                    </li>
+                    <li class="folder-item">Documents</li>
+                    <li class="folder-item">Presentations</li>
+                    <li class="folder-item">Templates</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-title">Quick Access</h2>
+                <ul class="folder-tree">
+                    <li class="folder-item">Downloads</li>
+                    <li class="folder-item">Desktop</li>
+                    <li class="folder-item">Shared with me</li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="file-area">
+            <div class="toolbar">
+                <button class="btn-toolbar primary">Select All</button>
+                <button class="btn-toolbar">Download</button>
+                <button class="btn-toolbar">Move</button>
+                <button class="btn-toolbar">Copy</button>
+                <button class="btn-toolbar">Delete</button>
+                <button class="btn-toolbar">Rename</button>
+            </div>
+
+            <div class="file-grid">
+                <div class="file-card selected" data-type="video" tabindex="0">
+                    <div class="file-icon">🎬</div>
+                    <div class="file-name">campaign_final_v3.mp4</div>
+                    <div class="file-meta">142 MB • Video</div>
+                </div>
+
+                <div class="file-card" data-type="image" tabindex="0">
+                    <div class="file-icon">🖼️</div>
+                    <div class="file-name">hero_banner.png</div>
+                    <div class="file-meta">8.2 MB • Image</div>
+                </div>
+
+                <div class="file-card" data-type="folder" tabindex="0">
+                    <div class="file-icon">📁</div>
+                    <div class="file-name">Social Media Assets</div>
+                    <div class="file-meta">24 items • Folder</div>
+                </div>
+
+                <div class="file-card" data-type="audio" tabindex="0">
+                    <div class="file-icon">🎵</div>
+                    <div class="file-name">podcast_intro.wav</div>
+                    <div class="file-meta">18.4 MB • Audio</div>
+                </div>
+
+                <div class="file-card" data-type="video" tabindex="0">
+                    <div class="file-icon">🎥</div>
+                    <div class="file-name">behind_the_scenes.mov</div>
+                    <div class="file-meta">387 MB • Video</div>
+                </div>
+
+                <div class="file-card" data-type="document" tabindex="0">
+                    <div class="file-icon">📄</div>
+                    <div class="file-name">production_schedule.pdf</div>
+                    <div class="file-meta">1.2 MB • PDF</div>
+                </div>
+
+                <div class="file-card" data-type="image" tabindex="0">
+                    <div class="file-icon">🎨</div>
+                    <div class="file-name">brand_guidelines.ai</div>
+                    <div class="file-meta">24.8 MB • Vector</div>
+                </div>
+
+                <div class="file-card" data-type="video" tabindex="0">
+                    <div class="file-icon">📹</div>
+                    <div class="file-name">interview_raw.mp4</div>
+                    <div class="file-meta">512 MB • Video</div>
+                </div>
+
+                <div class="file-card" data-type="audio" tabindex="0">
+                    <div class="file-icon">🎧</div>
+                    <div class="file-name">soundtrack_master.mp3</div>
+                    <div class="file-meta">12.1 MB • Audio</div>
+                </div>
+
+                <div class="file-card" data-type="folder" tabindex="0">
+                    <div class="file-icon">📂</div>
+                    <div class="file-name">Client Deliverables</div>
+                    <div class="file-meta">18 items • Folder</div>
+                </div>
+
+                <div class="file-card" data-type="image" tabindex="0">
+                    <div class="file-icon">📸</div>
+                    <div class="file-name">product_shot_01.jpg</div>
+                    <div class="file-meta">4.8 MB • Image</div>
+                </div>
+
+                <div class="file-card" data-type="document" tabindex="0">
+                    <div class="file-icon">📋</div>
+                    <div class="file-name">script_revision_2.docx</div>
+                    <div class="file-meta">245 KB • Document</div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="preview-panel">
+            <h2 class="preview-title">Preview</h2>
+
+            <div class="preview-content">
+                <div class="preview-thumbnail">🎬</div>
+
+                <div class="preview-info">
+                    <div class="info-row">
+                        <span class="info-label">File Name</span>
+                        <span class="info-value">campaign_final_v3.mp4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type</span>
+                        <span class="info-value">Video/MP4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Size</span>
+                        <span class="info-value">142 MB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Duration</span>
+                        <span class="info-value">3:42</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Resolution</span>
+                        <span class="info-value">1920x1080</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Modified</span>
+                        <span class="info-value">Jan 7, 2026</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Owner</span>
+                        <span class="info-value">Creative Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-actions">
+                <button class="btn-preview primary">Open</button>
+                <button class="btn-preview">Download</button>
+                <button class="btn-preview">Share Link</button>
+                <button class="btn-preview">Add to Collection</button>
+                <button class="btn-preview">View Details</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div>12 items • 1.2 GB</div>
+            <div class="storage-bar">
+                <div class="storage-label">
+                    <span>Storage</span>
+                    <span>68 GB of 100 GB used</span>
+                </div>
+                <div class="storage-progress">
+                    <div class="storage-fill"></div>
+                </div>
+            </div>
+            <div>Last synced: Just now</div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 6;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // File selection interactivity
+        const fileCards = document.querySelectorAll('.file-card');
+        fileCards.forEach(card => {
+            card.addEventListener('click', () => {
+                fileCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+
+                // Update preview panel based on selected file
+                const type = card.getAttribute('data-type');
+                const name = card.querySelector('.file-name').textContent;
+                const meta = card.querySelector('.file-meta').textContent;
+
+                const previewThumb = document.querySelector('.preview-thumbnail');
+                const previewName = document.querySelector('.info-value');
+
+                if (previewThumb && previewName) {
+                    previewThumb.textContent = card.querySelector('.file-icon').textContent;
+                    previewName.textContent = name;
+                }
+            });
+        });
+
+        // Folder navigation
+        const folderItems = document.querySelectorAll('.folder-item');
+        folderItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!item.querySelector('.folder-nested')) {
+                    folderItems.forEach(f => f.classList.remove('active'));
+                    item.classList.add('active');
+                }
+                e.stopPropagation();
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

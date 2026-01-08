@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Core - The flat way to developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Pure Core - The flat way to developer
+        ABOUTME: A developer calculator with grunge aesthetic featuring distressed typography,
+        raw textures, and serious functionality for hex/binary/decimal conversions and bitwise operations.
+
+        CSS VARIABLES:
+        --color-primary: #7fb069 (worn moss green)
+        --color-background: #1a1a1a (deep black)
+        --color-surface: #252525 (charcoal)
+        --color-text: #e8e8e8 (off-white)
+        --color-text-muted: #888888 (gray)
+        --font-heading: 'Special Elite' (typewriter grunge)
+        --font-body: 'Courier Prime' (monospace developer)
+        --space-unit: 16px
+        --radius-default: 2px (minimal, sharp)
+        --shadow-default: 0 4px 12px rgba(0,0,0,0.6) (heavy shadow)
+
+        DESIGN RATIONALE:
+        Grunge meets developer tools - distressed typewriter font for headings creates analog friction
+        against digital precision. Dark palette with worn green accent evokes terminal aesthetics.
+        Heavy shadows and texture overlays add physical weight. Calculator functionality is serious
+        and complete: multiple number systems, bitwise operations, memory functions. The "flat way"
+        tagline reflected in minimal borders and sharp corners, letting texture and typography carry
+        the grunge aesthetic rather than decorative elements.
+        */
+
+        :root {
+            --color-primary: #7fb069;
+            --color-background: #1a1a1a;
+            --color-surface: #252525;
+            --color-text: #e8e8e8;
+            --color-text-muted: #888888;
+            --font-heading: 'Special Elite', monospace;
+            --font-body: 'Courier Prime', monospace;
+            --space-unit: 16px;
+            --radius-default: 2px;
+            --shadow-default: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: calc(var(--space-unit) * 2);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+            padding-bottom: calc(var(--space-unit) * 1.5);
+            border-bottom: 3px solid var(--color-surface);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--color-primary) 50%, transparent 100%);
+            opacity: 0.3;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        .calc-wrapper {
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-default);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .calc-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255,255,255,0.01) 0px,
+                rgba(255,255,255,0.01) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+        }
+
+        .mode-selector {
+            display: flex;
+            background-color: rgba(0,0,0,0.3);
+            padding: calc(var(--space-unit) * 0.5);
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        .mode-btn {
+            flex: 1;
+            background-color: transparent;
+            border: 1px solid var(--color-text-muted);
+            color: var(--color-text-muted);
+            padding: calc(var(--space-unit) * 0.5);
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: var(--radius-default);
+            letter-spacing: 1px;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .mode-btn.active {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+            font-weight: 700;
+        }
+
+        .mode-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .display-area {
+            padding: calc(var(--space-unit) * 1.5);
+            background-color: rgba(0,0,0,0.4);
+            border-bottom: 2px solid rgba(127, 176, 105, 0.2);
+        }
+
+        .display-label {
+            font-size: 0.625rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: calc(var(--space-unit) * 0.25);
+        }
+
+        .display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: right;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: var(--color-primary);
+            word-break: break-all;
+            text-shadow: 0 0 10px rgba(127, 176, 105, 0.3);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .conversions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: calc(var(--space-unit) * 0.5);
+            margin-top: calc(var(--space-unit) * 0.75);
+        }
+
+        .conversion-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(var(--space-unit) * 0.5);
+            background-color: rgba(0,0,0,0.2);
+            border-left: 2px solid var(--color-text-muted);
+            font-size: 0.75rem;
+        }
+
+        .conversion-label {
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.625rem;
+            min-width: 50px;
+        }
+
+        .conversion-value {
+            color: var(--color-text);
+            font-family: var(--font-body);
+            word-break: break-all;
+            text-align: right;
+        }
+
+        .button-grid {
+            padding: calc(var(--space-unit) * 1.5);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(var(--space-unit) * 0.75);
+        }
+
+        .calc-btn {
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--color-text);
+            padding: calc(var(--space-unit) * 1);
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border-radius: var(--radius-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127, 176, 105, 0.2), transparent);
+            transition: left 0.3s ease;
+        }
+
+        .calc-btn:hover::before {
+            left: 100%;
+        }
+
+        .calc-btn:hover {
+            background-color: rgba(127, 176, 105, 0.1);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .calc-btn:active {
+            transform: translateY(0);
+        }
+
+        .calc-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .calc-btn.operator {
+            background-color: rgba(127, 176, 105, 0.15);
+            border-color: rgba(127, 176, 105, 0.3);
+            color: var(--color-primary);
+        }
+
+        .calc-btn.operator:hover {
+            background-color: rgba(127, 176, 105, 0.25);
+        }
+
+        .calc-btn.special {
+            background-color: rgba(255,255,255,0.02);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .calc-btn.special:hover {
+            color: var(--color-text);
+        }
+
+        .calc-btn.wide {
+            grid-column: span 2;
+        }
+
+        .calc-btn.equals {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+            grid-column: span 2;
+        }
+
+        .calc-btn.equals:hover {
+            background-color: #8fc479;
+            border-color: #8fc479;
+            transform: translateY(-2px);
+        }
+
+        .memory-status {
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.5);
+            background-color: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: calc(var(--space-unit) * 1);
+            font-size: 0.625rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .memory-indicator {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        .memory-indicator::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--color-text-muted);
+            border-radius: 50%;
+        }
+
+        .memory-indicator.active::before {
+            background-color: var(--color-primary);
+            box-shadow: 0 0 8px var(--color-primary);
+        }
+
+        footer {
+            margin-top: calc(var(--space-unit) * 3);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.75rem;
+            padding-top: calc(var(--space-unit) * 2);
+            border-top: 1px solid var(--color-surface);
+        }
+
+        .instructions {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 1.5);
+            margin-top: calc(var(--space-unit) * 2);
+            border-radius: var(--radius-default);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .instructions h2 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin-bottom: calc(var(--space-unit) * 0.75);
+            color: var(--color-primary);
+            text-transform: uppercase;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: var(--space-unit);
+        }
+
+        .instructions li {
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            position: relative;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .instructions li::before {
+            content: '>';
+            position: absolute;
+            left: calc(var(--space-unit) * -1);
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .instructions code {
+            background-color: rgba(0,0,0,0.4);
+            padding: 2px 6px;
+            border-radius: 2px;
+            color: var(--color-primary);
+            font-size: 0.875em;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .display {
+                font-size: 1.75rem;
+            }
+
+            .calc-btn {
+                padding: calc(var(--space-unit) * 0.75);
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pure Core</h1>
+            <p class="tagline">The flat way to developer</p>
+        </header>
+
+        <main>
+            <div class="calc-wrapper">
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="dec" aria-label="Decimal mode">DEC</button>
+                    <button class="mode-btn" data-mode="hex" aria-label="Hexadecimal mode">HEX</button>
+                    <button class="mode-btn" data-mode="bin" aria-label="Binary mode">BIN</button>
+                    <button class="mode-btn" data-mode="oct" aria-label="Octal mode">OCT</button>
+                </div>
+
+                <div class="display-area">
+                    <div class="display-label">OUTPUT</div>
+                    <div class="display" id="display">0</div>
+                    <div class="conversions">
+                        <div class="conversion-row">
+                            <span class="conversion-label">HEX</span>
+                            <span class="conversion-value" id="hex-display">0x0</span>
+                        </div>
+                        <div class="conversion-row">
+                            <span class="conversion-label">BIN</span>
+                            <span class="conversion-value" id="bin-display">0b0</span>
+                        </div>
+                        <div class="conversion-row">
+                            <span class="conversion-label">OCT</span>
+                            <span class="conversion-value" id="oct-display">0o0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-grid">
+                    <button class="calc-btn special" data-action="mc">MC</button>
+                    <button class="calc-btn special" data-action="mr">MR</button>
+                    <button class="calc-btn special" data-action="m+">M+</button>
+                    <button class="calc-btn special" data-action="m-">M-</button>
+
+                    <button class="calc-btn special" data-action="and">AND</button>
+                    <button class="calc-btn special" data-action="or">OR</button>
+                    <button class="calc-btn special" data-action="xor">XOR</button>
+                    <button class="calc-btn special" data-action="not">NOT</button>
+
+                    <button class="calc-btn special" data-action="lsh">LSH</button>
+                    <button class="calc-btn special" data-action="rsh">RSH</button>
+                    <button class="calc-btn special" data-action="mod">MOD</button>
+                    <button class="calc-btn operator" data-action="/">/</button>
+
+                    <button class="calc-btn" data-digit="7">7</button>
+                    <button class="calc-btn" data-digit="8">8</button>
+                    <button class="calc-btn" data-digit="9">9</button>
+                    <button class="calc-btn operator" data-action="*">*</button>
+
+                    <button class="calc-btn" data-digit="4">4</button>
+                    <button class="calc-btn" data-digit="5">5</button>
+                    <button class="calc-btn" data-digit="6">6</button>
+                    <button class="calc-btn operator" data-action="-">-</button>
+
+                    <button class="calc-btn" data-digit="1">1</button>
+                    <button class="calc-btn" data-digit="2">2</button>
+                    <button class="calc-btn" data-digit="3">3</button>
+                    <button class="calc-btn operator" data-action="+">+</button>
+
+                    <button class="calc-btn special" data-action="c">C</button>
+                    <button class="calc-btn" data-digit="0">0</button>
+                    <button class="calc-btn equals" data-action="=">=</button>
+                </div>
+
+                <div class="memory-status">
+                    <div class="memory-indicator" id="memory-indicator">
+                        <span>MEMORY</span>
+                    </div>
+                    <div class="memory-indicator active">
+                        <span>MODE: <span id="current-mode">DEC</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h2>Usage</h2>
+                <ul>
+                    <li>Switch between <code>DEC</code>, <code>HEX</code>, <code>BIN</code>, and <code>OCT</code> modes</li>
+                    <li>Bitwise operations: <code>AND</code>, <code>OR</code>, <code>XOR</code>, <code>NOT</code></li>
+                    <li>Bit shifting: <code>LSH</code> (left shift), <code>RSH</code> (right shift)</li>
+                    <li>Memory: <code>MC</code> (clear), <code>MR</code> (recall), <code>M+</code> (add), <code>M-</code> (subtract)</li>
+                    <li>All conversions update automatically across number systems</li>
+                    <li>Use arrow keys or swipe to navigate between designs</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p>Design #7 of 100 &mdash; Pure Core &copy; 2026</p>
+            <p style="margin-top: 8px; opacity: 0.5;">Use arrow keys to navigate</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        let currentValue = 0;
+        let currentMode = 'dec';
+        let memory = 0;
+        let operator = null;
+        let waitingForOperand = false;
+        let previousValue = null;
+
+        const display = document.getElementById('display');
+        const hexDisplay = document.getElementById('hex-display');
+        const binDisplay = document.getElementById('bin-display');
+        const octDisplay = document.getElementById('oct-display');
+        const currentModeDisplay = document.getElementById('current-mode');
+        const memoryIndicator = document.getElementById('memory-indicator');
+
+        function updateDisplay() {
+            switch(currentMode) {
+                case 'hex':
+                    display.textContent = '0x' + currentValue.toString(16).toUpperCase();
+                    break;
+                case 'bin':
+                    display.textContent = '0b' + currentValue.toString(2);
+                    break;
+                case 'oct':
+                    display.textContent = '0o' + currentValue.toString(8);
+                    break;
+                default:
+                    display.textContent = currentValue;
+            }
+
+            hexDisplay.textContent = '0x' + currentValue.toString(16).toUpperCase();
+            binDisplay.textContent = '0b' + currentValue.toString(2);
+            octDisplay.textContent = '0o' + currentValue.toString(8);
+
+            if (memory !== 0) {
+                memoryIndicator.classList.add('active');
+            } else {
+                memoryIndicator.classList.remove('active');
+            }
+        }
+
+        function handleDigit(digit) {
+            if (waitingForOperand) {
+                currentValue = 0;
+                waitingForOperand = false;
+            }
+
+            const digitValue = parseInt(digit, 10);
+            const maxDigit = currentMode === 'bin' ? 1 : currentMode === 'oct' ? 7 : currentMode === 'hex' ? 15 : 9;
+
+            if (digitValue > maxDigit) return;
+
+            const base = currentMode === 'bin' ? 2 : currentMode === 'oct' ? 8 : currentMode === 'hex' ? 16 : 10;
+            currentValue = currentValue * base + digitValue;
+            updateDisplay();
+        }
+
+        function handleOperator(op) {
+            if (previousValue !== null && operator && !waitingForOperand) {
+                calculate();
+            }
+
+            operator = op;
+            previousValue = currentValue;
+            waitingForOperand = true;
+        }
+
+        function calculate() {
+            if (operator === null || previousValue === null) return;
+
+            let result = currentValue;
+            switch(operator) {
+                case '+':
+                    result = previousValue + currentValue;
+                    break;
+                case '-':
+                    result = previousValue - currentValue;
+                    break;
+                case '*':
+                    result = previousValue * currentValue;
+                    break;
+                case '/':
+                    result = Math.floor(previousValue / currentValue);
+                    break;
+                case 'and':
+                    result = previousValue & currentValue;
+                    break;
+                case 'or':
+                    result = previousValue | currentValue;
+                    break;
+                case 'xor':
+                    result = previousValue ^ currentValue;
+                    break;
+                case 'mod':
+                    result = previousValue % currentValue;
+                    break;
+                case 'lsh':
+                    result = previousValue << currentValue;
+                    break;
+                case 'rsh':
+                    result = previousValue >> currentValue;
+                    break;
+            }
+
+            currentValue = Math.max(0, result);
+            operator = null;
+            previousValue = null;
+            waitingForOperand = true;
+            updateDisplay();
+        }
+
+        function handleAction(action) {
+            switch(action) {
+                case 'c':
+                    currentValue = 0;
+                    operator = null;
+                    previousValue = null;
+                    waitingForOperand = false;
+                    updateDisplay();
+                    break;
+                case '=':
+                    calculate();
+                    break;
+                case 'mc':
+                    memory = 0;
+                    updateDisplay();
+                    break;
+                case 'mr':
+                    currentValue = memory;
+                    waitingForOperand = true;
+                    updateDisplay();
+                    break;
+                case 'm+':
+                    memory += currentValue;
+                    updateDisplay();
+                    break;
+                case 'm-':
+                    memory -= currentValue;
+                    updateDisplay();
+                    break;
+                case 'not':
+                    currentValue = ~currentValue >>> 0;
+                    waitingForOperand = true;
+                    updateDisplay();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case 'and':
+                case 'or':
+                case 'xor':
+                case 'mod':
+                case 'lsh':
+                case 'rsh':
+                    handleOperator(action);
+                    break;
+            }
+        }
+
+        document.querySelectorAll('[data-digit]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                handleDigit(btn.dataset.digit);
+            });
+        });
+
+        document.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                handleAction(btn.dataset.action);
+            });
+        });
+
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                currentModeDisplay.textContent = currentMode.toUpperCase();
+                updateDisplay();
+            });
+        });
+
+        updateDisplay();
+    })();
+    </script>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 7;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

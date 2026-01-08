@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Nexus - A flat approach meets international sensibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Clean Nexus - A flat approach meets international sensibility
+        ABOUTME: A Bauhaus-inspired coming soon page for a creative agency, featuring geometric shapes,
+        asymmetric layout, and restrained use of primary colors to evoke calm modernism.
+
+        CSS VARIABLES:
+        --color-primary: #D93636 (Bauhaus red, used sparingly)
+        --color-accent-blue: #2B5FCC (primary blue for accents)
+        --color-accent-yellow: #F4C430 (muted yellow for geometry)
+        --color-background: #FAFAFA (off-white for warmth)
+        --color-surface: #FFFFFF (pure white for cards)
+        --color-text: #1A1A1A (near-black for readability)
+        --color-text-muted: #6B6B6B (mid-gray for secondary text)
+        --font-heading: 'Space Grotesk', sans-serif (geometric, Bauhaus-aligned)
+        --font-body: 'Space Grotesk', sans-serif
+        --space-unit: 1.5rem
+        --radius-default: 0px (Bauhaus prefers hard edges)
+        --shadow-default: none (flat design)
+
+        DESIGN RATIONALE:
+        Bauhaus principles guide every choice: functional typography, geometric purity, and strategic color.
+        The asymmetric grid creates dynamic tension while maintaining balance. Primary colors are used as
+        accents rather than dominants to preserve the calm tone. The coming soon format presents a countdown,
+        notification signup, and brand positioning in a clean, hierarchical layout that celebrates negative space.
+        */
+
+        :root {
+            --color-primary: #D93636;
+            --color-accent-blue: #2B5FCC;
+            --color-accent-yellow: #F4C430;
+            --color-background: #FAFAFA;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #6B6B6B;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --space-unit: 1.5rem;
+            --radius-default: 0px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Geometric background elements */
+        .geometric-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .geo-circle {
+            position: absolute;
+            border: 3px solid var(--color-accent-yellow);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .geo-circle-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .geo-circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            left: 5%;
+            border-color: var(--color-accent-blue);
+        }
+
+        .geo-square {
+            position: absolute;
+            background-color: var(--color-primary);
+            opacity: 0.08;
+        }
+
+        .geo-square-1 {
+            width: 180px;
+            height: 180px;
+            top: 20%;
+            left: 10%;
+            transform: rotate(15deg);
+        }
+
+        .geo-square-2 {
+            width: 120px;
+            height: 120px;
+            bottom: 15%;
+            right: 15%;
+            transform: rotate(-25deg);
+            background-color: var(--color-accent-blue);
+        }
+
+        .geo-line {
+            position: absolute;
+            background-color: var(--color-text);
+            opacity: 0.1;
+        }
+
+        .geo-line-1 {
+            width: 2px;
+            height: 300px;
+            top: 10%;
+            left: 25%;
+        }
+
+        .geo-line-2 {
+            width: 250px;
+            height: 2px;
+            bottom: 25%;
+            right: 10%;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-unit);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: calc(var(--space-unit) * 1.5) 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--color-text);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-square {
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-links a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: calc(var(--space-unit) * 3) 0;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: calc(var(--space-unit) * 4);
+            width: 100%;
+            align-items: center;
+        }
+
+        .main-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: var(--space-unit);
+            letter-spacing: -0.03em;
+        }
+
+        .main-content .tagline {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+            max-width: 500px;
+        }
+
+        .main-content .description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: calc(var(--space-unit) * 2);
+            max-width: 540px;
+        }
+
+        /* Countdown timer */
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-unit);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .countdown-item {
+            background-color: var(--color-surface);
+            border: 2px solid var(--color-text);
+            padding: calc(var(--space-unit) * 1.2);
+            text-align: center;
+        }
+
+        .countdown-item:first-child {
+            border-color: var(--color-primary);
+            border-width: 3px;
+        }
+
+        .countdown-item:nth-child(2) {
+            border-color: var(--color-accent-blue);
+            border-width: 3px;
+        }
+
+        .countdown-value {
+            display: block;
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown-label {
+            display: block;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--color-surface);
+            border: 2px solid var(--color-text);
+            padding: calc(var(--space-unit) * 2);
+            position: relative;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-accent-yellow);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .sidebar h2 {
+            font-size: 1.75rem;
+            margin-bottom: var(--space-unit);
+            font-weight: 700;
+        }
+
+        .sidebar p {
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            color: var(--color-text-muted);
+        }
+
+        /* Form */
+        .notify-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-unit);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding: calc(var(--space-unit) * 0.75);
+            border: 2px solid var(--color-text);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            padding: calc(var(--space-unit) * 0.9) calc(var(--space-unit) * 1.5);
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: background-color 0.2s, transform 0.1s;
+            position: relative;
+        }
+
+        .btn-primary:hover {
+            background-color: #B82E2E;
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--color-text);
+            outline-offset: 4px;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-text);
+            z-index: -1;
+        }
+
+        /* Footer */
+        footer {
+            padding: calc(var(--space-unit) * 1.5) 0;
+            border-top: 2px solid var(--color-text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-unit);
+        }
+
+        .footer-text {
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--space-unit);
+            list-style: none;
+        }
+
+        .social-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--color-text);
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--color-accent-blue);
+            border-color: var(--color-accent-blue);
+            color: var(--color-surface);
+        }
+
+        .social-links a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--color-accent-blue);
+            color: var(--color-surface);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space-unit) * 2);
+            }
+
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .geo-circle-1 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .geo-square-1 {
+                width: 100px;
+                height: 100px;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .main-content h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Accessibility - reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric background elements -->
+    <div class="geometric-bg">
+        <div class="geo-circle geo-circle-1"></div>
+        <div class="geo-circle geo-circle-2"></div>
+        <div class="geo-square geo-square-1"></div>
+        <div class="geo-square geo-square-2"></div>
+        <div class="geo-line geo-line-1"></div>
+        <div class="geo-line geo-line-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-square"></div>
+                <span>CLEAN NEXUS</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="content-grid">
+                <div class="main-content">
+                    <div class="status-badge">Launching Soon</div>
+                    <h1>Where Form Meets Function</h1>
+                    <p class="tagline">A flat approach meets international sensibility</p>
+                    <p class="description">
+                        We're crafting a new creative studio that honors Bauhaus principles: clarity,
+                        precision, and purposeful design. Our work bridges modernist ideals with
+                        contemporary digital craft.
+                    </p>
+
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="days">28</span>
+                            <span class="countdown-label">Days</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="hours">14</span>
+                            <span class="countdown-label">Hours</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="minutes">32</span>
+                            <span class="countdown-label">Minutes</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="seconds">07</span>
+                            <span class="countdown-label">Seconds</span>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="sidebar">
+                    <h2>Get Notified</h2>
+                    <p>Be among the first to experience our debut collection. We'll send you one email when we launch.</p>
+                    <form class="notify-form" onsubmit="event.preventDefault(); alert('Thank you for your interest! We'll notify you at launch.');">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="interest">Primary Interest</label>
+                            <input type="text" id="interest" name="interest" placeholder="Branding, Web, Print...">
+                        </div>
+                        <button type="submit" class="btn-primary">Notify Me</button>
+                    </form>
+                </aside>
+            </div>
+        </main>
+
+        <footer>
+            <p class="footer-text">&copy; 2026 Clean Nexus. All rights reserved.</p>
+            <ul class="social-links">
+                <li><a href="#twitter">Twitter</a></li>
+                <li><a href="#instagram">Instagram</a></li>
+                <li><a href="#dribbble">Dribbble</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 24;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Countdown timer
+        const launchDate = new Date();
+        launchDate.setDate(launchDate.getDate() + 28);
+        launchDate.setHours(launchDate.getHours() + 14);
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    })();
+    </script>
+</body>
+</html>

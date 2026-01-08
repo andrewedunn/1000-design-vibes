@@ -1,0 +1,771 @@
+<!--
+DESIGN: Quirk Urban - Neutral palette, natural spirit
+ABOUTME: A password generator that blends Arts and Crafts movement principles with modern SaaS functionality. Features organic forms, handcrafted typography, and earthy tones while maintaining the utility of a secure password tool.
+
+CSS VARIABLES:
+--color-primary: #8B6F47 (warm brown, natural wood tone)
+--color-background: #F5F1E8 (cream, natural paper)
+--color-surface: #FFFFFF (clean white cards)
+--color-text: #3A3226 (dark walnut)
+--color-text-muted: #7A6F5D (muted earth)
+--font-heading: 'Libre Baskerville', serif (crafted, traditional)
+--font-body: 'Lato', sans-serif (readable, modern)
+--space-unit: 1rem
+--radius-default: 0.5rem (subtle organic curves)
+--shadow-default: hand-drawn shadow effect
+
+DESIGN RATIONALE:
+Arts and Crafts emphasized natural materials, honest construction, and beauty in utility. This password generator honors those principles through:
+- Earthy, neutral color palette inspired by natural materials (wood, stone, paper)
+- Typography mixing traditional serif headings with clean sans-serif body text
+- Organic border treatments and subtle texture suggesting handmade quality
+- Playful micro-interactions (animated strength meter, generated password reveal)
+- Dark mode using deeper earth tones (charcoal, moss, amber)
+- Clear visual hierarchy showing the "craft" of password creation
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quirk Urban - Password Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #8B6F47;
+            --color-primary-hover: #725A36;
+            --color-background: #F5F1E8;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #EAE3D5;
+            --color-text: #3A3226;
+            --color-text-muted: #7A6F5D;
+            --color-accent: #A67C52;
+            --color-success: #6B8E4E;
+            --color-warning: #C49A46;
+            --color-danger: #A85D4D;
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'Lato', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 0.5rem;
+            --shadow-default: 0 4px 8px rgba(58, 50, 38, 0.08), 0 1px 2px rgba(58, 50, 38, 0.12);
+            --shadow-hover: 0 8px 16px rgba(58, 50, 38, 0.12), 0 2px 4px rgba(58, 50, 38, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #C4A676;
+            --color-primary-hover: #D4B686;
+            --color-background: #2A2520;
+            --color-surface: #363029;
+            --color-surface-alt: #3F3832;
+            --color-text: #E8E3D8;
+            --color-text-muted: #B8AE9F;
+            --color-accent: #D4B686;
+            --color-success: #8FAF6B;
+            --color-warning: #D4B46A;
+            --color-danger: #C78270;
+            --shadow-default: 0 4px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-surface);
+            border-bottom: 3px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                var(--color-primary) 0%,
+                var(--color-accent) 50%,
+                var(--color-primary) 100%);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-unit);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            color: var(--color-primary);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--color-surface-alt);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-default);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: var(--font-body);
+            color: var(--color-text);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: var(--transition);
+            box-shadow: var(--shadow-default);
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .theme-toggle:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3) var(--space-unit);
+        }
+
+        .generator-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        @media (min-width: 768px) {
+            .generator-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+            border: 2px solid var(--color-surface-alt);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-default) var(--radius-default) 0 0;
+        }
+
+        .card h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            font-weight: 700;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-surface-alt);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            background: var(--color-background);
+            color: var(--color-text);
+            transition: var(--transition);
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1);
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+
+        .checkbox-item label {
+            margin-bottom: 0;
+            text-transform: none;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        /* Button */
+        .btn-generate {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-default);
+            margin-top: calc(var(--space-unit) * 1.5);
+        }
+
+        .btn-generate:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        .btn-generate:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Password Display */
+        .password-display {
+            background: var(--color-background);
+            border: 3px solid var(--color-primary);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text);
+            word-break: break-all;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .password-placeholder {
+            color: var(--color-text-muted);
+            font-style: italic;
+            font-family: var(--font-body);
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--color-surface-alt);
+            color: var(--color-text);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .btn-copy:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-copy:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .btn-copy:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Strength Meter */
+        .strength-meter {
+            margin-top: calc(var(--space-unit) * 1.5);
+        }
+
+        .strength-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .strength-text {
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .strength-value {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .strength-bar {
+            height: 1rem;
+            background: var(--color-surface-alt);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            position: relative;
+            border: 2px solid var(--color-primary);
+        }
+
+        .strength-fill {
+            height: 100%;
+            background: var(--color-text-muted);
+            width: 0%;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .strength-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .strength-weak .strength-fill { background: var(--color-danger); }
+        .strength-medium .strength-fill { background: var(--color-warning); }
+        .strength-strong .strength-fill { background: var(--color-success); }
+
+        /* Tips Section */
+        .tips-section {
+            grid-column: 1 / -1;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-unit);
+            margin-top: var(--space-unit);
+        }
+
+        .tip-item {
+            background: var(--color-background);
+            padding: var(--space-unit);
+            border-radius: var(--radius-default);
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .tip-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-item p {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: 3px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-default);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Quirk Urban</h1>
+                <p class="tagline">Neutral palette, natural spirit</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <span id="themeLabel">Light Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="generator-container">
+            <!-- Configuration Card -->
+            <div class="card">
+                <h2>Configure Password</h2>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="length">Password Length</label>
+                        <input type="number" id="length" name="length" min="8" max="128" value="16">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Character Types</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="uppercase" name="uppercase" checked>
+                                <label for="uppercase">Uppercase Letters (A-Z)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lowercase" name="lowercase" checked>
+                                <label for="lowercase">Lowercase Letters (a-z)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="numbers" name="numbers" checked>
+                                <label for="numbers">Numbers (0-9)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="symbols" name="symbols" checked>
+                                <label for="symbols">Symbols (!@#$%...)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-generate">Generate Password</button>
+                </form>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card">
+                <h2>Your Password</h2>
+                <div class="password-display">
+                    <div class="password-text password-placeholder" id="passwordOutput">
+                        Click generate to create a password
+                    </div>
+                </div>
+
+                <button class="btn-copy" id="copyBtn" disabled>Copy to Clipboard</button>
+
+                <div class="strength-meter">
+                    <div class="strength-label">
+                        <span class="strength-text">Password Strength</span>
+                        <span class="strength-value" id="strengthValue">-</span>
+                    </div>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="card tips-section">
+                <h2>Password Security Tips</h2>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <h3>Use Length</h3>
+                        <p>Longer passwords (16+ characters) are exponentially harder to crack than shorter ones.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3>Mix Characters</h3>
+                        <p>Combine uppercase, lowercase, numbers, and symbols for maximum security.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3>Unique Everywhere</h3>
+                        <p>Never reuse passwords across different accounts or services.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3>Use a Manager</h3>
+                        <p>Password managers securely store and generate strong passwords for you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Design #9 of 100 | Quirk Urban Password Generator | Navigate with arrow keys or swipe</p>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+        const root = document.documentElement;
+
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeLabel.textContent = 'Dark Mode';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', theme);
+            themeLabel.textContent = theme === 'dark' ? 'Dark Mode' : 'Light Mode';
+            localStorage.setItem('theme', theme);
+        });
+
+        // Password Generator
+        const form = document.getElementById('passwordForm');
+        const lengthInput = document.getElementById('length');
+        const uppercaseCheck = document.getElementById('uppercase');
+        const lowercaseCheck = document.getElementById('lowercase');
+        const numbersCheck = document.getElementById('numbers');
+        const symbolsCheck = document.getElementById('symbols');
+        const passwordOutput = document.getElementById('passwordOutput');
+        const copyBtn = document.getElementById('copyBtn');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthValue = document.getElementById('strengthValue');
+
+        const charset = {
+            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lowercase: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        };
+
+        function generatePassword(length, options) {
+            let chars = '';
+            let password = '';
+
+            // Build character set
+            if (options.uppercase) chars += charset.uppercase;
+            if (options.lowercase) chars += charset.lowercase;
+            if (options.numbers) chars += charset.numbers;
+            if (options.symbols) chars += charset.symbols;
+
+            if (chars === '') {
+                return null;
+            }
+
+            // Generate password
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+
+            for (let i = 0; i < length; i++) {
+                password += chars[array[i] % chars.length];
+            }
+
+            return password;
+        }
+
+        function calculateStrength(password, options) {
+            if (!password) return { score: 0, text: '-' };
+
+            let score = 0;
+            const length = password.length;
+
+            // Length scoring
+            if (length >= 16) score += 40;
+            else if (length >= 12) score += 30;
+            else if (length >= 8) score += 20;
+            else score += 10;
+
+            // Character variety scoring
+            let variety = 0;
+            if (options.uppercase) variety++;
+            if (options.lowercase) variety++;
+            if (options.numbers) variety++;
+            if (options.symbols) variety++;
+
+            score += variety * 15;
+
+            // Determine strength
+            if (score >= 80) return { score, text: 'Strong', class: 'strength-strong' };
+            if (score >= 50) return { score, text: 'Medium', class: 'strength-medium' };
+            return { score, text: 'Weak', class: 'strength-weak' };
+        }
+
+        function updateStrengthMeter(password, options) {
+            const strength = calculateStrength(password, options);
+            strengthFill.style.width = `${strength.score}%`;
+            strengthValue.textContent = strength.text;
+
+            // Remove all strength classes
+            strengthFill.parentElement.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+
+            // Add appropriate class
+            if (strength.class) {
+                strengthFill.parentElement.classList.add(strength.class);
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const length = parseInt(lengthInput.value);
+            const options = {
+                uppercase: uppercaseCheck.checked,
+                lowercase: lowercaseCheck.checked,
+                numbers: numbersCheck.checked,
+                symbols: symbolsCheck.checked
+            };
+
+            // Validate at least one option is selected
+            if (!options.uppercase && !options.lowercase && !options.numbers && !options.symbols) {
+                alert('Please select at least one character type');
+                return;
+            }
+
+            const password = generatePassword(length, options);
+
+            if (password) {
+                passwordOutput.textContent = password;
+                passwordOutput.classList.remove('password-placeholder');
+                copyBtn.disabled = false;
+                updateStrengthMeter(password, options);
+            }
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            const password = passwordOutput.textContent;
+
+            try {
+                await navigator.clipboard.writeText(password);
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy password to clipboard');
+            }
+        });
+
+        // Navigation Script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 9;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

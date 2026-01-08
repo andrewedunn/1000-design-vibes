@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilight Pewter - Investment Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Twilight Pewter - Y2k design with natural neutral tones
+        ABOUTME: An investment portfolio interface blending Y2K futurism with subdued natural neutrals, creating a mysterious yet trustworthy financial dashboard.
+
+        CSS VARIABLES:
+        --color-primary: #8B7E74 (warm pewter)
+        --color-background: #E8E4DF (soft linen)
+        --color-surface: #D4CFC8 (natural stone)
+        --color-text: #3A352F (deep umber)
+        --color-text-muted: #6B655D (muted taupe)
+        --color-accent: #A49689 (metallic sand)
+        --color-success: #7A8B6F (sage green)
+        --color-warning: #B89968 (antique gold)
+        --font-heading: 'Orbitron' (Y2K tech aesthetic)
+        --font-body: 'Rajdhani' (modern yet approachable)
+
+        DESIGN RATIONALE:
+        Combines Y2K's chrome-and-glass futurism with natural earth tones for a mysterious, contemplative investment experience.
+        Glowing borders, metallic gradients, and tech-forward typography contrast with organic color palette.
+        The dual color mode shifts between twilight warmth and moonlit cool tones.
+        Investment portfolio structure includes holdings overview, performance charts, allocation breakdown, and transaction history.
+        */
+
+        :root {
+            --color-primary: #8B7E74;
+            --color-background: #E8E4DF;
+            --color-surface: #D4CFC8;
+            --color-text: #3A352F;
+            --color-text-muted: #6B655D;
+            --color-accent: #A49689;
+            --color-success: #7A8B6F;
+            --color-warning: #B89968;
+            --color-danger: #9B6B5C;
+            --color-glow: rgba(139, 126, 116, 0.4);
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 12px;
+            --shadow-default: 0 4px 16px rgba(58, 53, 47, 0.15);
+            --glow-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-glow);
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #9B8F85;
+            --color-background: #2A2520;
+            --color-surface: #3D3730;
+            --color-text: #E8E4DF;
+            --color-text-muted: #A49B92;
+            --color-accent: #C4B5A8;
+            --color-success: #8FA17D;
+            --color-warning: #D4AD7A;
+            --color-danger: #B5846F;
+            --color-glow: rgba(155, 143, 133, 0.5);
+            --shadow-default: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Y2K Chrome Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            border-bottom: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--color-primary) 20%,
+                var(--color-accent) 50%,
+                var(--color-primary) 80%,
+                transparent 100%);
+            filter: blur(1px);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-default);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+
+        .theme-toggle:hover {
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .account-balance {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-align: right;
+        }
+
+        .balance-amount {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        /* Portfolio Overview Cards */
+        .portfolio-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-accent);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--glow-shadow), var(--shadow-default);
+        }
+
+        .stat-label {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: var(--color-success);
+        }
+
+        .stat-change.negative {
+            color: var(--color-danger);
+        }
+
+        /* Holdings Section */
+        .section {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2.5);
+            margin-bottom: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-accent);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+            padding-bottom: var(--space-unit);
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text);
+        }
+
+        .section-action {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .section-action:hover {
+            background: var(--color-accent);
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-2px);
+        }
+
+        .section-action:focus {
+            outline: 3px solid var(--color-text);
+            outline-offset: 2px;
+        }
+
+        /* Holdings Table */
+        .holdings-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .holdings-table thead {
+            background: var(--color-background);
+        }
+
+        .holdings-table th {
+            padding: 1rem;
+            text-align: left;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .holdings-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--color-accent);
+            font-size: 0.95rem;
+        }
+
+        .holdings-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .holdings-table tbody tr:hover {
+            background: var(--color-background);
+            box-shadow: inset 0 0 10px var(--color-glow);
+        }
+
+        .asset-name {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .asset-symbol {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            display: block;
+            margin-top: 0.2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .performance-positive {
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        .performance-negative {
+            color: var(--color-danger);
+            font-weight: 600;
+        }
+
+        /* Allocation Chart */
+        .allocation-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--space-unit) * 2);
+            align-items: start;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-donut {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                var(--color-primary) 0deg 144deg,
+                var(--color-accent) 144deg 230deg,
+                var(--color-success) 230deg 295deg,
+                var(--color-warning) 295deg 335deg,
+                var(--color-text-muted) 335deg 360deg
+            );
+            box-shadow: var(--glow-shadow), inset 0 0 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-donut::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            background: var(--color-surface);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+        }
+
+        .chart-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .chart-total {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .allocation-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--color-background);
+            border-radius: calc(var(--radius-default) * 0.5);
+            border-left: 4px solid;
+            transition: all 0.2s ease;
+        }
+
+        .legend-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .legend-item:nth-child(1) { border-color: var(--color-primary); }
+        .legend-item:nth-child(2) { border-color: var(--color-accent); }
+        .legend-item:nth-child(3) { border-color: var(--color-success); }
+        .legend-item:nth-child(4) { border-color: var(--color-warning); }
+        .legend-item:nth-child(5) { border-color: var(--color-text-muted); }
+
+        .legend-label {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .legend-value {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-text-muted);
+        }
+
+        /* Recent Transactions */
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .transaction-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.2rem;
+            background: var(--color-background);
+            border-radius: calc(var(--radius-default) * 0.7);
+            border: 1px solid var(--color-accent);
+            transition: all 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-default);
+            border-color: var(--color-primary);
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--color-background);
+        }
+
+        .transaction-icon.buy {
+            background: var(--color-success);
+        }
+
+        .transaction-icon.sell {
+            background: var(--color-danger);
+        }
+
+        .transaction-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-asset {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.2rem;
+        }
+
+        .transaction-date {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .transaction-amount {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .transaction-status {
+            padding: 0.4rem 1rem;
+            border-radius: calc(var(--radius-default) * 0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-complete {
+            background: rgba(122, 139, 111, 0.2);
+            color: var(--color-success);
+        }
+
+        .status-pending {
+            background: rgba(184, 153, 104, 0.2);
+            color: var(--color-warning);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: calc(var(--space-unit) * 2);
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--color-accent);
+            margin-top: calc(var(--space-unit) * 3);
+        }
+
+        .footer-hint {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-unit);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .portfolio-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .allocation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .holdings-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .transaction-item {
+                grid-template-columns: auto 1fr;
+                gap: 1rem;
+            }
+
+            .transaction-amount,
+            .transaction-status {
+                grid-column: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Twilight Pewter</div>
+        <div class="header-controls">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                Switch Mode
+            </button>
+            <div class="account-balance">
+                <span class="balance-label">Total Portfolio</span>
+                <span class="balance-amount">$847,293.45</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Portfolio Overview -->
+        <section class="portfolio-overview">
+            <div class="stat-card">
+                <div class="stat-label">Total Value</div>
+                <div class="stat-value">$847,293</div>
+                <div class="stat-change positive">
+                    <span>↑</span>
+                    <span>+2.34% Today</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">All-Time Return</div>
+                <div class="stat-value">+18.7%</div>
+                <div class="stat-change positive">
+                    <span>↑</span>
+                    <span>$133,492 Gain</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">30-Day Change</div>
+                <div class="stat-value">-1.2%</div>
+                <div class="stat-change negative">
+                    <span>↓</span>
+                    <span>$10,247 Loss</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Annual Yield</div>
+                <div class="stat-value">4.8%</div>
+                <div class="stat-change positive">
+                    <span>↑</span>
+                    <span>$40,670 Expected</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Holdings -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Current Holdings</h2>
+                <button class="section-action">Add Position</button>
+            </div>
+
+            <table class="holdings-table">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Shares/Units</th>
+                        <th>Current Price</th>
+                        <th>Total Value</th>
+                        <th>Day Change</th>
+                        <th>Total Return</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="asset-name">Vanguard S&P 500 ETF</div>
+                            <span class="asset-symbol">VOO</span>
+                        </td>
+                        <td>782</td>
+                        <td>$428.67</td>
+                        <td>$335,220.14</td>
+                        <td class="performance-positive">+1.89%</td>
+                        <td class="performance-positive">+22.4%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">Apple Inc.</div>
+                            <span class="asset-symbol">AAPL</span>
+                        </td>
+                        <td>1,240</td>
+                        <td>$178.23</td>
+                        <td>$221,005.20</td>
+                        <td class="performance-positive">+3.12%</td>
+                        <td class="performance-positive">+18.9%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">Bitcoin</div>
+                            <span class="asset-symbol">BTC</span>
+                        </td>
+                        <td>3.45</td>
+                        <td>$42,189.33</td>
+                        <td>$145,553.19</td>
+                        <td class="performance-negative">-2.45%</td>
+                        <td class="performance-positive">+67.3%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">Treasury Bond ETF</div>
+                            <span class="asset-symbol">TLT</span>
+                        </td>
+                        <td>1,180</td>
+                        <td>$96.87</td>
+                        <td>$114,306.60</td>
+                        <td class="performance-positive">+0.45%</td>
+                        <td class="performance-negative">-4.2%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">Gold Miners ETF</div>
+                            <span class="asset-symbol">GDX</span>
+                        </td>
+                        <td>1,050</td>
+                        <td>$29.72</td>
+                        <td>$31,206.00</td>
+                        <td class="performance-positive">+1.23%</td>
+                        <td class="performance-positive">+9.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Asset Allocation -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Asset Allocation</h2>
+                <button class="section-action">Rebalance</button>
+            </div>
+
+            <div class="allocation-grid">
+                <div class="chart-container">
+                    <div class="chart-donut"></div>
+                    <div class="chart-center">
+                        <div class="chart-label">Total</div>
+                        <div class="chart-total">$847K</div>
+                    </div>
+                </div>
+
+                <div class="allocation-legend">
+                    <div class="legend-item">
+                        <span class="legend-label">US Equities</span>
+                        <span class="legend-value">40%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-label">Tech Stocks</span>
+                        <span class="legend-value">26%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-label">Cryptocurrency</span>
+                        <span class="legend-value">17%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-label">Fixed Income</span>
+                        <span class="legend-value">13%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-label">Commodities</span>
+                        <span class="legend-value">4%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Transactions -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+                <button class="section-action">View All</button>
+            </div>
+
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-icon buy">BUY</div>
+                    <div class="transaction-info">
+                        <div class="transaction-asset">Apple Inc. (AAPL)</div>
+                        <div class="transaction-date">Jan 5, 2026 • 140 shares</div>
+                    </div>
+                    <div class="transaction-amount">$24,952.20</div>
+                    <div class="transaction-status status-complete">Complete</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon sell">SELL</div>
+                    <div class="transaction-info">
+                        <div class="transaction-asset">Tesla Inc. (TSLA)</div>
+                        <div class="transaction-date">Jan 3, 2026 • 85 shares</div>
+                    </div>
+                    <div class="transaction-amount">$18,743.50</div>
+                    <div class="transaction-status status-complete">Complete</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon buy">BUY</div>
+                    <div class="transaction-info">
+                        <div class="transaction-asset">Bitcoin (BTC)</div>
+                        <div class="transaction-date">Dec 28, 2025 • 0.35 units</div>
+                    </div>
+                    <div class="transaction-amount">$14,766.27</div>
+                    <div class="transaction-status status-complete">Complete</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon buy">BUY</div>
+                    <div class="transaction-info">
+                        <div class="transaction-asset">Vanguard S&P 500 ETF (VOO)</div>
+                        <div class="transaction-date">Dec 22, 2025 • 62 shares</div>
+                    </div>
+                    <div class="transaction-amount">$26,577.54</div>
+                    <div class="transaction-status status-pending">Pending</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Investment portfolio designed for education. Not financial advice.</p>
+        <p class="footer-hint">← → Arrow keys to navigate designs</p>
+    </footer>
+
+    <script>
+    // Theme Toggle
+    (function() {
+        const toggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+        }
+
+        toggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            if (newTheme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    })();
+
+    // Navigation
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 20;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

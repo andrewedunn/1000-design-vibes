@@ -1,0 +1,707 @@
+<!--
+DESIGN: Phantom Core - International minimalism with natural undertones
+ABOUTME: A Swiss International style chart dashboard for nonprofit impact tracking, featuring precise grid layouts, sans-serif typography, and mysterious natural earth tones. Supports both light and dark modes with seamless theme switching.
+
+CSS VARIABLES:
+--color-primary: #5A7C5C (muted forest green)
+--color-background: #FAFAF8 (warm white) / #1A1D1A (deep charcoal)
+--color-surface: #FFFFFF (white) / #262926 (dark surface)
+--color-text: #2D332D (deep green-black) / #E8EBE8 (soft white)
+--color-text-muted: #6B7A6C (muted sage) / #8A958B (light sage)
+--font-heading: 'Archivo', sans-serif (geometric precision)
+--font-body: 'Inter', sans-serif (neutral readability)
+--space-unit: 8px (systematic spacing)
+--radius-default: 2px (minimal rounding)
+--shadow-default: subtle elevation
+
+DESIGN RATIONALE:
+Swiss International design emphasizes clarity, precision, and grid-based layouts. The "mysterious" tone is achieved through muted natural colors and subtle shadows rather than dramatic contrasts. The chart dashboard displays nonprofit impact metrics using clean bar charts, line graphs, and KPI cards. Both light and dark modes maintain the same visual hierarchy and grid precision. Natural undertones come from earth-toned greens and warm neutrals.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Core - Chart Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #5A7C5C;
+            --color-primary-dark: #4A6A4C;
+            --color-background: #FAFAF8;
+            --color-surface: #FFFFFF;
+            --color-border: #E0E3E0;
+            --color-text: #2D332D;
+            --color-text-muted: #6B7A6C;
+            --color-accent: #7C9A7E;
+            --color-chart-1: #5A7C5C;
+            --color-chart-2: #8A9F8C;
+            --color-chart-3: #A3B8A5;
+            --color-chart-4: #6B7A6C;
+            --font-heading: 'Archivo', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(45, 51, 45, 0.08);
+            --shadow-elevated: 0 2px 8px rgba(45, 51, 45, 0.12);
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #7C9A7E;
+            --color-primary-dark: #6B8A6D;
+            --color-background: #1A1D1A;
+            --color-surface: #262926;
+            --color-border: #3A3D3A;
+            --color-text: #E8EBE8;
+            --color-text-muted: #8A958B;
+            --color-accent: #5A7C5C;
+            --color-chart-1: #7C9A7E;
+            --color-chart-2: #A3B8A5;
+            --color-chart-3: #6B8A6D;
+            --color-chart-4: #8A9F8C;
+            --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-elevated: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Grid System */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .grid {
+            display: grid;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 3) 0;
+            box-shadow: var(--shadow-default);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .logo-mark {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 2px;
+        }
+
+        .theme-toggle {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-border);
+        }
+
+        .theme-toggle:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1);
+            font-weight: 500;
+        }
+
+        .kpi-value {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--color-text);
+            line-height: 1.1;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .kpi-change {
+            font-size: 13px;
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .kpi-change.negative {
+            color: var(--color-text-muted);
+        }
+
+        /* Chart Card */
+        .chart-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .chart-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-period {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: calc(var(--space-unit) * 1);
+            padding-top: calc(var(--space-unit) * 2);
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--color-chart-1);
+            border-radius: var(--radius-default) var(--radius-default) 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar:nth-child(2) { background: var(--color-chart-2); }
+        .bar:nth-child(3) { background: var(--color-chart-3); }
+        .bar:nth-child(4) { background: var(--color-chart-4); }
+        .bar:nth-child(5) { background: var(--color-chart-1); }
+        .bar:nth-child(6) { background: var(--color-chart-2); }
+        .bar:nth-child(7) { background: var(--color-chart-3); }
+        .bar:nth-child(8) { background: var(--color-chart-4); }
+        .bar:nth-child(9) { background: var(--color-chart-1); }
+        .bar:nth-child(10) { background: var(--color-chart-2); }
+        .bar:nth-child(11) { background: var(--color-chart-3); }
+        .bar:nth-child(12) { background: var(--color-chart-4); }
+
+        .bar-label {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        /* Line Chart */
+        .line-chart {
+            position: relative;
+            height: 200px;
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .line-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-area {
+            fill: var(--color-primary);
+            opacity: 0.1;
+        }
+
+        .chart-dot {
+            fill: var(--color-surface);
+            stroke: var(--color-primary);
+            stroke-width: 2;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .data-table th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .data-table td {
+            padding: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--color-background);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .status-active {
+            background: rgba(90, 124, 92, 0.12);
+            color: var(--color-primary);
+        }
+
+        .status-pending {
+            background: rgba(107, 122, 108, 0.12);
+            color: var(--color-text-muted);
+        }
+
+        /* Progress Indicators */
+        .progress-bar {
+            height: 4px;
+            background: var(--color-border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: calc(var(--space-unit) * 1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 2);
+                align-items: flex-start;
+            }
+
+            .kpi-value {
+                font-size: 28px;
+            }
+
+            .bar-chart {
+                height: 150px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-mark">P</div>
+                <div>
+                    <h1>Phantom Core</h1>
+                    <div class="tagline">Impact Analytics</div>
+                </div>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                Switch Theme
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- KPI Section -->
+        <section class="grid grid-4" style="margin-bottom: calc(var(--space-unit) * 3);">
+            <div class="kpi-card">
+                <div class="kpi-label">Active Projects</div>
+                <div class="kpi-value">127</div>
+                <div class="kpi-change">+12% from last quarter</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Beneficiaries Reached</div>
+                <div class="kpi-value">48.2K</div>
+                <div class="kpi-change">+23% from last quarter</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Volunteer Hours</div>
+                <div class="kpi-value">9,847</div>
+                <div class="kpi-change">+8% from last quarter</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Program Efficiency</div>
+                <div class="kpi-value">94%</div>
+                <div class="kpi-change">+2% from last quarter</div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="grid grid-2" style="margin-bottom: calc(var(--space-unit) * 3);">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Monthly Engagement</h2>
+                    <span class="chart-period">2025</span>
+                </div>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 65%;">
+                        <div class="bar-label">Jan</div>
+                    </div>
+                    <div class="bar" style="height: 72%;">
+                        <div class="bar-label">Feb</div>
+                    </div>
+                    <div class="bar" style="height: 68%;">
+                        <div class="bar-label">Mar</div>
+                    </div>
+                    <div class="bar" style="height: 85%;">
+                        <div class="bar-label">Apr</div>
+                    </div>
+                    <div class="bar" style="height: 78%;">
+                        <div class="bar-label">May</div>
+                    </div>
+                    <div class="bar" style="height: 92%;">
+                        <div class="bar-label">Jun</div>
+                    </div>
+                    <div class="bar" style="height: 88%;">
+                        <div class="bar-label">Jul</div>
+                    </div>
+                    <div class="bar" style="height: 95%;">
+                        <div class="bar-label">Aug</div>
+                    </div>
+                    <div class="bar" style="height: 90%;">
+                        <div class="bar-label">Sep</div>
+                    </div>
+                    <div class="bar" style="height: 98%;">
+                        <div class="bar-label">Oct</div>
+                    </div>
+                    <div class="bar" style="height: 94%;">
+                        <div class="bar-label">Nov</div>
+                    </div>
+                    <div class="bar" style="height: 100%;">
+                        <div class="bar-label">Dec</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Cumulative Impact</h2>
+                    <span class="chart-period">Q4 2025</span>
+                </div>
+                <div class="line-chart">
+                    <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:var(--color-primary);stop-opacity:0.2" />
+                                <stop offset="100%" style="stop-color:var(--color-primary);stop-opacity:0" />
+                            </linearGradient>
+                        </defs>
+                        <path class="chart-area" d="M 0 200 L 0 140 L 50 125 L 100 110 L 150 95 L 200 85 L 250 70 L 300 60 L 350 45 L 400 35 L 400 200 Z" fill="url(#areaGradient)" />
+                        <path class="chart-line" d="M 0 140 L 50 125 L 100 110 L 150 95 L 200 85 L 250 70 L 300 60 L 350 45 L 400 35" />
+                        <circle class="chart-dot" cx="0" cy="140" r="4" />
+                        <circle class="chart-dot" cx="50" cy="125" r="4" />
+                        <circle class="chart-dot" cx="100" cy="110" r="4" />
+                        <circle class="chart-dot" cx="150" cy="95" r="4" />
+                        <circle class="chart-dot" cx="200" cy="85" r="4" />
+                        <circle class="chart-dot" cx="250" cy="70" r="4" />
+                        <circle class="chart-dot" cx="300" cy="60" r="4" />
+                        <circle class="chart-dot" cx="350" cy="45" r="4" />
+                        <circle class="chart-dot" cx="400" cy="35" r="4" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Regional Impact -->
+        <section class="grid grid-3" style="margin-bottom: calc(var(--space-unit) * 3);">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">North Region</h2>
+                    <span class="chart-period">38 Projects</span>
+                </div>
+                <div class="kpi-value" style="margin: calc(var(--space-unit) * 2) 0;">16.4K</div>
+                <div class="kpi-label">Beneficiaries</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Central Region</h2>
+                    <span class="chart-period">52 Projects</span>
+                </div>
+                <div class="kpi-value" style="margin: calc(var(--space-unit) * 2) 0;">21.8K</div>
+                <div class="kpi-label">Beneficiaries</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%;"></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">South Region</h2>
+                    <span class="chart-period">37 Projects</span>
+                </div>
+                <div class="kpi-value" style="margin: calc(var(--space-unit) * 2) 0;">10.0K</div>
+                <div class="kpi-label">Beneficiaries</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 64%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Projects Table -->
+        <section class="chart-card">
+            <div class="chart-header">
+                <h2 class="chart-title">Recent Projects</h2>
+                <span class="chart-period">Last 30 Days</span>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Region</th>
+                        <th>Participants</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Community Garden Initiative</strong></td>
+                        <td>Central</td>
+                        <td>342</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>87%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Youth Literacy Program</strong></td>
+                        <td>North</td>
+                        <td>218</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>72%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Clean Water Access</strong></td>
+                        <td>South</td>
+                        <td>1,456</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>94%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mental Health Workshops</strong></td>
+                        <td>Central</td>
+                        <td>128</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>56%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Job Training Center</strong></td>
+                        <td>North</td>
+                        <td>487</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>28%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Senior Care Network</strong></td>
+                        <td>South</td>
+                        <td>293</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>81%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+    // Theme Toggle
+    (function() {
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', currentTheme);
+        updateToggleText(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleText(newTheme);
+        });
+
+        function updateToggleText(theme) {
+            themeToggle.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+        }
+    })();
+
+    // Navigation
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 46;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

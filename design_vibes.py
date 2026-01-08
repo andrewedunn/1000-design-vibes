@@ -15,10 +15,11 @@ def cli():
 @cli.command()
 @click.option("--count", default=20, help="Number of designs to generate")
 @click.option("--name", default=None, help="Optional name suffix for output folder")
-def manifest(count: int, name: str | None):
+@click.option("--core-only", is_flag=True, help="Only specify core dimensions, let agent choose the rest")
+def manifest(count: int, name: str | None, core_only: bool):
     """Create a manifest with unique design seeds."""
     from src.manifest import generate_manifest
-    generate_manifest(count=count, name=name)
+    generate_manifest(count=count, name=name, core_only=core_only)
 
 
 @cli.command()
@@ -42,6 +43,23 @@ def build_indexes():
 
     build_all_indexes(outputs_path)
     click.echo("Done!")
+
+
+@cli.command()
+@click.option("--path", required=True, help="Path to output folder")
+@click.option("--fix", is_flag=True, help="Attempt to fix fixable issues")
+def validate(path: str, fix: bool):
+    """Validate designs for CSS comment issues and other problems."""
+    from pathlib import Path
+    from src.validate import validate_batch, show_validation_report
+
+    batch_path = Path(path)
+    if not batch_path.exists():
+        click.echo(f"Path not found: {path}")
+        return
+
+    results = validate_batch(batch_path, fix=fix)
+    show_validation_report(results)
 
 
 if __name__ == "__main__":

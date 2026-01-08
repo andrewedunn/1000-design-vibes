@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spritz Nexus - Travel Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Spritz Nexus - Neutral palette, natural spirit
+        ABOUTME: A playful dark-mode travel guide with flat 2010s aesthetics, featuring clean cards,
+        vibrant accent colors, and intuitive destination browsing.
+
+        CSS VARIABLES:
+        --color-primary: #34D399 (emerald green for natural spirit)
+        --color-background: #1F2937 (dark gray)
+        --color-surface: #374151 (medium gray)
+        --color-text: #F9FAFB (off-white)
+        --color-text-muted: #9CA3AF (gray)
+        --font-heading: 'Montserrat', sans-serif
+        --font-body: 'Open Sans', sans-serif
+        --space-unit: 1rem
+        --radius-default: 8px (soft rounded corners, flat 2010s style)
+        --shadow-default: none (flat design)
+
+        DESIGN RATIONALE:
+        Flat 2010s design emphasizes clean shapes, no shadows, and vibrant colors. The dark mode with
+        neutral grays and pops of emerald green creates a modern, eco-friendly travel vibe. Playful
+        elements include colorful destination cards, emoji-style icons, and cheerful micro-interactions.
+        The travel guide structure showcases featured destinations, quick facts, travel tips, and
+        itinerary planning—all essential for trip planning.
+        -->
+
+        */
+        :root {
+            --color-primary: #34D399;
+            --color-secondary: #60A5FA;
+            --color-accent: #F59E0B;
+            --color-background: #1F2937;
+            --color-surface: #374151;
+            --color-surface-light: #4B5563;
+            --color-text: #F9FAFB;
+            --color-text-muted: #9CA3AF;
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 8px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 1.5) var(--space-unit);
+            border-bottom: 3px solid var(--color-primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-unit);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-default);
+            background-color: transparent;
+            transition: background-color 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--color-surface-light);
+        }
+
+        nav a.active {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #34D399 0%, #2563EB 100%);
+            padding: calc(var(--space-unit) * 4) var(--space-unit);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-unit);
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 600px;
+            margin: 0 auto calc(var(--space-unit) * 2);
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-default);
+            font-size: 1rem;
+            font-family: var(--font-body);
+        }
+
+        .search-bar button {
+            padding: 1rem 2rem;
+            background-color: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3) var(--space-unit);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-text);
+        }
+
+        /* Featured Destinations */
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .destination-card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #34D399 0%, #60A5FA 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .destination-card:nth-child(2) .destination-image {
+            background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+        }
+
+        .destination-card:nth-child(3) .destination-image {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+        }
+
+        .destination-card:nth-child(4) .destination-image {
+            background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+        }
+
+        .destination-info {
+            padding: calc(var(--space-unit) * 1.5);
+        }
+
+        .destination-info h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .destination-meta {
+            display: flex;
+            gap: var(--space-unit);
+            margin-bottom: var(--space-unit);
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            background-color: var(--color-surface-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .destination-info p {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-unit);
+            line-height: 1.6;
+        }
+
+        .destination-price {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .cta-button {
+            display: inline-block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            text-decoration: none;
+            text-align: center;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #10B981;
+        }
+
+        /* Quick Stats */
+        .stats-section {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+        }
+
+        /* Travel Tips */
+        .tips-section {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-unit);
+        }
+
+        .tip-card {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 1.5);
+            border-radius: var(--radius-default);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .tip-card:nth-child(2) {
+            border-left-color: var(--color-secondary);
+        }
+
+        .tip-card:nth-child(3) {
+            border-left-color: var(--color-accent);
+        }
+
+        .tip-card h4 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .tip-card p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Sample Itinerary */
+        .itinerary-section {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .itinerary-timeline {
+            position: relative;
+            padding-left: calc(var(--space-unit) * 3);
+        }
+
+        .itinerary-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .itinerary-item {
+            position: relative;
+            margin-bottom: calc(var(--space-unit) * 2);
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 1.5);
+            border-radius: var(--radius-default);
+        }
+
+        .itinerary-item::before {
+            content: '';
+            position: absolute;
+            left: calc(var(--space-unit) * -3);
+            top: calc(var(--space-unit) * 1.5);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            border: 3px solid var(--color-background);
+        }
+
+        .itinerary-day {
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .itinerary-item h4 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .itinerary-item p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 3) var(--space-unit);
+            margin-top: calc(var(--space-unit) * 4);
+            border-top: 3px solid var(--color-primary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .footer-section h5 {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--space-unit);
+            color: var(--color-primary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--color-text);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: calc(var(--space-unit) * 2) auto 0;
+            padding-top: calc(var(--space-unit) * 2);
+            border-top: 1px solid var(--color-surface-light);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Focus Styles */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">Spritz Nexus</a>
+            <nav>
+                <a href="#" class="active">Destinations</a>
+                <a href="#">Itineraries</a>
+                <a href="#">Tips</a>
+                <a href="#">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Discover Your Next Adventure</h1>
+        <p>Explore handpicked destinations and create unforgettable travel experiences with our curated guides.</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Where do you want to go?" aria-label="Search destinations">
+            <button type="submit">Search</button>
+        </div>
+    </section>
+
+    <main>
+        <section class="featured-section">
+            <h2 class="section-title">Featured Destinations</h2>
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <div class="destination-image">🏝️</div>
+                    <div class="destination-info">
+                        <h3>Bali Bliss</h3>
+                        <div class="destination-meta">
+                            <span class="meta-tag">Beach</span>
+                            <span class="meta-tag">Culture</span>
+                            <span class="meta-tag">7 Days</span>
+                        </div>
+                        <p>Experience the perfect blend of pristine beaches, ancient temples, and vibrant culture in Indonesia's paradise island.</p>
+                        <div class="destination-price">From $1,499</div>
+                        <a href="#" class="cta-button">Explore Package</a>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image">🗼</div>
+                    <div class="destination-info">
+                        <h3>Paris Romance</h3>
+                        <div class="destination-meta">
+                            <span class="meta-tag">City</span>
+                            <span class="meta-tag">Art</span>
+                            <span class="meta-tag">5 Days</span>
+                        </div>
+                        <p>Stroll along the Seine, marvel at world-class art, and savor exquisite cuisine in the City of Light.</p>
+                        <div class="destination-price">From $2,299</div>
+                        <a href="#" class="cta-button">Explore Package</a>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image">🏔️</div>
+                    <div class="destination-info">
+                        <h3>Alpine Adventure</h3>
+                        <div class="destination-meta">
+                            <span class="meta-tag">Mountain</span>
+                            <span class="meta-tag">Adventure</span>
+                            <span class="meta-tag">10 Days</span>
+                        </div>
+                        <p>Hike through breathtaking peaks, explore charming villages, and experience the majesty of the Swiss Alps.</p>
+                        <div class="destination-price">From $3,199</div>
+                        <a href="#" class="cta-button">Explore Package</a>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image">🌊</div>
+                    <div class="destination-info">
+                        <h3>Coastal Serenity</h3>
+                        <div class="destination-meta">
+                            <span class="meta-tag">Coast</span>
+                            <span class="meta-tag">Relaxation</span>
+                            <span class="meta-tag">6 Days</span>
+                        </div>
+                        <p>Unwind on pristine shores, explore hidden coves, and let the ocean breeze wash away your worries.</p>
+                        <div class="destination-price">From $1,799</div>
+                        <a href="#" class="cta-button">Explore Package</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">🌍</div>
+                    <span class="stat-number">127</span>
+                    <div class="stat-label">Countries Covered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">✈️</div>
+                    <span class="stat-number">2.4K</span>
+                    <div class="stat-label">Travel Packages</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <span class="stat-number">4.9</span>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🎒</div>
+                    <span class="stat-number">45K</span>
+                    <div class="stat-label">Happy Travelers</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tips-section">
+            <h2 class="section-title">Expert Travel Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>💼 Pack Smart</h4>
+                    <p>Bring versatile clothing that can be mixed and matched. Roll clothes to save space and prevent wrinkles. Always pack a change of clothes in your carry-on in case your luggage gets delayed.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>🗺️ Plan Flexibly</h4>
+                    <p>Create a loose itinerary with must-see highlights, but leave room for spontaneous discoveries. Some of the best travel memories come from unplanned adventures and local recommendations.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>💰 Budget Wisely</h4>
+                    <p>Research costs beforehand and set a daily budget. Use local transportation, eat where locals eat, and book accommodations in advance for better rates. Don't forget to factor in souvenirs!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="itinerary-section">
+            <h2 class="section-title">Sample 7-Day Itinerary: Bali Discovery</h2>
+            <div class="itinerary-timeline">
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 1</div>
+                    <h4>Arrival & Ubud Welcome</h4>
+                    <p>Touch down in Denpasar, transfer to Ubud. Explore the Monkey Forest Sanctuary and visit traditional art markets. Enjoy a welcome dinner with authentic Balinese cuisine.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 2</div>
+                    <h4>Rice Terraces & Temple Tour</h4>
+                    <p>Visit the iconic Tegalalang Rice Terraces at sunrise. Tour the sacred Tirta Empul water temple and participate in a traditional purification ritual. Afternoon at leisure to explore local cafes.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 3</div>
+                    <h4>Volcano Sunrise Trek</h4>
+                    <p>Early morning trek to Mount Batur summit to watch the sunrise over the volcanic landscape. Soak in natural hot springs afterward. Return for traditional Balinese massage.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 4</div>
+                    <h4>Beach Day in Seminyak</h4>
+                    <p>Transfer to coastal Seminyak. Relax on pristine beaches, try surfing lessons, or explore beachfront boutiques. Sunset cocktails at a beach club followed by fresh seafood dinner.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 5</div>
+                    <h4>Island Hopping Adventure</h4>
+                    <p>Day trip to Nusa Penida. Visit Kelingking Beach, snorkel at Crystal Bay, and explore hidden caves. Return to Seminyak for evening at leisure.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 6</div>
+                    <h4>Cultural Immersion</h4>
+                    <p>Visit Tanah Lot Temple at sunset. Attend a traditional Kecak dance performance. Participate in a Balinese cooking class and enjoy your homemade feast.</p>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-day">Day 7</div>
+                    <h4>Departure Day</h4>
+                    <p>Final morning for souvenir shopping or beach relaxation. Transfer to airport with memories to last a lifetime. Safe travels home!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h5>Destinations</h5>
+                <ul>
+                    <li><a href="#">Asia</a></li>
+                    <li><a href="#">Europe</a></li>
+                    <li><a href="#">Americas</a></li>
+                    <li><a href="#">Africa</a></li>
+                    <li><a href="#">Oceania</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h5>Travel Types</h5>
+                <ul>
+                    <li><a href="#">Adventure</a></li>
+                    <li><a href="#">Beach Getaways</a></li>
+                    <li><a href="#">Cultural Tours</a></li>
+                    <li><a href="#">Romantic Escapes</a></li>
+                    <li><a href="#">Family Vacations</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h5>Resources</h5>
+                <ul>
+                    <li><a href="#">Travel Blog</a></li>
+                    <li><a href="#">Packing Guides</a></li>
+                    <li><a href="#">Visa Information</a></li>
+                    <li><a href="#">Travel Insurance</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h5>Company</h5>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Spritz Nexus. Your gateway to unforgettable adventures.
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 59;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

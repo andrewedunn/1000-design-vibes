@@ -1,0 +1,755 @@
+<!--
+DESIGN: Clear Prime - Natural meets neutral: a swiss international perspective
+ABOUTME: A lab results interface for fashion industry quality control testing, combining Swiss International typography and grid systems with a friendly, approachable dark interface. Features clean tabular data presentation with clear hierarchy and accessible contrast.
+
+CSS VARIABLES:
+--color-primary: #7EC4A8 (soft mint green for test status indicators)
+--color-background: #1A1D23 (deep charcoal background)
+--color-surface: #252932 (elevated surface for cards and tables)
+--color-text: #E8EAED (high contrast off-white)
+--color-text-muted: #9AA0A9 (medium gray for secondary info)
+--font-heading: 'Roboto', sans-serif (clean, geometric Swiss style)
+--font-body: 'Roboto', sans-serif (consistent with heading)
+--space-unit: 8px (systematic spacing grid)
+--radius-default: 4px (minimal, precise corners)
+--shadow-default: 0 2px 8px rgba(0,0,0,0.3) (subtle elevation)
+
+DESIGN RATIONALE:
+Swiss International design emphasizes clarity, objectivity, and grid-based layouts—perfect for lab results requiring precision. The friendly tone is achieved through approachable mint green accents, generous white space, and clear typography. Dark mode reduces eye strain during extended review sessions. The grid system creates perfect alignment across all data tables, while the systematic spacing maintains visual rhythm throughout the interface.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Prime - Lab Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #7EC4A8;
+            --color-background: #1A1D23;
+            --color-surface: #252932;
+            --color-text: #E8EAED;
+            --color-text-muted: #9AA0A9;
+            --color-warning: #F4A259;
+            --color-error: #E76F51;
+            --color-success: #7EC4A8;
+            --font-heading: 'Roboto', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 4px;
+            --shadow-default: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        /* Header */
+        header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            color: var(--color-text);
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .header-meta strong {
+            color: var(--color-text);
+            font-weight: 500;
+            display: block;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: calc(var(--space-unit) * 1);
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .status-card {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border-radius: var(--radius-default);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .status-card.warning {
+            border-left-color: var(--color-warning);
+        }
+
+        .status-card.error {
+            border-left-color: var(--color-error);
+        }
+
+        .status-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1);
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .status-detail {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: calc(var(--space-unit) * 5);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            color: var(--color-text);
+        }
+
+        .section-meta {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* Table */
+        .table-wrapper {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-align: left;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        th:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: calc(var(--space-unit) * 2.5) calc(var(--space-unit) * 3);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .test-name {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .test-code {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-family: monospace;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .result-value {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .result-unit {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-left: 4px;
+        }
+
+        .reference-range {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: right;
+            justify-content: flex-end;
+        }
+
+        .status-badge.pass {
+            background-color: rgba(126, 196, 168, 0.15);
+            color: var(--color-success);
+        }
+
+        .status-badge.warning {
+            background-color: rgba(244, 162, 89, 0.15);
+            color: var(--color-warning);
+        }
+
+        .status-badge.fail {
+            background-color: rgba(231, 111, 81, 0.15);
+            color: var(--color-error);
+        }
+
+        /* Grid Layout for Material Tests */
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .test-card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+        }
+
+        .test-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: calc(var(--space-unit) * 2);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .test-card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .test-card-code {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-family: monospace;
+        }
+
+        .test-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .metric-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: calc(var(--space-unit) * 8);
+            padding-top: calc(var(--space-unit) * 4);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .footer-note {
+            max-width: 800px;
+            margin: 0 auto calc(var(--space-unit) * 2);
+            line-height: 1.8;
+        }
+
+        .footer-meta {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Accessibility */
+        a:focus, button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 2);
+            }
+
+            .header-meta {
+                text-align: left;
+            }
+
+            .status-banner {
+                grid-template-columns: 1fr;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="logo">Clear Prime</div>
+                <div class="header-meta">
+                    <strong>Report ID: FQ-2026-001247</strong>
+                    <div>Issued: January 7, 2026</div>
+                    <div>Lab: Milano Quality Center</div>
+                </div>
+            </div>
+            <h1>Fabric Quality Analysis</h1>
+            <p class="subtitle">Natural meets neutral: a swiss international perspective</p>
+        </header>
+
+        <!-- Status Overview -->
+        <div class="status-banner">
+            <div class="status-card">
+                <div class="status-label">Overall Status</div>
+                <div class="status-value">Pass</div>
+                <div class="status-detail">12/14 tests passed</div>
+            </div>
+            <div class="status-card">
+                <div class="status-label">Sample</div>
+                <div class="status-value">CP-SS26-017</div>
+                <div class="status-detail">Organic Cotton Blend</div>
+            </div>
+            <div class="status-card warning">
+                <div class="status-label">Warnings</div>
+                <div class="status-value">2</div>
+                <div class="status-detail">Minor deviations noted</div>
+            </div>
+            <div class="status-card">
+                <div class="status-label">Certification</div>
+                <div class="status-value">GOTS</div>
+                <div class="status-detail">Global Organic Textile Standard</div>
+            </div>
+        </div>
+
+        <!-- Physical Properties -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Physical Properties</h2>
+                <div class="section-meta">ASTM D5034-21 Standard</div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test Parameter</th>
+                            <th>Result</th>
+                            <th>Reference Range</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="test-name">Fabric Weight</span>
+                                <span class="test-code">FW-001</span>
+                            </td>
+                            <td>
+                                <span class="result-value">182.4</span>
+                                <span class="result-unit">g/m²</span>
+                            </td>
+                            <td class="reference-range">180 - 200 g/m²</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Thread Count</span>
+                                <span class="test-code">TC-002</span>
+                            </td>
+                            <td>
+                                <span class="result-value">144</span>
+                                <span class="result-unit">threads/inch</span>
+                            </td>
+                            <td class="reference-range">140 - 160 threads/inch</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Tensile Strength (Warp)</span>
+                                <span class="test-code">TS-003W</span>
+                            </td>
+                            <td>
+                                <span class="result-value">487</span>
+                                <span class="result-unit">N</span>
+                            </td>
+                            <td class="reference-range">≥ 450 N</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Tensile Strength (Weft)</span>
+                                <span class="test-code">TS-003F</span>
+                            </td>
+                            <td>
+                                <span class="result-value">421</span>
+                                <span class="result-unit">N</span>
+                            </td>
+                            <td class="reference-range">≥ 400 N</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Tear Strength</span>
+                                <span class="test-code">TR-004</span>
+                            </td>
+                            <td>
+                                <span class="result-value">34.2</span>
+                                <span class="result-unit">N</span>
+                            </td>
+                            <td class="reference-range">≥ 35 N</td>
+                            <td><span class="status-badge warning">Below</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Pilling Resistance</span>
+                                <span class="test-code">PR-005</span>
+                            </td>
+                            <td>
+                                <span class="result-value">4.0</span>
+                                <span class="result-unit">grade</span>
+                            </td>
+                            <td class="reference-range">≥ 3.5 grade</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Chemical Composition -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Chemical Analysis</h2>
+                <div class="section-meta">ISO 105 Standards</div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test Parameter</th>
+                            <th>Result</th>
+                            <th>Reference Range</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="test-name">pH Value</span>
+                                <span class="test-code">PH-006</span>
+                            </td>
+                            <td>
+                                <span class="result-value">7.2</span>
+                                <span class="result-unit">pH</span>
+                            </td>
+                            <td class="reference-range">6.5 - 8.0 pH</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Formaldehyde Content</span>
+                                <span class="test-code">FC-007</span>
+                            </td>
+                            <td>
+                                <span class="result-value">12</span>
+                                <span class="result-unit">ppm</span>
+                            </td>
+                            <td class="reference-range">≤ 75 ppm</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Heavy Metals (Total)</span>
+                                <span class="test-code">HM-008</span>
+                            </td>
+                            <td>
+                                <span class="result-value">0.8</span>
+                                <span class="result-unit">mg/kg</span>
+                            </td>
+                            <td class="reference-range">≤ 1.0 mg/kg</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="test-name">Azo Dyes</span>
+                                <span class="test-code">AZ-009</span>
+                            </td>
+                            <td>
+                                <span class="result-value">ND</span>
+                                <span class="result-unit"></span>
+                            </td>
+                            <td class="reference-range">Not Detected</td>
+                            <td><span class="status-badge pass">Pass</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Color Fastness Tests -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Color Fastness</h2>
+                <div class="section-meta">ISO 105 Series</div>
+            </div>
+            <div class="test-grid">
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <div>
+                            <div class="test-card-title">Washing Fastness</div>
+                            <div class="test-card-code">CF-010</div>
+                        </div>
+                        <span class="status-badge pass">Pass</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Color Change</span>
+                        <span class="metric-value">4-5 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Staining</span>
+                        <span class="metric-value">4 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Standard</span>
+                        <span class="metric-value">≥ 4 Grade</span>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <div>
+                            <div class="test-card-title">Light Fastness</div>
+                            <div class="test-card-code">CF-011</div>
+                        </div>
+                        <span class="status-badge warning">Below</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Xenon Arc Test</span>
+                        <span class="metric-value">3-4 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Exposure Time</span>
+                        <span class="metric-value">40 Hours</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Standard</span>
+                        <span class="metric-value">≥ 4 Grade</span>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <div>
+                            <div class="test-card-title">Rubbing Fastness (Dry)</div>
+                            <div class="test-card-code">CF-012D</div>
+                        </div>
+                        <span class="status-badge pass">Pass</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Color Change</span>
+                        <span class="metric-value">4-5 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Staining</span>
+                        <span class="metric-value">4-5 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Standard</span>
+                        <span class="metric-value">≥ 4 Grade</span>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <div>
+                            <div class="test-card-title">Rubbing Fastness (Wet)</div>
+                            <div class="test-card-code">CF-012W</div>
+                        </div>
+                        <span class="status-badge pass">Pass</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Color Change</span>
+                        <span class="metric-value">4 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Staining</span>
+                        <span class="metric-value">3-4 Grade</span>
+                    </div>
+                    <div class="test-metric">
+                        <span class="metric-label">Standard</span>
+                        <span class="metric-value">≥ 3 Grade</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-note">
+                This report contains the results of laboratory testing performed on the submitted sample.
+                Results relate only to the items tested. This document shall not be reproduced except in full,
+                without written approval of Clear Prime Laboratory Services.
+            </div>
+            <div class="footer-meta">
+                Accredited Lab · ISO/IEC 17025:2017 · GOTS Approved Testing Facility
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 85;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

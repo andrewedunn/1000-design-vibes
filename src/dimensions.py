@@ -1,7 +1,7 @@
 # ABOUTME: Defines all design dimensions and their possible values.
 # ABOUTME: These dimensions combine to create unique design system specifications.
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -10,6 +10,11 @@ class Dimension:
     name: str
     description: str
     values: dict[str, str]  # value -> description
+    weights: dict[str, float] = field(default_factory=dict)  # value -> weight (default 1.0)
+
+    def get_weight(self, value: str) -> float:
+        """Get the weight for a value (default 1.0 if not specified)."""
+        return self.weights.get(value, 1.0)
 
 
 # Tier 1: Core Visual Style
@@ -27,6 +32,20 @@ UI_PARADIGM = Dimension(
         "claymorphic": "3D, inflated, toy-like appearance",
         "organic": "Flowing, natural shapes, blob-like",
         "editorial": "Magazine-inspired, typography-focused",
+    },
+    weights={
+        # Standard (4x weight)
+        "flat": 4.0,
+        "material": 4.0,
+        "editorial": 4.0,
+        # Moderate (2x weight)
+        "neumorphic": 2.0,
+        "skeuomorphic": 2.0,
+        # Experimental (1x weight - default)
+        "glassmorphic": 1.0,
+        "brutalist": 1.0,
+        "claymorphic": 1.0,
+        "organic": 1.0,
     },
 )
 
@@ -50,6 +69,28 @@ DESIGN_ERA = Dimension(
         "flat_2010s": "2010-2015 minimal, colorful, no shadows",
         "neo_brutalist": "2020s bold borders, raw, high contrast",
         "scandinavian_modern": "Minimal, functional, light, natural",
+    },
+    weights={
+        # Standard/professional (4x weight)
+        "swiss_international": 4.0,
+        "flat_2010s": 4.0,
+        "scandinavian_modern": 4.0,
+        "mid_century_modern": 4.0,
+        # Classic/refined (3x weight)
+        "bauhaus": 3.0,
+        "art_deco": 3.0,
+        "neo_brutalist": 3.0,
+        # Moderate (2x weight)
+        "web2_glossy": 2.0,
+        "y2k": 2.0,
+        "grunge": 2.0,
+        # Experimental (1x weight - default)
+        "psychedelic": 1.0,
+        "punk": 1.0,
+        "memphis": 1.0,
+        "pop_art": 1.0,
+        "arts_and_crafts": 1.0,
+        "art_nouveau": 1.0,
     },
 )
 
@@ -651,6 +692,191 @@ FUNCTIONAL_DIRECTION = Dimension(
         "data_table": "Sortable columns, pagination, filters, row selection, bulk actions",
         "chart_dashboard": "Multiple chart types, filters, date range, drill-down, export",
         "analytics_overview": "KPI cards, trend lines, comparison periods, top lists",
+    },
+    weights={
+        # === STANDARD WEB TYPES (4x weight) ===
+        "dashboard": 4.0,
+        "admin_panel": 4.0,
+        "landing_page": 4.0,
+        "documentation": 4.0,
+        "e_commerce": 4.0,
+        "portfolio": 4.0,
+        "blog": 4.0,
+        "social_feed": 4.0,
+        "forum": 4.0,
+        "wiki": 4.0,
+        "knowledge_base": 4.0,
+        "pricing_page": 4.0,
+        "changelog": 4.0,
+        "status_page": 4.0,
+        # Education
+        "online_course": 4.0,
+        "quiz_interface": 4.0,
+        "flashcard_app": 4.0,
+        "lms_dashboard": 4.0,
+        "textbook_reader": 4.0,
+        "tutorial_walkthrough": 4.0,
+        "grade_book": 4.0,
+        "exam_interface": 4.0,
+        "certification_page": 4.0,
+        "language_learning": 4.0,
+        # Productivity
+        "project_management": 4.0,
+        "kanban_board": 4.0,
+        "note_taking": 4.0,
+        "spreadsheet": 4.0,
+        "time_tracker": 4.0,
+        "invoice": 4.0,
+        "crm": 4.0,
+        "help_desk": 4.0,
+        "file_manager": 4.0,
+        "presentation": 4.0,
+        # Communication
+        "messaging_app": 4.0,
+        "email_client": 4.0,
+        "team_chat": 4.0,
+        "comment_section": 4.0,
+        "live_chat_widget": 4.0,
+        "announcement_board": 4.0,
+        "video_call": 4.0,
+        # Finance
+        "banking_dashboard": 4.0,
+        "investment_portfolio": 4.0,
+        "expense_tracker": 4.0,
+        "budget_planner": 4.0,
+        "subscription_manager": 4.0,
+        "pos_terminal": 4.0,
+        # Health
+        "fitness_tracker": 4.0,
+        "appointment_booking": 4.0,
+        "medical_records": 4.0,
+        "habit_tracker": 4.0,
+        "nutrition_counter": 4.0,
+        "symptom_checker": 4.0,
+        "mental_health_journal": 4.0,
+        # Travel
+        "flight_booking": 4.0,
+        "hotel_search": 4.0,
+        "trip_planner": 4.0,
+        "transit_app": 4.0,
+        "restaurant_finder": 4.0,
+        "ride_sharing": 4.0,
+        "maps_interface": 4.0,
+        "travel_guide": 4.0,
+        # Social
+        "user_profile": 4.0,
+        "review_site": 4.0,
+        "event_discovery": 4.0,
+        "community_directory": 4.0,
+        "group_page": 4.0,
+        "dating_profile": 4.0,
+        # Creative tools
+        "code_editor": 4.0,
+        "design_tool": 4.0,
+        "markdown_editor": 4.0,
+        "component_library": 4.0,
+        # Real estate
+        "property_listing": 4.0,
+        "mortgage_calculator": 4.0,
+        # Food
+        "restaurant_menu": 4.0,
+        "recipe_card": 4.0,
+        "food_delivery": 4.0,
+        "meal_planner": 4.0,
+        # News/Publishing
+        "newsletter": 4.0,
+        "newspaper": 4.0,
+        "magazine_spread": 4.0,
+        "press_release": 4.0,
+        "podcast_directory": 4.0,
+        # Events
+        "ticket_booking": 4.0,
+        "conference_schedule": 4.0,
+        "wedding_invitation": 4.0,
+        "countdown_page": 4.0,
+        "event_poster": 4.0,
+        # Utility
+        "calculator": 4.0,
+        "survey_form": 4.0,
+        "url_shortener": 4.0,
+        "password_generator": 4.0,
+        "unit_converter": 4.0,
+        "qr_generator": 4.0,
+        # Professional
+        "shipping_tracker": 4.0,
+        "inventory_system": 4.0,
+        "security_dashboard": 4.0,
+        "iot_dashboard": 4.0,
+        "government_form": 4.0,
+        "legal_document": 4.0,
+        "scientific_paper": 4.0,
+        "medical_chart": 4.0,
+        "lab_results": 4.0,
+        # Personal
+        "resume_cv": 4.0,
+        "business_card": 4.0,
+        "personal_homepage": 4.0,
+        "linktree_clone": 4.0,
+        "login_page": 4.0,
+        "settings_panel": 4.0,
+        "onboarding_flow": 4.0,
+        "coming_soon": 4.0,
+        "404_page": 4.0,
+        "maintenance_page": 4.0,
+        "cookie_consent": 4.0,
+        "age_verification": 4.0,
+        # Data
+        "data_table": 4.0,
+        "chart_dashboard": 4.0,
+        "analytics_overview": 4.0,
+        "report_builder": 4.0,
+        "infographic": 4.0,
+        # === MODERATE (2x weight) ===
+        # Creative/niche
+        "font_browser": 2.0,
+        "color_picker": 2.0,
+        "icon_library": 2.0,
+        "animation_timeline": 2.0,
+        "floor_plan": 2.0,
+        "wine_list": 2.0,
+        # Media
+        "music_player": 2.0,
+        "video_player": 2.0,
+        "podcast_player": 2.0,
+        "photo_gallery": 2.0,
+        "news_reader": 2.0,
+        "streaming_service": 2.0,
+        "movie_database": 2.0,
+        "comic_reader": 2.0,
+        "audio_visualizer": 2.0,
+        "live_stream": 2.0,
+        # Gaming (non-retro)
+        "game_leaderboard": 2.0,
+        "tournament_bracket": 2.0,
+        "fantasy_sports": 2.0,
+        "sports_scores": 2.0,
+        "character_sheet": 2.0,
+        "game_inventory": 2.0,
+        "achievement_showcase": 2.0,
+        # Finance (niche)
+        "crypto_tracker": 2.0,
+        "stock_ticker": 2.0,
+        # Health (niche)
+        "meditation_app": 2.0,
+        "sleep_tracker": 2.0,
+        # Memorial
+        "memorial_page": 2.0,
+        # === EXPERIMENTAL/RETRO (1x weight - default) ===
+        "terminal_ui": 1.0,
+        "retro_game_hud": 1.0,
+        "sci_fi_console": 1.0,
+        "windows_95": 1.0,
+        "vaporwave": 1.0,
+        "cyberpunk": 1.0,
+        "pixel_art_ui": 1.0,
+        "90s_website": 1.0,
+        "myspace_profile": 1.0,
+        "vintage_catalog": 1.0,
     },
 )
 

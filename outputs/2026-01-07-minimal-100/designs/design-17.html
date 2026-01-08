@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Core - Exam Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Royal Core - A flat approach meets international sensibility
+        ABOUTME: A luxurious dark-themed finance certification exam interface with bold pop art aesthetics,
+        featuring high-contrast color blocks, geometric shapes, and premium interactive elements.
+
+        CSS VARIABLES:
+        --color-primary: #FFD700 (Luxurious gold)
+        --color-accent-1: #FF1493 (Bold magenta)
+        --color-accent-2: #00CED1 (Vibrant turquoise)
+        --color-accent-3: #FF6B35 (Pop orange)
+        --color-background: #0A0E27 (Deep navy)
+        --color-surface: #151B3B (Elevated navy)
+        --color-surface-elevated: #1F2749 (Card surface)
+        --color-text: #FFFFFF (Pure white)
+        --color-text-muted: #A8B2D1 (Muted lavender)
+        --font-heading: 'Space Grotesk' (Modern, geometric)
+        --font-body: 'Poppins' (Clean, readable)
+
+        DESIGN RATIONALE:
+        Pop art aesthetics meet international finance through bold, flat color blocks and geometric precision.
+        The dark luxurious palette (gold, magenta, turquoise) creates premium feel while maintaining the playful
+        energy of pop art. Flat design with sharp edges and high contrast ensures clarity for exam-taking.
+        Large typography and clear hierarchy support focused reading and decision-making under pressure.
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #FFD700;
+            --color-accent-1: #FF1493;
+            --color-accent-2: #00CED1;
+            --color-accent-3: #FF6B35;
+            --color-background: #0A0E27;
+            --color-surface: #151B3B;
+            --color-surface-elevated: #1F2749;
+            --color-text: #FFFFFF;
+            --color-text-muted: #A8B2D1;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Progress */
+        .exam-header {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border-bottom: 4px solid var(--color-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .exam-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .exam-title .highlight {
+            color: var(--color-primary);
+        }
+
+        .exam-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 4);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: calc(var(--space-unit) * 0.5);
+        }
+
+        .timer {
+            color: var(--color-accent-1);
+        }
+
+        .score {
+            color: var(--color-accent-2);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            margin-top: calc(var(--space-unit) * 3);
+            background: var(--color-background);
+            height: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent-2) 100%);
+            width: 47%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-text);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Main Content Area */
+        .exam-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 3);
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--color-surface-elevated);
+            padding: calc(var(--space-unit) * 5);
+            border-left: 6px solid var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 4);
+            padding-bottom: calc(var(--space-unit) * 3);
+            border-bottom: 2px solid var(--color-surface);
+        }
+
+        .question-number {
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .question-category {
+            background: var(--color-accent-1);
+            color: var(--color-text);
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2.5);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: calc(var(--space-unit) * 5);
+            color: var(--color-text);
+            font-weight: 400;
+        }
+
+        /* Answer Options */
+        .answers-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2.5);
+        }
+
+        .answer-option {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: calc(var(--space-unit) * 2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: var(--color-accent-2);
+            opacity: 0.1;
+            transition: width 0.3s ease;
+        }
+
+        .answer-option:hover {
+            border-color: var(--color-primary);
+            transform: translateX(4px);
+        }
+
+        .answer-option:hover::before {
+            width: 100%;
+        }
+
+        .answer-option.selected {
+            border-color: var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .answer-option.selected .option-letter {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .option-letter {
+            background: var(--color-surface-elevated);
+            color: var(--color-primary);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .option-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            padding-top: calc(var(--space-unit) * 1.5);
+        }
+
+        /* Navigation Buttons */
+        .question-nav {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 5);
+            padding-top: calc(var(--space-unit) * 4);
+            border-top: 2px solid var(--color-surface);
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: calc(var(--space-unit) * 2.5) calc(var(--space-unit) * 4);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .nav-button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-button.btn-previous {
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: 2px solid var(--color-text-muted);
+        }
+
+        .nav-button.btn-previous:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .nav-button.btn-next {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .nav-button.btn-next:hover {
+            background: var(--color-accent-2);
+        }
+
+        .nav-button.btn-submit {
+            background: var(--color-accent-1);
+            color: var(--color-text);
+        }
+
+        .nav-button.btn-submit:hover {
+            background: var(--color-accent-3);
+        }
+
+        /* Sidebar */
+        .exam-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .sidebar-card {
+            background: var(--color-surface-elevated);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+        }
+
+        .sidebar-title {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: calc(var(--space-unit) * 2.5);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 3px solid var(--color-primary);
+        }
+
+        /* Question Navigator */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .question-nav-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .question-nav-item:hover {
+            transform: scale(1.1);
+            border-color: var(--color-primary);
+        }
+
+        .question-nav-item.current {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .question-nav-item.answered {
+            background: var(--color-accent-2);
+            color: var(--color-background);
+        }
+
+        .question-nav-item.flagged {
+            background: var(--color-accent-1);
+            color: var(--color-text);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: calc(var(--space-unit) * 2);
+            background: var(--color-surface);
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .stat-number.answered-stat {
+            color: var(--color-accent-2);
+        }
+
+        .stat-number.remaining-stat {
+            color: var(--color-accent-1);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        /* Legend */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+            padding: calc(var(--space-unit) * 1.5) 0;
+            border-bottom: 1px solid var(--color-surface);
+        }
+
+        .legend-item:last-child {
+            border-bottom: none;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Flag Button */
+        .flag-button {
+            background: transparent;
+            border: 2px solid var(--color-text-muted);
+            color: var(--color-text);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .flag-button:hover {
+            border-color: var(--color-accent-1);
+            background: var(--color-accent-1);
+        }
+
+        .flag-button.flagged {
+            background: var(--color-accent-1);
+            border-color: var(--color-accent-1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .exam-container {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-sidebar {
+                order: -1;
+            }
+
+            .question-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exam-header {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .exam-title {
+                font-size: 1.3rem;
+            }
+
+            .meta-value {
+                font-size: 1.2rem;
+            }
+
+            .question-card {
+                padding: calc(var(--space-unit) * 3);
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .question-nav {
+                flex-direction: column;
+            }
+
+            .question-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .answer-option:focus,
+        .nav-button:focus,
+        .question-nav-item:focus,
+        .flag-button:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="exam-header">
+        <div class="header-content">
+            <h1 class="exam-title"><span class="highlight">CFA</span> Level II Certification</h1>
+            <div class="exam-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Time Left</span>
+                    <span class="meta-value timer">2:47:32</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Current Score</span>
+                    <span class="meta-value score">78%</span>
+                </div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+            <span class="progress-text">Question 47 of 100</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="exam-container">
+        <!-- Question Card -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-number">QUESTION 47</div>
+                <div class="question-category">Portfolio Management</div>
+            </div>
+
+            <p class="question-text">
+                An investment manager is evaluating the performance of a global equity portfolio using the Brinson-Fachler attribution model. The portfolio generated a return of 12.4% while the benchmark returned 10.8%. The allocation effect was +0.8% and the interaction effect was +0.2%. What was the selection effect?
+            </p>
+
+            <ul class="answers-list">
+                <li class="answer-option" tabindex="0" role="radio" aria-checked="false">
+                    <div class="option-letter">A</div>
+                    <div class="option-text">+0.4%</div>
+                </li>
+                <li class="answer-option selected" tabindex="0" role="radio" aria-checked="true">
+                    <div class="option-letter">B</div>
+                    <div class="option-text">+0.6%</div>
+                </li>
+                <li class="answer-option" tabindex="0" role="radio" aria-checked="false">
+                    <div class="option-letter">C</div>
+                    <div class="option-text">+1.0%</div>
+                </li>
+                <li class="answer-option" tabindex="0" role="radio" aria-checked="false">
+                    <div class="option-letter">D</div>
+                    <div class="option-text">+1.6%</div>
+                </li>
+            </ul>
+
+            <div class="question-nav">
+                <button class="nav-button btn-previous">← Previous</button>
+                <button class="nav-button btn-next">Next →</button>
+                <button class="flag-button">🚩 Flag for Review</button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="exam-sidebar">
+            <!-- Question Navigator -->
+            <div class="sidebar-card">
+                <h2 class="sidebar-title">Questions</h2>
+                <div class="question-grid">
+                    <div class="question-nav-item answered">1</div>
+                    <div class="question-nav-item answered">2</div>
+                    <div class="question-nav-item answered">3</div>
+                    <div class="question-nav-item answered">4</div>
+                    <div class="question-nav-item flagged">5</div>
+                    <div class="question-nav-item answered">6</div>
+                    <div class="question-nav-item answered">7</div>
+                    <div class="question-nav-item answered">8</div>
+                    <div class="question-nav-item answered">9</div>
+                    <div class="question-nav-item answered">10</div>
+                    <div class="question-nav-item answered">11</div>
+                    <div class="question-nav-item flagged">12</div>
+                    <div class="question-nav-item answered">13</div>
+                    <div class="question-nav-item answered">14</div>
+                    <div class="question-nav-item answered">15</div>
+                    <div class="question-nav-item answered">16</div>
+                    <div class="question-nav-item answered">17</div>
+                    <div class="question-nav-item answered">18</div>
+                    <div class="question-nav-item answered">19</div>
+                    <div class="question-nav-item answered">20</div>
+                    <div class="question-nav-item answered">21</div>
+                    <div class="question-nav-item answered">22</div>
+                    <div class="question-nav-item answered">23</div>
+                    <div class="question-nav-item answered">24</div>
+                    <div class="question-nav-item answered">25</div>
+                    <div class="question-nav-item answered">26</div>
+                    <div class="question-nav-item answered">27</div>
+                    <div class="question-nav-item answered">28</div>
+                    <div class="question-nav-item answered">29</div>
+                    <div class="question-nav-item answered">30</div>
+                    <div class="question-nav-item answered">31</div>
+                    <div class="question-nav-item answered">32</div>
+                    <div class="question-nav-item answered">33</div>
+                    <div class="question-nav-item answered">34</div>
+                    <div class="question-nav-item answered">35</div>
+                    <div class="question-nav-item answered">36</div>
+                    <div class="question-nav-item answered">37</div>
+                    <div class="question-nav-item answered">38</div>
+                    <div class="question-nav-item answered">39</div>
+                    <div class="question-nav-item answered">40</div>
+                    <div class="question-nav-item answered">41</div>
+                    <div class="question-nav-item answered">42</div>
+                    <div class="question-nav-item answered">43</div>
+                    <div class="question-nav-item answered">44</div>
+                    <div class="question-nav-item answered">45</div>
+                    <div class="question-nav-item answered">46</div>
+                    <div class="question-nav-item current">47</div>
+                    <div class="question-nav-item">48</div>
+                    <div class="question-nav-item">49</div>
+                    <div class="question-nav-item">50</div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="sidebar-card">
+                <h2 class="sidebar-title">Progress</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number answered-stat">46</span>
+                        <span class="stat-label">Answered</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number remaining-stat">54</span>
+                        <span class="stat-label">Remaining</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="sidebar-card">
+                <h2 class="sidebar-title">Legend</h2>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-primary);"></div>
+                    <div class="legend-label">Current Question</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-accent-2);"></div>
+                    <div class="legend-label">Answered</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-accent-1);"></div>
+                    <div class="legend-label">Flagged for Review</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-surface);"></div>
+                    <div class="legend-label">Not Answered</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 17;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Answer selection interactivity
+        const answerOptions = document.querySelectorAll('.answer-option');
+        answerOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                answerOptions.forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-checked', 'false');
+                });
+                this.classList.add('selected');
+                this.setAttribute('aria-checked', 'true');
+            });
+
+            option.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Flag button interactivity
+        const flagButton = document.querySelector('.flag-button');
+        flagButton.addEventListener('click', function() {
+            this.classList.toggle('flagged');
+            this.textContent = this.classList.contains('flagged') ? '🚩 Flagged' : '🚩 Flag for Review';
+        });
+
+        // Question navigator interactivity
+        const navItems = document.querySelectorAll('.question-nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const questionNum = this.textContent;
+                console.log(`Navigate to question ${questionNum}`);
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

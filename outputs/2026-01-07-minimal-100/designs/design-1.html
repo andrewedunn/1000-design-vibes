@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigma Ash - LMS Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Enigma Ash - Natural meets neutral: a swiss international perspective
+        ABOUTME: An LMS dashboard for travel education with Swiss International design principles -
+        precise grid systems, neutral typography, and mysterious dark aesthetics that evoke nighttime exploration.
+
+        CSS VARIABLES:
+        --color-primary: #4A9B8E (muted teal - suggests travel and water)
+        --color-background: #0D0F12 (deep charcoal)
+        --color-surface: #1A1D23 (elevated surface)
+        --color-text: #E8E9EA (soft white)
+        --color-text-muted: #8B8E93 (neutral gray)
+        --font-heading: 'Helvetica Neue', sans-serif (Swiss International standard)
+        --font-body: 'Roboto', sans-serif (clean readability)
+        --space-unit: 8px (strict 8px grid system)
+        --radius-default: 2px (minimal, Swiss restraint)
+        --shadow-default: 0 1px 3px rgba(0,0,0,0.4) (subtle depth)
+
+        DESIGN RATIONALE:
+        Swiss International style emphasizes objectivity, clarity, and mathematical precision. The dark mode
+        adds mystery and evokes nighttime travel - airports at 3am, train stations in fog. The muted teal
+        primary color references water, maps, and journey. Typography is sans-serif and neutral. Grid-based
+        layout with generous whitespace. No decorative elements - pure function and hierarchy.
+        -->
+
+        */
+        :root {
+            --color-primary: #4A9B8E;
+            --color-primary-dim: #3A7B6E;
+            --color-background: #0D0F12;
+            --color-surface: #1A1D23;
+            --color-surface-elevated: #23262E;
+            --color-border: #2A2D35;
+            --color-text: #E8E9EA;
+            --color-text-muted: #8B8E93;
+            --color-warning: #C89B5F;
+            --color-success: #5FA87D;
+            --font-heading: 'Helvetica Neue', -apple-system, sans-serif;
+            --font-body: 'Roboto', -apple-system, sans-serif;
+            --space-unit: 8px;
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* Grid System - Swiss precision */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .grid {
+            display: grid;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Header */
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--color-primary);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: calc(var(--space-unit) * 4);
+            align-items: center;
+        }
+
+        .header-nav a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--color-text);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--color-primary-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        /* Main Layout */
+        main {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            max-width: 1440px;
+            margin: 0 auto;
+            min-height: calc(100vh - 57px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--color-surface);
+            border-right: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .sidebar-section {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .sidebar-title {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+            font-weight: 500;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+            padding: calc(var(--space-unit) * 1.5);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius-default);
+            transition: all 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+        }
+
+        .sidebar-menu a.active {
+            background: var(--color-primary-dim);
+            color: var(--color-text);
+        }
+
+        .menu-icon {
+            width: 16px;
+            height: 16px;
+            background: currentColor;
+            mask-size: contain;
+            -webkit-mask-size: contain;
+        }
+
+        /* Content Area */
+        .content {
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .subtitle {
+            color: var(--color-text-muted);
+            font-size: 13px;
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        /* Course Cards */
+        .course-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, var(--color-primary-dim) 0%, var(--color-surface-elevated) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: rgba(255,255,255,0.1);
+            font-weight: 700;
+        }
+
+        .course-content {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .course-category {
+            display: inline-block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 1);
+            font-weight: 500;
+        }
+
+        .course-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: calc(var(--space-unit) * 1);
+            letter-spacing: 0.2px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-surface-elevated);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Stats */
+        .stat-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Activity List */
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            padding: calc(var(--space-unit) * 2) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-default);
+            background: var(--color-surface-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .activity-meta {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: var(--radius-default);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dim);
+        }
+
+        .btn-secondary {
+            background: var(--color-surface-elevated);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-surface);
+        }
+
+        /* Focus States */
+        a:focus,
+        button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 2);
+                align-items: flex-start;
+            }
+
+            .header-nav {
+                gap: calc(var(--space-unit) * 2);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Enigma Ash</div>
+            <nav class="header-nav">
+                <a href="#">Dashboard</a>
+                <a href="#">Courses</a>
+                <a href="#">Certificates</a>
+                <a href="#">Messages</a>
+                <div class="user-avatar">TA</div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Learning</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">My Courses</a></li>
+                    <li><a href="#">Browse Catalog</a></li>
+                    <li><a href="#">Saved</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Progress</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#">Assignments</a></li>
+                    <li><a href="#">Achievements</a></li>
+                    <li><a href="#">Certificates</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Community</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#">Discussions</a></li>
+                    <li><a href="#">Study Groups</a></li>
+                    <li><a href="#">Mentors</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="content">
+            <h1>Dashboard</h1>
+            <p class="subtitle">Welcome back, Travel Agent. Continue your journey through global hospitality.</p>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-4" style="margin-bottom: calc(var(--space-unit) * 4);">
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Active Courses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">127</div>
+                    <div class="stat-label">Hours Learned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Certificates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">92%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+
+            <!-- Continue Learning -->
+            <section style="margin-bottom: calc(var(--space-unit) * 5);">
+                <h2>Continue Learning</h2>
+                <div class="grid grid-3">
+                    <div class="course-card">
+                        <div class="course-thumbnail">✈</div>
+                        <div class="course-content">
+                            <span class="course-category">Aviation</span>
+                            <h3 class="course-title">International Flight Operations</h3>
+                            <div class="course-meta">
+                                <span>Module 4 of 8</span>
+                                <span>•</span>
+                                <span>3.2 hrs left</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 48%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-thumbnail">🗺</div>
+                        <div class="course-content">
+                            <span class="course-category">Geography</span>
+                            <h3 class="course-title">Hidden Routes of Eastern Europe</h3>
+                            <div class="course-meta">
+                                <span>Module 2 of 6</span>
+                                <span>•</span>
+                                <span>5.8 hrs left</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 28%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-thumbnail">🏨</div>
+                        <div class="course-content">
+                            <span class="course-category">Hospitality</span>
+                            <h3 class="course-title">Boutique Hotel Management</h3>
+                            <div class="course-meta">
+                                <span>Module 7 of 10</span>
+                                <span>•</span>
+                                <span>2.1 hrs left</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 67%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Two Column Layout -->
+            <div class="grid grid-2">
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Activity</h2>
+                        <a href="#" style="font-size: 12px; color: var(--color-primary); text-decoration: none;">View All</a>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon">📜</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Certificate Earned: Aviation Safety</div>
+                                <div class="activity-meta">Completed with distinction</div>
+                            </div>
+                            <div class="activity-time">2 hours ago</div>
+                        </li>
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon">✅</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Assignment Submitted</div>
+                                <div class="activity-meta">Eastern Europe Travel Routes</div>
+                            </div>
+                            <div class="activity-time">Yesterday</div>
+                        </li>
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon">💬</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Discussion Reply</div>
+                                <div class="activity-meta">Sustainable Tourism Practices</div>
+                            </div>
+                            <div class="activity-time">2 days ago</div>
+                        </li>
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon">⭐</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Module Completed</div>
+                                <div class="activity-meta">Boutique Hotel Management - Module 6</div>
+                            </div>
+                            <div class="activity-time">3 days ago</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Upcoming Deadlines -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Upcoming Deadlines</h2>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon" style="background: rgba(200, 155, 95, 0.2); color: var(--color-warning);">⚠</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Final Exam: Flight Operations</div>
+                                <div class="activity-meta">Aviation Safety Module</div>
+                            </div>
+                            <div class="activity-time">In 2 days</div>
+                        </li>
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon" style="background: rgba(95, 168, 125, 0.2); color: var(--color-success);">📝</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Assignment: Route Planning</div>
+                                <div class="activity-meta">Eastern Europe Geography</div>
+                            </div>
+                            <div class="activity-time">In 5 days</div>
+                        </li>
+                        <li class="activity-item" style="display: flex; align-items: center;">
+                            <div class="activity-icon" style="background: rgba(95, 168, 125, 0.2); color: var(--color-success);">🎯</div>
+                            <div class="activity-details">
+                                <div class="activity-title">Quiz: Customer Service</div>
+                                <div class="activity-meta">Hospitality Excellence</div>
+                            </div>
+                            <div class="activity-time">In 1 week</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recommended Courses -->
+            <section style="margin-top: calc(var(--space-unit) * 5);">
+                <h2>Recommended For You</h2>
+                <div class="grid grid-4">
+                    <div class="course-card">
+                        <div class="course-thumbnail">🌍</div>
+                        <div class="course-content">
+                            <span class="course-category">Cultural Studies</span>
+                            <h3 class="course-title">Global Customs & Etiquette</h3>
+                            <div class="course-meta">
+                                <span>12 modules</span>
+                                <span>•</span>
+                                <span>18 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-thumbnail">🚆</div>
+                        <div class="course-content">
+                            <span class="course-category">Transportation</span>
+                            <h3 class="course-title">Rail Networks of Asia</h3>
+                            <div class="course-meta">
+                                <span>8 modules</span>
+                                <span>•</span>
+                                <span>10 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-thumbnail">🏔</div>
+                        <div class="course-content">
+                            <span class="course-category">Adventure</span>
+                            <h3 class="course-title">Mountain Resort Operations</h3>
+                            <div class="course-meta">
+                                <span>15 modules</span>
+                                <span>•</span>
+                                <span>22 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-thumbnail">🌊</div>
+                        <div class="course-content">
+                            <span class="course-category">Marine</span>
+                            <h3 class="course-title">Coastal Tourism Management</h3>
+                            <div class="course-meta">
+                                <span>10 modules</span>
+                                <span>•</span>
+                                <span>14 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 1;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

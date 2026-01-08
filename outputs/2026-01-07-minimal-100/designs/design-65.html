@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Metro - Subscription Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Thesis Metro - Natural vibes for ecommerce
+ABOUTME: A subscription management interface blending Memphis design's geometric boldness with a refined dark mode aesthetic for ecommerce subscription oversight.
+
+CSS VARIABLES:
+--color-primary: #FF6B9D (vibrant pink accent)
+--color-secondary: #4ECDC4 (teal geometric accent)
+--color-tertiary: #FFE66D (yellow highlight)
+--color-background: #1a1a1a (deep charcoal)
+--color-surface: #252525 (elevated surface)
+--color-surface-alt: #2d2d2d (alternative surface)
+--color-text: #f5f5f5 (near white)
+--color-text-muted: #a0a0a0 (muted gray)
+--color-border: #3a3a3a (subtle borders)
+--font-heading: 'Space Grotesk' (geometric sans-serif)
+--font-body: 'Space Grotesk' (consistency)
+--font-mono: 'IBM Plex Mono' (data display)
+--space-unit: 8px
+--radius-default: 2px (minimal, geometric)
+--shadow-default: 0 4px 12px rgba(0,0,0,0.3)
+
+DESIGN RATIONALE:
+Memphis design traditionally features bold colors, geometric shapes, and playful patterns. For this serious, dark-mode subscription manager, I've adapted the aesthetic by:
+- Using geometric shapes as structural elements and visual accents
+- Applying vibrant Memphis colors (pink, teal, yellow) sparingly as status indicators and highlights
+- Employing sharp angles and precise geometry in layouts
+- Creating visual rhythm through repeating geometric patterns in backgrounds
+- Maintaining professionalism through restrained use of color and clear hierarchy
+- Using Space Grotesk for its geometric clarity
+-->
+
+<style>
+:root {
+    --color-primary: #FF6B9D;
+    --color-secondary: #4ECDC4;
+    --color-tertiary: #FFE66D;
+    --color-background: #1a1a1a;
+    --color-surface: #252525;
+    --color-surface-alt: #2d2d2d;
+    --color-text: #f5f5f5;
+    --color-text-muted: #a0a0a0;
+    --color-border: #3a3a3a;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Memphis geometric background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 107, 157, 0.03) 35px, rgba(255, 107, 157, 0.03) 70px),
+        repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(78, 205, 196, 0.02) 35px, rgba(78, 205, 196, 0.02) 70px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 4);
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 6);
+    padding-bottom: calc(var(--space-unit) * 3);
+    border-bottom: 2px solid var(--color-border);
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 120px;
+    height: 2px;
+    background: var(--color-primary);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.logo-mark {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    position: relative;
+}
+
+.logo-mark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    background: var(--color-background);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.user-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+}
+
+.btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.btn-primary:hover {
+    background: #ff4d85;
+    border-color: #ff4d85;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+/* Sidebar Stats */
+.stats-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    border: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.stat-card.active::before {
+    background: var(--color-secondary);
+}
+
+.stat-card.pending::before {
+    background: var(--color-tertiary);
+}
+
+.stat-card.cancelled::before {
+    background: var(--color-primary);
+}
+
+.stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 1);
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1;
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.stat-detail {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.stat-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    margin-left: calc(var(--space-unit) * 1);
+    color: var(--color-secondary);
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.content-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+.content-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+.filters {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.filter-btn {
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+}
+
+.filter-btn:hover {
+    border-color: var(--color-primary);
+}
+
+.filter-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Subscription Cards */
+.subscriptions-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.subscription-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+    display: grid;
+    grid-template-columns: 60px 1fr auto auto;
+    gap: calc(var(--space-unit) * 3);
+    align-items: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.subscription-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.subscription-card.status-active::before {
+    background: var(--color-secondary);
+}
+
+.subscription-card.status-pending::before {
+    background: var(--color-tertiary);
+}
+
+.subscription-card.status-cancelled::before {
+    background: var(--color-primary);
+}
+
+.subscription-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-default);
+}
+
+.subscription-card:hover::before {
+    opacity: 1;
+}
+
+.subscription-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-surface-alt);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+}
+
+.subscription-icon::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.subscription-card.status-active .subscription-icon::after {
+    background: var(--color-secondary);
+}
+
+.subscription-card.status-pending .subscription-icon::after {
+    background: var(--color-tertiary);
+}
+
+.subscription-card.status-cancelled .subscription-icon::after {
+    background: var(--color-primary);
+}
+
+.subscription-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.subscription-meta {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.subscription-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.subscription-meta .label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.subscription-pricing {
+    text-align: right;
+}
+
+.subscription-price {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.subscription-period {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subscription-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text-muted);
+}
+
+.icon-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.icon-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+    background: rgba(78, 205, 196, 0.15);
+    color: var(--color-secondary);
+}
+
+.status-badge.pending {
+    background: rgba(255, 230, 109, 0.15);
+    color: var(--color-tertiary);
+}
+
+.status-badge.cancelled {
+    background: rgba(255, 107, 157, 0.15);
+    color: var(--color-primary);
+}
+
+.status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.status-badge.active::before {
+    background: var(--color-secondary);
+}
+
+.status-badge.pending::before {
+    background: var(--color-tertiary);
+}
+
+.status-badge.cancelled::before {
+    background: var(--color-primary);
+}
+
+/* Bottom CTA Section */
+.cta-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 4);
+    margin-top: calc(var(--space-unit) * 4);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.1), transparent);
+    pointer-events: none;
+}
+
+.cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(78, 205, 196, 0.08), transparent);
+    pointer-events: none;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+}
+
+.cta-content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: calc(var(--space-unit) * 2);
+    position: relative;
+    display: inline-block;
+}
+
+.cta-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-tertiary));
+}
+
+.cta-content p {
+    font-size: 16px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 3);
+    line-height: 1.7;
+}
+
+.cta-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+}
+
+/* Geometric decorative elements */
+.geometric-accent {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.geo-1 {
+    top: 10%;
+    right: 5%;
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    border: 3px solid rgba(255, 107, 157, 0.1);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    transform: rotate(15deg);
+}
+
+.geo-2 {
+    bottom: 15%;
+    left: 3%;
+    width: 60px;
+    height: 60px;
+    background: transparent;
+    border: 3px solid rgba(78, 205, 196, 0.1);
+    border-radius: 50%;
+}
+
+.geo-3 {
+    top: 40%;
+    right: 2%;
+    width: 0;
+    height: 0;
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    border-bottom: 60px solid rgba(255, 230, 109, 0.08);
+    transform: rotate(25deg);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-sidebar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: calc(var(--space-unit) * 2);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: calc(var(--space-unit) * 2);
+    }
+
+    header {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+        align-items: flex-start;
+    }
+
+    .subscription-card {
+        grid-template-columns: 1fr;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .subscription-actions {
+        justify-content: flex-start;
+    }
+
+    .stats-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .filters {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .cta-actions {
+        flex-direction: column;
+    }
+}
+</style>
+
+<div class="geometric-accent geo-1"></div>
+<div class="geometric-accent geo-2"></div>
+<div class="geometric-accent geo-3"></div>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <div class="logo-mark"></div>
+            <h1>Thesis Metro</h1>
+        </div>
+        <div class="user-actions">
+            <button class="btn">Settings</button>
+            <button class="btn btn-primary">Add Subscription</button>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        <aside class="stats-sidebar">
+            <div class="stat-card active">
+                <div class="stat-label">Active</div>
+                <div class="stat-value">12</div>
+                <div class="stat-detail">
+                    subscriptions
+                    <span class="stat-trend">↑ 2</span>
+                </div>
+            </div>
+
+            <div class="stat-card pending">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value">3</div>
+                <div class="stat-detail">
+                    renewals
+                </div>
+            </div>
+
+            <div class="stat-card cancelled">
+                <div class="stat-label">Monthly</div>
+                <div class="stat-value">$284</div>
+                <div class="stat-detail">
+                    total spend
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Saved</div>
+                <div class="stat-value">$156</div>
+                <div class="stat-detail">
+                    this quarter
+                    <span class="stat-trend">↑ 12%</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h2>Your Subscriptions</h2>
+                <div class="filters">
+                    <button class="filter-btn active">All</button>
+                    <button class="filter-btn">Active</button>
+                    <button class="filter-btn">Pending</button>
+                    <button class="filter-btn">Cancelled</button>
+                </div>
+            </div>
+
+            <div class="subscriptions-list">
+                <div class="subscription-card status-active">
+                    <div class="subscription-icon">📦</div>
+                    <div class="subscription-info">
+                        <h3>Premium Commerce Suite</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Started:</span> Jan 15, 2025</span>
+                            <span><span class="label">Renews:</span> Feb 15, 2026</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$49</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+
+                <div class="subscription-card status-active">
+                    <div class="subscription-icon">🔐</div>
+                    <div class="subscription-info">
+                        <h3>Security & Analytics Pro</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Started:</span> Dec 1, 2025</span>
+                            <span><span class="label">Renews:</span> Jan 1, 2026</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$79</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+
+                <div class="subscription-card status-pending">
+                    <div class="subscription-icon">📊</div>
+                    <div class="subscription-info">
+                        <h3>Business Intelligence Hub</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Started:</span> Nov 10, 2025</span>
+                            <span><span class="label">Renews:</span> Jan 10, 2026</span>
+                            <span class="status-badge pending">Pending</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$32</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+
+                <div class="subscription-card status-active">
+                    <div class="subscription-icon">🚀</div>
+                    <div class="subscription-info">
+                        <h3>Marketing Automation Suite</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Started:</span> Oct 22, 2025</span>
+                            <span><span class="label">Renews:</span> Jan 22, 2026</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$64</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+
+                <div class="subscription-card status-active">
+                    <div class="subscription-icon">💬</div>
+                    <div class="subscription-info">
+                        <h3>Customer Support Platform</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Started:</span> Sep 5, 2025</span>
+                            <span><span class="label">Renews:</span> Feb 5, 2026</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$29</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+
+                <div class="subscription-card status-cancelled">
+                    <div class="subscription-icon">📧</div>
+                    <div class="subscription-info">
+                        <h3>Email Marketing Pro</h3>
+                        <div class="subscription-meta">
+                            <span><span class="label">Cancelled:</span> Dec 20, 2025</span>
+                            <span><span class="label">Ends:</span> Jan 20, 2026</span>
+                            <span class="status-badge cancelled">Cancelled</span>
+                        </div>
+                    </div>
+                    <div class="subscription-pricing">
+                        <div class="subscription-price">$31</div>
+                        <div class="subscription-period">per month</div>
+                    </div>
+                    <div class="subscription-actions">
+                        <button class="icon-btn" aria-label="Edit subscription">✎</button>
+                        <button class="icon-btn" aria-label="More options">⋮</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Optimize Your Subscriptions</h2>
+            <p>Get personalized recommendations to reduce costs and eliminate redundant services. Our AI analyzes your usage patterns and suggests optimal subscription combinations.</p>
+            <div class="cta-actions">
+                <button class="btn btn-primary">View Recommendations</button>
+                <button class="btn">Export Report</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 65;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

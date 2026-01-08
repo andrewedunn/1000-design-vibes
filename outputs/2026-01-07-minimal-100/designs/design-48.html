@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch Marble - Appointment Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Glitch Marble - Natural meets neutral: a flat 2010s perspective
+ABOUTME: An appointment booking interface for developers with an edgy flat 2010s aesthetic, featuring sharp geometric shapes, marble texture patterns via CSS gradients, glitch-inspired accent colors, and a dual light/dark mode toggle.
+
+CSS VARIABLES:
+--color-primary: #00D9FF (cyan glitch accent)
+--color-secondary: #FF0080 (magenta glitch accent)
+--color-background: #FAFAFA (light) / #1A1A1A (dark)
+--color-surface: #FFFFFF (light) / #242424 (dark)
+--color-text: #1A1A1A (light) / #FAFAFA (dark)
+--color-text-muted: #757575 (light) / #9E9E9E (dark)
+--color-border: #E0E0E0 (light) / #333333 (dark)
+--font-heading: 'Work Sans', sans-serif (geometric, flat 2010s)
+--font-body: 'Work Sans', sans-serif
+--font-mono: 'Roboto Mono', monospace (developer context)
+--space-unit: 8px
+--radius-default: 0px (flat, sharp edges)
+--shadow-default: none (flat design principle)
+
+DESIGN RATIONALE:
+Flat 2010s design eschewed skeuomorphism for bold colors, sharp geometry, and no shadows. This design embraces that with zero border radius, no shadows, and strong flat colors. The "glitch" element comes through vibrant cyan/magenta accents that evoke digital distortion. The "marble" aspect is achieved through subtle CSS gradient patterns that suggest natural stone texture while maintaining flatness. Developer industry is reflected in monospace fonts for time slots and code-like precision. Edgy tone comes from the high-contrast glitch colors and unconventional marble-digital fusion. Both light and dark modes use the same geometric principles with inverted neutral tones.
+-->
+
+<style>
+:root {
+    --color-primary: #00D9FF;
+    --color-secondary: #FF0080;
+    --color-background: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #757575;
+    --color-border: #E0E0E0;
+    --font-heading: 'Work Sans', sans-serif;
+    --font-body: 'Work Sans', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --space-unit: 8px;
+    --radius-default: 0px;
+    --shadow-default: none;
+    --marble-light: linear-gradient(135deg, #F5F5F5 0%, #FFFFFF 25%, #EEEEEE 50%, #FFFFFF 75%, #F8F8F8 100%);
+    --marble-dark: linear-gradient(135deg, #2A2A2A 0%, #1F1F1F 25%, #252525 50%, #1A1A1A 75%, #222222 100%);
+}
+
+[data-theme="dark"] {
+    --color-background: #1A1A1A;
+    --color-surface: #242424;
+    --color-text: #FAFAFA;
+    --color-text-muted: #9E9E9E;
+    --color-border: #333333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 4);
+}
+
+/* Header */
+header {
+    background: var(--marble-light);
+    border-bottom: 4px solid var(--color-primary);
+    padding: calc(var(--space-unit) * 3) 0;
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+[data-theme="dark"] header {
+    background: var(--marble-dark);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 calc(var(--space-unit) * 4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 2.5rem;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.glitch-text {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-text::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -2px 0 var(--color-primary);
+    top: 0;
+    color: var(--color-text);
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch-anim-1 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: -2px 0 var(--color-secondary);
+    top: 0;
+    color: var(--color-text);
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip: rect(42px, 9999px, 44px, 0); }
+    25% { clip: rect(12px, 9999px, 59px, 0); }
+    50% { clip: rect(82px, 9999px, 23px, 0); }
+    75% { clip: rect(35px, 9999px, 78px, 0); }
+    100% { clip: rect(91px, 9999px, 16px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(65px, 9999px, 23px, 0); }
+    25% { clip: rect(29px, 9999px, 84px, 0); }
+    50% { clip: rect(15px, 9999px, 47px, 0); }
+    75% { clip: rect(78px, 9999px, 8px, 0); }
+    100% { clip: rect(33px, 9999px, 71px, 0); }
+}
+
+.theme-toggle {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+}
+
+.theme-toggle:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Main Grid */
+.booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+/* Calendar Section */
+.calendar-section {
+    background: var(--marble-light);
+    border: 2px solid var(--color-border);
+    padding: calc(var(--space-unit) * 4);
+}
+
+[data-theme="dark"] .calendar-section {
+    background: var(--marble-dark);
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: calc(var(--space-unit) * 3);
+    padding-bottom: calc(var(--space-unit) * 2);
+    border-bottom: 3px solid var(--color-secondary);
+}
+
+.calendar {
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 3);
+}
+
+.calendar-month {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: calc(var(--space-unit));
+}
+
+.calendar-nav button {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.125rem;
+    transition: all 0.2s ease;
+}
+
+.calendar-nav button:hover {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+}
+
+.calendar-nav button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: calc(var(--space-unit));
+}
+
+.calendar-day-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: center;
+    padding: calc(var(--space-unit));
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+}
+
+.calendar-day.selected {
+    background: var(--color-secondary);
+    color: #FFF;
+    border-color: var(--color-secondary);
+    font-weight: 500;
+}
+
+.calendar-day.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.calendar-day.disabled:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.calendar-day:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: -1px;
+}
+
+/* Service Selection */
+.service-selection {
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.service-options {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.service-option {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+    padding: calc(var(--space-unit) * 2);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.service-option:hover {
+    border-color: var(--color-primary);
+}
+
+.service-option.selected {
+    border-color: var(--color-secondary);
+    background: var(--color-surface);
+}
+
+.service-option input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    position: relative;
+}
+
+.service-option input[type="radio"]:checked {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.service-option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #FFF;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.service-option input[type="radio"]:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.service-info {
+    flex: 1;
+}
+
+.service-name {
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.service-duration {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Time Slots Section */
+.timeslots-section {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    padding: calc(var(--space-unit) * 4);
+}
+
+.timeslots-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 3);
+}
+
+.selected-date {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    padding: calc(var(--space-unit)) calc(var(--space-unit) * 2);
+    background: var(--marble-light);
+    border: 2px solid var(--color-border);
+}
+
+[data-theme="dark"] .selected-date {
+    background: var(--marble-dark);
+}
+
+.timezone-info {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.timeslots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.timeslot {
+    padding: calc(var(--space-unit) * 2);
+    background: var(--marble-light);
+    border: 2px solid var(--color-border);
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .timeslot {
+    background: var(--marble-dark);
+}
+
+.timeslot:hover {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+}
+
+.timeslot.selected {
+    background: var(--color-secondary);
+    color: #FFF;
+    border-color: var(--color-secondary);
+}
+
+.timeslot:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Booking Summary */
+.booking-summary {
+    background: var(--marble-light);
+    border: 2px solid var(--color-border);
+    padding: calc(var(--space-unit) * 3);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+[data-theme="dark"] .booking-summary {
+    background: var(--marble-dark);
+}
+
+.summary-title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+}
+
+.summary-label {
+    color: var(--color-text-muted);
+}
+
+.summary-value {
+    font-weight: 500;
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit));
+}
+
+label {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    padding: calc(var(--space-unit) * 2);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.btn-primary {
+    background: var(--color-secondary);
+    color: #FFF;
+    border: 2px solid var(--color-secondary);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+}
+
+.btn-primary:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 2px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-primary);
+}
+
+.btn-secondary:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Footer */
+footer {
+    background: var(--marble-light);
+    border-top: 4px solid var(--color-primary);
+    padding: calc(var(--space-unit) * 3) 0;
+    margin-top: calc(var(--space-unit) * 6);
+}
+
+[data-theme="dark"] footer {
+    background: var(--marble-dark);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 calc(var(--space-unit) * 4);
+    text-align: center;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.footer-nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+.footer-nav a:hover {
+    color: var(--color-primary);
+}
+
+.footer-nav a:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.footer-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .booking-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+        text-align: center;
+    }
+
+    .timeslots-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+        display: none;
+    }
+}
+</style>
+
+<header>
+    <div class="header-content">
+        <h1><span class="glitch-text" data-text="Glitch Marble">Glitch Marble</span></h1>
+        <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="booking-grid">
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <h2>Select Date</h2>
+
+            <div class="calendar">
+                <div class="calendar-header">
+                    <span class="calendar-month">January 2026</span>
+                    <div class="calendar-nav">
+                        <button aria-label="Previous month">&lt;</button>
+                        <button aria-label="Next month">&gt;</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="calendar-day-label">Mon</div>
+                    <div class="calendar-day-label">Tue</div>
+                    <div class="calendar-day-label">Wed</div>
+                    <div class="calendar-day-label">Thu</div>
+                    <div class="calendar-day-label">Fri</div>
+                    <div class="calendar-day-label">Sat</div>
+                    <div class="calendar-day-label">Sun</div>
+
+                    <div class="calendar-day disabled">29</div>
+                    <div class="calendar-day disabled">30</div>
+                    <div class="calendar-day disabled">31</div>
+                    <div class="calendar-day disabled">1</div>
+                    <div class="calendar-day disabled">2</div>
+                    <div class="calendar-day disabled">3</div>
+                    <div class="calendar-day disabled">4</div>
+                    <div class="calendar-day disabled">5</div>
+                    <div class="calendar-day disabled">6</div>
+                    <div class="calendar-day disabled">7</div>
+                    <div class="calendar-day selected">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                </div>
+            </div>
+
+            <div class="service-selection">
+                <h3>Service Type</h3>
+                <div class="service-options">
+                    <label class="service-option selected">
+                        <input type="radio" name="service" value="consultation" checked>
+                        <div class="service-info">
+                            <div class="service-name">Technical Consultation</div>
+                            <div class="service-duration">60 min // $150</div>
+                        </div>
+                    </label>
+                    <label class="service-option">
+                        <input type="radio" name="service" value="code-review">
+                        <div class="service-info">
+                            <div class="service-name">Code Review Session</div>
+                            <div class="service-duration">45 min // $120</div>
+                        </div>
+                    </label>
+                    <label class="service-option">
+                        <input type="radio" name="service" value="architecture">
+                        <div class="service-info">
+                            <div class="service-name">Architecture Planning</div>
+                            <div class="service-duration">90 min // $200</div>
+                        </div>
+                    </label>
+                    <label class="service-option">
+                        <input type="radio" name="service" value="pair-programming">
+                        <div class="service-info">
+                            <div class="service-name">Pair Programming</div>
+                            <div class="service-duration">120 min // $250</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Slots Section -->
+        <div class="timeslots-section">
+            <div class="timeslots-header">
+                <h2>Available Times</h2>
+                <div class="selected-date">Wed, Jan 8, 2026</div>
+            </div>
+
+            <div class="timezone-info">Timezone: PST (UTC-8)</div>
+
+            <div class="timeslots-grid">
+                <button class="timeslot">09:00</button>
+                <button class="timeslot">09:30</button>
+                <button class="timeslot">10:00</button>
+                <button class="timeslot">10:30</button>
+                <button class="timeslot">11:00</button>
+                <button class="timeslot selected">11:30</button>
+                <button class="timeslot">13:00</button>
+                <button class="timeslot">13:30</button>
+                <button class="timeslot">14:00</button>
+                <button class="timeslot">14:30</button>
+                <button class="timeslot">15:00</button>
+                <button class="timeslot">15:30</button>
+                <button class="timeslot">16:00</button>
+                <button class="timeslot">16:30</button>
+                <button class="timeslot">17:00</button>
+            </div>
+
+            <div class="booking-summary">
+                <div class="summary-title">Booking Summary</div>
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span class="summary-label">Service:</span>
+                        <span class="summary-value">Technical Consultation</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Date:</span>
+                        <span class="summary-value">Jan 8, 2026</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Time:</span>
+                        <span class="summary-value">11:30 PST</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Duration:</span>
+                        <span class="summary-value">60 min</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Price:</span>
+                        <span class="summary-value">$150.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub Username (Optional)</label>
+                    <input type="text" id="github" name="github">
+                </div>
+                <div class="form-group">
+                    <label for="notes">Session Notes</label>
+                    <textarea id="notes" name="notes" placeholder="What would you like to discuss?"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <nav class="footer-nav">
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+            <a href="#">Support</a>
+            <a href="#">Privacy Policy</a>
+        </nav>
+        <p class="footer-text">© 2026 Glitch Marble // Developer Services</p>
+    </div>
+</footer>
+
+<script>
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme') || 'light';
+htmlElement.setAttribute('data-theme', savedTheme);
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = htmlElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+    htmlElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// Calendar Day Selection
+const calendarDays = document.querySelectorAll('.calendar-day:not(.disabled)');
+calendarDays.forEach(day => {
+    day.addEventListener('click', () => {
+        calendarDays.forEach(d => d.classList.remove('selected'));
+        day.classList.add('selected');
+    });
+});
+
+// Service Selection
+const serviceOptions = document.querySelectorAll('.service-option');
+serviceOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        serviceOptions.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        option.querySelector('input[type="radio"]').checked = true;
+    });
+});
+
+// Timeslot Selection
+const timeslots = document.querySelectorAll('.timeslot');
+timeslots.forEach(slot => {
+    slot.addEventListener('click', () => {
+        timeslots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+    });
+});
+
+// Form Submission
+const contactForm = document.querySelector('.contact-form');
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Booking confirmed! Check your email for confirmation details.');
+});
+
+// Navigation Script
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 48;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

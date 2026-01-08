@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haze Chalk - Data Table</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Haze Chalk - Where flat meets international aesthetics
+ABOUTME: A Bauhaus-inspired data table for media analytics featuring geometric precision,
+grid-based layout, and restrained color palette emphasizing function and clarity.
+
+CSS VARIABLES:
+--color-primary: #FFD700 (Bauhaus yellow, adapted for dark mode accent)
+--color-background: #1a1a1a (deep charcoal)
+--color-surface: #242424 (subtle elevation)
+--color-text: #e8e8e8 (warm white)
+--color-text-muted: #888888 (muted gray)
+--font-heading: 'Space Grotesk' (geometric sans-serif)
+--font-body: 'Space Mono' (monospaced for data clarity)
+--space-unit: 8px (strict grid system)
+--radius-default: 0px (pure geometric shapes)
+--shadow-default: none (flat design principle)
+
+DESIGN RATIONALE:
+Bauhaus emphasized "form follows function" - this data table strips away ornamentation
+to reveal pure geometric structure. The strict grid system, geometric shapes (circles,
+rectangles, squares), and limited color palette (primarily grayscale with yellow accent)
+honor Bauhaus principles while serving media industry analytics needs. Typography uses
+geometric sans-serif for headings and monospace for data precision. The calm tone is
+achieved through generous whitespace, consistent rhythm, and absence of decorative elements.
+-->
+
+<style>
+:root {
+    --color-primary: #FFD700;
+    --color-secondary: #FF6B6B;
+    --color-tertiary: #4ECDC4;
+    --color-background: #1a1a1a;
+    --color-surface: #242424;
+    --color-surface-hover: #2d2d2d;
+    --color-border: #333333;
+    --color-text: #e8e8e8;
+    --color-text-muted: #888888;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Mono', monospace;
+    --space-unit: 8px;
+    --radius-default: 0px;
+    --shadow-default: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 6);
+}
+
+/* Header */
+header {
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 6);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: calc(var(--space-unit) * 4);
+}
+
+.header-content h1 {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: calc(var(--space-unit) * 2);
+    text-transform: uppercase;
+}
+
+.header-content p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+}
+
+.header-shapes {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.shape {
+    width: 40px;
+    height: 40px;
+}
+
+.shape.circle {
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.shape.square {
+    background: var(--color-secondary);
+}
+
+.shape.triangle {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 40px solid var(--color-tertiary);
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: calc(var(--space-unit) * 3);
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+.metric-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: calc(var(--space-unit) * 3);
+    position: relative;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+.metric-card:nth-child(2)::before {
+    background: var(--color-secondary);
+}
+
+.metric-card:nth-child(3)::before {
+    background: var(--color-tertiary);
+}
+
+.metric-card:nth-child(4)::before {
+    background: var(--color-primary);
+}
+
+.metric-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.metric-value {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.metric-change {
+    font-size: 12px;
+    color: var(--color-tertiary);
+}
+
+.metric-change.negative {
+    color: var(--color-secondary);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+    margin-bottom: calc(var(--space-unit) * 4);
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.filter-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+.button-group {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--color-border);
+}
+
+.btn {
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: none;
+    border-right: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn:last-child {
+    border-right: none;
+}
+
+.btn:hover {
+    background: var(--color-surface-hover);
+}
+
+.btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.search-box {
+    margin-left: auto;
+    position: relative;
+}
+
+.search-box input {
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    width: 280px;
+}
+
+.search-box input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.search-box input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+/* Data Table */
+.table-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+thead {
+    background: var(--color-background);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+th {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    text-align: left;
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+th.sortable:hover {
+    color: var(--color-text);
+}
+
+th.sorted {
+    color: var(--color-primary);
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: var(--color-surface-hover);
+}
+
+td {
+    padding: calc(var(--space-unit) * 2.5) calc(var(--space-unit) * 3);
+}
+
+.status-badge {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: calc(var(--space-unit) * 1);
+}
+
+.status-badge.live {
+    background: var(--color-tertiary);
+}
+
+.status-badge.scheduled {
+    background: var(--color-primary);
+}
+
+.status-badge.draft {
+    background: var(--color-text-muted);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--color-border);
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+.engagement-score {
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+.engagement-score.high {
+    color: var(--color-tertiary);
+}
+
+.engagement-score.medium {
+    color: var(--color-primary);
+}
+
+.engagement-score.low {
+    color: var(--color-secondary);
+}
+
+/* Footer */
+footer {
+    margin-top: calc(var(--space-unit) * 8);
+    padding-top: calc(var(--space-unit) * 4);
+    border-top: 2px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: calc(var(--space-unit) * 4);
+}
+
+.pagination {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.page-btn {
+    font-family: var(--font-body);
+    font-size: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    background: var(--color-surface-hover);
+}
+
+.page-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.footer-info {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus Styles */
+*:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus,
+input:focus {
+    outline-offset: -2px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .controls {
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: calc(var(--space-unit) * 3);
+    }
+
+    header {
+        grid-template-columns: 1fr;
+    }
+
+    .header-content h1 {
+        font-size: 32px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+}
+</style>
+
+<div class="container">
+    <header>
+        <div class="header-content">
+            <h1>Haze Chalk</h1>
+            <p>Media Analytics Dashboard / Q1 2026</p>
+        </div>
+        <div class="header-shapes">
+            <div class="shape circle"></div>
+            <div class="shape square"></div>
+            <div class="shape triangle"></div>
+        </div>
+    </header>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">Total Articles</div>
+            <div class="metric-value">1,247</div>
+            <div class="metric-change">+12.3% from last month</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Total Views</div>
+            <div class="metric-value">4.2M</div>
+            <div class="metric-change">+8.7% from last month</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Avg. Engagement</div>
+            <div class="metric-value">68%</div>
+            <div class="metric-change">+3.2% from last month</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Authors Active</div>
+            <div class="metric-value">89</div>
+            <div class="metric-change negative">-2.1% from last month</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="filter-group">
+            <span class="filter-label">Status</span>
+            <div class="button-group">
+                <button class="btn active">All</button>
+                <button class="btn">Live</button>
+                <button class="btn">Scheduled</button>
+                <button class="btn">Draft</button>
+            </div>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Category</span>
+            <div class="button-group">
+                <button class="btn active">All</button>
+                <button class="btn">News</button>
+                <button class="btn">Features</button>
+                <button class="btn">Opinion</button>
+            </div>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="Search articles, authors...">
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="sortable sorted">Title</th>
+                    <th class="sortable">Author</th>
+                    <th class="sortable">Status</th>
+                    <th class="sortable">Category</th>
+                    <th class="sortable">Views</th>
+                    <th class="sortable">Completion</th>
+                    <th class="sortable">Engagement</th>
+                    <th class="sortable">Published</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The Future of Digital Storytelling in 2026</td>
+                    <td>Sarah Chen</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>Features</td>
+                    <td>127,843</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score high">94%</span></td>
+                    <td>2026-01-03</td>
+                </tr>
+                <tr>
+                    <td>Breaking: New Copyright Laws Affect Content Creators</td>
+                    <td>Michael Torres</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>News</td>
+                    <td>98,234</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score high">87%</span></td>
+                    <td>2026-01-05</td>
+                </tr>
+                <tr>
+                    <td>How AI is Reshaping Journalism Ethics</td>
+                    <td>Emily Rodriguez</td>
+                    <td><span class="status-badge scheduled"></span>Scheduled</td>
+                    <td>Opinion</td>
+                    <td>0</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score medium">—</span></td>
+                    <td>2026-01-08</td>
+                </tr>
+                <tr>
+                    <td>Behind the Scenes: Documentary Filmmaking Today</td>
+                    <td>David Kim</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>Features</td>
+                    <td>76,912</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score medium">72%</span></td>
+                    <td>2026-01-02</td>
+                </tr>
+                <tr>
+                    <td>Media Consolidation: A Year in Review</td>
+                    <td>Jennifer Walsh</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>News</td>
+                    <td>54,328</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score medium">68%</span></td>
+                    <td>2025-12-28</td>
+                </tr>
+                <tr>
+                    <td>The Rise of Micro-Documentaries on Social Platforms</td>
+                    <td>Alex Patel</td>
+                    <td><span class="status-badge draft"></span>Draft</td>
+                    <td>Features</td>
+                    <td>0</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">—</span></td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Interview: Award-Winning War Correspondent Reflects</td>
+                    <td>Marcus Thompson</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>Features</td>
+                    <td>43,567</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">61%</span></td>
+                    <td>2025-12-30</td>
+                </tr>
+                <tr>
+                    <td>Why Podcasting Still Matters in 2026</td>
+                    <td>Lisa Anderson</td>
+                    <td><span class="status-badge scheduled"></span>Scheduled</td>
+                    <td>Opinion</td>
+                    <td>0</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score medium">—</span></td>
+                    <td>2026-01-09</td>
+                </tr>
+                <tr>
+                    <td>Data Privacy Concerns in Modern Newsrooms</td>
+                    <td>Robert Chang</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>News</td>
+                    <td>38,291</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">58%</span></td>
+                    <td>2026-01-01</td>
+                </tr>
+                <tr>
+                    <td>The Evolution of Photojournalism Standards</td>
+                    <td>Nina Patel</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>Features</td>
+                    <td>29,847</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">54%</span></td>
+                    <td>2025-12-27</td>
+                </tr>
+                <tr>
+                    <td>Streaming Services vs. Traditional Broadcasting</td>
+                    <td>Christopher Lee</td>
+                    <td><span class="status-badge draft"></span>Draft</td>
+                    <td>Opinion</td>
+                    <td>0</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 62%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">—</span></td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Local News in the Digital Age: Survival Strategies</td>
+                    <td>Amanda Foster</td>
+                    <td><span class="status-badge live"></span>Live</td>
+                    <td>News</td>
+                    <td>21,394</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="engagement-score low">49%</span></td>
+                    <td>2025-12-29</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <div class="pagination">
+            <button class="page-btn">‹</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">›</button>
+        </div>
+        <div class="footer-info">
+            Showing 1-12 of 1,247 articles
+        </div>
+    </footer>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 98;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

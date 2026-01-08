@@ -1,0 +1,772 @@
+<!--
+DESIGN: Whisper Metro - Natural vibes for media
+ABOUTME: A Swiss International-style calculator for media professionals featuring ultra-clean typography, mathematical precision in layout, and calm neutral tones that promote focused calculation work.
+
+CSS VARIABLES:
+--color-primary: #2c5f2d (forest green for calm natural accent)
+--color-background: #fafbf9 (soft warm white)
+--color-surface: #ffffff (pure white for calculator surface)
+--color-text: #1a1a1a (near black)
+--color-text-muted: #6b6b6b (neutral gray)
+--font-heading: 'Archivo', sans-serif (geometric precision)
+--font-body: 'Inter', sans-serif (Swiss neutrality)
+--space-unit: 8px (mathematical grid)
+--radius-default: 2px (minimal, Swiss restraint)
+--shadow-default: 0 1px 3px rgba(0,0,0,0.08) (subtle depth)
+
+DESIGN RATIONALE:
+Swiss International design emphasizes mathematical precision, grid systems, and typographic hierarchy. The calculator embodies these principles through strict alignment, monospaced numerics, and asymmetric grid layout. The forest green accent provides natural calm without disrupting the neutral foundation. Media professionals need clarity and focus—this design eliminates visual noise while maintaining warmth through subtle off-whites and organic accent colors.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisper Metro - Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #2c5f2d;
+            --color-background: #fafbf9;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: #6b6b6b;
+            --font-heading: 'Archivo', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-weight: 300;
+        }
+
+        main {
+            flex: 1;
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 4);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--space-unit) * 4);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .calculator-main {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .display {
+            background: #f8f9f7;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+
+        .display-expression {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-family: 'Courier New', monospace;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .display-value {
+            font-size: 2.5rem;
+            font-family: 'Courier New', monospace;
+            color: var(--color-text);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .calc-button {
+            background: var(--color-surface);
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2.5);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 400;
+        }
+
+        .calc-button:hover {
+            background: #f5f6f4;
+            border-color: rgba(0,0,0,0.2);
+        }
+
+        .calc-button:active {
+            transform: translateY(1px);
+        }
+
+        .calc-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .calc-button.operator {
+            background: #f0f2ee;
+            font-weight: 500;
+        }
+
+        .calc-button.equals {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+            grid-column: span 2;
+            font-weight: 500;
+        }
+
+        .calc-button.equals:hover {
+            background: #234a23;
+            border-color: #234a23;
+        }
+
+        .calc-button.clear {
+            background: #ede9e3;
+            color: #8b4513;
+            font-weight: 500;
+        }
+
+        .calc-button.zero {
+            grid-column: span 2;
+        }
+
+        .calculator-sidebar {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .sidebar-section {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .memory-display {
+            background: #f8f9f7;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 2);
+            font-family: 'Courier New', monospace;
+            font-size: 1.125rem;
+            color: var(--color-text);
+            text-align: right;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .memory-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .memory-button {
+            background: var(--color-surface);
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .memory-button:hover {
+            background: #f5f6f4;
+            border-color: rgba(0,0,0,0.2);
+        }
+
+        .memory-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .history-list {
+            list-style: none;
+        }
+
+        .history-item {
+            padding: calc(var(--space-unit) * 1.5);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .expression {
+            color: var(--color-text);
+        }
+
+        .history-item .result {
+            color: var(--color-primary);
+            float: right;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .info-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .info-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            color: var(--color-text);
+            font-weight: 300;
+        }
+
+        .features-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .features-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: calc(var(--space-unit) * 3);
+            color: var(--color-text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: #f0f2ee;
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-text);
+        }
+
+        .feature-content p {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        @media (max-width: 900px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space-unit) * 2);
+            }
+
+            .header-meta {
+                text-align: left;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-grid {
+                gap: calc(var(--space-unit) * 1);
+            }
+
+            .display-value {
+                font-size: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Whisper Metro</h1>
+            </div>
+            <div class="header-meta">
+                Natural vibes for media
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="calculator-grid">
+            <div class="calculator-main">
+                <div class="display">
+                    <div class="display-expression" id="expression"></div>
+                    <div class="display-value" id="display">0</div>
+                </div>
+                <div class="button-grid">
+                    <button class="calc-button clear" data-action="clear">AC</button>
+                    <button class="calc-button operator" data-action="operator" data-value="+/-">+/-</button>
+                    <button class="calc-button operator" data-action="operator" data-value="%">%</button>
+                    <button class="calc-button operator" data-action="operator" data-value="/">÷</button>
+
+                    <button class="calc-button" data-action="number" data-value="7">7</button>
+                    <button class="calc-button" data-action="number" data-value="8">8</button>
+                    <button class="calc-button" data-action="number" data-value="9">9</button>
+                    <button class="calc-button operator" data-action="operator" data-value="*">×</button>
+
+                    <button class="calc-button" data-action="number" data-value="4">4</button>
+                    <button class="calc-button" data-action="number" data-value="5">5</button>
+                    <button class="calc-button" data-action="number" data-value="6">6</button>
+                    <button class="calc-button operator" data-action="operator" data-value="-">−</button>
+
+                    <button class="calc-button" data-action="number" data-value="1">1</button>
+                    <button class="calc-button" data-action="number" data-value="2">2</button>
+                    <button class="calc-button" data-action="number" data-value="3">3</button>
+                    <button class="calc-button operator" data-action="operator" data-value="+">+</button>
+
+                    <button class="calc-button zero" data-action="number" data-value="0">0</button>
+                    <button class="calc-button" data-action="decimal">.</button>
+                    <button class="calc-button equals" data-action="equals">=</button>
+                </div>
+            </div>
+
+            <div class="calculator-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Memory</div>
+                    <div class="memory-display" id="memory">0</div>
+                    <div class="memory-buttons">
+                        <button class="memory-button" data-action="mc">MC</button>
+                        <button class="memory-button" data-action="mr">MR</button>
+                        <button class="memory-button" data-action="m+">M+</button>
+                        <button class="memory-button" data-action="m-">M−</button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">History</div>
+                    <ul class="history-list" id="history">
+                        <li class="history-item">
+                            <span class="expression">125 × 8</span>
+                            <span class="result">1000</span>
+                        </li>
+                        <li class="history-item">
+                            <span class="expression">450 ÷ 3</span>
+                            <span class="result">150</span>
+                        </li>
+                        <li class="history-item">
+                            <span class="expression">89 + 11</span>
+                            <span class="result">100</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">Precision</div>
+                <div class="info-value">12 digits</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Operations</div>
+                <div class="info-value">247</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Accuracy</div>
+                <div class="info-value">99.99%</div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="features-title">Calculator Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">±</div>
+                    <div class="feature-content">
+                        <h3>Sign Toggle</h3>
+                        <p>Quickly switch between positive and negative values with the +/- operator</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">M</div>
+                    <div class="feature-content">
+                        <h3>Memory Functions</h3>
+                        <p>Store and recall values with MC, MR, M+, and M− for complex calculations</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">%</div>
+                    <div class="feature-content">
+                        <h3>Percentage Mode</h3>
+                        <p>Calculate percentages directly without manual conversion steps</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">H</div>
+                    <div class="feature-content">
+                        <h3>Calculation History</h3>
+                        <p>Review previous operations and results for verification and reference</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div>&copy; 2026 Whisper Metro Calculator</div>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Support</a>
+                <a href="#">About</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        // Navigation
+        const TOTAL = 100;
+        const CURRENT = 78;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Calculator Logic
+        let currentValue = '0';
+        let previousValue = null;
+        let operator = null;
+        let resetDisplay = false;
+        let memory = 0;
+        let history = [];
+
+        const display = document.getElementById('display');
+        const expression = document.getElementById('expression');
+        const memoryDisplay = document.getElementById('memory');
+        const historyList = document.getElementById('history');
+
+        function updateDisplay() {
+            display.textContent = currentValue;
+            if (previousValue !== null && operator) {
+                expression.textContent = `${previousValue} ${getOperatorSymbol(operator)}`;
+            } else {
+                expression.textContent = '';
+            }
+        }
+
+        function getOperatorSymbol(op) {
+            const symbols = { '+': '+', '-': '−', '*': '×', '/': '÷', '%': '%' };
+            return symbols[op] || op;
+        }
+
+        function handleNumber(num) {
+            if (resetDisplay) {
+                currentValue = num;
+                resetDisplay = false;
+            } else {
+                currentValue = currentValue === '0' ? num : currentValue + num;
+            }
+            updateDisplay();
+        }
+
+        function handleOperator(op) {
+            if (op === '+/-') {
+                currentValue = String(parseFloat(currentValue) * -1);
+                updateDisplay();
+                return;
+            }
+
+            if (previousValue !== null && operator && !resetDisplay) {
+                calculate();
+            }
+            previousValue = currentValue;
+            operator = op;
+            resetDisplay = true;
+            updateDisplay();
+        }
+
+        function handleDecimal() {
+            if (resetDisplay) {
+                currentValue = '0.';
+                resetDisplay = false;
+            } else if (!currentValue.includes('.')) {
+                currentValue += '.';
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            if (previousValue === null || operator === null) return;
+
+            const prev = parseFloat(previousValue);
+            const curr = parseFloat(currentValue);
+            let result;
+
+            switch (operator) {
+                case '+': result = prev + curr; break;
+                case '-': result = prev - curr; break;
+                case '*': result = prev * curr; break;
+                case '/': result = prev / curr; break;
+                case '%': result = prev * (curr / 100); break;
+                default: return;
+            }
+
+            const expr = `${previousValue} ${getOperatorSymbol(operator)} ${currentValue}`;
+            addToHistory(expr, result);
+
+            currentValue = String(result);
+            previousValue = null;
+            operator = null;
+            resetDisplay = true;
+            updateDisplay();
+        }
+
+        function clear() {
+            currentValue = '0';
+            previousValue = null;
+            operator = null;
+            resetDisplay = false;
+            updateDisplay();
+        }
+
+        function addToHistory(expr, result) {
+            history.unshift({ expression: expr, result: result });
+            if (history.length > 5) history.pop();
+
+            historyList.innerHTML = history.map(item => `
+                <li class="history-item">
+                    <span class="expression">${item.expression}</span>
+                    <span class="result">${item.result}</span>
+                </li>
+            `).join('');
+        }
+
+        function updateMemoryDisplay() {
+            memoryDisplay.textContent = memory;
+        }
+
+        // Event listeners
+        document.querySelectorAll('.calc-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const action = button.dataset.action;
+                const value = button.dataset.value;
+
+                if (action === 'number') handleNumber(value);
+                else if (action === 'operator') handleOperator(value);
+                else if (action === 'decimal') handleDecimal();
+                else if (action === 'equals') calculate();
+                else if (action === 'clear') clear();
+            });
+        });
+
+        document.querySelectorAll('.memory-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const action = button.dataset.action;
+                const current = parseFloat(currentValue);
+
+                if (action === 'mc') memory = 0;
+                else if (action === 'mr') {
+                    currentValue = String(memory);
+                    resetDisplay = true;
+                }
+                else if (action === 'm+') memory += current;
+                else if (action === 'm-') memory -= current;
+
+                updateMemoryDisplay();
+                updateDisplay();
+            });
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') handleNumber(e.key);
+            else if (e.key === '.') handleDecimal();
+            else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') handleOperator(e.key);
+            else if (e.key === 'Enter' || e.key === '=') calculate();
+            else if (e.key === 'Escape') clear();
+            else if (e.key === '%') handleOperator('%');
+        });
+    })();
+    </script>
+</body>
+</html>

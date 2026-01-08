@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Urban - Mortgage Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Clear Urban - Natural vibes for media
+ABOUTME: A Scandinavian modern mortgage calculator for the media industry, featuring clean lines,
+generous white space, natural color palette, and functional minimalism. Supports both light and dark modes
+with smooth transitions. The design emphasizes clarity and usability while maintaining a professional,
+serious tone appropriate for financial calculations.
+
+CSS VARIABLES:
+--color-primary: #2D5F4F (forest green)
+--color-primary-light: #3A7863
+--color-secondary: #C2956E (warm sand)
+--color-background: #FAFAF8 (warm white) / #1A1D1E (dark charcoal)
+--color-surface: #FFFFFF / #252829
+--color-surface-elevated: #F5F5F3 / #2E3133
+--color-text: #2A2A2A / #E8E8E6
+--color-text-muted: #6B6B6B / #A8A8A6
+--color-border: #E0E0DE / #3A3D3F
+--font-heading: 'Space Grotesk', sans-serif
+--font-body: 'Inter', sans-serif
+--space-unit: 8px
+--radius-default: 4px
+--shadow-subtle: 0 1px 3px rgba(0,0,0,0.06)
+
+DESIGN RATIONALE:
+The Scandinavian modern aesthetic is expressed through minimal ornamentation, functional layouts,
+and a connection to natural materials suggested by the color palette (forest greens, warm sand tones).
+Typography is clean and highly legible with generous letter spacing. The layout uses an asymmetric
+grid with strong vertical rhythm. The serious emotional tone is achieved through restrained color use,
+clear hierarchies, and no decorative elements. Both color modes maintain the same design language
+while adapting contrast levels appropriately. The mortgage calculator functionality is presented
+with clear input fields, immediate visual feedback, and an emphasis on the resulting calculation
+displayed prominently.
+-->
+
+<style>
+    :root {
+        --color-primary: #2D5F4F;
+        --color-primary-light: #3A7863;
+        --color-secondary: #C2956E;
+        --color-background: #FAFAF8;
+        --color-surface: #FFFFFF;
+        --color-surface-elevated: #F5F5F3;
+        --color-text: #2A2A2A;
+        --color-text-muted: #6B6B6B;
+        --color-border: #E0E0DE;
+        --font-heading: 'Space Grotesk', sans-serif;
+        --font-body: 'Inter', sans-serif;
+        --space-unit: 8px;
+        --radius-default: 4px;
+        --shadow-subtle: 0 1px 3px rgba(0,0,0,0.06);
+        --transition-speed: 0.3s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --color-background: #1A1D1E;
+            --color-surface: #252829;
+            --color-surface-elevated: #2E3133;
+            --color-text: #E8E8E6;
+            --color-text-muted: #A8A8A6;
+            --color-border: #3A3D3F;
+            --shadow-subtle: 0 2px 8px rgba(0,0,0,0.3);
+        }
+    }
+
+    [data-theme="dark"] {
+        --color-background: #1A1D1E;
+        --color-surface: #252829;
+        --color-surface-elevated: #2E3133;
+        --color-text: #E8E8E6;
+        --color-text-muted: #A8A8A6;
+        --color-border: #3A3D3F;
+        --shadow-subtle: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    [data-theme="light"] {
+        --color-background: #FAFAF8;
+        --color-surface: #FFFFFF;
+        --color-surface-elevated: #F5F5F3;
+        --color-text: #2A2A2A;
+        --color-text-muted: #6B6B6B;
+        --color-border: #E0E0DE;
+        --shadow-subtle: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: calc(var(--space-unit) * 4);
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: calc(var(--space-unit) * 3) 0;
+        margin-bottom: calc(var(--space-unit) * 6);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        border-radius: var(--radius-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 18px;
+        font-family: var(--font-heading);
+    }
+
+    .logo-text {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+    }
+
+    .theme-toggle {
+        background: var(--color-surface-elevated);
+        border: 1px solid var(--color-border);
+        border-radius: calc(var(--radius-default) * 5);
+        padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+        cursor: pointer;
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--color-text);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: calc(var(--space-unit) * 1);
+    }
+
+    .theme-toggle:hover {
+        background: var(--color-surface);
+        box-shadow: var(--shadow-subtle);
+    }
+
+    .theme-toggle:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: calc(var(--space-unit) * 8);
+        margin-bottom: calc(var(--space-unit) * 8);
+    }
+
+    .intro-section h1 {
+        font-family: var(--font-heading);
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: calc(var(--space-unit) * 3);
+        letter-spacing: -0.02em;
+    }
+
+    .intro-section p {
+        font-size: 18px;
+        color: var(--color-text-muted);
+        margin-bottom: calc(var(--space-unit) * 4);
+        line-height: 1.7;
+    }
+
+    .info-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: calc(var(--space-unit) * 2);
+        margin-top: calc(var(--space-unit) * 5);
+    }
+
+    .info-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 3);
+        transition: all var(--transition-speed);
+    }
+
+    .info-card-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-muted);
+        margin-bottom: calc(var(--space-unit) * 1);
+        font-weight: 500;
+    }
+
+    .info-card-value {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    .calculator-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: calc(var(--radius-default) * 2);
+        padding: calc(var(--space-unit) * 5);
+        box-shadow: var(--shadow-subtle);
+        transition: all var(--transition-speed);
+    }
+
+    .calculator-header {
+        margin-bottom: calc(var(--space-unit) * 4);
+        padding-bottom: calc(var(--space-unit) * 3);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .calculator-header h2 {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: calc(var(--space-unit) * 1);
+        letter-spacing: -0.01em;
+    }
+
+    .calculator-header p {
+        color: var(--color-text-muted);
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: calc(var(--space-unit) * 1.5);
+        color: var(--color-text);
+        letter-spacing: 0.01em;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: calc(var(--space-unit) * 2);
+        font-family: var(--font-body);
+        font-size: 16px;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        color: var(--color-text);
+        transition: all 0.2s ease;
+    }
+
+    .form-input:hover {
+        border-color: var(--color-primary-light);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(45, 95, 79, 0.1);
+    }
+
+    .input-with-prefix {
+        position: relative;
+    }
+
+    .input-prefix {
+        position: absolute;
+        left: calc(var(--space-unit) * 2);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-text-muted);
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .input-with-prefix .form-input {
+        padding-left: calc(var(--space-unit) * 4);
+    }
+
+    .input-suffix {
+        position: absolute;
+        right: calc(var(--space-unit) * 2);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-text-muted);
+        font-size: 14px;
+        pointer-events: none;
+    }
+
+    .input-with-suffix .form-input {
+        padding-right: calc(var(--space-unit) * 6);
+    }
+
+    .slider-container {
+        position: relative;
+        padding-top: calc(var(--space-unit) * 1);
+    }
+
+    .range-slider {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--color-border);
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .range-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+        background: var(--color-primary-light);
+    }
+
+    .range-slider::-moz-range-thumb:hover {
+        transform: scale(1.1);
+        background: var(--color-primary-light);
+    }
+
+    .range-slider:focus::-webkit-slider-thumb {
+        box-shadow: 0 0 0 3px rgba(45, 95, 79, 0.2);
+    }
+
+    .range-slider:focus::-moz-range-thumb {
+        box-shadow: 0 0 0 3px rgba(45, 95, 79, 0.2);
+    }
+
+    .slider-value {
+        display: flex;
+        justify-content: space-between;
+        margin-top: calc(var(--space-unit) * 1);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .calculate-btn {
+        width: 100%;
+        padding: calc(var(--space-unit) * 2.5);
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: var(--radius-default);
+        font-family: var(--font-heading);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: 0.02em;
+        margin-top: calc(var(--space-unit) * 2);
+    }
+
+    .calculate-btn:hover {
+        background: var(--color-primary-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(45, 95, 79, 0.2);
+    }
+
+    .calculate-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .calculate-btn:active {
+        transform: translateY(0);
+    }
+
+    .results-section {
+        margin-top: calc(var(--space-unit) * 5);
+        padding-top: calc(var(--space-unit) * 5);
+        border-top: 1px solid var(--color-border);
+    }
+
+    .result-highlight {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        border-radius: calc(var(--radius-default) * 2);
+        padding: calc(var(--space-unit) * 4);
+        margin-bottom: calc(var(--space-unit) * 3);
+        text-align: center;
+    }
+
+    .result-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: calc(var(--space-unit) * 1);
+        font-weight: 500;
+    }
+
+    .result-value {
+        color: white;
+        font-family: var(--font-heading);
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .result-breakdown {
+        display: grid;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: calc(var(--space-unit) * 2);
+        background: var(--color-surface-elevated);
+        border-radius: var(--radius-default);
+    }
+
+    .breakdown-label {
+        font-size: 14px;
+        color: var(--color-text);
+        font-weight: 500;
+    }
+
+    .breakdown-value {
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    .disclaimer {
+        margin-top: calc(var(--space-unit) * 8);
+        padding: calc(var(--space-unit) * 4);
+        background: var(--color-surface-elevated);
+        border-left: 3px solid var(--color-secondary);
+        border-radius: var(--radius-default);
+    }
+
+    .disclaimer-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: calc(var(--space-unit) * 1);
+        color: var(--color-text);
+    }
+
+    .disclaimer p {
+        font-size: 13px;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+    }
+
+    footer {
+        margin-top: calc(var(--space-unit) * 10);
+        padding-top: calc(var(--space-unit) * 4);
+        border-top: 1px solid var(--color-border);
+        text-align: center;
+        color: var(--color-text-muted);
+        font-size: 14px;
+    }
+
+    @media (max-width: 968px) {
+        .main-content {
+            grid-template-columns: 1fr;
+            gap: calc(var(--space-unit) * 5);
+        }
+
+        .intro-section h1 {
+            font-size: 36px;
+        }
+
+        .info-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .container {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .intro-section h1 {
+            font-size: 32px;
+        }
+
+        .calculator-section {
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .result-value {
+            font-size: 36px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <div class="logo-icon">CU</div>
+            <div class="logo-text">Clear Urban</div>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle color mode">
+            <span id="themeIcon">●</span>
+            <span id="themeLabel">Auto</span>
+        </button>
+    </header>
+
+    <div class="main-content">
+        <div class="intro-section">
+            <h1>Calculate Your Mortgage with Confidence</h1>
+            <p>Use our comprehensive calculator to understand your monthly payments, total interest, and loan breakdown. Make informed decisions about your property investment.</p>
+
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-card-label">Avg. Rate</div>
+                    <div class="info-card-value">6.75%</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">Term</div>
+                    <div class="info-card-value">30 Years</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <div class="calculator-header">
+                <h2>Loan Details</h2>
+                <p>Enter your loan information to calculate monthly payments</p>
+            </div>
+
+            <form id="mortgageForm">
+                <div class="form-group">
+                    <label class="form-label" for="loanAmount">Loan Amount</label>
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">$</span>
+                        <input
+                            type="number"
+                            class="form-input"
+                            id="loanAmount"
+                            value="350000"
+                            min="0"
+                            step="1000"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="downPayment">Down Payment</label>
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">$</span>
+                        <input
+                            type="number"
+                            class="form-input"
+                            id="downPayment"
+                            value="70000"
+                            min="0"
+                            step="1000"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="interestRate">Interest Rate</label>
+                    <div class="input-with-suffix">
+                        <input
+                            type="number"
+                            class="form-input"
+                            id="interestRate"
+                            value="6.75"
+                            min="0"
+                            max="20"
+                            step="0.01"
+                            required
+                        >
+                        <span class="input-suffix">%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="loanTerm">Loan Term (Years)</label>
+                    <div class="slider-container">
+                        <input
+                            type="range"
+                            class="range-slider"
+                            id="loanTerm"
+                            min="5"
+                            max="30"
+                            step="5"
+                            value="30"
+                        >
+                        <div class="slider-value">
+                            <span>5 years</span>
+                            <span id="termValue">30 years</span>
+                            <span>30 years</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="calculate-btn">Calculate Payment</button>
+            </form>
+
+            <div class="results-section" id="results" style="display: none;">
+                <div class="result-highlight">
+                    <div class="result-label">Monthly Payment</div>
+                    <div class="result-value" id="monthlyPayment">$0</div>
+                </div>
+
+                <div class="result-breakdown">
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">Principal Amount</span>
+                        <span class="breakdown-value" id="principalAmount">$0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">Total Interest</span>
+                        <span class="breakdown-value" id="totalInterest">$0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">Total Payment</span>
+                        <span class="breakdown-value" id="totalPayment">$0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">Loan-to-Value Ratio</span>
+                        <span class="breakdown-value" id="ltvRatio">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <div class="disclaimer-title">Important Information</div>
+        <p>This calculator provides estimates for informational purposes only. Actual mortgage payments may vary based on additional factors such as property taxes, homeowners insurance, HOA fees, and mortgage insurance. Please consult with a qualified mortgage professional for accurate rates and personalized advice.</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clear Urban. Natural vibes for media. All rights reserved.</p>
+    </footer>
+</div>
+
+<script>
+// Theme Toggle
+(function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const html = document.documentElement;
+
+    let currentTheme = 'auto';
+
+    function updateTheme() {
+        if (currentTheme === 'light') {
+            html.setAttribute('data-theme', 'light');
+            themeIcon.textContent = '☀';
+            themeLabel.textContent = 'Light';
+        } else if (currentTheme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '☾';
+            themeLabel.textContent = 'Dark';
+        } else {
+            html.removeAttribute('data-theme');
+            themeIcon.textContent = '●';
+            themeLabel.textContent = 'Auto';
+        }
+    }
+
+    themeToggle.addEventListener('click', () => {
+        if (currentTheme === 'auto') {
+            currentTheme = 'light';
+        } else if (currentTheme === 'light') {
+            currentTheme = 'dark';
+        } else {
+            currentTheme = 'auto';
+        }
+        updateTheme();
+    });
+
+    updateTheme();
+})();
+
+// Loan Term Slider
+(function() {
+    const slider = document.getElementById('loanTerm');
+    const termValue = document.getElementById('termValue');
+
+    slider.addEventListener('input', () => {
+        termValue.textContent = slider.value + ' years';
+    });
+})();
+
+// Mortgage Calculator
+(function() {
+    const form = document.getElementById('mortgageForm');
+    const results = document.getElementById('results');
+
+    function calculateMortgage(principal, downPayment, annualRate, years) {
+        const loanAmount = principal - downPayment;
+        const monthlyRate = (annualRate / 100) / 12;
+        const numPayments = years * 12;
+
+        // Monthly payment formula: M = P * [r(1+r)^n] / [(1+r)^n - 1]
+        const monthlyPayment = loanAmount *
+            (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+            (Math.pow(1 + monthlyRate, numPayments) - 1);
+
+        const totalPayment = monthlyPayment * numPayments;
+        const totalInterest = totalPayment - loanAmount;
+        const ltvRatio = (loanAmount / principal) * 100;
+
+        return {
+            monthlyPayment: monthlyPayment,
+            principalAmount: loanAmount,
+            totalInterest: totalInterest,
+            totalPayment: totalPayment,
+            ltvRatio: ltvRatio
+        };
+    }
+
+    function formatCurrency(amount) {
+        return '$' + Math.round(amount).toLocaleString('en-US');
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+        const downPayment = parseFloat(document.getElementById('downPayment').value);
+        const interestRate = parseFloat(document.getElementById('interestRate').value);
+        const loanTerm = parseInt(document.getElementById('loanTerm').value);
+
+        const result = calculateMortgage(loanAmount, downPayment, interestRate, loanTerm);
+
+        document.getElementById('monthlyPayment').textContent = formatCurrency(result.monthlyPayment);
+        document.getElementById('principalAmount').textContent = formatCurrency(result.principalAmount);
+        document.getElementById('totalInterest').textContent = formatCurrency(result.totalInterest);
+        document.getElementById('totalPayment').textContent = formatCurrency(result.totalPayment);
+        document.getElementById('ltvRatio').textContent = result.ltvRatio.toFixed(1) + '%';
+
+        results.style.display = 'block';
+        results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+})();
+
+// Navigation
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 61;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

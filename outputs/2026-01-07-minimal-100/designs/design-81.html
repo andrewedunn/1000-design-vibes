@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bounce Core - Tournament Bracket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Bounce Core - Crafted for users with international roots
+ABOUTME: A playful Bauhaus-inspired tournament bracket showcasing government service translation competitions with geometric shapes, bold primary colors, and clean typography
+
+CSS VARIABLES:
+--color-primary: #E63946 (bold red accent)
+--color-secondary: #F1C40F (vibrant yellow)
+--color-tertiary: #2E86DE (bright blue)
+--color-background: #FAFAFA (soft white)
+--color-surface: #FFFFFF (pure white)
+--color-text: #1A1A1A (near black)
+--color-text-muted: #6C6C6C (medium gray)
+--font-heading: 'Archivo', sans-serif (geometric, Bauhaus-inspired)
+--font-body: 'Space Mono', monospace (clean, systematic)
+--space-unit: 1rem
+--radius-default: 2px (minimal, Bauhaus geometric)
+--shadow-default: 4px 4px 0px rgba(0,0,0,0.1) (hard shadow, playful)
+
+DESIGN RATIONALE:
+Bauhaus principles meet playful government service design. The tournament bracket tracks international translation service competitions, celebrating multilingual accessibility. Geometric shapes (circles, squares, rectangles) create visual rhythm. Hard shadows and bold primary colors (red, yellow, blue) evoke Bauhaus color theory while maintaining accessibility. The bracket structure is clear and functional, with playful geometric connectors. Typography is clean and systematic (Archivo + Space Mono), reflecting both precision and approachability. Light-only mode ensures clarity for official government contexts.
+-->
+
+<style>
+:root {
+    --color-primary: #E63946;
+    --color-secondary: #F1C40F;
+    --color-tertiary: #2E86DE;
+    --color-background: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6C6C6C;
+    --font-heading: 'Archivo', sans-serif;
+    --font-body: 'Space Mono', monospace;
+    --space-unit: 1rem;
+    --radius-default: 2px;
+    --shadow-default: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    border-bottom: 4px solid var(--color-primary);
+    box-shadow: var(--shadow-default);
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    right: calc(var(--space-unit) * 2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    box-shadow: var(--shadow-default);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.tagline {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+}
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 3) var(--space-unit);
+}
+
+/* Tournament Info */
+.tournament-info {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 3);
+    box-shadow: var(--shadow-default);
+    border-left: 8px solid var(--color-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.tournament-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.tournament-meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.tournament-status {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+    background: var(--color-background);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.status-badge.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+/* Bracket Container */
+.bracket {
+    display: flex;
+    gap: calc(var(--space-unit) * 4);
+    overflow-x: auto;
+    padding: calc(var(--space-unit) * 2) 0;
+}
+
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 280px;
+    position: relative;
+}
+
+.round-label {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: calc(var(--space-unit) * 2);
+    text-align: center;
+    position: relative;
+    padding-bottom: calc(var(--space-unit) * 1);
+}
+
+.round-label::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--color-primary);
+}
+
+.round-label.semifinals::after {
+    background: var(--color-secondary);
+}
+
+.round-label.finals::after {
+    background: var(--color-tertiary);
+}
+
+/* Matchups */
+.matchup {
+    margin-bottom: calc(var(--space-unit) * 3);
+    position: relative;
+}
+
+.competitor {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 1.5);
+    margin-bottom: calc(var(--space-unit) * 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-default);
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.competitor::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--color-background);
+}
+
+.competitor.winner {
+    border-color: var(--color-primary);
+    background: #FFF5F5;
+}
+
+.competitor.winner::before {
+    background: var(--color-primary);
+}
+
+.competitor:hover {
+    transform: translateX(2px);
+}
+
+.competitor-info {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.competitor-seed {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    min-width: 30px;
+}
+
+.competitor-flag {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--color-tertiary);
+    color: var(--color-surface);
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.competitor-flag.es { background: var(--color-primary); }
+.competitor-flag.fr { background: var(--color-tertiary); }
+.competitor-flag.zh { background: var(--color-secondary); color: var(--color-text); }
+.competitor-flag.ar { background: #27AE60; }
+.competitor-flag.pt { background: #E67E22; }
+.competitor-flag.ru { background: #9B59B6; }
+.competitor-flag.de { background: #34495E; }
+.competitor-flag.ja { background: #E74C3C; }
+
+.competitor-name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+
+.competitor-score {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-text);
+    min-width: 40px;
+    text-align: right;
+}
+
+.competitor.winner .competitor-score {
+    color: var(--color-primary);
+}
+
+/* Connector Lines */
+.bracket-connector {
+    position: absolute;
+    right: -2rem;
+    top: 50%;
+    width: 2rem;
+    height: 2px;
+    background: var(--color-text-muted);
+    opacity: 0.3;
+}
+
+/* Legend */
+.legend {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    margin-top: calc(var(--space-unit) * 3);
+    box-shadow: var(--shadow-default);
+    border-top: 4px solid var(--color-secondary);
+}
+
+.legend-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.legend-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    box-shadow: var(--shadow-default);
+}
+
+.legend-text {
+    font-size: 0.875rem;
+}
+
+.legend-lang {
+    font-weight: 700;
+    display: block;
+}
+
+.legend-desc {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+/* Stats Panel */
+.stats-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+    margin-top: calc(var(--space-unit) * 3);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: var(--color-background);
+    transform: rotate(45deg) translate(30px, -30px);
+}
+
+.stat-card:nth-child(1) { border-bottom: 4px solid var(--color-primary); }
+.stat-card:nth-child(2) { border-bottom: 4px solid var(--color-secondary); }
+.stat-card:nth-child(3) { border-bottom: 4px solid var(--color-tertiary); }
+.stat-card:nth-child(4) { border-bottom: 4px solid #27AE60; }
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Footer */
+footer {
+    margin-top: calc(var(--space-unit) * 4);
+    padding: calc(var(--space-unit) * 2);
+    background: var(--color-surface);
+    border-top: 4px solid var(--color-tertiary);
+    text-align: center;
+    box-shadow: var(--shadow-default);
+}
+
+.footer-shapes {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 1);
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.shape {
+    width: 20px;
+    height: 20px;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.shape.circle {
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.shape.square {
+    background: var(--color-secondary);
+}
+
+.shape.rect {
+    width: 30px;
+    background: var(--color-tertiary);
+}
+
+footer p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Accessibility */
+*:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .tournament-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bracket {
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .bracket-round {
+        min-width: 240px;
+    }
+
+    .stats-panel {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+
+<header>
+    <h1>Bounce Core</h1>
+    <p class="tagline">Crafted for users with international roots</p>
+</header>
+
+<div class="container">
+    <div class="tournament-info">
+        <div>
+            <h2 class="tournament-title">2026 Global Translation Services Championship</h2>
+            <p class="tournament-meta">Public Sector Excellence • Multilingual Accessibility Initiative</p>
+        </div>
+        <div class="tournament-status">
+            <div class="status-badge">Quarterfinals</div>
+            <div class="status-badge active">Semifinals</div>
+            <div class="status-badge">Finals</div>
+        </div>
+    </div>
+
+    <div class="bracket">
+        <!-- Quarterfinals -->
+        <div class="bracket-round">
+            <div class="round-label">Quarterfinals</div>
+
+            <div class="matchup">
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">1</span>
+                        <div class="competitor-flag es">ES</div>
+                        <span class="competitor-name">Spanish Services</span>
+                    </div>
+                    <span class="competitor-score">94</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">8</span>
+                        <div class="competitor-flag de">DE</div>
+                        <span class="competitor-name">German Bureau</span>
+                    </div>
+                    <span class="competitor-score">87</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+
+            <div class="matchup">
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">4</span>
+                        <div class="competitor-flag ar">AR</div>
+                        <span class="competitor-name">Arabic Division</span>
+                    </div>
+                    <span class="competitor-score">89</span>
+                </div>
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">5</span>
+                        <div class="competitor-flag zh">ZH</div>
+                        <span class="competitor-name">Chinese Department</span>
+                    </div>
+                    <span class="competitor-score">92</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+
+            <div class="matchup">
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">2</span>
+                        <div class="competitor-flag fr">FR</div>
+                        <span class="competitor-name">French Services</span>
+                    </div>
+                    <span class="competitor-score">96</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">7</span>
+                        <div class="competitor-flag ja">JA</div>
+                        <span class="competitor-name">Japanese Unit</span>
+                    </div>
+                    <span class="competitor-score">85</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+
+            <div class="matchup">
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">3</span>
+                        <div class="competitor-flag pt">PT</div>
+                        <span class="competitor-name">Portuguese Office</span>
+                    </div>
+                    <span class="competitor-score">91</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">6</span>
+                        <div class="competitor-flag ru">RU</div>
+                        <span class="competitor-name">Russian Services</span>
+                    </div>
+                    <span class="competitor-score">88</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+        </div>
+
+        <!-- Semifinals -->
+        <div class="bracket-round">
+            <div class="round-label semifinals">Semifinals</div>
+
+            <div class="matchup">
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">1</span>
+                        <div class="competitor-flag es">ES</div>
+                        <span class="competitor-name">Spanish Services</span>
+                    </div>
+                    <span class="competitor-score">97</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">5</span>
+                        <div class="competitor-flag zh">ZH</div>
+                        <span class="competitor-name">Chinese Department</span>
+                    </div>
+                    <span class="competitor-score">93</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+
+            <div class="matchup">
+                <div class="competitor winner">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">2</span>
+                        <div class="competitor-flag fr">FR</div>
+                        <span class="competitor-name">French Services</span>
+                    </div>
+                    <span class="competitor-score">98</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">3</span>
+                        <div class="competitor-flag pt">PT</div>
+                        <span class="competitor-name">Portuguese Office</span>
+                    </div>
+                    <span class="competitor-score">90</span>
+                </div>
+                <div class="bracket-connector"></div>
+            </div>
+        </div>
+
+        <!-- Finals -->
+        <div class="bracket-round">
+            <div class="round-label finals">Finals</div>
+
+            <div class="matchup">
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">1</span>
+                        <div class="competitor-flag es">ES</div>
+                        <span class="competitor-name">Spanish Services</span>
+                    </div>
+                    <span class="competitor-score">—</span>
+                </div>
+                <div class="competitor">
+                    <div class="competitor-info">
+                        <span class="competitor-seed">2</span>
+                        <div class="competitor-flag fr">FR</div>
+                        <span class="competitor-name">French Services</span>
+                    </div>
+                    <span class="competitor-score">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <h3 class="legend-title">Competing Language Services</h3>
+        <div class="legend-items">
+            <div class="legend-item">
+                <div class="legend-icon es" style="background: var(--color-primary); color: var(--color-surface);">ES</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Spanish Services</span>
+                    <span class="legend-desc">45M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon fr" style="background: var(--color-tertiary); color: var(--color-surface);">FR</div>
+                <div class="legend-text">
+                    <span class="legend-lang">French Services</span>
+                    <span class="legend-desc">38M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon zh" style="background: var(--color-secondary); color: var(--color-text);">ZH</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Chinese Department</span>
+                    <span class="legend-desc">32M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon pt" style="background: #E67E22; color: var(--color-surface);">PT</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Portuguese Office</span>
+                    <span class="legend-desc">28M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon ar" style="background: #27AE60; color: var(--color-surface);">AR</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Arabic Division</span>
+                    <span class="legend-desc">24M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon ru" style="background: #9B59B6; color: var(--color-surface);">RU</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Russian Services</span>
+                    <span class="legend-desc">19M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon de" style="background: #34495E; color: var(--color-surface);">DE</div>
+                <div class="legend-text">
+                    <span class="legend-lang">German Bureau</span>
+                    <span class="legend-desc">16M citizens served</span>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon ja" style="background: #E74C3C; color: var(--color-surface);">JA</div>
+                <div class="legend-text">
+                    <span class="legend-lang">Japanese Unit</span>
+                    <span class="legend-desc">12M citizens served</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat-card">
+            <div class="stat-value">214M</div>
+            <div class="stat-label">Total Citizens Reached</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Language Divisions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">96.2%</div>
+            <div class="stat-label">Average Satisfaction</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">12K</div>
+            <div class="stat-label">Documents Translated</div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-shapes">
+        <div class="shape circle"></div>
+        <div class="shape square"></div>
+        <div class="shape rect"></div>
+        <div class="shape circle"></div>
+        <div class="shape square"></div>
+    </div>
+    <p>Global Translation Services Championship • Celebrating Linguistic Diversity in Public Service</p>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 81;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

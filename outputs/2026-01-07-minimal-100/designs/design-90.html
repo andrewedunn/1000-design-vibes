@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surge Core - A flat approach meets international sensibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Surge Core - A flat approach meets international sensibility
+        ABOUTME: A punk-inspired textbook reader for financial content with harsh contrasts,
+        brutal grid structures, and DIY-aesthetic typography. Features aggressive color blocking,
+        raw margins, and xeroxed-zine vibes adapted for professional finance education.
+
+        CSS VARIABLES:
+        --color-primary: #00ff41 (aggressive neon green)
+        --color-background: #0a0a0a (near-black)
+        --color-surface: #1a1a1a (dark surface)
+        --color-text: #ffffff (harsh white)
+        --color-text-muted: #888888 (concrete grey)
+        --font-heading: 'Space Grotesk' (geometric punk)
+        --font-body: 'IBM Plex Mono' (typewriter aesthetic)
+        --space-unit: 8px
+        --radius-default: 0px (brutally square)
+        --shadow-default: none (flat design)
+
+        DESIGN RATIONALE:
+        Punk era meets finance through harsh contrasts and DIY aesthetics. The textbook reader
+        format uses aggressive grid structures reminiscent of xeroxed zines, with neon accent
+        colors and monospace typography creating an edgy, anti-establishment vibe while maintaining
+        readability for financial content. No shadows, no gradients—just raw geometric blocks.
+        */
+
+        :root {
+            --color-primary: #00ff41;
+            --color-secondary: #ff006e;
+            --color-accent: #ffff00;
+            --color-background: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-surface-alt: #252525;
+            --color-text: #ffffff;
+            --color-text-muted: #888888;
+            --color-border: #333333;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'IBM Plex Mono', monospace;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+
+        /* Textbook Reader Layout */
+        .reader-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            border-left: 4px solid var(--color-primary);
+            border-right: 4px solid var(--color-primary);
+        }
+
+        /* Table of Contents Sidebar */
+        .toc-sidebar {
+            background: var(--color-surface);
+            border-right: 4px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .toc-header {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .toc-chapter {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .chapter-number {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .chapter-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: color 0.1s;
+        }
+
+        .chapter-title:hover {
+            color: var(--color-primary);
+        }
+
+        .chapter-title.active {
+            color: var(--color-primary);
+            background: var(--color-surface-alt);
+            margin-left: calc(var(--space-unit) * -2);
+            margin-right: calc(var(--space-unit) * -2);
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+        }
+
+        .section-list {
+            list-style: none;
+            margin-left: calc(var(--space-unit) * 2);
+        }
+
+        .section-item {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 1);
+            cursor: pointer;
+            transition: color 0.1s;
+            border-left: 2px solid transparent;
+            padding-left: calc(var(--space-unit) * 1);
+        }
+
+        .section-item:hover {
+            color: var(--color-text);
+            border-left-color: var(--color-secondary);
+        }
+
+        /* Main Content Area */
+        .content-area {
+            padding: calc(var(--space-unit) * 6);
+            background: var(--color-background);
+        }
+
+        .content-header {
+            margin-bottom: calc(var(--space-unit) * 6);
+            padding-bottom: calc(var(--space-unit) * 4);
+            border-bottom: 4px solid var(--color-primary);
+        }
+
+        .book-title {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: calc(var(--space-unit) * 2);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .book-subtitle {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Chapter Content */
+        .chapter-content {
+            max-width: 720px;
+        }
+
+        .chapter-header {
+            margin-bottom: calc(var(--space-unit) * 5);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 4);
+            border-left: 8px solid var(--color-secondary);
+        }
+
+        .chapter-meta {
+            font-size: 11px;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: calc(var(--space-unit) * 3);
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: calc(var(--space-unit) * 8);
+            margin-bottom: calc(var(--space-unit) * 3);
+            text-transform: uppercase;
+            color: var(--color-primary);
+            border-top: 2px solid var(--color-border);
+            padding-top: calc(var(--space-unit) * 3);
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: calc(var(--space-unit) * 5);
+            margin-bottom: calc(var(--space-unit) * 2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: calc(var(--space-unit) * 3);
+            color: var(--color-text);
+        }
+
+        /* Callout Boxes */
+        .callout {
+            background: var(--color-surface);
+            border-left: 6px solid var(--color-accent);
+            padding: calc(var(--space-unit) * 3);
+            margin: calc(var(--space-unit) * 5) 0;
+        }
+
+        .callout-title {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        /* Key Concepts */
+        .key-concept {
+            background: var(--color-surface-alt);
+            padding: calc(var(--space-unit) * 4);
+            margin: calc(var(--space-unit) * 5) 0;
+            border: 2px solid var(--color-primary);
+        }
+
+        .key-concept-label {
+            font-size: 10px;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .key-concept-text {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* Code Blocks */
+        .formula {
+            background: var(--color-surface);
+            border: 2px dashed var(--color-border);
+            padding: calc(var(--space-unit) * 3);
+            margin: calc(var(--space-unit) * 4) 0;
+            font-family: var(--font-body);
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: calc(var(--space-unit) * 4);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        li {
+            margin-bottom: calc(var(--space-unit) * 1);
+            padding-left: calc(var(--space-unit) * 1);
+        }
+
+        li::marker {
+            color: var(--color-primary);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            margin: calc(var(--space-unit) * 5) 0;
+            border-collapse: collapse;
+            border: 2px solid var(--color-border);
+        }
+
+        .data-table thead {
+            background: var(--color-surface);
+        }
+
+        .data-table th {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: calc(var(--space-unit) * 2);
+            text-align: left;
+            border-bottom: 2px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .data-table td {
+            padding: calc(var(--space-unit) * 2);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .data-table tr:hover {
+            background: var(--color-surface);
+        }
+
+        /* Progress Indicators */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--color-surface);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 42%;
+            transition: width 0.3s;
+        }
+
+        /* Navigation Footer */
+        .chapter-nav {
+            margin-top: calc(var(--space-unit) * 10);
+            padding-top: calc(var(--space-unit) * 5);
+            border-top: 4px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: calc(var(--space-unit) * 3);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .nav-button:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface-alt);
+        }
+
+        .nav-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-button.next {
+            text-align: right;
+        }
+
+        /* Accessibility */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .reader-container {
+                grid-template-columns: 1fr;
+                border-left: none;
+                border-right: none;
+            }
+
+            .toc-sidebar {
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 4px solid var(--color-border);
+            }
+
+            .content-area {
+                padding: calc(var(--space-unit) * 4);
+            }
+
+            .book-title {
+                font-size: 32px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .toc-sidebar,
+            .chapter-nav,
+            .progress-bar {
+                display: none;
+            }
+
+            .reader-container {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <div class="reader-container">
+        <!-- Table of Contents Sidebar -->
+        <aside class="toc-sidebar">
+            <div class="toc-header">Contents</div>
+
+            <div class="toc-chapter">
+                <div class="chapter-number">Chapter 01</div>
+                <div class="chapter-title">Foundation Concepts</div>
+                <ul class="section-list">
+                    <li class="section-item">1.1 Market Fundamentals</li>
+                    <li class="section-item">1.2 Risk Assessment</li>
+                    <li class="section-item">1.3 Capital Structures</li>
+                </ul>
+            </div>
+
+            <div class="toc-chapter">
+                <div class="chapter-number">Chapter 02</div>
+                <div class="chapter-title active">Derivative Instruments</div>
+                <ul class="section-list">
+                    <li class="section-item">2.1 Options Pricing</li>
+                    <li class="section-item">2.2 Futures Contracts</li>
+                    <li class="section-item">2.3 Swaps & Hedging</li>
+                </ul>
+            </div>
+
+            <div class="toc-chapter">
+                <div class="chapter-number">Chapter 03</div>
+                <div class="chapter-title">Portfolio Theory</div>
+                <ul class="section-list">
+                    <li class="section-item">3.1 Diversification</li>
+                    <li class="section-item">3.2 Beta & Alpha</li>
+                    <li class="section-item">3.3 Optimization</li>
+                </ul>
+            </div>
+
+            <div class="toc-chapter">
+                <div class="chapter-number">Chapter 04</div>
+                <div class="chapter-title">Fixed Income</div>
+                <ul class="section-list">
+                    <li class="section-item">4.1 Bond Valuation</li>
+                    <li class="section-item">4.2 Duration & Convexity</li>
+                    <li class="section-item">4.3 Credit Risk</li>
+                </ul>
+            </div>
+
+            <div class="toc-chapter">
+                <div class="chapter-number">Chapter 05</div>
+                <div class="chapter-title">Advanced Strategies</div>
+                <ul class="section-list">
+                    <li class="section-item">5.1 Arbitrage</li>
+                    <li class="section-item">5.2 Leverage Models</li>
+                    <li class="section-item">5.3 Risk Parity</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <header class="content-header">
+                <h1 class="book-title">Surge Core</h1>
+                <div class="book-subtitle">A flat approach meets international sensibility</div>
+            </header>
+
+            <article class="chapter-content">
+                <div class="chapter-header">
+                    <div class="chapter-meta">Chapter 02 / Section 2.1</div>
+                    <h1>Options Pricing Models</h1>
+                </div>
+
+                <p>
+                    Financial derivatives represent contracts whose value derives from underlying assets.
+                    Options, as a primary derivative class, grant the holder the right—but not the
+                    obligation—to buy or sell an asset at a predetermined price within a specific timeframe.
+                </p>
+
+                <p>
+                    Understanding options pricing requires mastery of several interconnected variables:
+                    strike price, time to expiration, volatility, interest rates, and dividend yields.
+                    The Black-Scholes model revolutionized this field in 1973, providing a mathematical
+                    framework that remains foundational despite its limitations.
+                </p>
+
+                <div class="key-concept">
+                    <div class="key-concept-label">Key Concept</div>
+                    <div class="key-concept-text">
+                        Option value = Intrinsic Value + Time Value, where intrinsic value represents
+                        immediate exercise profit and time value reflects potential future appreciation.
+                    </div>
+                </div>
+
+                <h2>The Black-Scholes Framework</h2>
+
+                <p>
+                    The Black-Scholes equation models European-style options under specific assumptions:
+                    continuous trading, no transaction costs, constant volatility, and log-normal price
+                    distribution. While these assumptions rarely hold in practice, the model provides
+                    a useful baseline for valuation.
+                </p>
+
+                <div class="formula">
+                    C = S₀N(d₁) - Xe⁻ʳᵀN(d₂)
+
+                    where:
+                    d₁ = [ln(S₀/X) + (r + σ²/2)T] / (σ√T)
+                    d₂ = d₁ - σ√T
+                </div>
+
+                <p>
+                    In this framework, C represents call option value, S₀ is current stock price,
+                    X is strike price, r is risk-free rate, T is time to expiration, σ is volatility,
+                    and N(d) represents the cumulative standard normal distribution function.
+                </p>
+
+                <div class="callout">
+                    <div class="callout-title">Warning: Model Limitations</div>
+                    <p>
+                        Black-Scholes assumes constant volatility and continuous markets. Real markets
+                        exhibit volatility clustering, discrete trading hours, and transaction costs.
+                        Always stress-test models against historical data and extreme scenarios.
+                    </p>
+                </div>
+
+                <h2>Greeks: Sensitivity Measures</h2>
+
+                <p>
+                    Option Greeks quantify price sensitivity to various factors. These measures are
+                    essential for risk management and hedging strategies:
+                </p>
+
+                <ul>
+                    <li><strong>Delta (Δ)</strong>: Change in option price per $1 change in underlying asset</li>
+                    <li><strong>Gamma (Γ)</strong>: Rate of change of delta as underlying moves</li>
+                    <li><strong>Theta (Θ)</strong>: Time decay—option value lost per day</li>
+                    <li><strong>Vega (ν)</strong>: Sensitivity to volatility changes</li>
+                    <li><strong>Rho (ρ)</strong>: Sensitivity to interest rate changes</li>
+                </ul>
+
+                <h3>Delta Hedging Strategies</h3>
+
+                <p>
+                    Delta-neutral portfolios maintain zero net delta by combining options and underlying
+                    assets. This hedging approach minimizes directional risk while capturing profits
+                    from volatility changes or time decay.
+                </p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Delta</th>
+                            <th>Gamma</th>
+                            <th>Theta</th>
+                            <th>Vega</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Long Call</td>
+                            <td>+0.65</td>
+                            <td>+0.03</td>
+                            <td>-0.15</td>
+                            <td>+0.22</td>
+                        </tr>
+                        <tr>
+                            <td>Short Stock</td>
+                            <td>-1.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Net Position</td>
+                            <td>-0.35</td>
+                            <td>+0.03</td>
+                            <td>-0.15</td>
+                            <td>+0.22</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Dynamic hedging requires continuous rebalancing as delta changes with underlying
+                    price movements. Transaction costs and discrete rebalancing intervals create
+                    imperfect hedges in practice, necessitating regular portfolio monitoring.
+                </p>
+
+                <h2>Implied Volatility</h2>
+
+                <p>
+                    Implied volatility (IV) represents the market's expectation of future price
+                    fluctuations, extracted from current option prices. Unlike historical volatility,
+                    which measures past movements, IV is forward-looking and often exhibits term
+                    structure and skew patterns.
+                </p>
+
+                <div class="key-concept">
+                    <div class="key-concept-label">Critical Insight</div>
+                    <div class="key-concept-text">
+                        Volatility smile and skew indicate market participants price tail risks
+                        differently than normal distributions suggest. Out-of-the-money puts typically
+                        trade at higher IV, reflecting crash risk premiums.
+                    </div>
+                </div>
+
+                <p>
+                    Volatility trading strategies exploit discrepancies between implied and realized
+                    volatility. Long straddles profit when actual volatility exceeds implied levels,
+                    while short strangles benefit from overpriced volatility premiums.
+                </p>
+
+                <h3>Volatility Surface Modeling</h3>
+
+                <p>
+                    The volatility surface maps IV across strikes and expirations, revealing market
+                    microstructure and sentiment. Parametric models like SABR or SVI fit this surface,
+                    enabling interpolation and arbitrage detection.
+                </p>
+
+                <div class="callout">
+                    <div class="callout-title">Practical Application</div>
+                    <p>
+                        Monitor IV rank (current IV percentile over historical range) to identify
+                        entry points. High IV rank suggests selling premium, while low rank favors
+                        buying options. Combine with fundamental analysis for robust strategies.
+                    </p>
+                </div>
+
+                <h2>Advanced Pricing Models</h2>
+
+                <p>
+                    Beyond Black-Scholes, practitioners employ stochastic volatility models (Heston),
+                    jump-diffusion processes (Merton), and local volatility frameworks. Each addresses
+                    specific empirical violations of the original assumptions.
+                </p>
+
+                <p>
+                    Binomial and trinomial trees provide flexible numerical methods for American
+                    options and path-dependent features. Monte Carlo simulation handles complex
+                    payoffs and multiple underlying assets, trading computational cost for versatility.
+                </p>
+
+                <div class="formula">
+                    Binomial Tree:
+                    u = e^(σ√Δt)    [up movement]
+                    d = 1/u         [down movement]
+                    p = (e^(rΔt) - d) / (u - d)  [risk-neutral probability]
+                </div>
+
+                <p>
+                    Modern quantitative finance increasingly relies on machine learning for volatility
+                    forecasting and pricing exotic derivatives. Neural networks can approximate complex
+                    pricing functions, though interpretability and regulatory acceptance remain challenges.
+                </p>
+
+                <!-- Chapter Navigation -->
+                <nav class="chapter-nav">
+                    <button class="nav-button prev">
+                        ← Previous: Chapter 1 - Capital Structures
+                    </button>
+                    <button class="nav-button next">
+                        Next: Section 2.2 - Futures Contracts →
+                    </button>
+                </nav>
+            </article>
+        </main>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 90;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+
+</body>
+</html>

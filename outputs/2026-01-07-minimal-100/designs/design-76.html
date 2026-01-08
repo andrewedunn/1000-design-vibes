@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Vertex - Meal Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Vertex - Neo brutalist-inspired design for users
+ABOUTME: A stark, unapologetic meal planner embracing neo-brutalist principles with raw geometric shapes,
+high contrast dark interface, and bold typography. Functional meal planning stripped to essentials with
+aggressive visual hierarchy and no-nonsense food management.
+
+CSS VARIABLES:
+--color-primary: #00FF94 (electric green accent)
+--color-background: #0A0A0A (deep black)
+--color-surface: #1A1A1A (off-black cards)
+--color-text: #FFFFFF (pure white)
+--color-text-muted: #888888 (medium gray)
+--font-heading: 'Space Grotesk' (geometric sans)
+--font-body: 'Space Mono' (monospace for data)
+--space-unit: 8px
+--radius-default: 0px (brutalist sharp edges)
+--shadow-default: 8px 8px 0px rgba(0,255,148,0.3)
+
+DESIGN RATIONALE:
+Neo-brutalism demands raw honesty - sharp corners, bold borders, high contrast, and aggressive shadows replace
+subtle gradients. The meal planner uses stark geometric containers, electric green as the sole accent color
+against deep blacks, and monospace fonts for nutritional data to emphasize precision. Every element casts hard
+shadows, creating a layered, almost physical feel. The serious tone is reinforced through clinical presentation
+of meal data, calorie tracking, and macro breakdowns without softening visual language.
+-->
+
+<style>
+:root {
+    --color-primary: #00FF94;
+    --color-background: #0A0A0A;
+    --color-surface: #1A1A1A;
+    --color-text: #FFFFFF;
+    --color-text-muted: #888888;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Mono', monospace;
+    --space-unit: 8px;
+    --radius-default: 0px;
+    --shadow-default: 8px 8px 0px rgba(0, 255, 148, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: calc(var(--space-unit) * 3);
+}
+
+/* Header */
+header {
+    margin-bottom: calc(var(--space-unit) * 6);
+    border: 4px solid var(--color-primary);
+    padding: calc(var(--space-unit) * 4);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-default);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: calc(var(--space-unit) * 2);
+    line-height: 0.9;
+}
+
+.header-meta {
+    display: flex;
+    gap: calc(var(--space-unit) * 4);
+    align-items: center;
+    margin-top: calc(var(--space-unit) * 3);
+    padding-top: calc(var(--space-unit) * 3);
+    border-top: 2px solid var(--color-primary);
+}
+
+.date-selector {
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    padding: calc(var(--space-unit) * 2);
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.date-selector button {
+    background: var(--color-primary);
+    border: none;
+    width: 36px;
+    height: 36px;
+    color: var(--color-background);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.1s;
+}
+
+.date-selector button:hover {
+    transform: scale(1.1);
+}
+
+.date-selector button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.date-display {
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-width: 180px;
+    text-align: center;
+}
+
+.stats-bar {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+    flex: 1;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* Main Layout */
+.planner-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+/* Meals Section */
+.meals-section {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.meal-card {
+    background: var(--color-surface);
+    border: 4px solid var(--color-text);
+    padding: calc(var(--space-unit) * 3);
+    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s;
+}
+
+.meal-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px rgba(0, 255, 148, 0.3);
+}
+
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 2);
+    padding-bottom: calc(var(--space-unit) * 2);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.meal-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.meal-time {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    background: var(--color-background);
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+    border: 2px solid var(--color-text-muted);
+}
+
+.food-items {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.food-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: calc(var(--space-unit) * 2);
+    padding: calc(var(--space-unit) * 2);
+    background: var(--color-background);
+    border-left: 4px solid var(--color-primary);
+    align-items: center;
+}
+
+.food-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.food-amount {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.food-calories {
+    background: var(--color-primary);
+    color: var(--color-background);
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.food-remove {
+    background: transparent;
+    border: 2px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+.food-remove:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.food-remove:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.add-food {
+    background: var(--color-background);
+    border: 3px dashed var(--color-text-muted);
+    color: var(--color-text-muted);
+    padding: calc(var(--space-unit) * 2);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.add-food:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    border-style: solid;
+}
+
+.add-food:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.macro-panel {
+    background: var(--color-surface);
+    border: 4px solid var(--color-primary);
+    padding: calc(var(--space-unit) * 3);
+    box-shadow: var(--shadow-default);
+}
+
+.panel-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: calc(var(--space-unit) * 3);
+    color: var(--color-primary);
+}
+
+.macro-bars {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.macro-item {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.macro-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.macro-name {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.macro-values {
+    color: var(--color-text-muted);
+}
+
+.macro-bar-container {
+    height: 24px;
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    position: relative;
+    overflow: hidden;
+}
+
+.macro-bar-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: calc(var(--space-unit) * 1);
+}
+
+.macro-bar-percentage {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-background);
+}
+
+/* Weekly Overview */
+.weekly-panel {
+    background: var(--color-surface);
+    border: 4px solid var(--color-text);
+    padding: calc(var(--space-unit) * 3);
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: calc(var(--space-unit) * 1);
+    margin-top: calc(var(--space-unit) * 2);
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    background: var(--color-background);
+    border: 2px solid var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    gap: calc(var(--space-unit) * 0.5);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.day-cell:hover {
+    border-color: var(--color-primary);
+    transform: scale(1.05);
+}
+
+.day-cell.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.day-name {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+.day-calories {
+    font-weight: 700;
+}
+
+/* Shopping List */
+.shopping-panel {
+    background: var(--color-surface);
+    border: 4px solid var(--color-text);
+    padding: calc(var(--space-unit) * 3);
+}
+
+.shopping-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 1.5);
+    margin-top: calc(var(--space-unit) * 2);
+}
+
+.shopping-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+    padding: calc(var(--space-unit) * 1.5);
+    background: var(--color-background);
+    border-left: 3px solid var(--color-primary);
+}
+
+.shopping-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--color-text);
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.shopping-checkbox:checked {
+    background: var(--color-primary);
+}
+
+.shopping-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-background);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.shopping-checkbox:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.shopping-text {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+/* Bottom Actions */
+.actions-bar {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.action-btn {
+    flex: 1;
+    background: var(--color-surface);
+    border: 4px solid var(--color-text);
+    color: var(--color-text);
+    padding: calc(var(--space-unit) * 3);
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.1);
+}
+
+.action-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.action-btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.action-btn.primary {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.action-btn.primary:hover {
+    box-shadow: 6px 6px 0px rgba(0, 255, 148, 0.5);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .planner-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stats-bar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: calc(var(--space-unit) * 2);
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .food-item {
+        grid-template-columns: 1fr;
+        gap: calc(var(--space-unit) * 1);
+    }
+
+    .week-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .actions-bar {
+        flex-direction: column;
+    }
+}
+</style>
+
+<header>
+    <h1>Modern<br>Vertex</h1>
+    <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: calc(var(--space-unit) * 2);">PRECISION MEAL PLANNING</p>
+
+    <div class="header-meta">
+        <div class="date-selector">
+            <button aria-label="Previous day">←</button>
+            <div class="date-display">MON, JAN 13, 2026</div>
+            <button aria-label="Next day">→</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-label">Target</div>
+                <div class="stat-value">2200</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Consumed</div>
+                <div class="stat-value">1847</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Remaining</div>
+                <div class="stat-value">353</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="planner-grid">
+    <div class="meals-section">
+        <div class="meal-card">
+            <div class="meal-header">
+                <h2 class="meal-title">Breakfast</h2>
+                <div class="meal-time">07:30</div>
+            </div>
+            <div class="food-items">
+                <div class="food-item">
+                    <div class="food-name">Steel Cut Oatmeal</div>
+                    <div class="food-amount">150g</div>
+                    <div class="food-calories">220 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Blueberries</div>
+                    <div class="food-amount">75g</div>
+                    <div class="food-calories">42 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Almond Butter</div>
+                    <div class="food-amount">20g</div>
+                    <div class="food-calories">118 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Black Coffee</div>
+                    <div class="food-amount">300ml</div>
+                    <div class="food-calories">5 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+            </div>
+            <button class="add-food">+ Add Food</button>
+        </div>
+
+        <div class="meal-card">
+            <div class="meal-header">
+                <h2 class="meal-title">Lunch</h2>
+                <div class="meal-time">12:45</div>
+            </div>
+            <div class="food-items">
+                <div class="food-item">
+                    <div class="food-name">Grilled Chicken Breast</div>
+                    <div class="food-amount">200g</div>
+                    <div class="food-calories">330 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Quinoa</div>
+                    <div class="food-amount">120g</div>
+                    <div class="food-calories">156 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Mixed Green Salad</div>
+                    <div class="food-amount">150g</div>
+                    <div class="food-calories">45 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Olive Oil Dressing</div>
+                    <div class="food-amount">15ml</div>
+                    <div class="food-calories">119 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+            </div>
+            <button class="add-food">+ Add Food</button>
+        </div>
+
+        <div class="meal-card">
+            <div class="meal-header">
+                <h2 class="meal-title">Dinner</h2>
+                <div class="meal-time">19:00</div>
+            </div>
+            <div class="food-items">
+                <div class="food-item">
+                    <div class="food-name">Grilled Salmon</div>
+                    <div class="food-amount">180g</div>
+                    <div class="food-calories">374 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Roasted Sweet Potato</div>
+                    <div class="food-amount">200g</div>
+                    <div class="food-calories">180 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Steamed Broccoli</div>
+                    <div class="food-amount">150g</div>
+                    <div class="food-calories">51 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+            </div>
+            <button class="add-food">+ Add Food</button>
+        </div>
+
+        <div class="meal-card">
+            <div class="meal-header">
+                <h2 class="meal-title">Snacks</h2>
+                <div class="meal-time">15:30</div>
+            </div>
+            <div class="food-items">
+                <div class="food-item">
+                    <div class="food-name">Greek Yogurt</div>
+                    <div class="food-amount">170g</div>
+                    <div class="food-calories">100 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+                <div class="food-item">
+                    <div class="food-name">Almonds</div>
+                    <div class="food-amount">30g</div>
+                    <div class="food-calories">173 CAL</div>
+                    <button class="food-remove" aria-label="Remove item">×</button>
+                </div>
+            </div>
+            <button class="add-food">+ Add Food</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="macro-panel">
+            <h3 class="panel-title">Macros</h3>
+            <div class="macro-bars">
+                <div class="macro-item">
+                    <div class="macro-label">
+                        <span class="macro-name">Protein</span>
+                        <span class="macro-values">142g / 165g</span>
+                    </div>
+                    <div class="macro-bar-container">
+                        <div class="macro-bar-fill" style="width: 86%;">
+                            <span class="macro-bar-percentage">86%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">
+                        <span class="macro-name">Carbs</span>
+                        <span class="macro-values">178g / 220g</span>
+                    </div>
+                    <div class="macro-bar-container">
+                        <div class="macro-bar-fill" style="width: 81%;">
+                            <span class="macro-bar-percentage">81%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">
+                        <span class="macro-name">Fat</span>
+                        <span class="macro-values">58g / 73g</span>
+                    </div>
+                    <div class="macro-bar-container">
+                        <div class="macro-bar-fill" style="width: 79%;">
+                            <span class="macro-bar-percentage">79%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">
+                        <span class="macro-name">Fiber</span>
+                        <span class="macro-values">28g / 35g</span>
+                    </div>
+                    <div class="macro-bar-container">
+                        <div class="macro-bar-fill" style="width: 80%;">
+                            <span class="macro-bar-percentage">80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weekly-panel">
+            <h3 class="panel-title">Week View</h3>
+            <div class="week-grid">
+                <div class="day-cell">
+                    <div class="day-name">SUN</div>
+                    <div class="day-calories">2156</div>
+                </div>
+                <div class="day-cell active">
+                    <div class="day-name">MON</div>
+                    <div class="day-calories">1847</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-name">TUE</div>
+                    <div class="day-calories">2089</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-name">WED</div>
+                    <div class="day-calories">2201</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-name">THU</div>
+                    <div class="day-calories">2134</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-name">FRI</div>
+                    <div class="day-calories">--</div>
+                </div>
+                <div class="day-cell">
+                    <div class="day-name">SAT</div>
+                    <div class="day-calories">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shopping-panel">
+            <h3 class="panel-title">Shopping List</h3>
+            <div class="shopping-list">
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox" checked>
+                    <span class="shopping-text">Blueberries (300g)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Chicken Breast (1kg)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Salmon Fillets (500g)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox" checked>
+                    <span class="shopping-text">Sweet Potatoes (1kg)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Greek Yogurt (500g)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Mixed Greens</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Quinoa (500g)</span>
+                </label>
+                <label class="shopping-item">
+                    <input type="checkbox" class="shopping-checkbox">
+                    <span class="shopping-text">Almonds (200g)</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="actions-bar">
+    <button class="action-btn">Copy to Tomorrow</button>
+    <button class="action-btn">Generate Report</button>
+    <button class="action-btn primary">Save Plan</button>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 76;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

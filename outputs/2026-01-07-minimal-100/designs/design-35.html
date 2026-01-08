@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsy Nexus - Mid Century Modern Movie Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Whimsy Nexus - Mid century modern design with natural neutral tones
+        ABOUTME: A playful movie database interface combining mid-century modern aesthetics with warm neutrals and organic shapes. Features rounded corners, soft shadows, and a sophisticated dark palette with terracotta and sage accents.
+
+        CSS VARIABLES:
+        --color-primary: #D4855F (warm terracotta)
+        --color-secondary: #9FB68E (sage green)
+        --color-background: #2B2520 (rich dark brown)
+        --color-surface: #3D352F (medium brown)
+        --color-surface-light: #4A4039 (lighter brown)
+        --color-text: #F5EDE0 (warm cream)
+        --color-text-muted: #C4B5A0 (muted tan)
+        --color-accent: #E8A87C (peach)
+        --font-heading: 'Montserrat', sans-serif
+        --font-body: 'Lora', serif
+        --space-unit: 1rem
+        --radius-default: 16px
+        --shadow-default: 0 8px 24px rgba(0,0,0,0.3)
+
+        DESIGN RATIONALE:
+        Mid-century modern design emphasizes clean lines, organic shapes, and a connection to nature. I've interpreted this through rounded corners, warm earth tones (terracotta, sage, browns), and ample negative space. The playful tone comes through in the rounded pill buttons, bouncy hover states, and friendly rating stars. The dark mode uses rich browns instead of grays to maintain warmth. Typography pairs a geometric sans (Montserrat) with a sophisticated serif (Lora) for contrast. The layout uses asymmetric grids typical of MCM design.
+        -->
+
+        */
+        :root {
+            --color-primary: #D4855F;
+            --color-secondary: #9FB68E;
+            --color-background: #2B2520;
+            --color-surface: #3D352F;
+            --color-surface-light: #4A4039;
+            --color-text: #F5EDE0;
+            --color-text-muted: #C4B5A0;
+            --color-accent: #E8A87C;
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Lora', serif;
+            --space-unit: 1rem;
+            --radius-default: 16px;
+            --radius-large: 24px;
+            --radius-pill: 50px;
+            --shadow-default: 0 8px 24px rgba(0,0,0,0.3);
+            --shadow-hover: 0 12px 32px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 2);
+            box-shadow: var(--shadow-default);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+            letter-spacing: -0.5px;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.5);
+            background-color: var(--color-surface-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-pill);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background-color: var(--color-background);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        nav {
+            display: flex;
+            gap: var(--space-unit);
+        }
+
+        .nav-btn {
+            padding: calc(var(--space-unit) * 0.625) calc(var(--space-unit) * 1.5);
+            background-color: transparent;
+            border: 2px solid var(--color-text-muted);
+            border-radius: var(--radius-pill);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .nav-btn.active {
+            background-color: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: var(--color-background);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 2);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-light) 100%);
+            border-radius: var(--radius-large);
+            padding: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 3);
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: var(--space-unit);
+            color: var(--color-text);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-image {
+            background: var(--color-primary);
+            border-radius: var(--radius-default);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+            opacity: 0.4;
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            bottom: -30px;
+            left: -30px;
+            opacity: 0.4;
+        }
+
+        /* Filters */
+        .filters {
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .filters h2 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-unit);
+            color: var(--color-text);
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-unit);
+        }
+
+        .chip {
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.25);
+            background-color: var(--color-surface);
+            border: 2px solid transparent;
+            border-radius: var(--radius-pill);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chip:hover {
+            background-color: var(--color-surface-light);
+            border-color: var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        .chip:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .chip.active {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        /* Movie Grid */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--color-text);
+        }
+
+        .view-all {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: var(--color-accent);
+        }
+
+        .view-all:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .movie-card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .movie-card:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-poster::before {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: 20%;
+            left: 10%;
+        }
+
+        .movie-poster::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            bottom: 20%;
+            right: 15%;
+        }
+
+        .poster-text {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+
+        .movie-info {
+            padding: calc(var(--space-unit) * 1.5);
+        }
+
+        .movie-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-text);
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-unit);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .star {
+            color: var(--color-accent);
+        }
+
+        .movie-description {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            margin-bottom: var(--space-unit);
+        }
+
+        .movie-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .genre-tag {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--color-background);
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-large);
+            padding: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 4);
+            box-shadow: var(--shadow-default);
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 2);
+        }
+
+        .featured-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: calc(var(--space-unit) * 1.5);
+            background-color: var(--color-surface-light);
+            border-radius: var(--radius-default);
+            padding: var(--space-unit);
+            transition: all 0.3s ease;
+        }
+
+        .featured-card:hover {
+            background-color: var(--color-background);
+            transform: scale(1.02);
+        }
+
+        .featured-card:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .featured-poster {
+            width: 150px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .featured-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            color: var(--color-text);
+        }
+
+        .featured-info .movie-meta {
+            margin-bottom: calc(var(--space-unit) * 0.75);
+        }
+
+        .featured-info p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 2);
+            margin-top: calc(var(--space-unit) * 4);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-unit);
+            color: var(--color-primary);
+        }
+
+        .footer-section p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-links a:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: calc(var(--space-unit) * 2) auto 0;
+            padding-top: calc(var(--space-unit) * 2);
+            border-top: 2px solid var(--color-surface-light);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+
+            nav {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-unit);
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .featured-card {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-poster {
+                width: 100%;
+                height: 250px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Whimsy Nexus</div>
+            <div class="search-bar">
+                <input type="search" placeholder="Search movies, actors, directors..." aria-label="Search movies">
+            </div>
+            <nav aria-label="Main navigation">
+                <button class="nav-btn active">Movies</button>
+                <button class="nav-btn">Series</button>
+                <button class="nav-btn">Watchlist</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover Your Next Favorite Film</h1>
+                <p>Explore our curated collection of cinema from every era and genre, all organized with playful mid-century charm.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">12.5K</span>
+                        <span class="stat-label">Movies</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3.2K</span>
+                        <span class="stat-label">Directors</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">850</span>
+                        <span class="stat-label">Collections</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image" role="img" aria-label="Decorative gradient shapes"></div>
+        </section>
+
+        <section class="filters">
+            <h2>Browse by Genre</h2>
+            <div class="filter-chips" role="group" aria-label="Genre filters">
+                <button class="chip active">All</button>
+                <button class="chip">Drama</button>
+                <button class="chip">Comedy</button>
+                <button class="chip">Thriller</button>
+                <button class="chip">Sci-Fi</button>
+                <button class="chip">Romance</button>
+                <button class="chip">Documentary</button>
+                <button class="chip">Animation</button>
+                <button class="chip">Horror</button>
+                <button class="chip">Action</button>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>Trending This Week</h2>
+                <a href="#" class="view-all">View All →</a>
+            </div>
+            <div class="movie-grid">
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Midnight Perspectives">
+                    <div class="movie-poster">
+                        <span class="poster-text">MP</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Midnight Perspectives</h3>
+                        <div class="movie-meta">
+                            <span>2024</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.4</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A gripping exploration of financial ethics in the modern banking world.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Drama</span>
+                            <span class="genre-tag">Thriller</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for The Numbers Game">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #9FB68E 0%, #E8A87C 100%);">
+                        <span class="poster-text">TNG</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">The Numbers Game</h3>
+                        <div class="movie-meta">
+                            <span>2023</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>7.9</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A quirky comedy about an accountant who discovers joy in unexpected places.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Comedy</span>
+                            <span class="genre-tag">Drama</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Equity Dreams">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #E8A87C 0%, #D4855F 100%);">
+                        <span class="poster-text">ED</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Equity Dreams</h3>
+                        <div class="movie-meta">
+                            <span>2024</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.7</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">An inspiring documentary following young entrepreneurs in the startup ecosystem.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Documentary</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Ledger Lines">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #D4855F 0%, #9FB68E 100%);">
+                        <span class="poster-text">LL</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Ledger Lines</h3>
+                        <div class="movie-meta">
+                            <span>2023</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>7.2</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A romantic comedy set in the bustling world of investment banking.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Romance</span>
+                            <span class="genre-tag">Comedy</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="featured-section">
+            <h2>Staff Picks: Financial Cinema</h2>
+            <div class="featured-grid">
+                <article class="featured-card" tabindex="0" role="button">
+                    <div class="featured-poster">
+                        <span class="poster-text" style="font-size: 2rem; color: rgba(255,255,255,0.5);">BBS</span>
+                    </div>
+                    <div class="featured-info">
+                        <h3>The Big Bull Street</h3>
+                        <div class="movie-meta">
+                            <span>2022 • 142 min</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>9.1</span>
+                            </div>
+                        </div>
+                        <p>A masterful examination of Wall Street culture during the 1980s boom, blending dark humor with incisive social commentary.</p>
+                    </div>
+                </article>
+
+                <article class="featured-card" tabindex="0" role="button">
+                    <div class="featured-poster" style="background: linear-gradient(135deg, #E8A87C 0%, #D4855F 100%);">
+                        <span class="poster-text" style="font-size: 2rem; color: rgba(255,255,255,0.5);">MO</span>
+                    </div>
+                    <div class="featured-info">
+                        <h3>Margin of Error</h3>
+                        <div class="movie-meta">
+                            <span>2021 • 118 min</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.3</span>
+                            </div>
+                        </div>
+                        <p>A taut thriller about a risk analyst who uncovers a massive fraud scheme while battling personal demons.</p>
+                    </div>
+                </article>
+
+                <article class="featured-card" tabindex="0" role="button">
+                    <div class="featured-poster" style="background: linear-gradient(135deg, #9FB68E 0%, #E8A87C 100%);">
+                        <span class="poster-text" style="font-size: 2rem; color: rgba(255,255,255,0.5);">CT</span>
+                    </div>
+                    <div class="featured-info">
+                        <h3>Compound Time</h3>
+                        <div class="movie-meta">
+                            <span>2023 • 95 min</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>7.8</span>
+                            </div>
+                        </div>
+                        <p>A whimsical exploration of how small financial decisions ripple through generations of a quirky family.</p>
+                    </div>
+                </article>
+
+                <article class="featured-card" tabindex="0" role="button">
+                    <div class="featured-poster" style="background: linear-gradient(135deg, #D4855F 0%, #9FB68E 100%);">
+                        <span class="poster-text" style="font-size: 2rem; color: rgba(255,255,255,0.5);">AP</span>
+                    </div>
+                    <div class="featured-info">
+                        <h3>Asset Protection</h3>
+                        <div class="movie-meta">
+                            <span>2024 • 128 min</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.6</span>
+                            </div>
+                        </div>
+                        <p>An action-packed heist film where a team of forensic accountants races to prevent a digital bank robbery.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>Classic Cinema Vault</h2>
+                <a href="#" class="view-all">Explore Collection →</a>
+            </div>
+            <div class="movie-grid">
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Capital Gains">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #9FB68E 0%, #D4855F 100%);">
+                        <span class="poster-text">CG</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Capital Gains</h3>
+                        <div class="movie-meta">
+                            <span>1987</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.9</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">The quintessential 80s financial drama that defined a generation's view of corporate America.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Drama</span>
+                            <span class="genre-tag">Classic</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for The Dividend">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #E8A87C 0%, #9FB68E 100%);">
+                        <span class="poster-text">TD</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">The Dividend</h3>
+                        <div class="movie-meta">
+                            <span>1962</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>9.3</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A timeless tale of family inheritance and the true meaning of wealth in post-war America.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Drama</span>
+                            <span class="genre-tag">Family</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Portfolio Hearts">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #D4855F 0%, #E8A87C 100%);">
+                        <span class="poster-text">PH</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Portfolio Hearts</h3>
+                        <div class="movie-meta">
+                            <span>1956</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>7.6</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A charming romantic comedy about rival stock brokers falling in love during market chaos.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Romance</span>
+                            <span class="genre-tag">Comedy</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="movie-card" tabindex="0" role="button" aria-label="View details for Fiscal Year">
+                    <div class="movie-poster" style="background: linear-gradient(135deg, #9FB68E 0%, #E8A87C 100%);">
+                        <span class="poster-text">FY</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Fiscal Year</h3>
+                        <div class="movie-meta">
+                            <span>1973</span>
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span>8.1</span>
+                            </div>
+                        </div>
+                        <p class="movie-description">A political thriller examining corporate influence in Washington during the Nixon era.</p>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Thriller</span>
+                            <span class="genre-tag">Political</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Whimsy Nexus</h3>
+                <p>Your playful portal to the world of cinema. We believe movies should be discovered with joy, organized with care, and celebrated with enthusiasm.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="#">New Releases</a></li>
+                    <li><a href="#">Top Rated</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">Directors</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Forums</a></li>
+                    <li><a href="#">Reviews</a></li>
+                    <li><a href="#">Lists</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Whimsy Nexus. A playful approach to film discovery. Design #35 of 1000 Design Vibes.</p>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 35;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

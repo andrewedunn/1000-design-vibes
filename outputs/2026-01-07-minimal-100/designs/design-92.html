@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Steel - Mental Health Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Metro Steel - Where flat meets international aesthetics
+ABOUTME: A mental health journaling interface combining Memphis design's bold geometric playfulness
+with the supportive structure of educational wellness tracking. Features nostalgic patterns, vibrant
+color blocking, and a warm approach to emotional check-ins and reflection.
+
+CSS VARIABLES:
+--color-primary: #FF6B9D (vibrant pink)
+--color-secondary: #FFC857 (warm yellow)
+--color-accent-1: #4ECDC4 (teal)
+--color-accent-2: #A06CD5 (purple)
+--color-background: #FFF8F0 (warm cream)
+--color-surface: #FFFFFF
+--color-text: #2D3142 (deep blue-gray)
+--color-text-muted: #6B7280
+--font-heading: 'Archivo Black', sans-serif (bold Memphis style)
+--font-body: 'Space Grotesk', sans-serif (modern geometric)
+--space-unit: 1.25rem
+--radius-default: 0px (Memphis sharp edges)
+--shadow-default: 6px 6px 0px rgba(0,0,0,0.15) (Memphis offset shadow)
+
+DESIGN RATIONALE:
+Memphis design (1980s) meets mental health support through:
+- Bold geometric shapes and color blocking create visual interest without overwhelming
+- Playful patterns evoke nostalgic educational materials (stickers, workbooks)
+- Flat design with strong shadows provides depth without complexity
+- Warm color palette balances Memphis vibrancy with calming wellness tones
+- Grid-based layout reflects both international typography and structured journaling
+- Educational context through achievement tracking, growth metrics, and supportive prompts
+-->
+
+<style>
+:root {
+    --color-primary: #FF6B9D;
+    --color-secondary: #FFC857;
+    --color-accent-1: #4ECDC4;
+    --color-accent-2: #A06CD5;
+    --color-background: #FFF8F0;
+    --color-surface: #FFFFFF;
+    --color-text: #2D3142;
+    --color-text-muted: #6B7280;
+    --font-heading: 'Archivo Black', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --space-unit: 1.25rem;
+    --radius-default: 0px;
+    --shadow-default: 6px 6px 0px rgba(0,0,0,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Memphis Pattern Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,107,157,0.05) 20px, rgba(255,107,157,0.05) 40px),
+        repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(78,205,196,0.05) 20px, rgba(78,205,196,0.05) 40px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+header {
+    background: var(--color-primary);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+    margin-bottom: calc(var(--space-unit) * 3);
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    right: 40px;
+    width: 80px;
+    height: 80px;
+    background: var(--color-secondary);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    box-shadow: var(--shadow-default);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-unit);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--color-surface);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+.date-display {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.5);
+    font-weight: 700;
+    color: var(--color-primary);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    font-size: 1.125rem;
+}
+
+/* Mood Check-in Section */
+.mood-section {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+    margin-bottom: calc(var(--space-unit) * 2);
+    border-left: 12px solid var(--color-accent-1);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    color: var(--color-text);
+    margin-bottom: var(--space-unit);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.section-title::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent-1);
+    display: inline-block;
+    clip-path: circle(50%);
+}
+
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-unit);
+    margin-top: calc(var(--space-unit) * 1.5);
+}
+
+.mood-card {
+    background: var(--color-background);
+    padding: calc(var(--space-unit) * 1.5);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    border: 3px solid transparent;
+}
+
+.mood-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.15);
+}
+
+.mood-card.selected {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+}
+
+.mood-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.mood-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text);
+    text-transform: uppercase;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+/* Journal Entry */
+.journal-entry {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+    border-left: 12px solid var(--color-secondary);
+}
+
+.prompt {
+    background: var(--color-accent-2);
+    color: var(--color-surface);
+    padding: var(--space-unit);
+    margin-bottom: calc(var(--space-unit) * 1.5);
+    font-weight: 500;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.prompt::before {
+    content: '💭 ';
+    margin-right: 0.5rem;
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: var(--space-unit);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border: 3px solid var(--color-text);
+    background: var(--color-background);
+    color: var(--color-text);
+    resize: vertical;
+    line-height: 1.8;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.3);
+}
+
+/* Sidebar Widgets */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.widget {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 1.5);
+    box-shadow: var(--shadow-default);
+}
+
+.widget-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-unit);
+    text-transform: uppercase;
+    color: var(--color-text);
+}
+
+/* Streak Widget */
+.streak-widget {
+    border-left: 12px solid var(--color-primary);
+}
+
+.streak-number {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.streak-label {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.streak-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-top: var(--space-unit);
+}
+
+.day-dot {
+    aspect-ratio: 1;
+    background: var(--color-background);
+    border: 2px solid var(--color-text-muted);
+    transition: all 0.2s;
+}
+
+.day-dot.completed {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Growth Tracker */
+.growth-widget {
+    border-left: 12px solid var(--color-accent-1);
+}
+
+.growth-item {
+    margin-bottom: var(--space-unit);
+}
+
+.growth-item-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    height: 24px;
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-accent-1);
+    transition: width 0.6s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 8px,
+        rgba(255,255,255,0.3) 8px,
+        rgba(255,255,255,0.3) 16px
+    );
+}
+
+/* Affirmation Widget */
+.affirmation-widget {
+    border-left: 12px solid var(--color-accent-2);
+    background: var(--color-accent-2);
+    color: var(--color-surface);
+}
+
+.affirmation-widget .widget-title {
+    color: var(--color-surface);
+}
+
+.affirmation-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.affirmation-text::before {
+    content: '"';
+    font-size: 3rem;
+    font-family: var(--font-heading);
+    line-height: 0;
+    vertical-align: -0.4em;
+    margin-right: 0.25rem;
+}
+
+.affirmation-text::after {
+    content: '"';
+    font-size: 3rem;
+    font-family: var(--font-heading);
+    line-height: 0;
+    vertical-align: -0.4em;
+    margin-left: 0.25rem;
+}
+
+/* Reflection Tags */
+.tags-section {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default);
+    margin-bottom: calc(var(--space-unit) * 2);
+    border-left: 12px solid var(--color-accent-2);
+}
+
+.tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--space-unit) * 0.75);
+    margin-top: var(--space-unit);
+}
+
+.tag {
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+    background: var(--color-background);
+    border: 3px solid var(--color-text);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tag:hover {
+    background: var(--color-text);
+    color: var(--color-surface);
+}
+
+.tag.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-surface);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+}
+
+/* Action Buttons */
+.action-bar {
+    display: flex;
+    gap: var(--space-unit);
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    box-shadow: var(--shadow-default);
+}
+
+.btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+}
+
+.btn-primary:active {
+    transform: translate(0, 0);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 3px solid var(--color-text);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.btn-secondary:hover {
+    background: var(--color-text);
+    color: var(--color-surface);
+}
+
+/* Footer with Memphis Shapes */
+footer {
+    margin-top: calc(var(--space-unit) * 4);
+    padding: calc(var(--space-unit) * 2);
+    text-align: center;
+    position: relative;
+}
+
+.decorative-shapes {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.6;
+}
+
+.shape-1 {
+    top: 15%;
+    right: 5%;
+    width: 100px;
+    height: 100px;
+    background: var(--color-secondary);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transform: rotate(25deg);
+}
+
+.shape-2 {
+    top: 40%;
+    left: 3%;
+    width: 80px;
+    height: 80px;
+    background: var(--color-accent-1);
+    clip-path: circle(50%);
+}
+
+.shape-3 {
+    bottom: 20%;
+    right: 8%;
+    width: 60px;
+    height: 120px;
+    background: var(--color-accent-2);
+    transform: rotate(-15deg);
+}
+
+.shape-4 {
+    top: 60%;
+    left: 10%;
+    width: 70px;
+    height: 70px;
+    background: var(--color-primary);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    transform: rotate(45deg);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mood-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: var(--space-unit);
+    }
+
+    .mood-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tags-grid {
+        gap: calc(var(--space-unit) * 0.5);
+    }
+
+    .action-bar {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .decorative-shapes {
+        display: none;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Theme Toggle Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: #1a1a2e;
+        --color-surface: #25274d;
+        --color-text: #eaeaea;
+        --color-text-muted: #a8a8a8;
+    }
+
+    textarea {
+        background: #1a1a2e;
+        color: var(--color-text);
+    }
+
+    .mood-card {
+        background: #2d2d44;
+    }
+
+    .progress-bar {
+        background: #1a1a2e;
+    }
+
+    .tag {
+        background: #2d2d44;
+    }
+}
+</style>
+
+<div class="decorative-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+</div>
+
+<header>
+    <div class="header-content">
+        <h1>Metro Steel</h1>
+        <div class="date-display">Tuesday, January 7, 2026</div>
+    </div>
+</header>
+
+<div class="container">
+    <section class="mood-section">
+        <h2 class="section-title">How are you feeling today?</h2>
+        <div class="mood-grid">
+            <div class="mood-card">
+                <span class="mood-emoji">😊</span>
+                <div class="mood-label">Great</div>
+            </div>
+            <div class="mood-card selected">
+                <span class="mood-emoji">😌</span>
+                <div class="mood-label">Good</div>
+            </div>
+            <div class="mood-card">
+                <span class="mood-emoji">😐</span>
+                <div class="mood-label">Okay</div>
+            </div>
+            <div class="mood-card">
+                <span class="mood-emoji">😔</span>
+                <div class="mood-label">Down</div>
+            </div>
+            <div class="mood-card">
+                <span class="mood-emoji">😰</span>
+                <div class="mood-label">Anxious</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-grid">
+        <section class="journal-entry">
+            <h2 class="section-title">Today's Reflection</h2>
+            <div class="prompt">
+                What's one thing you're grateful for today? How did it make you feel?
+            </div>
+            <textarea placeholder="Start writing your thoughts here...">I'm grateful for the support I received from my study group today. We've been working together all semester, and seeing how far we've come reminds me that growth happens in community. It made me feel connected and less alone in the challenges I'm facing.
+
+The nostalgic feeling of collaborative learning - like those group projects in elementary school where everyone had colorful markers - brings me comfort. There's something healing about remembering that learning and growing don't have to be solitary journeys.</textarea>
+        </section>
+
+        <aside class="sidebar">
+            <div class="widget streak-widget">
+                <h3 class="widget-title">Journal Streak</h3>
+                <div class="streak-number">14</div>
+                <div class="streak-label">Days in a row</div>
+                <div class="streak-calendar">
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                    <div class="day-dot completed"></div>
+                </div>
+            </div>
+
+            <div class="widget growth-widget">
+                <h3 class="widget-title">Growth Areas</h3>
+                <div class="growth-item">
+                    <div class="growth-item-label">
+                        <span>Self-Compassion</span>
+                        <span>78%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%"></div>
+                    </div>
+                </div>
+                <div class="growth-item">
+                    <div class="growth-item-label">
+                        <span>Mindfulness</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="growth-item">
+                    <div class="growth-item-label">
+                        <span>Social Connection</span>
+                        <span>82%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget affirmation-widget">
+                <h3 class="widget-title">Today's Affirmation</h3>
+                <p class="affirmation-text">I am worthy of love and care, especially from myself.</p>
+            </div>
+        </aside>
+    </div>
+
+    <section class="tags-section">
+        <h2 class="section-title">Reflection Tags</h2>
+        <div class="tags-grid">
+            <button class="tag active">Gratitude</button>
+            <button class="tag">Anxiety</button>
+            <button class="tag">Growth</button>
+            <button class="tag active">Connection</button>
+            <button class="tag">Self-Care</button>
+            <button class="tag">Stress</button>
+            <button class="tag">Joy</button>
+            <button class="tag">Learning</button>
+            <button class="tag">Boundaries</button>
+            <button class="tag">Progress</button>
+        </div>
+    </section>
+
+    <div class="action-bar">
+        <button class="btn btn-primary">Save Entry</button>
+        <button class="btn btn-secondary">View Past Entries</button>
+        <button class="btn btn-secondary">Export Journal</button>
+    </div>
+
+    <footer>
+        <p style="color: var(--color-text-muted); font-size: 0.9rem;">Remember: Progress isn't linear. Every entry is a step forward. 💙</p>
+    </footer>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 92;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Interactive mood selection
+    document.querySelectorAll('.mood-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Tag toggling
+    document.querySelectorAll('.tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    });
+
+    // Save button feedback
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+        const originalText = this.textContent;
+        this.textContent = 'Saved! ✓';
+        setTimeout(() => {
+            this.textContent = originalText;
+        }, 2000);
+    });
+})();
+</script>
+
+</body>
+</html>

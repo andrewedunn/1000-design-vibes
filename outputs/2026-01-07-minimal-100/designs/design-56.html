@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Pewter - IoT Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Nexus Pewter - Natural vibes for creative
+        ABOUTME: A luxurious Scandinavian Modern IoT dashboard for creative professionals,
+        featuring clean lines, generous whitespace, natural materiality through subtle textures,
+        and an elegant dark palette with pewter accents.
+
+        CSS VARIABLES:
+        --color-primary: #9BA8AB (Pewter - soft, natural metallic)
+        --color-background: #1A1D1E (Deep charcoal)
+        --color-surface: #252A2C (Elevated charcoal)
+        --color-text: #E8EAEB (Warm white)
+        --color-text-muted: #9BA8AB (Pewter for secondary text)
+        --font-heading: 'Crimson Pro' (Elegant serif for luxury feel)
+        --font-body: 'Inter' (Clean sans-serif)
+        --space-unit: 1.5rem (Generous spacing)
+        --radius-default: 0.5rem (Subtle softness)
+        --shadow-default: Layered shadows for depth
+
+        DESIGN RATIONALE:
+        Scandinavian Modern principles guide this IoT dashboard: minimalism, functionality,
+        natural materials (simulated through texture overlays), and quality over quantity.
+        The pewter color palette evokes natural metals and stone. Generous whitespace and
+        precise typography create a luxurious, calm environment. IoT devices are presented
+        as connected nodes in a harmonious ecosystem, with real-time data elegantly integrated.
+        The dark mode enhances the luxurious feel while reducing eye strain for creative work.
+        -->
+
+        */
+        :root {
+            --color-primary: #9BA8AB;
+            --color-primary-dark: #7A8688;
+            --color-accent: #B8A899;
+            --color-success: #8FAA92;
+            --color-warning: #BFA989;
+            --color-background: #1A1D1E;
+            --color-surface: #252A2C;
+            --color-surface-elevated: #2D3234;
+            --color-border: #3A3F41;
+            --color-text: #E8EAEB;
+            --color-text-muted: #9BA8AB;
+            --color-text-subtle: #6B7578;
+            --font-heading: 'Crimson Pro', serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 1.5rem;
+            --radius-default: 0.5rem;
+            --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3),
+                            0 4px 12px rgba(0, 0, 0, 0.2);
+            --shadow-elevated: 0 4px 6px rgba(0, 0, 0, 0.3),
+                             0 12px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* Subtle texture overlay for natural feel */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(155, 168, 171, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(184, 168, 153, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        /* Header */
+        header {
+            margin-bottom: calc(var(--space-unit) * 3);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.75rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            margin-top: var(--space-unit);
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-success);
+            box-shadow: 0 0 12px rgba(143, 170, 146, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            box-shadow: var(--shadow-default);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--color-primary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-unit);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--color-text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-subtle);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Grid Spans */
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+        .span-8 { grid-column: span 8; }
+        .span-12 { grid-column: span 12; }
+
+        /* Device Cards */
+        .device-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--color-surface-elevated);
+            border-radius: calc(var(--radius-default) * 0.75);
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        .device-status.online { color: var(--color-success); }
+        .device-status.offline { color: var(--color-text-subtle); }
+
+        .device-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .device-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-weight: 300;
+        }
+
+        .metric-value {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 300;
+            color: var(--color-text);
+        }
+
+        .metric-unit {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-left: 0.25rem;
+        }
+
+        /* Chart Visualization */
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin-top: var(--space-unit);
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100%;
+            gap: 0.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--color-primary), var(--color-primary-dark));
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+            background: linear-gradient(to top, var(--color-accent), var(--color-primary));
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6875rem;
+            color: var(--color-text-subtle);
+            white-space: nowrap;
+        }
+
+        /* Network Topology */
+        .topology-view {
+            position: relative;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .topology-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--color-surface-elevated);
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            box-shadow: var(--shadow-default);
+            transition: all 0.3s ease;
+        }
+
+        .topology-node:hover {
+            border-color: var(--color-accent);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .topology-node.hub {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-surface-elevated), var(--color-surface));
+            border-color: var(--color-accent);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .topology-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--color-border), transparent);
+            transform-origin: left center;
+        }
+
+        /* Activity Feed */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--color-surface-elevated);
+            border-radius: calc(var(--radius-default) * 0.75);
+            border-left: 3px solid var(--color-primary);
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: var(--color-surface);
+            border-left-color: var(--color-accent);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 0.9375rem;
+            color: var(--color-text);
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.8125rem;
+            color: var(--color-text-subtle);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-unit);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-unit);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2.25rem;
+            font-weight: 300;
+            color: var(--color-text);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Controls */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--color-surface-elevated);
+            border-radius: calc(var(--radius-default) * 0.75);
+        }
+
+        .control-label {
+            font-size: 0.9375rem;
+            color: var(--color-text);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--color-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--color-primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--color-text);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        /* Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: none;
+            border-radius: calc(var(--radius-default) * 0.75);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--color-accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text-muted);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: calc(var(--space-unit) * 4);
+            padding-top: calc(var(--space-unit) * 2);
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-subtle);
+            font-size: 0.8125rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .span-4, .span-6, .span-8 { grid-column: span 6; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-unit);
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-unit);
+            }
+
+            .span-4, .span-6, .span-8, .span-12 {
+                grid-column: span 1;
+            }
+
+            .header-meta {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nexus Pewter</h1>
+            <p class="tagline">Natural vibes for creative</p>
+            <div class="header-meta">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>12 devices connected</span>
+                </div>
+                <div class="status-indicator">
+                    <span>Last sync: 2 minutes ago</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Studio Environment -->
+            <div class="card span-4">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Studio Environment</div>
+                        <h2 class="card-title">Climate Control</h2>
+                    </div>
+                    <div class="device-status online">
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+                            <circle cx="4" cy="4" r="4"/>
+                        </svg>
+                        Online
+                    </div>
+                </div>
+                <div>
+                    <div class="device-metric">
+                        <span class="metric-label">Temperature</span>
+                        <span class="metric-value">21.5<span class="metric-unit">°C</span></span>
+                    </div>
+                    <div class="device-metric">
+                        <span class="metric-label">Humidity</span>
+                        <span class="metric-value">45<span class="metric-unit">%</span></span>
+                    </div>
+                    <div class="device-metric">
+                        <span class="metric-label">Air Quality</span>
+                        <span class="metric-value">Good</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lighting System -->
+            <div class="card span-4">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Ambiance</div>
+                        <h2 class="card-title">Smart Lighting</h2>
+                    </div>
+                    <div class="device-status online">
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+                            <circle cx="4" cy="4" r="4"/>
+                        </svg>
+                        Active
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-item">
+                        <span class="control-label">Main Workspace</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                    <div class="control-item">
+                        <span class="control-label">Accent Lighting</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                    <div class="control-item">
+                        <span class="control-label">Task Lights</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Energy Consumption -->
+            <div class="card span-4">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">This Week</div>
+                        <h2 class="card-title">Energy Usage</h2>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bars">
+                        <div class="chart-bar" style="height: 45%;">
+                            <span class="chart-label">Mon</span>
+                        </div>
+                        <div class="chart-bar" style="height: 62%;">
+                            <span class="chart-label">Tue</span>
+                        </div>
+                        <div class="chart-bar" style="height: 38%;">
+                            <span class="chart-label">Wed</span>
+                        </div>
+                        <div class="chart-bar" style="height: 71%;">
+                            <span class="chart-label">Thu</span>
+                        </div>
+                        <div class="chart-bar" style="height: 56%;">
+                            <span class="chart-label">Fri</span>
+                        </div>
+                        <div class="chart-bar" style="height: 28%;">
+                            <span class="chart-label">Sat</span>
+                        </div>
+                        <div class="chart-bar" style="height: 19%;">
+                            <span class="chart-label">Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Topology -->
+            <div class="card span-6">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Ecosystem</div>
+                        <h2 class="card-title">Device Network</h2>
+                    </div>
+                </div>
+                <div class="topology-view">
+                    <div class="topology-connection" style="width: 120px; top: 50%; left: 50%; transform: translateX(-60px) rotate(-45deg);"></div>
+                    <div class="topology-connection" style="width: 120px; top: 50%; left: 50%; transform: translateX(-60px) rotate(45deg);"></div>
+                    <div class="topology-connection" style="width: 120px; top: 50%; left: 50%; transform: translateX(-60px) rotate(-135deg);"></div>
+                    <div class="topology-connection" style="width: 120px; top: 50%; left: 50%; transform: translateX(-60px) rotate(135deg);"></div>
+
+                    <div class="topology-node hub" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        HUB
+                    </div>
+                    <div class="topology-node" style="top: 10%; left: 50%; transform: translateX(-50%);" title="Smart Thermostat">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="topology-node" style="top: 50%; right: 10%; transform: translateY(-50%);" title="LED System">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        </svg>
+                    </div>
+                    <div class="topology-node" style="bottom: 10%; left: 50%; transform: translateX(-50%);" title="Security">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div class="topology-node" style="top: 50%; left: 10%; transform: translateY(-50%);" title="Audio System">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Stats -->
+            <div class="card span-6">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Overview</div>
+                        <h2 class="card-title">System Health</h2>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">99.8<span class="metric-unit">%</span></div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">142</div>
+                        <div class="stat-label">Automations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3.2<span class="metric-unit">kWh</span></div>
+                        <div class="stat-label">Today's Usage</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Active Devices</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card span-8">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Timeline</div>
+                        <h2 class="card-title">Recent Activity</h2>
+                    </div>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Lighting adjusted to Evening Creative mode</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Climate optimization completed</div>
+                            <div class="activity-time">15 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Audio system synced with workspace mode</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Security system armed for night mode</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card span-4">
+                <div class="card-header">
+                    <div>
+                        <div class="card-label">Controls</div>
+                        <h2 class="card-title">Quick Actions</h2>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                    <button class="btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Run Morning Routine
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Schedule Automation
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Device
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Nexus Pewter IoT Dashboard — Design System Showcase</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">Use arrow keys or swipe to navigate designs</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 56;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Interactive toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -60,6 +60,28 @@
 
 ---
 
+### v0.6 - Core-Only Dimensions Experiment (2026-01-07)
+- [x] Identified that 35 randomly-combined dimensions create incoherent designs
+- [x] Defined 5 "core" dimensions that set design identity:
+  - `functional_direction` - what the page IS
+  - `design_era` - aesthetic period
+  - `emotional_tone` - how it should feel
+  - `industry` - business context
+  - `color_mode` - light/dark
+- [x] Added `--core-only` flag to manifest command
+- [x] Added `approach` metadata to manifest format for tracking
+- [x] Created `DESIGN_GUIDE_CORE.md` for agent instructions
+- [ ] Testing 10 designs with core-only approach
+
+**Hypothesis:** Giving agents fewer, non-conflicting constraints and letting them choose coherent values for typography, colors, shapes, etc. will produce more harmonious designs than specifying all 35 dimensions randomly.
+
+**Key Changes:**
+- Manifest now includes `approach` field documenting the generation method
+- Agents receive 5 core dimensions and explicit permission to choose the other 30
+- Guide emphasizes coherence over following conflicting specifications
+
+---
+
 ## Planned
 
 ### Screenshot Generation
@@ -106,6 +128,7 @@ Based on A/B test results:
 | 2026-01-07 | nav-test | 3 | Haiku | ~33KB | Fixed nav script, all passed |
 | 2026-01-07 | batch-100 | 100 | Haiku | ~19KB | First large batch, 2.1MB total |
 | 2026-01-07 | functional-100 | 100 | Sonnet | ~36KB | 82 unique functional directions, 3.5MB total |
+| 2026-01-07 | test-core-only | 10 | Sonnet | ~30KB | Core-only approach: 5 dims specified, agent chooses 30 |
 
 **Key Learnings:**
 - Loose guide produces more varied layouts but smaller files

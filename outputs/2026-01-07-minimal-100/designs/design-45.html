@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Cosmo - Hotel Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+DESIGN: Clean Cosmo - Crafted for users with international roots
+ABOUTME: A Y2K-era inspired hotel search interface with glossy gradients, metallic accents, and energetic dark theme designed for nonprofit travel services connecting diaspora communities
+
+CSS VARIABLES:
+--color-primary: #00d9ff (electric cyan)
+--color-background: #0a0e1a (deep space navy)
+--color-surface: #141b2e (midnight blue)
+--color-text: #ffffff
+--color-text-muted: #8b9dc3
+--font-heading: 'Orbitron', sans-serif (Y2K futuristic)
+--font-body: 'Rajdhani', sans-serif (clean technical)
+--space-unit: 1rem
+--radius-default: 12px
+--shadow-default: 0 8px 32px rgba(0, 217, 255, 0.15)
+
+DESIGN RATIONALE:
+Y2K aesthetics with glossy buttons, metallic gradients, and futuristic fonts create an energetic, optimistic feel reminiscent of early 2000s travel sites. Dark mode with vibrant cyan accents provides high energy while maintaining readability. The hotel search functionality is front and center with destination cards showcasing global locations, appealing to international users. Nonprofit mission is subtly integrated through community-focused messaging and cultural inclusivity.
+-->
+
+<style>
+:root {
+    --color-primary: #00d9ff;
+    --color-primary-light: #33e3ff;
+    --color-primary-dark: #00a8cc;
+    --color-secondary: #ff006e;
+    --color-accent: #ffbe0b;
+    --color-background: #0a0e1a;
+    --color-surface: #141b2e;
+    --color-surface-elevated: #1a2335;
+    --color-text: #ffffff;
+    --color-text-muted: #8b9dc3;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --space-unit: 1rem;
+    --radius-default: 12px;
+    --shadow-default: 0 8px 32px rgba(0, 217, 255, 0.15);
+    --shadow-glow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Y2K Background Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 0, 110, 0.06) 0%, transparent 50%);
+    animation: pulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* Header */
+header {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(20, 27, 46, 0.8) 100%);
+    border-bottom: 2px solid rgba(0, 217, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+nav {
+    display: flex;
+    gap: calc(var(--space-unit) * 1.5);
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    background: rgba(0, 217, 255, 0.1);
+}
+
+.nav-link.active {
+    color: var(--color-primary);
+    background: rgba(0, 217, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+}
+
+/* Main Content */
+main {
+    position: relative;
+    z-index: 5;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 2);
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.hero h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: calc(var(--space-unit) * 1);
+    background: linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    max-width: 700px;
+    margin: 0 auto calc(var(--space-unit) * 2.5);
+    font-weight: 500;
+}
+
+/* Search Box */
+.search-container {
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2);
+    box-shadow: var(--shadow-default), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    max-width: 1100px;
+    margin: 0 auto calc(var(--space-unit) * 4);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.search-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: calc(var(--space-unit) * 1.5);
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+}
+
+.form-group input,
+.form-group select {
+    background: var(--color-surface);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.15), var(--shadow-glow);
+}
+
+.form-group input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Y2K Glossy Button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2.5rem;
+    color: var(--color-background);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 217, 255, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Quick Filters */
+.quick-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: calc(var(--space-unit) * 3);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    background: var(--color-surface);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 20px;
+    padding: 0.6rem 1.5rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-chip:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(0, 217, 255, 0.1);
+}
+
+.filter-chip.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.section-header h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-light);
+    letter-spacing: 2px;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--color-surface);
+    padding: 0.4rem;
+    border-radius: 8px;
+}
+
+.view-btn {
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.view-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+/* Hotel Cards Grid */
+.hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 3);
+}
+
+.hotel-card {
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    border: 1px solid rgba(0, 217, 255, 0.15);
+    box-shadow: var(--shadow-default);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hotel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 217, 255, 0.25);
+    border-color: var(--color-primary);
+}
+
+.hotel-image {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg,
+        rgba(0, 217, 255, 0.3) 0%,
+        rgba(255, 0, 110, 0.3) 50%,
+        rgba(255, 190, 11, 0.3) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hotel-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.03) 10px,
+        rgba(255, 255, 255, 0.03) 20px
+    );
+}
+
+.badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-secondary);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(255, 0, 110, 0.4);
+}
+
+.hotel-content {
+    padding: calc(var(--space-unit) * 1.5);
+}
+
+.hotel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.hotel-name {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 1px;
+}
+
+.hotel-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.hotel-location {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.hotel-location::before {
+    content: '📍';
+}
+
+.hotel-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-tag {
+    background: rgba(0, 217, 255, 0.1);
+    color: var(--color-primary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(0, 217, 255, 0.3);
+}
+
+.hotel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 217, 255, 0.1);
+}
+
+.price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-amount {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--color-accent);
+}
+
+.price-label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.btn-secondary {
+    background: rgba(0, 217, 255, 0.2);
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+}
+
+/* Mission Banner */
+.mission-banner {
+    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2.5);
+    margin-bottom: calc(var(--space-unit) * 3);
+    border: 2px solid rgba(255, 0, 110, 0.3);
+    box-shadow: 0 8px 32px rgba(255, 0, 110, 0.15);
+    text-align: center;
+}
+
+.mission-banner h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 1rem;
+    letter-spacing: 1.5px;
+}
+
+.mission-banner p {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Footer */
+footer {
+    position: relative;
+    z-index: 10;
+    background: var(--color-surface);
+    border-top: 2px solid rgba(0, 217, 255, 0.2);
+    padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 2);
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: calc(var(--space-unit) * 2);
+}
+
+.footer-section h4 {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--color-primary);
+}
+
+.footer-bottom {
+    max-width: 1400px;
+    margin: calc(var(--space-unit) * 2) auto 0;
+    padding-top: calc(var(--space-unit) * 2);
+    border-top: 1px solid rgba(0, 217, 255, 0.1);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .hotels-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .hotels-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+</style>
+
+<header>
+    <div class="header-content">
+        <div class="logo">CLEAN COSMO</div>
+        <nav>
+            <a href="#" class="nav-link active">Search</a>
+            <a href="#" class="nav-link">Destinations</a>
+            <a href="#" class="nav-link">Community</a>
+            <a href="#" class="nav-link">About</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <h1>Find Your Home Away From Home</h1>
+        <p>Connecting diaspora communities with culturally-welcoming accommodations worldwide</p>
+    </section>
+
+    <div class="search-container">
+        <form class="search-form">
+            <div class="form-group">
+                <label for="destination">Destination</label>
+                <input type="text" id="destination" placeholder="Where are you going?" />
+            </div>
+            <div class="form-group">
+                <label for="checkin">Check In</label>
+                <input type="date" id="checkin" />
+            </div>
+            <div class="form-group">
+                <label for="checkout">Check Out</label>
+                <input type="date" id="checkout" />
+            </div>
+            <button type="submit" class="btn-primary">Search</button>
+        </form>
+    </div>
+
+    <div class="quick-filters">
+        <div class="filter-chip active">All Locations</div>
+        <div class="filter-chip">Family Stays</div>
+        <div class="filter-chip">Cultural Hubs</div>
+        <div class="filter-chip">Language Support</div>
+        <div class="filter-chip">Halal Friendly</div>
+        <div class="filter-chip">Kosher Options</div>
+    </div>
+
+    <div class="mission-banner">
+        <h3>Our Mission: Bridging Cultures Through Travel</h3>
+        <p>We partner with accommodations that celebrate diversity and provide culturally-sensitive hospitality. 100% of proceeds support refugee resettlement programs.</p>
+    </div>
+
+    <div class="section-header">
+        <h2>Featured Hotels</h2>
+        <div class="view-toggle">
+            <button class="view-btn active">Grid</button>
+            <button class="view-btn">List</button>
+        </div>
+    </div>
+
+    <div class="hotels-grid">
+        <div class="hotel-card">
+            <div class="hotel-image">
+                <span class="badge">Featured</span>
+            </div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Global Haven</h3>
+                    <div class="hotel-rating">★ 4.8</div>
+                </div>
+                <div class="hotel-location">Berlin, Germany</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">Multilingual</span>
+                    <span class="feature-tag">Halal Kitchen</span>
+                    <span class="feature-tag">Cultural Events</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">€89</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-card">
+            <div class="hotel-image"></div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Heritage House</h3>
+                    <div class="hotel-rating">★ 4.9</div>
+                </div>
+                <div class="hotel-location">London, UK</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">Prayer Room</span>
+                    <span class="feature-tag">Family Suites</span>
+                    <span class="feature-tag">15+ Languages</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">£125</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-card">
+            <div class="hotel-image">
+                <span class="badge">New</span>
+            </div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Unity Plaza</h3>
+                    <div class="hotel-rating">★ 4.7</div>
+                </div>
+                <div class="hotel-location">Toronto, Canada</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">Kosher Meals</span>
+                    <span class="feature-tag">Community Space</span>
+                    <span class="feature-tag">Airport Shuttle</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">$145</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-card">
+            <div class="hotel-image"></div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Diaspora Inn</h3>
+                    <div class="hotel-rating">★ 4.6</div>
+                </div>
+                <div class="hotel-location">Paris, France</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">Cultural Tours</span>
+                    <span class="feature-tag">Translation Services</span>
+                    <span class="feature-tag">Vegan Options</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">€110</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-card">
+            <div class="hotel-image">
+                <span class="badge">Featured</span>
+            </div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Roots Residency</h3>
+                    <div class="hotel-rating">★ 5.0</div>
+                </div>
+                <div class="hotel-location">Dubai, UAE</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">All Halal</span>
+                    <span class="feature-tag">Family Pool</span>
+                    <span class="feature-tag">24/7 Concierge</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">AED 420</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-card">
+            <div class="hotel-image"></div>
+            <div class="hotel-content">
+                <div class="hotel-header">
+                    <h3 class="hotel-name">Crossroads Lodge</h3>
+                    <div class="hotel-rating">★ 4.8</div>
+                </div>
+                <div class="hotel-location">New York, USA</div>
+                <div class="hotel-features">
+                    <span class="feature-tag">Interfaith Space</span>
+                    <span class="feature-tag">Metro Access</span>
+                    <span class="feature-tag">Cultural Library</span>
+                </div>
+                <div class="hotel-footer">
+                    <div class="price">
+                        <span class="price-amount">$199</span>
+                        <span class="price-label">per night</span>
+                    </div>
+                    <button class="btn-secondary">View</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>About Clean Cosmo</h4>
+            <ul>
+                <li><a href="#">Our Mission</a></li>
+                <li><a href="#">Impact Report</a></li>
+                <li><a href="#">Partner Hotels</a></li>
+                <li><a href="#">Community Stories</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Support</h4>
+            <ul>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Accessibility</a></li>
+                <li><a href="#">Language Options</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Resources</h4>
+            <ul>
+                <li><a href="#">Travel Guides</a></li>
+                <li><a href="#">Cultural Tips</a></li>
+                <li><a href="#">Safety Resources</a></li>
+                <li><a href="#">Visa Information</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Connect</h4>
+            <ul>
+                <li><a href="#">Newsletter</a></li>
+                <li><a href="#">Social Media</a></li>
+                <li><a href="#">Donate</a></li>
+                <li><a href="#">Volunteer</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Clean Cosmo. A nonprofit initiative connecting cultures through hospitality.</p>
+    </div>
+</footer>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 45;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

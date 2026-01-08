@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolt Nexus - Sleep Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Bolt Nexus - Natural vibes for travel
+        ABOUTME: A neo-brutalist sleep tracker for travelers featuring bold geometric shapes, high contrast borders, and raw, unapologetic design elements.
+
+        CSS VARIABLES:
+        --color-primary: Electric cyan (#00FFE0) for light mode, neon pink (#FF006E) for dark mode
+        --color-background: Off-white (#F5F5F0) / Deep charcoal (#1A1A1A)
+        --color-surface: White (#FFFFFF) / Dark slate (#252525)
+        --color-text: Near black (#0A0A0A) / Off-white (#F0F0F0)
+        --color-text-muted: Medium gray (#666666) / Light gray (#999999)
+        --font-heading: 'Space Grotesk', sans-serif
+        --font-body: 'JetBrains Mono', monospace
+        --space-unit: 8px
+        --radius-default: 0px (brutal sharp edges)
+        --shadow-default: 8px 8px 0px rgba(0,0,0,1) (hard shadows)
+
+        DESIGN RATIONALE:
+        Neo-brutalism meets sleep tracking with aggressive borders, flat colors, and geometric brutality. The design embraces the raw aesthetic with thick black borders, harsh shadows, and bold typography. Travel-focused sleep data is presented with energetic urgency through vibrant accent colors and stark contrasts. Both light and dark modes maintain the brutal aesthetic while serving different time-of-day contexts (day travel planning vs. nighttime review).
+        -->
+
+        */
+        :root {
+            --color-primary: #00FFE0;
+            --color-secondary: #FF006E;
+            --color-background: #F5F5F0;
+            --color-surface: #FFFFFF;
+            --color-text: #0A0A0A;
+            --color-text-muted: #666666;
+            --color-border: #0A0A0A;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'JetBrains Mono', monospace;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 8px 8px 0px rgba(10, 10, 10, 1);
+            --shadow-small: 4px 4px 0px rgba(10, 10, 10, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #FF006E;
+                --color-secondary: #00FFE0;
+                --color-background: #1A1A1A;
+                --color-surface: #252525;
+                --color-text: #F0F0F0;
+                --color-text-muted: #999999;
+                --color-border: #F0F0F0;
+                --shadow-default: 8px 8px 0px rgba(240, 240, 240, 1);
+                --shadow-small: 4px 4px 0px rgba(240, 240, 240, 1);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: calc(var(--space-unit) * 3);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        h3 {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .header {
+            border: 6px solid var(--color-border);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            width: 60px;
+            height: 60px;
+            background: var(--color-primary);
+            border: 6px solid var(--color-border);
+            z-index: -1;
+        }
+
+        .tagline {
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 400;
+        }
+
+        .location-bar {
+            margin-top: calc(var(--space-unit) * 2);
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            flex-wrap: wrap;
+        }
+
+        .location-tag {
+            background: var(--color-primary);
+            color: var(--color-background);
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            border: 4px solid var(--color-border);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .sleep-card {
+            border: 6px solid var(--color-border);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .sleep-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--color-border);
+        }
+
+        .sleep-metric {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .trend-indicator {
+            margin-top: calc(var(--space-unit) * 2);
+            padding: calc(var(--space-unit) * 1);
+            border: 4px solid var(--color-border);
+            background: var(--color-background);
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .trend-up {
+            color: var(--color-primary);
+        }
+
+        .trend-down {
+            color: var(--color-secondary);
+        }
+
+        .sleep-chart {
+            border: 6px solid var(--color-border);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .chart-title {
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 4px solid var(--color-border);
+        }
+
+        .chart-bars {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: flex-end;
+            height: 200px;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .bar {
+            width: 100%;
+            border: 4px solid var(--color-border);
+            background: var(--color-primary);
+            min-height: 40px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            background: var(--color-secondary);
+            transform: translateY(-4px);
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .sleep-stages {
+            border: 6px solid var(--color-border);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .stage-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(var(--space-unit) * 2);
+            border: 4px solid var(--color-border);
+            margin-bottom: calc(var(--space-unit) * 2);
+            background: var(--color-background);
+        }
+
+        .stage-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .stage-name {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stage-duration {
+            font-size: 1.5rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .stage-bar-container {
+            flex: 1;
+            height: 20px;
+            border: 4px solid var(--color-border);
+            background: var(--color-background);
+            margin: 0 calc(var(--space-unit) * 2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage-bar-fill {
+            height: 100%;
+            background: var(--color-primary);
+            border-right: 4px solid var(--color-border);
+        }
+
+        .recommendations {
+            border: 6px solid var(--color-border);
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-default);
+        }
+
+        .recommendation-item {
+            padding: calc(var(--space-unit) * 2);
+            border: 4px solid var(--color-border);
+            background: var(--color-background);
+            margin-bottom: calc(var(--space-unit) * 2);
+            position: relative;
+        }
+
+        .recommendation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-item::before {
+            content: '→';
+            position: absolute;
+            left: calc(var(--space-unit) * -5);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .rec-title {
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .rec-desc {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .timezone-notice {
+            background: var(--color-secondary);
+            color: var(--color-background);
+            border: 6px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 3);
+            box-shadow: var(--shadow-small);
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .cta-button {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border: 6px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--color-border);
+        }
+
+        .cta-button:active {
+            transform: translate(0, 0);
+            box-shadow: 4px 4px 0px var(--color-border);
+        }
+
+        .cta-button:focus {
+            outline: 4px dashed var(--color-secondary);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .header {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .sleep-card,
+            .sleep-chart,
+            .sleep-stages,
+            .recommendations {
+                padding: calc(var(--space-unit) * 2);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-bars {
+                height: 150px;
+            }
+
+            .recommendation-item::before {
+                position: static;
+                display: block;
+                margin-bottom: calc(var(--space-unit) * 1);
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timezone-notice">
+        ⚡ TIMEZONE: GMT+2 (ATHENS) • JETLAG RISK: MODERATE
+    </div>
+
+    <header class="header">
+        <h1>BOLT NEXUS</h1>
+        <p class="tagline">Natural vibes for travel</p>
+        <div class="location-bar">
+            <span class="location-tag">ATHENS</span>
+            <span class="location-tag">HOTEL ZONE</span>
+            <span class="location-tag">ACTIVE</span>
+        </div>
+    </header>
+
+    <div class="main-grid">
+        <div class="sleep-card">
+            <div class="sleep-metric">7.2h</div>
+            <div class="metric-label">Total Sleep</div>
+            <div class="trend-indicator trend-up">▲ 45min vs. home baseline</div>
+        </div>
+
+        <div class="sleep-card">
+            <div class="sleep-metric">89%</div>
+            <div class="metric-label">Sleep Quality</div>
+            <div class="trend-indicator trend-up">▲ Excellent recovery</div>
+        </div>
+
+        <div class="sleep-card">
+            <div class="sleep-metric">23:15</div>
+            <div class="metric-label">Bedtime</div>
+            <div class="trend-indicator trend-down">▼ 1hr later than usual</div>
+        </div>
+
+        <div class="sleep-card">
+            <div class="sleep-metric">06:30</div>
+            <div class="metric-label">Wake Time</div>
+            <div class="trend-indicator trend-up">▲ Natural wake-up</div>
+        </div>
+    </div>
+
+    <section class="sleep-chart">
+        <h2 class="chart-title">7-DAY SLEEP DURATION</h2>
+        <div class="chart-bars">
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 85%;"></div>
+                <div class="bar-label">MON</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 70%;"></div>
+                <div class="bar-label">TUE</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 60%;"></div>
+                <div class="bar-label">WED</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 75%;"></div>
+                <div class="bar-label">THU</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 80%;"></div>
+                <div class="bar-label">FRI</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 90%;"></div>
+                <div class="bar-label">SAT</div>
+            </div>
+            <div class="bar-wrapper">
+                <div class="bar" style="height: 95%;"></div>
+                <div class="bar-label">SUN</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sleep-stages">
+        <h2>SLEEP STAGES BREAKDOWN</h2>
+
+        <div class="stage-row">
+            <div class="stage-name">Awake</div>
+            <div class="stage-bar-container">
+                <div class="stage-bar-fill" style="width: 5%;"></div>
+            </div>
+            <div class="stage-duration">22m</div>
+        </div>
+
+        <div class="stage-row">
+            <div class="stage-name">REM</div>
+            <div class="stage-bar-container">
+                <div class="stage-bar-fill" style="width: 22%;"></div>
+            </div>
+            <div class="stage-duration">1h 35m</div>
+        </div>
+
+        <div class="stage-row">
+            <div class="stage-name">Light</div>
+            <div class="stage-bar-container">
+                <div class="stage-bar-fill" style="width: 48%;"></div>
+            </div>
+            <div class="stage-duration">3h 28m</div>
+        </div>
+
+        <div class="stage-row">
+            <div class="stage-name">Deep</div>
+            <div class="stage-bar-container">
+                <div class="stage-bar-fill" style="width: 25%;"></div>
+            </div>
+            <div class="stage-duration">1h 47m</div>
+        </div>
+    </section>
+
+    <section class="recommendations">
+        <h2>TRAVEL SLEEP OPTIMIZATION</h2>
+
+        <div class="recommendation-item">
+            <div class="rec-title">Maintain Local Schedule</div>
+            <p class="rec-desc">Your sleep time is adapting well to Athens timezone. Continue current bedtime routine to minimize jetlag effects.</p>
+        </div>
+
+        <div class="recommendation-item">
+            <div class="rec-title">Morning Light Exposure</div>
+            <p class="rec-desc">Get 15-30 minutes of natural sunlight between 07:00-09:00 to reinforce circadian rhythm adjustment.</p>
+        </div>
+
+        <div class="recommendation-item">
+            <div class="rec-title">Hydration Alert</div>
+            <p class="rec-desc">Mediterranean climate detected. Increase water intake by 20% to support sleep quality during travel.</p>
+        </div>
+
+        <div class="recommendation-item">
+            <div class="rec-title">Pre-Flight Preparation</div>
+            <p class="rec-desc">Next destination in 3 days. Start adjusting sleep schedule by 30min increments to ease transition.</p>
+        </div>
+
+        <div style="margin-top: calc(var(--space-unit) * 4); text-align: center;">
+            <button class="cta-button">SYNC TO FITNESS TRACKER</button>
+        </div>
+    </section>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 88;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

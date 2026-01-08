@@ -1,0 +1,867 @@
+<!--
+DESIGN: Riot Hub - Natural vibes for ecommerce
+ABOUTME: A ride-sharing platform interface combining Bauhaus geometric minimalism with edgy product marketplace energy. Features driver matching, real-time ride tracking, and product discovery in a bold, asymmetric layout with primary colors and geometric shapes.
+
+CSS VARIABLES:
+--color-primary: #e63946 (bold red)
+--color-secondary: #457b9d (blue accent)
+--color-accent: #f1faee (cream)
+--color-background: #1d3557 (dark navy)
+--color-surface: #ffffff
+--color-text: #1d3557
+--color-text-muted: #457b9d
+--font-heading: 'Space Grotesk' (geometric sans-serif)
+--font-body: 'Inter' (clean readability)
+--space-unit: 8px
+--radius-default: 0px (Bauhaus geometric)
+--shadow-default: 4px 4px 0px rgba(0,0,0,0.2)
+
+DESIGN RATIONALE:
+Bauhaus principles drive the geometric shapes, primary color palette, and asymmetric grid layout. The ride-sharing functional direction manifests in live driver cards, route maps, and pricing tiers. Edgy tone achieved through bold typography, high contrast, and unconventional product grid overlays. Both light/dark modes implemented with toggle. Ecommerce context integrated through featured product cards within ride options.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Hub - Natural vibes for ecommerce</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #e63946;
+            --color-secondary: #457b9d;
+            --color-accent: #f1faee;
+            --color-background: #ffffff;
+            --color-surface: #f1faee;
+            --color-text: #1d3557;
+            --color-text-muted: #457b9d;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="dark"] {
+            --color-background: #1d3557;
+            --color-surface: #264653;
+            --color-text: #f1faee;
+            --color-text-muted: #a8dadc;
+            --color-accent: #264653;
+            --shadow-default: 4px 4px 0px rgba(0,0,0,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--color-primary);
+            padding: calc(var(--space-unit) * 3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-default);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: white;
+            color: var(--color-primary);
+        }
+
+        .theme-toggle:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .wallet {
+            background: white;
+            color: var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 4);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--space-unit) * 4);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .hero-main {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background-color: var(--color-primary);
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+
+        .hero-main h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit) * 3);
+            text-transform: uppercase;
+            letter-spacing: -3px;
+        }
+
+        .hero-main p {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+            max-width: 500px;
+        }
+
+        .location-input {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-unit);
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: calc(var(--space-unit) * 2);
+            border: 2px solid var(--color-text);
+            background: var(--color-background);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-default);
+        }
+
+        .hero-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .quick-stat {
+            background-color: var(--color-secondary);
+            color: white;
+            padding: calc(var(--space-unit) * 3);
+            text-align: center;
+        }
+
+        .quick-stat-value {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            display: block;
+            line-height: 1;
+        }
+
+        .quick-stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: var(--space-unit);
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: calc(var(--space-unit) * 3);
+            position: relative;
+            padding-left: calc(var(--space-unit) * 3);
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 100%;
+            background-color: var(--color-primary);
+        }
+
+        .ride-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--space-unit) * 3);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .ride-card {
+            background-color: var(--color-surface);
+            border: 3px solid var(--color-text);
+            padding: calc(var(--space-unit) * 4);
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .ride-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px var(--color-primary);
+        }
+
+        .ride-card:focus-within {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .ride-type {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 2);
+            letter-spacing: -1px;
+        }
+
+        .ride-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 2px solid var(--color-text);
+        }
+
+        .ride-time {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        .ride-price {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+        }
+
+        .ride-features {
+            list-style: none;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .ride-features li {
+            padding: calc(var(--space-unit)) 0;
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: calc(var(--space-unit) * 3);
+        }
+
+        .ride-features li::before {
+            content: '■';
+            position: absolute;
+            left: 0;
+            color: var(--color-secondary);
+        }
+
+        .product-badge {
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--space-unit) calc(var(--space-unit) * 2);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .btn-request {
+            width: 100%;
+            background-color: var(--color-text);
+            color: var(--color-background);
+            border: none;
+            padding: calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-request:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-request:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .drivers-section {
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .driver-card {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 3);
+            border-left: 6px solid var(--color-secondary);
+        }
+
+        .driver-header {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+        }
+
+        .driver-info h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .driver-rating {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .driver-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding-top: calc(var(--space-unit) * 2);
+            border-top: 1px solid var(--color-text-muted);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .live-map {
+            background-color: var(--color-surface);
+            padding: calc(var(--space-unit) * 5);
+            margin-bottom: calc(var(--space-unit) * 6);
+            position: relative;
+            min-height: 400px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        .map-visual {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border: 3px solid var(--color-text);
+            transform: rotate(45deg);
+        }
+
+        .map-pin:nth-child(1) {
+            top: 20%;
+            left: 30%;
+        }
+
+        .map-pin:nth-child(2) {
+            bottom: 30%;
+            right: 25%;
+        }
+
+        .route-line {
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background-color: white;
+            top: 50%;
+            left: 20%;
+            transform: rotate(-20deg);
+        }
+
+        .map-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .map-info h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 3);
+            letter-spacing: -1px;
+        }
+
+        .route-detail {
+            background-color: var(--color-background);
+            padding: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 2);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .route-detail strong {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-unit);
+        }
+
+        .route-detail span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        footer {
+            background-color: var(--color-text);
+            color: var(--color-background);
+            padding: calc(var(--space-unit) * 4);
+            text-align: center;
+            margin-top: calc(var(--space-unit) * 8);
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 4);
+            text-align: left;
+        }
+
+        .footer-section h4 {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 2);
+            letter-spacing: -0.5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: var(--color-background);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            padding: calc(var(--space-unit) * 0.5) 0;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+        }
+
+        .footer-section a:focus {
+            outline: 2px solid var(--color-background);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-main h1 {
+                font-size: 2.5rem;
+            }
+
+            .location-input {
+                flex-direction: column;
+            }
+
+            .ride-options {
+                grid-template-columns: 1fr;
+            }
+
+            .live-map {
+                grid-template-columns: 1fr;
+                min-height: 300px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Riot Hub</div>
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">Dark</button>
+            <div class="wallet">$42.50</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-main">
+                <h1>Ride Wild,<br>Shop Smart</h1>
+                <p>Premium ride-sharing meets curated marketplace. Every ride unlocks exclusive product drops.</p>
+                <div class="location-input">
+                    <div class="input-group">
+                        <label for="pickup">Pickup</label>
+                        <input type="text" id="pickup" placeholder="Enter pickup location" value="Mission District">
+                    </div>
+                    <div class="input-group">
+                        <label for="dropoff">Dropoff</label>
+                        <input type="text" id="dropoff" placeholder="Enter destination" value="Financial District">
+                    </div>
+                </div>
+            </div>
+            <div class="hero-sidebar">
+                <div class="quick-stat">
+                    <span class="quick-stat-value">4.9</span>
+                    <span class="quick-stat-label">Avg Rating</span>
+                </div>
+                <div class="quick-stat" style="background-color: var(--color-primary);">
+                    <span class="quick-stat-value">127</span>
+                    <span class="quick-stat-label">Active Riders</span>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Choose Your Ride</h2>
+        <div class="ride-options">
+            <div class="ride-card" tabindex="0">
+                <div class="product-badge">+ Free Tote</div>
+                <div class="ride-type">Eco Share</div>
+                <div class="ride-meta">
+                    <span class="ride-time">8 min away</span>
+                    <span class="ride-price">$12</span>
+                </div>
+                <ul class="ride-features">
+                    <li>Shared ride, eco-friendly</li>
+                    <li>Free organic tote bag</li>
+                    <li>Carbon offset included</li>
+                </ul>
+                <button class="btn-request">Request Eco Share</button>
+            </div>
+
+            <div class="ride-card" tabindex="0">
+                <div class="product-badge">+ Designer Cap</div>
+                <div class="ride-type">Solo Ride</div>
+                <div class="ride-meta">
+                    <span class="ride-time">5 min away</span>
+                    <span class="ride-price">$18</span>
+                </div>
+                <ul class="ride-features">
+                    <li>Private ride, fast pickup</li>
+                    <li>Limited edition cap</li>
+                    <li>Premium music selection</li>
+                </ul>
+                <button class="btn-request">Request Solo Ride</button>
+            </div>
+
+            <div class="ride-card" tabindex="0">
+                <div class="product-badge">+ Sneaker Drop</div>
+                <div class="ride-type">Riot XL</div>
+                <div class="ride-meta">
+                    <span class="ride-time">12 min away</span>
+                    <span class="ride-price">$28</span>
+                </div>
+                <ul class="ride-features">
+                    <li>Luxury SUV, group ready</li>
+                    <li>Exclusive sneaker access</li>
+                    <li>VIP driver experience</li>
+                </ul>
+                <button class="btn-request">Request Riot XL</button>
+            </div>
+        </div>
+
+        <h2 class="section-title">Drivers Near You</h2>
+        <section class="drivers-section">
+            <div class="drivers-grid">
+                <div class="driver-card">
+                    <div class="driver-header">
+                        <div class="driver-avatar">M</div>
+                        <div class="driver-info">
+                            <h3>Marcus</h3>
+                            <div class="driver-rating">★★★★★ 4.98</div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat">
+                            <span class="stat-value">2,341</span>
+                            <span class="stat-label">Rides</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">3 min</span>
+                            <span class="stat-label">Away</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-card">
+                    <div class="driver-header">
+                        <div class="driver-avatar">K</div>
+                        <div class="driver-info">
+                            <h3>Keiko</h3>
+                            <div class="driver-rating">★★★★★ 5.00</div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat">
+                            <span class="stat-value">1,892</span>
+                            <span class="stat-label">Rides</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">5 min</span>
+                            <span class="stat-label">Away</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-card">
+                    <div class="driver-header">
+                        <div class="driver-avatar">D</div>
+                        <div class="driver-info">
+                            <h3>Devon</h3>
+                            <div class="driver-rating">★★★★★ 4.95</div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat">
+                            <span class="stat-value">3,107</span>
+                            <span class="stat-label">Rides</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">7 min</span>
+                            <span class="stat-label">Away</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-card">
+                    <div class="driver-header">
+                        <div class="driver-avatar">R</div>
+                        <div class="driver-info">
+                            <h3>Rosa</h3>
+                            <div class="driver-rating">★★★★★ 4.99</div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="stat">
+                            <span class="stat-value">2,654</span>
+                            <span class="stat-label">Rides</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">4 min</span>
+                            <span class="stat-label">Away</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="live-map">
+            <div class="map-visual">
+                <div class="map-pin"></div>
+                <div class="map-pin"></div>
+                <div class="route-line"></div>
+            </div>
+            <div class="map-info">
+                <h2>Live Route</h2>
+                <div class="route-detail">
+                    <strong>Distance</strong>
+                    <span>4.2 miles</span>
+                </div>
+                <div class="route-detail">
+                    <strong>Est. Time</strong>
+                    <span>14 minutes</span>
+                </div>
+                <div class="route-detail">
+                    <strong>Traffic</strong>
+                    <span>Light congestion</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h4>Ride</h4>
+                <ul>
+                    <li><a href="#" tabindex="0">Request a Ride</a></li>
+                    <li><a href="#" tabindex="0">Schedule Pickup</a></li>
+                    <li><a href="#" tabindex="0">Corporate Accounts</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#" tabindex="0">Product Drops</a></li>
+                    <li><a href="#" tabindex="0">Exclusive Merch</a></li>
+                    <li><a href="#" tabindex="0">Rewards Store</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Drive</h4>
+                <ul>
+                    <li><a href="#" tabindex="0">Become a Driver</a></li>
+                    <li><a href="#" tabindex="0">Driver Resources</a></li>
+                    <li><a href="#" tabindex="0">Earnings</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#" tabindex="0">About Riot Hub</a></li>
+                    <li><a href="#" tabindex="0">Safety Standards</a></li>
+                    <li><a href="#" tabindex="0">Contact Support</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 40;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? 'Light' : 'Dark';
+        });
+    })();
+    </script>
+</body>
+</html>

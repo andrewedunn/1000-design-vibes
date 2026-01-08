@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch Global - CRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Glitch Global - Crafted for users with international roots
+ABOUTME: A grunge-inspired CRM interface for nonprofit organizations managing international contacts, donations, and volunteer coordination. Features distressed textures, digital glitch effects, and a raw aesthetic that reflects grassroots activism.
+
+CSS VARIABLES:
+--color-primary: #00ff88 (neon green accent)
+--color-background: #0d0d0d / #f5f5f0 (dark/light)
+--color-surface: #1a1a1a / #ffffff (elevated surfaces)
+--color-text: #e0e0e0 / #1a1a1a (main text)
+--color-text-muted: #888888 / #666666 (secondary text)
+--font-heading: 'Space Mono', monospace (edgy, digital)
+--font-body: 'Inter', sans-serif (readable)
+--space-unit: 8px
+--radius-default: 2px (harsh edges)
+--shadow-default: glitch-style with RGB split
+
+DESIGN RATIONALE:
+The grunge aesthetic is expressed through distressed borders, noise textures, and glitch effects that give the interface a raw, activist feel. The monospace heading font and neon green accents evoke early internet/hacker culture while maintaining professional functionality. The CRM displays donor lists, volunteer tracking, campaign management, and international contact database with timezone awareness. Both light and dark modes preserve the edgy, distressed aesthetic while maintaining WCAG AA accessibility standards.
+-->
+
+<style>
+:root {
+    --color-primary: #00ff88;
+    --color-primary-dim: #00cc6a;
+    --color-background: #0d0d0d;
+    --color-surface: #1a1a1a;
+    --color-surface-elevated: #252525;
+    --color-text: #e0e0e0;
+    --color-text-muted: #888888;
+    --color-border: #333333;
+    --color-danger: #ff3366;
+    --color-warning: #ffaa00;
+    --color-info: #00ccff;
+    --font-heading: 'Space Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: 2px 2px 0 rgba(0, 255, 136, 0.3), -2px -2px 0 rgba(255, 51, 102, 0.3);
+}
+
+[data-theme="light"] {
+    --color-background: #f5f5f0;
+    --color-surface: #ffffff;
+    --color-surface-elevated: #fafafa;
+    --color-text: #1a1a1a;
+    --color-text-muted: #666666;
+    --color-border: #d0d0d0;
+    --shadow-default: 2px 2px 0 rgba(0, 153, 102, 0.4), -2px -2px 0 rgba(204, 41, 82, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Noise texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    z-index: 9999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E");
+}
+
+.app-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--color-surface);
+    border-right: 2px solid var(--color-border);
+    padding: calc(var(--space-unit) * 3);
+    position: relative;
+}
+
+.sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -2px;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-primary) 0%, transparent 50%, var(--color-danger) 100%);
+    opacity: 0.5;
+    animation: glitchLine 4s infinite;
+}
+
+@keyframes glitchLine {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(2px); opacity: 0.8; }
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: calc(var(--space-unit) * 4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+.logo::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    top: 0;
+    color: var(--color-danger);
+    opacity: 0.7;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    92% { transform: translate(-2px, 2px); opacity: 0.7; }
+    94% { transform: translate(2px, -2px); opacity: 0.7; }
+}
+
+.nav-section {
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.nav-section-title {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1.5);
+    padding: calc(var(--space-unit) * 1.5);
+    margin-bottom: calc(var(--space-unit));
+    color: var(--color-text);
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-default);
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.nav-item:hover {
+    border-color: var(--color-border);
+    background: var(--color-surface-elevated);
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--color-border);
+}
+
+.nav-item.active {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: var(--shadow-default);
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main Content */
+.main-content {
+    padding: calc(var(--space-unit) * 4);
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 4);
+    padding-bottom: calc(var(--space-unit) * 3);
+    border-bottom: 2px dashed var(--color-border);
+}
+
+.header-left h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit));
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: var(--radius-default);
+    position: relative;
+}
+
+.btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 3px 3px 0 var(--color-border);
+}
+
+.btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    box-shadow: 3px 3px 0 var(--color-primary-dim);
+}
+
+.theme-toggle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-default);
+    transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 2px 2px 0 var(--color-border);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: calc(var(--space-unit) * 3);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--stat-color, var(--color-primary));
+}
+
+.stat-card.donors::before { --stat-color: var(--color-primary); }
+.stat-card.volunteers::before { --stat-color: var(--color-info); }
+.stat-card.campaigns::before { --stat-color: var(--color-warning); }
+.stat-card.impact::before { --stat-color: var(--color-danger); }
+
+.stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+    margin-bottom: calc(var(--space-unit));
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.stat-change {
+    font-size: 12px;
+    color: var(--color-primary);
+}
+
+.stat-change.negative {
+    color: var(--color-danger);
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: calc(var(--space-unit) * 3);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--space-unit) * 3);
+    padding-bottom: calc(var(--space-unit) * 2);
+    border-bottom: 1px dashed var(--color-border);
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text);
+}
+
+.card-action {
+    font-size: 12px;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+}
+
+.card-action:hover {
+    text-decoration: underline;
+}
+
+/* Contact Table */
+.contact-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.contact-table thead {
+    background: var(--color-surface-elevated);
+}
+
+.contact-table th {
+    padding: calc(var(--space-unit) * 1.5);
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.contact-table td {
+    padding: calc(var(--space-unit) * 2);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+}
+
+.contact-table tbody tr {
+    transition: background 0.2s;
+}
+
+.contact-table tbody tr:hover {
+    background: var(--color-surface-elevated);
+}
+
+.contact-name {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.contact-email {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.badge {
+    display: inline-block;
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+    border-radius: var(--radius-default);
+    font-size: 10px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    border: 1px solid;
+}
+
+.badge.donor {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.badge.volunteer {
+    background: rgba(0, 204, 255, 0.1);
+    color: var(--color-info);
+    border-color: var(--color-info);
+}
+
+.badge.partner {
+    background: rgba(255, 170, 0, 0.1);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.timezone {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+}
+
+/* Activity Feed */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.activity-item {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    padding: calc(var(--space-unit) * 2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    transition: all 0.2s;
+}
+
+.activity-item:hover {
+    border-color: var(--color-primary);
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--color-border);
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+    border: 2px solid;
+}
+
+.activity-icon.donation {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.activity-icon.volunteer {
+    background: rgba(0, 204, 255, 0.1);
+    color: var(--color-info);
+    border-color: var(--color-info);
+}
+
+.activity-icon.campaign {
+    background: rgba(255, 170, 0, 0.1);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 14px;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.activity-meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+/* Campaign List */
+.campaign-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.campaign-item {
+    padding: calc(var(--space-unit) * 2);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-default);
+}
+
+.campaign-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.campaign-name {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.campaign-status {
+    font-size: 10px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+    border-radius: var(--radius-default);
+    border: 1px solid;
+}
+
+.campaign-status.active {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.campaign-status.planning {
+    background: rgba(255, 170, 0, 0.1);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.campaign-progress {
+    margin-top: calc(var(--space-unit));
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-border);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: var(--radius-default);
+    position: relative;
+    transition: width 0.3s;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: calc(var(--space-unit) * 0.5);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .main-content {
+        padding: calc(var(--space-unit) * 2);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-table {
+        font-size: 12px;
+    }
+
+    .contact-table th,
+    .contact-table td {
+        padding: calc(var(--space-unit));
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+button:focus,
+a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+</style>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" data-text="GLITCH/GLOBAL">GLITCH/GLOBAL</div>
+
+        <nav>
+            <div class="nav-section">
+                <div class="nav-section-title">Core</div>
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon">●</span>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">◆</span>
+                    Contacts
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">▲</span>
+                    Donations
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">■</span>
+                    Volunteers
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Campaigns</div>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">✦</span>
+                    Active
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">◇</span>
+                    Archive
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">○</span>
+                    Analytics
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">System</div>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⚙</span>
+                    Settings
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">?</span>
+                    Help
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <h1>Dashboard</h1>
+                <p class="header-subtitle">International Impact Overview</p>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-primary">+ New Contact</button>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span style="font-size: 20px;">◐</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card donors">
+                <div class="stat-label">Active Donors</div>
+                <div class="stat-value">2,847</div>
+                <div class="stat-change">↑ 12.3% this month</div>
+            </div>
+            <div class="stat-card volunteers">
+                <div class="stat-label">Volunteers</div>
+                <div class="stat-value">1,492</div>
+                <div class="stat-change">↑ 8.7% this month</div>
+            </div>
+            <div class="stat-card campaigns">
+                <div class="stat-label">Active Campaigns</div>
+                <div class="stat-value">18</div>
+                <div class="stat-change">→ No change</div>
+            </div>
+            <div class="stat-card impact">
+                <div class="stat-label">Countries Reached</div>
+                <div class="stat-value">67</div>
+                <div class="stat-change">↑ 3 new regions</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Contact Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Contacts</h2>
+                    <a href="#" class="card-action">View All →</a>
+                </div>
+                <table class="contact-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                            <th>Last Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Maria Rodriguez</div>
+                                <div class="contact-email">maria.r@email.com</div>
+                            </td>
+                            <td>
+                                <div>Buenos Aires, AR</div>
+                                <div class="timezone">GMT-3</div>
+                            </td>
+                            <td><span class="badge donor">Donor</span></td>
+                            <td>2 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Kwame Osei</div>
+                                <div class="contact-email">k.osei@email.com</div>
+                            </td>
+                            <td>
+                                <div>Accra, GH</div>
+                                <div class="timezone">GMT+0</div>
+                            </td>
+                            <td><span class="badge volunteer">Volunteer</span></td>
+                            <td>5 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Yuki Tanaka</div>
+                                <div class="contact-email">yuki.t@email.com</div>
+                            </td>
+                            <td>
+                                <div>Tokyo, JP</div>
+                                <div class="timezone">GMT+9</div>
+                            </td>
+                            <td><span class="badge partner">Partner</span></td>
+                            <td>1 day ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Sofia Andersson</div>
+                                <div class="contact-email">sofia.a@email.com</div>
+                            </td>
+                            <td>
+                                <div>Stockholm, SE</div>
+                                <div class="timezone">GMT+1</div>
+                            </td>
+                            <td><span class="badge donor">Donor</span></td>
+                            <td>1 day ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Ahmed Hassan</div>
+                                <div class="contact-email">ahmed.h@email.com</div>
+                            </td>
+                            <td>
+                                <div>Cairo, EG</div>
+                                <div class="timezone">GMT+2</div>
+                            </td>
+                            <td><span class="badge volunteer">Volunteer</span></td>
+                            <td>2 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="contact-name">Priya Sharma</div>
+                                <div class="contact-email">priya.s@email.com</div>
+                            </td>
+                            <td>
+                                <div>Mumbai, IN</div>
+                                <div class="timezone">GMT+5:30</div>
+                            </td>
+                            <td><span class="badge partner">Partner</span></td>
+                            <td>3 days ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Activity</h2>
+                    <a href="#" class="card-action">View All →</a>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon donation">$</div>
+                        <div class="activity-content">
+                            <div class="activity-title">New Donation</div>
+                            <div class="activity-meta">Maria Rodriguez • $500 • 2h ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon volunteer">✓</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Volunteer Signup</div>
+                            <div class="activity-meta">Kwame Osei • Water Project • 5h ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon campaign">◆</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Campaign Milestone</div>
+                            <div class="activity-meta">Education Fund • 75% reached • 8h ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon donation">$</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Monthly Donation</div>
+                            <div class="activity-meta">Sofia Andersson • $250 • 1d ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon volunteer">✓</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Event RSVP</div>
+                            <div class="activity-meta">Ahmed Hassan • Fundraiser Gala • 2d ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Active Campaigns</h2>
+                <a href="#" class="card-action">Manage Campaigns →</a>
+            </div>
+            <div class="campaign-list">
+                <div class="campaign-item">
+                    <div class="campaign-header">
+                        <div class="campaign-name">Global Education Fund 2026</div>
+                        <div class="campaign-status active">Active</div>
+                    </div>
+                    <div class="campaign-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                        <div class="progress-label">
+                            <span>$78,340 raised</span>
+                            <span>$100,000 goal</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <div class="campaign-header">
+                        <div class="campaign-name">Clean Water Initiative - West Africa</div>
+                        <div class="campaign-status active">Active</div>
+                    </div>
+                    <div class="campaign-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <div class="progress-label">
+                            <span>$22,500 raised</span>
+                            <span>$50,000 goal</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <div class="campaign-header">
+                        <div class="campaign-name">Refugee Support Network</div>
+                        <div class="campaign-status planning">Planning</div>
+                    </div>
+                    <div class="campaign-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 12%"></div>
+                        </div>
+                        <div class="progress-label">
+                            <span>$8,950 raised</span>
+                            <span>$75,000 goal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? null : 'light';
+
+    if (newTheme) {
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    } else {
+        html.removeAttribute('data-theme');
+        localStorage.removeItem('theme');
+    }
+}
+
+// Load saved theme
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+// Navigation Script
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 15;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

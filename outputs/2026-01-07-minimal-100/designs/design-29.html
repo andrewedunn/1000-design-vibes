@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastion Graphite - The flat way to developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Bastion Graphite - The flat way to developer
+        ABOUTME: A grunge-inspired podcast directory for developers featuring distressed aesthetics,
+        layered textures, and raw typography while maintaining trustworthy information architecture.
+
+        CSS VARIABLES:
+        --color-primary: #2a2a2a (charcoal black for grunge contrast)
+        --color-background: #e8e4dc (off-white newsprint)
+        --color-surface: #f5f3ee (lighter surface for cards)
+        --color-text: #1a1a1a (near black)
+        --color-text-muted: #666666 (muted gray)
+        --color-accent: #d4423a (distressed red for highlights)
+        --font-heading: 'Bebas Neue' (bold grunge display)
+        --font-body: 'Courier Prime' (typewriter aesthetic)
+        --font-special: 'Special Elite' (distressed typewriter)
+        --space-unit: 1rem
+        --radius-default: 0 (sharp edges for grunge)
+        --shadow-default: none (flat grunge aesthetic)
+
+        DESIGN RATIONALE:
+        Grunge aesthetic with developer podcast focus. Used distressed typography (Bebas Neue, Special Elite),
+        layered elements with torn edges via clip-path, noise textures, and a newsprint color palette.
+        Despite the raw aesthetic, information hierarchy remains clear and trustworthy with organized
+        categories, search functionality, and structured podcast listings. The "flat" tagline is honored
+        through absence of gradients and shadows while maintaining textural depth through patterns.
+        */
+
+        :root {
+            --color-primary: #2a2a2a;
+            --color-background: #e8e4dc;
+            --color-surface: #f5f3ee;
+            --color-text: #1a1a1a;
+            --color-text-muted: #666666;
+            --color-accent: #d4423a;
+            --font-heading: 'Bebas Neue', sans-serif;
+            --font-body: 'Courier Prime', monospace;
+            --font-special: 'Special Elite', cursive;
+            --space-unit: 1rem;
+            --radius-default: 0;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Grunge noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        /* Additional paper texture */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 20% 50%, transparent 0%, rgba(0,0,0,0.02) 100%);
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 2);
+        }
+
+        /* Header with torn edge */
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            padding: calc(var(--space-unit) * 2) 0;
+            position: relative;
+            clip-path: polygon(
+                0 0, 100% 0, 100% 100%,
+                98% 98%, 95% 100%, 92% 97%,
+                88% 99%, 85% 96%, 80% 98%,
+                75% 97%, 70% 99%, 65% 96%,
+                60% 98%, 55% 97%, 50% 99%,
+                45% 97%, 40% 98%, 35% 96%,
+                30% 99%, 25% 97%, 20% 98%,
+                15% 96%, 10% 99%, 5% 97%,
+                2% 98%, 0 100%
+            );
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.02) 20px
+            );
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: relative;
+            line-height: 0.9;
+        }
+
+        .tagline {
+            font-family: var(--font-special);
+            font-size: 1.1rem;
+            color: var(--color-accent);
+            margin-top: calc(var(--space-unit) * 0.5);
+            letter-spacing: 0.02em;
+        }
+
+        /* Search bar with distressed border */
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border: 3px solid var(--color-surface);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--color-text);
+            position: relative;
+            clip-path: polygon(
+                0 0, 99% 0, 100% 5%, 100% 95%,
+                99% 100%, 1% 100%, 0 98%, 0 2%
+            );
+        }
+
+        .search-input:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Category tabs with grunge style */
+        .categories {
+            display: flex;
+            gap: calc(var(--space-unit) * 0.5);
+            flex-wrap: wrap;
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding: calc(var(--space-unit) * 1) 0;
+            border-top: 4px solid var(--color-primary);
+            border-bottom: 4px solid var(--color-primary);
+            position: relative;
+        }
+
+        .categories::before {
+            content: 'CATEGORIES';
+            position: absolute;
+            top: -1.5rem;
+            left: 0;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            background-color: var(--color-background);
+            padding: 0 calc(var(--space-unit) * 0.5);
+        }
+
+        .category-btn {
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            background-color: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            color: var(--color-text);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            transform: translate(-2px, -2px);
+        }
+
+        .category-btn:focus {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Featured section with layered look */
+        .featured {
+            margin-bottom: calc(var(--space-unit) * 4);
+            position: relative;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 2);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--color-accent);
+            clip-path: polygon(
+                0 0, 2% 50%, 5% 0, 8% 100%,
+                12% 0, 15% 80%, 20% 0, 25% 60%,
+                30% 0, 35% 90%, 40% 0, 45% 70%,
+                50% 0, 55% 85%, 60% 0, 65% 65%,
+                70% 0, 75% 95%, 80% 0, 85% 75%,
+                90% 0, 95% 100%, 98% 0, 100% 50%,
+                100% 100%, 0 100%
+            );
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        /* Podcast cards with torn edges */
+        .podcast-card {
+            background-color: var(--color-surface);
+            border: 3px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5);
+            position: relative;
+            clip-path: polygon(
+                0 0, 100% 0, 100% 2%, 98% 4%,
+                100% 6%, 100% 94%, 98% 96%,
+                100% 98%, 100% 100%, 0 100%,
+                0 98%, 2% 96%, 0 94%, 0 6%,
+                2% 4%, 0 2%
+            );
+            transition: transform 0.2s ease;
+        }
+
+        .podcast-card:hover {
+            transform: translate(-3px, -3px);
+        }
+
+        .podcast-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 15px,
+                rgba(0,0,0,0.01) 15px,
+                rgba(0,0,0,0.01) 30px
+            );
+            pointer-events: none;
+        }
+
+        .podcast-thumbnail {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-text-muted) 100%);
+            margin-bottom: calc(var(--space-unit) * 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--color-surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .podcast-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px);
+        }
+
+        .podcast-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+        }
+
+        .podcast-host {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 0.75);
+            font-style: italic;
+        }
+
+        .podcast-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .podcast-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            border-top: 2px dashed var(--color-text-muted);
+            padding-top: calc(var(--space-unit) * 0.75);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.3);
+        }
+
+        /* Episode listings */
+        .episodes-section {
+            margin-top: calc(var(--space-unit) * 4);
+        }
+
+        .episode-list {
+            list-style: none;
+        }
+
+        .episode-item {
+            background-color: var(--color-surface);
+            border-left: 6px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 1.5);
+            position: relative;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: calc(var(--space-unit) * 1.5);
+            align-items: start;
+        }
+
+        .episode-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                180deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.01) 2px,
+                rgba(0,0,0,0.01) 4px
+            );
+            pointer-events: none;
+        }
+
+        .episode-number {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--color-accent);
+            line-height: 1;
+            min-width: 60px;
+        }
+
+        .episode-content {
+            flex: 1;
+        }
+
+        .episode-title {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: calc(var(--space-unit) * 0.3);
+        }
+
+        .episode-show {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .episode-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .episode-duration {
+            font-family: var(--font-special);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        /* Play button */
+        .play-btn {
+            background-color: var(--color-accent);
+            color: var(--color-surface);
+            border: none;
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .play-btn:hover {
+            background-color: var(--color-primary);
+            transform: translate(-2px, -2px);
+        }
+
+        .play-btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: calc(var(--space-unit) * 6);
+            padding: calc(var(--space-unit) * 3) 0;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            text-align: center;
+            clip-path: polygon(
+                0 0, 5% 3%, 10% 1%, 15% 4%,
+                20% 2%, 25% 3%, 30% 1%, 35% 4%,
+                40% 2%, 45% 3%, 50% 1%, 55% 4%,
+                60% 2%, 65% 3%, 70% 1%, 75% 4%,
+                80% 2%, 85% 4%, 90% 1%, 95% 3%,
+                100% 2%, 100% 100%, 0 100%
+            );
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-container {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .episode-item {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space-unit) * 1);
+            }
+
+            .episode-number {
+                min-width: auto;
+            }
+
+            .episode-duration {
+                align-self: flex-start;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        *:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1>Bastion Graphite</h1>
+                    <div class="tagline">The flat way to developer</div>
+                </div>
+                <div class="search-container">
+                    <input
+                        type="search"
+                        class="search-input"
+                        placeholder="Search podcasts, episodes, hosts..."
+                        aria-label="Search podcasts"
+                    >
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Categories -->
+        <nav class="categories" aria-label="Podcast categories">
+            <button class="category-btn active">All Shows</button>
+            <button class="category-btn">Web Dev</button>
+            <button class="category-btn">Systems</button>
+            <button class="category-btn">Mobile</button>
+            <button class="category-btn">DevOps</button>
+            <button class="category-btn">Architecture</button>
+            <button class="category-btn">Career</button>
+            <button class="category-btn">Languages</button>
+        </nav>
+
+        <!-- Featured Podcasts -->
+        <section class="featured">
+            <h2 class="section-title">Featured Shows</h2>
+            <div class="featured-grid">
+                <article class="podcast-card">
+                    <div class="podcast-thumbnail" aria-hidden="true">CP</div>
+                    <h3 class="podcast-title">Code & Pixels</h3>
+                    <p class="podcast-host">Hosted by Sarah Chen</p>
+                    <p class="podcast-description">
+                        Deep dives into frontend architecture, performance optimization, and the art of building beautiful user interfaces that scale.
+                    </p>
+                    <div class="podcast-meta">
+                        <span class="meta-item">
+                            <span aria-label="Episodes">EP:</span> 142
+                        </span>
+                        <span class="meta-item">
+                            <span aria-label="Subscribers">SUB:</span> 45K
+                        </span>
+                        <span class="meta-item">Weekly</span>
+                    </div>
+                </article>
+
+                <article class="podcast-card">
+                    <div class="podcast-thumbnail" aria-hidden="true">RC</div>
+                    <h3 class="podcast-title">Rust Chronicles</h3>
+                    <p class="podcast-host">Hosted by Marcus Webb</p>
+                    <p class="podcast-description">
+                        Systems programming, memory safety, and why Rust is changing how we think about performance-critical applications.
+                    </p>
+                    <div class="podcast-meta">
+                        <span class="meta-item">
+                            <span aria-label="Episodes">EP:</span> 89
+                        </span>
+                        <span class="meta-item">
+                            <span aria-label="Subscribers">SUB:</span> 38K
+                        </span>
+                        <span class="meta-item">Bi-weekly</span>
+                    </div>
+                </article>
+
+                <article class="podcast-card">
+                    <div class="podcast-thumbnail" aria-hidden="true">DD</div>
+                    <h3 class="podcast-title">Debug Diaries</h3>
+                    <p class="podcast-host">Hosted by Alex Kumar & Jen Rodriguez</p>
+                    <p class="podcast-description">
+                        Real war stories from production incidents, debugging nightmares, and the lessons learned from shipping code at scale.
+                    </p>
+                    <div class="podcast-meta">
+                        <span class="meta-item">
+                            <span aria-label="Episodes">EP:</span> 201
+                        </span>
+                        <span class="meta-item">
+                            <span aria-label="Subscribers">SUB:</span> 62K
+                        </span>
+                        <span class="meta-item">Weekly</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Recent Episodes -->
+        <section class="episodes-section">
+            <h2 class="section-title">Recent Episodes</h2>
+            <ul class="episode-list">
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#142</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">Building a Design System That Developers Actually Use</h3>
+                        <p class="episode-show">Code & Pixels</p>
+                        <p class="episode-description">
+                            Sarah sits down with the team from Linear to discuss how they built a design system that balances consistency with developer flexibility. Topics include component APIs, documentation strategies, and getting buy-in from engineering teams.
+                        </p>
+                    </div>
+                    <span class="episode-duration">52 min</span>
+                </li>
+
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#89</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">Async Rust: When and Why</h3>
+                        <p class="episode-show">Rust Chronicles</p>
+                        <p class="episode-description">
+                            Marcus explores the async runtime ecosystem in Rust, comparing Tokio and async-std, and diving into when async makes sense versus traditional threaded approaches. Includes real-world benchmarks and production insights.
+                        </p>
+                    </div>
+                    <span class="episode-duration">1h 8m</span>
+                </li>
+
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#201</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">The Great Database Migration of 2025</h3>
+                        <p class="episode-show">Debug Diaries</p>
+                        <p class="episode-description">
+                            Alex and Jen interview the infrastructure team at Notion about their multi-year journey migrating from PostgreSQL to a distributed database. Zero-downtime strategies, rollback plans, and what went wrong (spoiler: a lot).
+                        </p>
+                    </div>
+                    <span class="episode-duration">1h 22m</span>
+                </li>
+
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#140</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">CSS Grid vs Flexbox in 2026: The Final Word</h3>
+                        <p class="episode-show">Code & Pixels</p>
+                        <p class="episode-description">
+                            After years of debate, Sarah breaks down exactly when to use Grid versus Flexbox, including modern browser support, performance considerations, and real layout patterns from production applications.
+                        </p>
+                    </div>
+                    <span class="episode-duration">38 min</span>
+                </li>
+
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#87</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">Memory Safety Without Garbage Collection</h3>
+                        <p class="episode-show">Rust Chronicles</p>
+                        <p class="episode-description">
+                            Marcus dives deep into Rust's ownership model, exploring how it achieves memory safety without runtime overhead. Includes comparisons with C++, Go, and discussions on when manual memory management still makes sense.
+                        </p>
+                    </div>
+                    <span class="episode-duration">56 min</span>
+                </li>
+
+                <li class="episode-item">
+                    <span class="episode-number" aria-label="Episode number">#199</span>
+                    <div class="episode-content">
+                        <h3 class="episode-title">Monitoring Hell: When Observability Broke Observability</h3>
+                        <p class="episode-show">Debug Diaries</p>
+                        <p class="episode-description">
+                            The team shares stories of when their monitoring systems became the problem, from runaway log ingestion costs to metrics systems that brought down production. Plus, practical tips for sustainable observability.
+                        </p>
+                    </div>
+                    <span class="episode-duration">1h 15m</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Bastion Graphite &copy; 2026 - A podcast directory for developers who build.</p>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 29;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

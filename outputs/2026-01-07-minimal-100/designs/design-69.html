@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Prime - A flat approach meets international sensibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Static Prime - A flat approach meets international sensibility
+ABOUTME: A healthcare-focused grade book interface combining Web 2.0 glossy aesthetics with an edgy, clinical dark theme. Features glossy buttons, subtle gradients, and reflective surfaces typical of mid-2000s design while maintaining professional medical education context.
+
+CSS VARIABLES:
+--color-primary: #00d9ff (electric cyan - medical tech aesthetic)
+--color-background: #0a0e14 (deep charcoal)
+--color-surface: #151b24 (elevated dark surface)
+--color-text: #e8ecf1 (cool white)
+--color-text-muted: #7a8694 (muted blue-grey)
+--font-heading: 'Rajdhani' (angular, technical feel)
+--font-body: 'Roboto' (clean, medical-grade readability)
+--space-unit: 8px
+--radius-default: 6px
+--shadow-default: 0 4px 12px rgba(0,0,0,0.4)
+
+DESIGN RATIONALE:
+Combines healthcare's need for precision and clarity with Web 2.0's glossy, reflective aesthetic. The grade book displays clinical rotation scores, patient care assessments, and medical competencies. Electric cyan creates an edgy, technological feel while maintaining professional credibility. Glossy buttons and subtle gradients reference the era while dark mode reduces eye strain during long grading sessions. The layout prioritizes quick scanning of student performance across multiple clinical metrics.
+-->
+
+<style>
+:root {
+    --color-primary: #00d9ff;
+    --color-primary-dark: #00a8cc;
+    --color-background: #0a0e14;
+    --color-surface: #151b24;
+    --color-surface-elevated: #1d2531;
+    --color-text: #e8ecf1;
+    --color-text-muted: #7a8694;
+    --color-border: #2a3441;
+    --color-success: #00ff88;
+    --color-warning: #ffaa00;
+    --color-danger: #ff3366;
+    --font-heading: 'Rajdhani', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 6px;
+    --shadow-default: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-glossy: 0 1px 0 rgba(255,255,255,0.1) inset, 0 4px 12px rgba(0,0,0,0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(180deg, #1d2531 0%, #151b24 100%);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+}
+
+.header-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 20px;
+    color: #000;
+    box-shadow: var(--shadow-glossy);
+    position: relative;
+}
+
+.logo-icon::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 8px;
+    right: 8px;
+    height: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 3px 3px 0 0;
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--color-text);
+}
+
+.logo-text p {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.header-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 1.5);
+    align-items: center;
+}
+
+.user-info {
+    text-align: right;
+    margin-right: calc(var(--space-unit) * 2);
+}
+
+.user-name {
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: 13px;
+}
+
+.user-role {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+/* Glossy Buttons */
+.btn {
+    padding: calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 2.5);
+    border: none;
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #000;
+    box-shadow: var(--shadow-glossy);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(180deg, #2a3441 0%, #1d2531 100%);
+    color: var(--color-text);
+    box-shadow: var(--shadow-glossy);
+}
+
+.btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-1px);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: calc(var(--space-unit) * 3);
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.controls-bar {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-default);
+}
+
+.controls-left {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.control-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.select-glossy {
+    background: linear-gradient(180deg, #1d2531 0%, #151b24 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 1.5);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 6px rgba(0,0,0,0.3);
+    min-width: 180px;
+}
+
+.select-glossy:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.stats-summary {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-unit) * 0.5);
+}
+
+/* Grade Table */
+.grade-table-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    box-shadow: var(--shadow-default);
+}
+
+.grade-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.grade-table thead {
+    background: linear-gradient(180deg, #1d2531 0%, #151b24 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.grade-table th {
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 2);
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 2px solid var(--color-primary);
+    white-space: nowrap;
+}
+
+.grade-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.grade-table th.sortable:hover {
+    color: var(--color-text);
+}
+
+.grade-table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s ease;
+}
+
+.grade-table tbody tr:hover {
+    background: var(--color-surface-elevated);
+}
+
+.grade-table td {
+    padding: calc(var(--space-unit) * 1.75) calc(var(--space-unit) * 2);
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.student-cell {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: #000;
+    box-shadow: 0 2px 8px rgba(0,217,255,0.3);
+    position: relative;
+}
+
+.student-avatar::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 8px;
+    right: 8px;
+    height: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 50% 50% 0 0;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-name {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.student-id {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.grade-badge {
+    display: inline-block;
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    min-width: 50px;
+    background: linear-gradient(180deg, #2a3441 0%, #1d2531 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.grade-badge.excellent {
+    background: linear-gradient(180deg, #00ff88 0%, #00cc6e 100%);
+    color: #000;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 2px 8px rgba(0,255,136,0.3);
+}
+
+.grade-badge.good {
+    background: linear-gradient(180deg, #00d9ff 0%, #00a8cc 100%);
+    color: #000;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 2px 8px rgba(0,217,255,0.3);
+}
+
+.grade-badge.average {
+    background: linear-gradient(180deg, #ffaa00 0%, #cc8800 100%);
+    color: #000;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 2px 8px rgba(255,170,0,0.3);
+}
+
+.grade-badge.poor {
+    background: linear-gradient(180deg, #ff3366 0%, #cc2952 100%);
+    color: #fff;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 2px 8px rgba(255,51,102,0.3);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #0f1419;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3) inset;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    transition: width 0.3s ease;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset;
+}
+
+.actions-cell {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-default);
+    background: linear-gradient(180deg, #2a3441 0%, #1d2531 100%);
+    color: var(--color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.15s ease;
+}
+
+.icon-btn:hover {
+    background: linear-gradient(180deg, #323d4f 0%, #252f3d 100%);
+    transform: translateY(-1px);
+}
+
+.icon-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Footer */
+.footer {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: calc(var(--space-unit) * 2);
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.footer-links {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.footer-links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--color-text);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus styles */
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .controls-bar {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+        align-items: flex-start;
+    }
+
+    .stats-summary {
+        width: 100%;
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: calc(var(--space-unit) * 2);
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .grade-table-container {
+        overflow-x: auto;
+    }
+
+    .grade-table {
+        min-width: 900px;
+    }
+}
+</style>
+
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">SP</div>
+                <div class="logo-text">
+                    <h1>Static Prime</h1>
+                    <p>Healthcare Education Grading System</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="user-info">
+                    <div class="user-name">Dr. Sarah Mitchell</div>
+                    <div class="user-role">Clinical Instructor</div>
+                </div>
+                <button class="btn btn-primary">Export Data</button>
+                <button class="btn btn-secondary">Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="controls-bar">
+            <div class="controls-left">
+                <div class="control-group">
+                    <label class="control-label">Academic Period</label>
+                    <select class="select-glossy">
+                        <option>Fall 2025 - Clinical Rotations</option>
+                        <option>Spring 2025 - Clinical Rotations</option>
+                        <option>Fall 2024 - Clinical Rotations</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Department</label>
+                    <select class="select-glossy">
+                        <option>Internal Medicine</option>
+                        <option>Emergency Medicine</option>
+                        <option>Pediatrics</option>
+                        <option>Surgery</option>
+                        <option>Psychiatry</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Performance Filter</label>
+                    <select class="select-glossy">
+                        <option>All Students</option>
+                        <option>Honors Track</option>
+                        <option>Needs Improvement</option>
+                        <option>At Risk</option>
+                    </select>
+                </div>
+            </div>
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">87.4</div>
+                    <div class="stat-label">Avg Score</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">96%</div>
+                    <div class="stat-label">Pass Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grade-table-container">
+            <table class="grade-table">
+                <thead>
+                    <tr>
+                        <th class="sortable">Student</th>
+                        <th class="sortable">Clinical Skills</th>
+                        <th class="sortable">Patient Care</th>
+                        <th class="sortable">Medical Knowledge</th>
+                        <th class="sortable">Professionalism</th>
+                        <th class="sortable">Overall</th>
+                        <th>Completion</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">JC</div>
+                                <div class="student-info">
+                                    <div class="student-name">James Chen</div>
+                                    <div class="student-id">MED-2024-001</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">94</span></td>
+                        <td><span class="grade-badge excellent">96</span></td>
+                        <td><span class="grade-badge excellent">92</span></td>
+                        <td><span class="grade-badge excellent">98</span></td>
+                        <td><span class="grade-badge excellent">95</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">AP</div>
+                                <div class="student-info">
+                                    <div class="student-name">Aisha Patel</div>
+                                    <div class="student-id">MED-2024-002</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">91</span></td>
+                        <td><span class="grade-badge good">88</span></td>
+                        <td><span class="grade-badge excellent">93</span></td>
+                        <td><span class="grade-badge excellent">95</span></td>
+                        <td><span class="grade-badge excellent">92</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">MR</div>
+                                <div class="student-info">
+                                    <div class="student-name">Marcus Rodriguez</div>
+                                    <div class="student-id">MED-2024-003</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge good">85</span></td>
+                        <td><span class="grade-badge good">87</span></td>
+                        <td><span class="grade-badge good">89</span></td>
+                        <td><span class="grade-badge excellent">92</span></td>
+                        <td><span class="grade-badge good">88</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">EK</div>
+                                <div class="student-info">
+                                    <div class="student-name">Emma Kowalski</div>
+                                    <div class="student-id">MED-2024-004</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">93</span></td>
+                        <td><span class="grade-badge excellent">91</span></td>
+                        <td><span class="grade-badge excellent">95</span></td>
+                        <td><span class="grade-badge excellent">97</span></td>
+                        <td><span class="grade-badge excellent">94</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">DW</div>
+                                <div class="student-info">
+                                    <div class="student-name">David Wang</div>
+                                    <div class="student-id">MED-2024-005</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge good">88</span></td>
+                        <td><span class="grade-badge good">84</span></td>
+                        <td><span class="grade-badge good">86</span></td>
+                        <td><span class="grade-badge good">89</span></td>
+                        <td><span class="grade-badge good">87</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">SN</div>
+                                <div class="student-info">
+                                    <div class="student-name">Sophia Nguyen</div>
+                                    <div class="student-id">MED-2024-006</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">96</span></td>
+                        <td><span class="grade-badge excellent">94</span></td>
+                        <td><span class="grade-badge excellent">97</span></td>
+                        <td><span class="grade-badge excellent">99</span></td>
+                        <td><span class="grade-badge excellent">97</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">OA</div>
+                                <div class="student-info">
+                                    <div class="student-name">Omar Ahmed</div>
+                                    <div class="student-id">MED-2024-007</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge average">78</span></td>
+                        <td><span class="grade-badge average">81</span></td>
+                        <td><span class="grade-badge good">85</span></td>
+                        <td><span class="grade-badge good">83</span></td>
+                        <td><span class="grade-badge good">82</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">LT</div>
+                                <div class="student-info">
+                                    <div class="student-name">Lucia Torres</div>
+                                    <div class="student-id">MED-2024-008</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">90</span></td>
+                        <td><span class="grade-badge good">87</span></td>
+                        <td><span class="grade-badge good">88</span></td>
+                        <td><span class="grade-badge excellent">91</span></td>
+                        <td><span class="grade-badge good">89</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">RJ</div>
+                                <div class="student-info">
+                                    <div class="student-name">Ryan Johnson</div>
+                                    <div class="student-id">MED-2024-009</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge good">86</span></td>
+                        <td><span class="grade-badge good">89</span></td>
+                        <td><span class="grade-badge good">84</span></td>
+                        <td><span class="grade-badge good">87</span></td>
+                        <td><span class="grade-badge good">87</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">IK</div>
+                                <div class="student-info">
+                                    <div class="student-name">Isabella Kim</div>
+                                    <div class="student-id">MED-2024-010</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge excellent">92</span></td>
+                        <td><span class="grade-badge excellent">90</span></td>
+                        <td><span class="grade-badge excellent">94</span></td>
+                        <td><span class="grade-badge excellent">96</span></td>
+                        <td><span class="grade-badge excellent">93</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">TM</div>
+                                <div class="student-info">
+                                    <div class="student-name">Tyler Martinez</div>
+                                    <div class="student-id">MED-2024-011</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge average">76</span></td>
+                        <td><span class="grade-badge average">79</span></td>
+                        <td><span class="grade-badge average">77</span></td>
+                        <td><span class="grade-badge good">82</span></td>
+                        <td><span class="grade-badge average">79</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <div class="student-avatar">NL</div>
+                                <div class="student-info">
+                                    <div class="student-name">Nina Larsen</div>
+                                    <div class="student-id">MED-2024-012</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="grade-badge good">88</span></td>
+                        <td><span class="grade-badge good">86</span></td>
+                        <td><span class="grade-badge good">90</span></td>
+                        <td><span class="grade-badge excellent">93</span></td>
+                        <td><span class="grade-badge good">89</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 98%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="icon-btn" aria-label="View details">📊</button>
+                                <button class="icon-btn" aria-label="Add note">📝</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>&copy; 2025 Static Prime Healthcare Education System</div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">FERPA Compliance</a>
+                <a href="#">Technical Support</a>
+                <a href="#">Documentation</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 69;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solid Slate - Medical Chart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+DESIGN: Solid Slate - Art nouveau-inspired design for users
+ABOUTME: A medical chart interface that blends clinical functionality with art nouveau's organic elegance. Features flowing decorative borders, botanical accents, and curved typography while maintaining the clarity and precision required for medical data visualization.
+
+CSS VARIABLES:
+--color-primary: #2d5f4f (deep sage green, evoking both medical/healing and natural art nouveau themes)
+--color-secondary: #8b6f47 (warm bronze, art nouveau metalwork)
+--color-accent: #c9a875 (gold highlight)
+--color-background: #faf8f5 (warm cream, reminiscent of aged medical parchment)
+--color-surface: #ffffff (clean white for data clarity)
+--color-text: #2c3e3a (deep forest text)
+--color-text-muted: #6b7f7a (muted sage)
+--color-border: #d4c4b0 (soft taupe border)
+--font-heading: 'Spectral', serif (elegant serif with art nouveau feel)
+--font-body: 'Crimson Text', serif (readable serif for medical data)
+--space-unit: 8px
+--radius-default: 12px
+--shadow-default: 0 2px 8px rgba(45, 95, 79, 0.08)
+
+DESIGN RATIONALE:
+Art nouveau's emphasis on natural forms and flowing lines creates an unexpectedly harmonious pairing with medical charts. The design uses botanical motifs and organic curves in decorative elements while maintaining strict data hierarchy and readability. Sage green serves dual duty as both a healing/medical color and a natural art nouveau palette base. Typography choices balance elegance with legibility. The layout uses asymmetric art nouveau composition principles while ensuring clinical information remains accessible and scannable.
+-->
+
+<style>
+    :root {
+        --color-primary: #2d5f4f;
+        --color-secondary: #8b6f47;
+        --color-accent: #c9a875;
+        --color-background: #faf8f5;
+        --color-surface: #ffffff;
+        --color-text: #2c3e3a;
+        --color-text-muted: #6b7f7a;
+        --color-border: #d4c4b0;
+        --color-critical: #9a4444;
+        --color-warning: #b8883d;
+        --color-normal: #5a8272;
+        --font-heading: 'Spectral', serif;
+        --font-body: 'Crimson Text', serif;
+        --space-unit: 8px;
+        --radius-default: 12px;
+        --shadow-default: 0 2px 8px rgba(45, 95, 79, 0.08);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    /* Art Nouveau Decorative Border */
+    .page-frame {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1000;
+    }
+
+    .frame-corner {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border: 2px solid var(--color-primary);
+        opacity: 0.3;
+    }
+
+    .frame-corner.top-left {
+        top: calc(var(--space-unit) * 2);
+        left: calc(var(--space-unit) * 2);
+        border-right: none;
+        border-bottom: none;
+        border-top-left-radius: 60px;
+    }
+
+    .frame-corner.top-right {
+        top: calc(var(--space-unit) * 2);
+        right: calc(var(--space-unit) * 2);
+        border-left: none;
+        border-bottom: none;
+        border-top-right-radius: 60px;
+    }
+
+    .frame-corner.bottom-left {
+        bottom: calc(var(--space-unit) * 2);
+        left: calc(var(--space-unit) * 2);
+        border-right: none;
+        border-top: none;
+        border-bottom-left-radius: 60px;
+    }
+
+    .frame-corner.bottom-right {
+        bottom: calc(var(--space-unit) * 2);
+        right: calc(var(--space-unit) * 2);
+        border-left: none;
+        border-top: none;
+        border-bottom-right-radius: 60px;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: calc(var(--space-unit) * 4);
+    }
+
+    /* Header with Art Nouveau Styling */
+    .header {
+        text-align: center;
+        margin-bottom: calc(var(--space-unit) * 6);
+        position: relative;
+    }
+
+    .header::after {
+        content: '';
+        display: block;
+        width: 200px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+        margin: calc(var(--space-unit) * 3) auto 0;
+        opacity: 0.4;
+    }
+
+    .site-title {
+        font-family: var(--font-heading);
+        font-size: 3rem;
+        font-weight: 300;
+        color: var(--color-primary);
+        letter-spacing: 0.05em;
+        margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .site-subtitle {
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+    }
+
+    /* Patient Info Card */
+    .patient-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 4);
+        margin-bottom: calc(var(--space-unit) * 4);
+        box-shadow: var(--shadow-default);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .patient-card::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
+        opacity: 0.03;
+        border-radius: 50%;
+    }
+
+    .patient-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: calc(var(--space-unit) * 3);
+        flex-wrap: wrap;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .patient-name {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .patient-id {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        font-weight: 400;
+    }
+
+    .patient-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: calc(var(--space-unit) * 3);
+        margin-top: calc(var(--space-unit) * 3);
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+        font-weight: 600;
+    }
+
+    .meta-value {
+        font-size: 1.1rem;
+        color: var(--color-text);
+        font-weight: 400;
+    }
+
+    /* Main Chart Layout */
+    .chart-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: calc(var(--space-unit) * 4);
+        margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    @media (max-width: 968px) {
+        .chart-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Vital Signs Section */
+    .vitals-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 4);
+        box-shadow: var(--shadow-default);
+    }
+
+    .section-title {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        margin-bottom: calc(var(--space-unit) * 3);
+        font-weight: 600;
+        position: relative;
+        padding-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: var(--color-accent);
+        border-radius: 2px;
+    }
+
+    .vitals-grid {
+        display: grid;
+        gap: calc(var(--space-unit) * 3);
+    }
+
+    .vital-item {
+        padding: calc(var(--space-unit) * 2.5);
+        border-left: 3px solid var(--color-border);
+        background: linear-gradient(90deg, rgba(45, 95, 79, 0.02) 0%, transparent 100%);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .vital-item:hover {
+        border-left-color: var(--color-primary);
+        background: linear-gradient(90deg, rgba(45, 95, 79, 0.04) 0%, transparent 100%);
+    }
+
+    .vital-item.critical {
+        border-left-color: var(--color-critical);
+    }
+
+    .vital-item.warning {
+        border-left-color: var(--color-warning);
+    }
+
+    .vital-item.normal {
+        border-left-color: var(--color-normal);
+    }
+
+    .vital-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .vital-name {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    .vital-status {
+        font-size: 0.75rem;
+        padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+        border-radius: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .vital-status.critical {
+        background: rgba(154, 68, 68, 0.1);
+        color: var(--color-critical);
+    }
+
+    .vital-status.warning {
+        background: rgba(184, 136, 61, 0.1);
+        color: var(--color-warning);
+    }
+
+    .vital-status.normal {
+        background: rgba(90, 130, 114, 0.1);
+        color: var(--color-normal);
+    }
+
+    .vital-value {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        color: var(--color-text);
+        font-weight: 600;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .vital-range {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+    }
+
+    /* Timeline Section */
+    .timeline-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 4);
+        box-shadow: var(--shadow-default);
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: calc(var(--space-unit) * 4);
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
+        opacity: 0.3;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: calc(var(--space-unit) * 4);
+        padding-bottom: calc(var(--space-unit) * 3);
+    }
+
+    .timeline-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: calc(var(--space-unit) * -4.5);
+        top: calc(var(--space-unit) * 0.5);
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--color-surface);
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 0 4px var(--color-background);
+    }
+
+    .timeline-date {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        font-weight: 600;
+        margin-bottom: calc(var(--space-unit) * 1);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .timeline-title {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        color: var(--color-primary);
+        margin-bottom: calc(var(--space-unit) * 1);
+        font-weight: 600;
+    }
+
+    .timeline-description {
+        font-size: 0.95rem;
+        color: var(--color-text);
+        line-height: 1.6;
+    }
+
+    /* Medications & Labs Section */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: calc(var(--space-unit) * 4);
+        margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .info-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 4);
+        box-shadow: var(--shadow-default);
+    }
+
+    .medication-item,
+    .lab-item {
+        padding: calc(var(--space-unit) * 2.5);
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(45, 95, 79, 0.02) 0%, transparent 100%);
+        margin-bottom: calc(var(--space-unit) * 2);
+        border: 1px solid rgba(212, 196, 176, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    .medication-item:hover,
+    .lab-item:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 2px 8px rgba(45, 95, 79, 0.1);
+    }
+
+    .medication-item:last-child,
+    .lab-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .medication-name,
+    .lab-name {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        color: var(--color-text);
+        font-weight: 600;
+        margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .medication-details,
+    .lab-details {
+        display: flex;
+        gap: calc(var(--space-unit) * 3);
+        flex-wrap: wrap;
+    }
+
+    .detail-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+        font-weight: 600;
+    }
+
+    .detail-value {
+        font-size: 0.95rem;
+        color: var(--color-text);
+    }
+
+    /* Notes Section */
+    .notes-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: calc(var(--space-unit) * 4);
+        box-shadow: var(--shadow-default);
+        margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    .note-item {
+        padding: calc(var(--space-unit) * 3);
+        background: rgba(45, 95, 79, 0.02);
+        border-radius: 8px;
+        border-left: 3px solid var(--color-secondary);
+        margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .note-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .note-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: calc(var(--space-unit) * 1.5);
+        flex-wrap: wrap;
+        gap: calc(var(--space-unit) * 2);
+    }
+
+    .note-author {
+        font-weight: 600;
+        color: var(--color-primary);
+    }
+
+    .note-date {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+    }
+
+    .note-content {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: var(--color-text);
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: calc(var(--space-unit) * 4) 0;
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .footer-ornament {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto calc(var(--space-unit) * 2);
+        border: 2px solid var(--color-primary);
+        border-radius: 50%;
+        opacity: 0.3;
+        position: relative;
+    }
+
+    .footer-ornament::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--color-accent);
+        border-radius: 50%;
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    *:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Responsive Typography */
+    @media (max-width: 768px) {
+        .site-title {
+            font-size: 2rem;
+        }
+
+        .patient-name {
+            font-size: 1.5rem;
+        }
+
+        .vital-value {
+            font-size: 1.5rem;
+        }
+
+        .container {
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .frame-corner {
+            width: 60px;
+            height: 60px;
+        }
+    }
+</style>
+
+<div class="page-frame">
+    <div class="frame-corner top-left"></div>
+    <div class="frame-corner top-right"></div>
+    <div class="frame-corner bottom-left"></div>
+    <div class="frame-corner bottom-right"></div>
+</div>
+
+<div class="container">
+    <header class="header">
+        <h1 class="site-title">Solid Slate Medical</h1>
+        <p class="site-subtitle">Patient Care & Records Management</p>
+    </header>
+
+    <div class="patient-card">
+        <div class="patient-header">
+            <div>
+                <h2 class="patient-name">Eleanor Whitmore</h2>
+                <p class="patient-id">Patient ID: WSL-2847-9163</p>
+            </div>
+        </div>
+
+        <div class="patient-meta">
+            <div class="meta-item">
+                <span class="meta-label">Date of Birth</span>
+                <span class="meta-value">March 14, 1968</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Age</span>
+                <span class="meta-value">57 Years</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Blood Type</span>
+                <span class="meta-value">O Positive</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Attending Physician</span>
+                <span class="meta-value">Dr. Amelia Chen</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Admission Date</span>
+                <span class="meta-value">January 3, 2026</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Room</span>
+                <span class="meta-value">3B-408</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-layout">
+        <div class="vitals-section">
+            <h3 class="section-title">Current Vital Signs</h3>
+            <div class="vitals-grid">
+                <div class="vital-item normal">
+                    <div class="vital-header">
+                        <span class="vital-name">Blood Pressure</span>
+                        <span class="vital-status normal">Normal</span>
+                    </div>
+                    <div class="vital-value">118/76 mmHg</div>
+                    <div class="vital-range">Normal range: 90/60 - 120/80</div>
+                </div>
+
+                <div class="vital-item normal">
+                    <div class="vital-header">
+                        <span class="vital-name">Heart Rate</span>
+                        <span class="vital-status normal">Normal</span>
+                    </div>
+                    <div class="vital-value">72 bpm</div>
+                    <div class="vital-range">Normal range: 60 - 100 bpm</div>
+                </div>
+
+                <div class="vital-item warning">
+                    <div class="vital-header">
+                        <span class="vital-name">Temperature</span>
+                        <span class="vital-status warning">Elevated</span>
+                    </div>
+                    <div class="vital-value">99.8°F</div>
+                    <div class="vital-range">Normal range: 97.8°F - 99.1°F</div>
+                </div>
+
+                <div class="vital-item normal">
+                    <div class="vital-header">
+                        <span class="vital-name">Respiratory Rate</span>
+                        <span class="vital-status normal">Normal</span>
+                    </div>
+                    <div class="vital-value">16 /min</div>
+                    <div class="vital-range">Normal range: 12 - 20 /min</div>
+                </div>
+
+                <div class="vital-item normal">
+                    <div class="vital-header">
+                        <span class="vital-name">Oxygen Saturation</span>
+                        <span class="vital-status normal">Normal</span>
+                    </div>
+                    <div class="vital-value">98%</div>
+                    <div class="vital-range">Normal range: 95% - 100%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <h3 class="section-title">Recent Activity</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Today, 08:45</div>
+                    <div class="timeline-title">Morning Vital Signs</div>
+                    <div class="timeline-description">Routine vital signs assessment completed. Slight temperature elevation noted.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Today, 06:30</div>
+                    <div class="timeline-title">Medication Administered</div>
+                    <div class="timeline-description">Morning dose of Lisinopril 10mg administered orally.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Yesterday, 14:20</div>
+                    <div class="timeline-title">Lab Results Available</div>
+                    <div class="timeline-description">Complete blood count and metabolic panel results reviewed by physician.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">January 3, 10:15</div>
+                    <div class="timeline-title">Patient Admitted</div>
+                    <div class="timeline-description">Admitted for observation following post-operative care.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-section">
+            <h3 class="section-title">Current Medications</h3>
+
+            <div class="medication-item">
+                <div class="medication-name">Lisinopril</div>
+                <div class="medication-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Dosage</span>
+                        <span class="detail-value">10mg</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Frequency</span>
+                        <span class="detail-value">Once daily</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Route</span>
+                        <span class="detail-value">Oral</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="medication-item">
+                <div class="medication-name">Metformin</div>
+                <div class="medication-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Dosage</span>
+                        <span class="detail-value">500mg</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Frequency</span>
+                        <span class="detail-value">Twice daily</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Route</span>
+                        <span class="detail-value">Oral</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="medication-item">
+                <div class="medication-name">Atorvastatin</div>
+                <div class="medication-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Dosage</span>
+                        <span class="detail-value">20mg</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Frequency</span>
+                        <span class="detail-value">Once daily</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Route</span>
+                        <span class="detail-value">Oral</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3 class="section-title">Recent Lab Results</h3>
+
+            <div class="lab-item">
+                <div class="lab-name">Complete Blood Count</div>
+                <div class="lab-details">
+                    <div class="detail-group">
+                        <span class="detail-label">WBC</span>
+                        <span class="detail-value">7.2 K/uL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">RBC</span>
+                        <span class="detail-value">4.8 M/uL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">Jan 6, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lab-item">
+                <div class="lab-name">Metabolic Panel</div>
+                <div class="lab-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Glucose</span>
+                        <span class="detail-value">102 mg/dL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Creatinine</span>
+                        <span class="detail-value">0.9 mg/dL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">Jan 6, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lab-item">
+                <div class="lab-name">Lipid Panel</div>
+                <div class="lab-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Total Chol</span>
+                        <span class="detail-value">185 mg/dL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">HDL</span>
+                        <span class="detail-value">58 mg/dL</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">Jan 4, 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes-section">
+        <h3 class="section-title">Clinical Notes</h3>
+
+        <div class="note-item">
+            <div class="note-header">
+                <span class="note-author">Dr. Amelia Chen, Attending Physician</span>
+                <span class="note-date">January 7, 2026 - 09:15</span>
+            </div>
+            <div class="note-content">
+                Patient continues post-operative recovery with satisfactory progress. Slight temperature elevation noted this morning (99.8°F), monitoring closely. Wound site appears clean with no signs of infection. Patient reports minimal discomfort, pain well-controlled with current regimen. Ambulation encouraged, continuing standard post-op protocol. Plan to reassess in 24 hours.
+            </div>
+        </div>
+
+        <div class="note-item">
+            <div class="note-header">
+                <span class="note-author">Sarah Mitchell, RN</span>
+                <span class="note-date">January 6, 2026 - 22:30</span>
+            </div>
+            <div class="note-content">
+                Evening assessment completed. Patient resting comfortably. Vital signs stable throughout shift. Patient ambulated in hallway with assistance, tolerated well. IV site clean and dry, no signs of infiltration. Patient consumed 75% of dinner. Family visited during evening hours. No concerns reported overnight.
+            </div>
+        </div>
+
+        <div class="note-item">
+            <div class="note-header">
+                <span class="note-author">Dr. Marcus Laurent, Surgeon</span>
+                <span class="note-date">January 4, 2026 - 16:45</span>
+            </div>
+            <div class="note-content">
+                Post-operative day 1 assessment. Surgical site intact with minimal serosanguinous drainage, within expected parameters. Patient tolerating clear liquids, advancing diet as tolerated. Pain management effective with current medications. Lab results reviewed - all values within normal limits. Continue current treatment plan, monitor for any signs of complications.
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-ornament"></div>
+        <p>Solid Slate Medical Records System · Design 74 of 100</p>
+    </footer>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 74;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

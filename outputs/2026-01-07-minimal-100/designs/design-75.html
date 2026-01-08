@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Stone - Ticket Booking</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Metro Stone - Natural meets neutral: a neo brutalist perspective
+        ABOUTME: A dark-mode ticket booking interface with bold neo-brutalist forms, concrete textures,
+        and playful developer-oriented interactions. Features stark geometry, high contrast, and raw material aesthetics.
+
+        CSS VARIABLES:
+        --color-primary: #88FF44 (electric lime accent)
+        --color-background: #1a1a1a (deep charcoal)
+        --color-surface: #2d2d2d (concrete gray)
+        --color-text: #ffffff (stark white)
+        --color-text-muted: #a0a0a0 (weathered gray)
+        --font-heading: 'Space Grotesk' (geometric brutalist)
+        --font-body: 'Space Mono' (developer monospace)
+        --space-unit: 8px
+        --radius-default: 0px (hard edges)
+        --shadow-default: 8px 8px 0px rgba(136, 255, 68, 0.3) (offset brutalist shadow)
+
+        DESIGN RATIONALE:
+        Neo-brutalism meets ticket booking through raw geometric forms, stark contrasts, and unapologetic
+        rectangularity. The dark palette mimics concrete and stone, while electric lime accents provide
+        playful energy. Monospace typography nods to developer culture. Heavy shadows create depth through
+        offset layers rather than soft gradients. The interface treats ticket selection as a modular,
+        component-based system—appropriate for the developer industry.
+        */
+
+        :root {
+            --color-primary: #88FF44;
+            --color-secondary: #FFD644;
+            --color-background: #1a1a1a;
+            --color-surface: #2d2d2d;
+            --color-surface-elevated: #3a3a3a;
+            --color-text: #ffffff;
+            --color-text-muted: #a0a0a0;
+            --color-border: #4a4a4a;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Space Mono', monospace;
+            --space-unit: 8px;
+            --radius-default: 0px;
+            --shadow-default: 8px 8px 0px rgba(136, 255, 68, 0.3);
+            --shadow-strong: 12px 12px 0px rgba(136, 255, 68, 0.5);
+            --shadow-subtle: 4px 4px 0px rgba(136, 255, 68, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--color-surface);
+            border-bottom: 4px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .logo-symbol {
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-background);
+            font-weight: 700;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .nav-item {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            border: 2px solid var(--color-border);
+            background-color: transparent;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item:focus {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px rgba(136, 255, 68, 0.5);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--color-surface);
+            border: 4px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 6);
+            margin-bottom: calc(var(--space-unit) * 6);
+            box-shadow: var(--shadow-strong);
+            position: relative;
+        }
+
+        .hero::before {
+            content: '{ }';
+            position: absolute;
+            top: calc(var(--space-unit) * 2);
+            right: calc(var(--space-unit) * 2);
+            font-size: 48px;
+            color: var(--color-primary);
+            opacity: 0.3;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: calc(var(--space-unit) * 2);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        .hero-highlight {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            padding: 0 calc(var(--space-unit) * 1);
+            display: inline-block;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        /* Search Form */
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .form-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            font-weight: 700;
+        }
+
+        .form-input,
+        .form-select {
+            background-color: var(--color-background);
+            border: 3px solid var(--color-border);
+            color: var(--color-text);
+            padding: calc(var(--space-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 4px 4px 0px rgba(136, 255, 68, 0.3);
+            transform: translate(-2px, -2px);
+        }
+
+        .search-button {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            border: none;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .search-button:hover,
+        .search-button:focus {
+            background-color: var(--color-secondary);
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px rgba(255, 214, 68, 0.5);
+        }
+
+        /* Tickets Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            position: relative;
+            padding-left: calc(var(--space-unit) * 3);
+        }
+
+        .section-title::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .filter-button {
+            background-color: transparent;
+            border: 2px solid var(--color-border);
+            color: var(--color-text-muted);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2.5);
+            font-family: var(--font-body);
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-button.active,
+        .filter-button:hover {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* Ticket Cards */
+        .tickets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: calc(var(--space-unit) * 4);
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .ticket-card {
+            background-color: var(--color-surface);
+            border: 4px solid var(--color-border);
+            padding: calc(var(--space-unit) * 4);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ticket-card:hover {
+            border-color: var(--color-primary);
+            transform: translate(-4px, -4px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .ticket-route {
+            flex: 1;
+        }
+
+        .ticket-from,
+        .ticket-to {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .ticket-arrow {
+            color: var(--color-primary);
+            margin: calc(var(--space-unit) * 1) 0;
+            font-size: 20px;
+        }
+
+        .ticket-badge {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding: calc(var(--space-unit) * 3);
+            background-color: var(--color-background);
+            border: 2px solid var(--color-border);
+        }
+
+        .ticket-detail {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 0.5);
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .ticket-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-price {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .ticket-currency {
+            font-size: 18px;
+            color: var(--color-text-muted);
+        }
+
+        .book-button {
+            background-color: var(--color-background);
+            border: 3px solid var(--color-primary);
+            color: var(--color-primary);
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .book-button:hover,
+        .book-button:focus {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px rgba(136, 255, 68, 0.5);
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background-color: var(--color-surface);
+            border: 4px solid var(--color-secondary);
+            padding: calc(var(--space-unit) * 4);
+            box-shadow: 8px 8px 0px rgba(255, 214, 68, 0.3);
+        }
+
+        .info-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-secondary);
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: calc(var(--space-unit) * 2);
+            border-left: 4px solid var(--color-border);
+            margin-bottom: calc(var(--space-unit) * 2);
+            transition: all 0.2s;
+        }
+
+        .info-list li:hover {
+            border-left-color: var(--color-secondary);
+            background-color: var(--color-background);
+            transform: translateX(8px);
+        }
+
+        .info-list li::before {
+            content: '//';
+            color: var(--color-secondary);
+            margin-right: calc(var(--space-unit) * 1);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--color-surface);
+            border-top: 4px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 4) calc(var(--space-unit) * 3);
+            margin-top: calc(var(--space-unit) * 8);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .footer-link {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .footer-link:hover,
+        .footer-link:focus {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .tickets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: start;
+                gap: calc(var(--space-unit) * 2);
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 3);
+                text-align: center;
+            }
+        }
+
+        /* Playful developer touches */
+        .code-accent {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        /* Focus states */
+        *:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-symbol">M</div>
+                Metro Stone
+            </div>
+            <nav class="nav">
+                <button class="nav-item">Search</button>
+                <button class="nav-item">My Trips</button>
+                <button class="nav-item">Help</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>
+                Book Your <span class="hero-highlight">Next Journey</span><br>
+                In Raw Style
+            </h1>
+            <p class="hero-subtitle">
+                <span class="code-accent">function</span> findTicket() → Developer-friendly ticket booking with brutal simplicity and playful efficiency.
+            </p>
+
+            <!-- Search Form -->
+            <form class="search-form">
+                <div class="form-group">
+                    <label class="form-label" for="from">From</label>
+                    <input type="text" id="from" class="form-input" value="San Francisco" placeholder="Origin">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="to">To</label>
+                    <input type="text" id="to" class="form-input" value="Portland" placeholder="Destination">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="date">Departure</label>
+                    <input type="date" id="date" class="form-input" value="2026-02-15">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="passengers">Passengers</label>
+                    <select id="passengers" class="form-select">
+                        <option value="1">1 Passenger</option>
+                        <option value="2">2 Passengers</option>
+                        <option value="3">3 Passengers</option>
+                        <option value="4">4+ Passengers</option>
+                    </select>
+                </div>
+            </form>
+
+            <button class="search-button">Execute Search</button>
+        </section>
+
+        <!-- Available Tickets -->
+        <section class="tickets-section">
+            <div class="section-header">
+                <h2 class="section-title">Available Tickets</h2>
+                <div class="filter-group">
+                    <button class="filter-button active">All</button>
+                    <button class="filter-button">Direct</button>
+                    <button class="filter-button">Fastest</button>
+                    <button class="filter-button">Cheapest</button>
+                </div>
+            </div>
+
+            <div class="tickets-grid">
+                <!-- Ticket Card 1 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge">Direct</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">08:30</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">10:45</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">2h 15m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">Alaska</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>189
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+
+                <!-- Ticket Card 2 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge" style="background-color: var(--color-secondary);">Fastest</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">06:15</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">08:20</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">2h 05m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">United</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>245
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+
+                <!-- Ticket Card 3 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge" style="background-color: var(--color-text-muted);">1 Stop</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">11:00</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">15:30</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">4h 30m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">Southwest</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>129
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+
+                <!-- Ticket Card 4 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge">Direct</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">14:45</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">17:00</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">2h 15m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">Alaska</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>199
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+
+                <!-- Ticket Card 5 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge">Direct</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">18:20</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">20:35</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">2h 15m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">JetBlue</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>175
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+
+                <!-- Ticket Card 6 -->
+                <article class="ticket-card">
+                    <div class="ticket-header">
+                        <div class="ticket-route">
+                            <div class="ticket-from">SFO</div>
+                            <div class="ticket-arrow">↓↓↓</div>
+                            <div class="ticket-to">PDX</div>
+                        </div>
+                        <div class="ticket-badge" style="background-color: var(--color-text-muted);">1 Stop</div>
+                    </div>
+
+                    <div class="ticket-details">
+                        <div class="ticket-detail">
+                            <span class="detail-label">Departure</span>
+                            <span class="detail-value">16:30</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Arrival</span>
+                            <span class="detail-value">21:45</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">5h 15m</span>
+                        </div>
+                        <div class="ticket-detail">
+                            <span class="detail-label">Carrier</span>
+                            <span class="detail-value">Delta</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <div class="ticket-price">
+                            <span class="ticket-currency">$</span>149
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Info Panel -->
+        <section class="info-panel">
+            <h3>Dev Notes</h3>
+            <ul class="info-list">
+                <li><strong>API Ready:</strong> All ticket data fetched via REST endpoints</li>
+                <li><strong>Real-time Updates:</strong> WebSocket integration for price changes</li>
+                <li><strong>Type Safe:</strong> Full TypeScript support with strict mode</li>
+                <li><strong>Performance:</strong> Sub-200ms search response time</li>
+                <li><strong>Accessibility:</strong> WCAG 2.1 AA compliant with keyboard nav</li>
+                <li><strong>Testing:</strong> 95% code coverage with Jest & Playwright</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">
+                Metro Stone © 2026 | Design #75 of 1000 | <span class="code-accent">console.log('brutalism++');</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">API Docs</a>
+                <a href="#" class="footer-link">Support</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Navigation Script -->
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 75;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,925 @@
+<!--
+DESIGN: Clear Metro - Where flat meets international aesthetics
+ABOUTME: A conference schedule interface blending Y2K minimalism with Swiss International design principles. Features clean typography, grid-based layouts, and nostalgic early-2000s digital aesthetics in a dark color scheme.
+
+CSS VARIABLES:
+--color-primary: #00D9FF (Y2K cyan)
+--color-background: #0A0A0F (deep charcoal)
+--color-surface: #1A1A24 (elevated surface)
+--color-text: #E8E8F0 (crisp white-blue)
+--color-text-muted: #8888A0 (muted lavender)
+--font-heading: 'DM Sans' (geometric sans-serif)
+--font-body: 'Inter' (clean, international)
+--space-unit: 1rem (16px base)
+--radius-default: 2px (minimal, intentional)
+--shadow-default: subtle depth without skeuomorphism
+
+DESIGN RATIONALE:
+Merges the precision and grid systems of Swiss International design with Y2K's love of flat colors and geometric simplicity. The dark palette creates nostalgia for early forum interfaces and digital schedules while maintaining high contrast for readability. Typography follows strict alignment principles. Color accents recall the optimistic cyan/blue gradients of early 2000s web design. The conference schedule format allows for systematic information hierarchy - perfect for showcasing grid-based design thinking.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Metro - CreativeConf 2003</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #00D9FF;
+            --color-secondary: #FF00AA;
+            --color-accent: #7B61FF;
+            --color-background: #0A0A0F;
+            --color-surface: #1A1A24;
+            --color-surface-elevated: #24243A;
+            --color-border: #2F2F48;
+            --color-text: #E8E8F0;
+            --color-text-muted: #8888A0;
+            --color-success: #00FF88;
+            --color-warning: #FFB800;
+            --font-heading: 'DM Sans', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            min-height: 100vh;
+        }
+
+        /* Grid System */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 2);
+        }
+
+        /* Header */
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 1.5) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-default);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.75);
+        }
+
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--color-background);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+        }
+
+        .date-badge {
+            background: var(--color-surface-elevated);
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+            border-radius: var(--radius-default);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            overflow-x: auto;
+        }
+
+        .nav-tabs-inner {
+            display: flex;
+            gap: 0;
+        }
+
+        .nav-tab {
+            padding: calc(var(--space-unit) * 0.875) calc(var(--space-unit) * 1.5);
+            border: none;
+            background: transparent;
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .nav-tab:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        /* Main Content */
+        main {
+            padding: calc(var(--space-unit) * 3) 0;
+        }
+
+        .schedule-header {
+            margin-bottom: calc(var(--space-unit) * 2.5);
+        }
+
+        .schedule-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            letter-spacing: -0.02em;
+        }
+
+        .schedule-subtitle {
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--color-surface);
+            padding: calc(var(--space-unit) * 1.25);
+            border-radius: var(--radius-default);
+            margin-bottom: calc(var(--space-unit) * 2);
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+            flex-wrap: wrap;
+            align-items: center;
+            border: 1px solid var(--color-border);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: calc(var(--space-unit) * 0.5);
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            padding: calc(var(--space-unit) * 0.375) calc(var(--space-unit) * 0.875);
+            background: var(--color-surface-elevated);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .pill:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .pill.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        .pill:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Schedule Grid */
+        .schedule-grid {
+            display: grid;
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .time-block {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+        }
+
+        .time-header {
+            background: var(--color-surface-elevated);
+            padding: calc(var(--space-unit) * 1);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .time-badge {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+            min-width: 80px;
+        }
+
+        .time-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .sessions {
+            padding: calc(var(--space-unit) * 1);
+            display: grid;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .session {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.25);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .session::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-color);
+            opacity: 0.7;
+        }
+
+        .session:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-elevated);
+            transform: translateY(-1px);
+        }
+
+        .session:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: calc(var(--space-unit) * 0.75);
+        }
+
+        .session-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 0.25);
+            letter-spacing: -0.01em;
+        }
+
+        .session-track {
+            padding: calc(var(--space-unit) * 0.25) calc(var(--space-unit) * 0.625);
+            background: var(--track-bg);
+            color: var(--track-color);
+            border-radius: var(--radius-default);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .session-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 1.5);
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 0.75);
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.375);
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .meta-icon {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+
+        .session-speaker {
+            font-size: 13px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .session-description {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Track Color System */
+        .session[data-track="design"] {
+            --accent-color: var(--color-primary);
+            --track-bg: rgba(0, 217, 255, 0.15);
+            --track-color: var(--color-primary);
+        }
+
+        .session[data-track="technology"] {
+            --accent-color: var(--color-accent);
+            --track-bg: rgba(123, 97, 255, 0.15);
+            --track-color: var(--color-accent);
+        }
+
+        .session[data-track="business"] {
+            --accent-color: var(--color-secondary);
+            --track-bg: rgba(255, 0, 170, 0.15);
+            --track-color: var(--color-secondary);
+        }
+
+        .session[data-track="workshop"] {
+            --accent-color: var(--color-success);
+            --track-bg: rgba(0, 255, 136, 0.15);
+            --track-color: var(--color-success);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            margin-top: calc(var(--space-unit) * 3);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .stat {
+            text-align: center;
+            padding: calc(var(--space-unit) * 1);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 0.25);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 2.5) 0;
+            margin-top: calc(var(--space-unit) * 4);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .footer-section h3 {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text);
+            margin-bottom: calc(var(--space-unit) * 1);
+            font-weight: 600;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            display: block;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .footer-section a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-section a:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-meta {
+                display: none;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .schedule-title {
+                font-size: 22px;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Visible */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-mark">CC</div>
+                    <div class="logo-text">
+                        <h1>CreativeConf 2003</h1>
+                        <p>Clear Metro</p>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div class="date-badge">May 15-17, 2003</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-tabs">
+        <div class="container">
+            <div class="nav-tabs-inner">
+                <button class="nav-tab active">Schedule</button>
+                <button class="nav-tab">Speakers</button>
+                <button class="nav-tab">Venues</button>
+                <button class="nav-tab">Sponsors</button>
+                <button class="nav-tab">Attendees</button>
+                <button class="nav-tab">Info</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="schedule-header">
+                <h2 class="schedule-title">Day 1 Schedule — May 15</h2>
+                <p class="schedule-subtitle">Browse sessions across four creative tracks</p>
+            </div>
+
+            <div class="filter-bar">
+                <span class="filter-label">Filter by Track</span>
+                <div class="filter-pills">
+                    <button class="pill active">All Tracks</button>
+                    <button class="pill">Design</button>
+                    <button class="pill">Technology</button>
+                    <button class="pill">Business</button>
+                    <button class="pill">Workshop</button>
+                </div>
+            </div>
+
+            <div class="schedule-grid">
+                <!-- 9:00 AM -->
+                <div class="time-block">
+                    <div class="time-header">
+                        <div class="time-badge">9:00</div>
+                        <div class="time-label">Morning Session</div>
+                    </div>
+                    <div class="sessions">
+                        <div class="session" data-track="design" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">The Future of Flat Design</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Sarah Chen</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            120 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            60 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Design</span>
+                            </div>
+                            <p class="session-description">Exploring minimalist aesthetics and the evolution from skeuomorphism. How clean interfaces became the new standard for digital products.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10:30 AM -->
+                <div class="time-block">
+                    <div class="time-header">
+                        <div class="time-badge">10:30</div>
+                        <div class="time-label">Mid-Morning</div>
+                    </div>
+                    <div class="sessions">
+                        <div class="session" data-track="technology" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">CSS Grid Revolution</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Marcus Liu</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            80 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            90 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Technology</span>
+                            </div>
+                            <p class="session-description">Building systematic layouts with the latest CSS specifications. Master grid systems for precision design implementations.</p>
+                        </div>
+                        <div class="session" data-track="business" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">Monetizing Creative Work</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Elena Rodriguez</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            100 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            45 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Business</span>
+                            </div>
+                            <p class="session-description">Sustainable business models for independent designers and studios. From client work to product development strategies.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1:00 PM -->
+                <div class="time-block">
+                    <div class="time-header">
+                        <div class="time-badge">13:00</div>
+                        <div class="time-label">Afternoon</div>
+                    </div>
+                    <div class="sessions">
+                        <div class="session" data-track="workshop" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">Typography Systems Workshop</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">David Kwan</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            30 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            120 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Workshop</span>
+                            </div>
+                            <p class="session-description">Hands-on exploration of type scales, hierarchies, and international typography. Build a modular type system from scratch.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3:30 PM -->
+                <div class="time-block">
+                    <div class="time-header">
+                        <div class="time-badge">15:30</div>
+                        <div class="time-label">Late Afternoon</div>
+                    </div>
+                    <div class="sessions">
+                        <div class="session" data-track="design" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">Color in Digital Interfaces</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Yuki Tanaka</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            150 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            60 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Design</span>
+                            </div>
+                            <p class="session-description">Accessibility-first color palettes that maintain brand identity. Understanding contrast ratios and perceptual color spaces.</p>
+                        </div>
+                        <div class="session" data-track="technology" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">Web Standards 2003</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Alex Patterson</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            90 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            75 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Technology</span>
+                            </div>
+                            <p class="session-description">Semantic HTML and the push for separation of content and presentation. Building for the future of the web.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5:00 PM -->
+                <div class="time-block">
+                    <div class="time-header">
+                        <div class="time-badge">17:00</div>
+                        <div class="time-label">Evening</div>
+                    </div>
+                    <div class="sessions">
+                        <div class="session" data-track="business" tabindex="0">
+                            <div class="session-header">
+                                <div>
+                                    <h3 class="session-title">Panel: The Creative Economy</h3>
+                                    <div class="session-meta">
+                                        <div class="meta-item">
+                                            <span class="session-speaker">Multiple Speakers</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            200 seats
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            90 min
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="session-track">Business</span>
+                            </div>
+                            <p class="session-description">Industry leaders discuss the intersection of creativity, technology, and commerce. Q&A with audience participation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Sessions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">Speakers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Tracks</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">850</div>
+                    <div class="stat-label">Attendees</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CreativeConf</h3>
+                    <p>Three days of design thinking, technical innovation, and creative business strategy. Join the community shaping digital creativity.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">Conference Guide</a>
+                    <a href="#">Venue Maps</a>
+                    <a href="#">Speaker Bios</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>info@creativeconf.com</p>
+                    <p>San Francisco, CA</p>
+                    <p>May 15-17, 2003</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <a href="#">Forums</a>
+                    <a href="#">Newsletter</a>
+                    <a href="#">Photo Gallery</a>
+                    <a href="#">2002 Archive</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 89;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Razor - Email Client</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Razor - Natural vibes for government
+ABOUTME: A flat 2010s-style email client for government use featuring sharp geometric aesthetics, monochromatic color scheme with high-contrast accents, and dual light/dark mode support. The design emphasizes information density and efficient workflows with an edgy, no-nonsense interface.
+
+CSS VARIABLES:
+--color-primary: #00D9FF (cyan accent for actions)
+--color-background: #F5F5F5 (light) / #1A1A1A (dark)
+--color-surface: #FFFFFF (light) / #252525 (dark)
+--color-text: #1A1A1A (light) / #E5E5E5 (dark)
+--color-text-muted: #757575 (light) / #999999 (dark)
+--font-heading: 'Roboto', sans-serif
+--font-body: 'Roboto', sans-serif
+--font-mono: 'Roboto Mono', monospace
+--space-unit: 8px
+--radius-default: 0px (flat design aesthetic)
+--shadow-default: none (flat design aesthetic)
+
+DESIGN RATIONALE:
+Modern Razor embodies the flat design revolution of the 2010s with absolutely zero skeuomorphism, using sharp geometric shapes and a strictly flat visual language. The government context demands clarity, security indicators, and classification levels, while the edgy tone is expressed through high-contrast cyan accents, dense information architecture, and a brutalist approach to layout. The email client features a three-column layout optimized for triage workflows, with keyboard shortcuts prominently displayed and a monospace font for technical details. Both light and dark modes maintain identical information hierarchy with inverted color schemes.
+-->
+
+<style>
+    :root {
+        --color-primary: #00D9FF;
+        --color-primary-dark: #00B8D9;
+        --color-background: #F5F5F5;
+        --color-surface: #FFFFFF;
+        --color-border: #E0E0E0;
+        --color-text: #1A1A1A;
+        --color-text-muted: #757575;
+        --color-accent-red: #FF3366;
+        --color-accent-green: #00CC66;
+        --color-accent-yellow: #FFB800;
+        --font-heading: 'Roboto', sans-serif;
+        --font-body: 'Roboto', sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+        --space-unit: 8px;
+        --radius-default: 0px;
+        --shadow-default: none;
+    }
+
+    [data-theme="dark"] {
+        --color-background: #1A1A1A;
+        --color-surface: #252525;
+        --color-border: #404040;
+        --color-text: #E5E5E5;
+        --color-text-muted: #999999;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-bar {
+        background: var(--color-surface);
+        border-bottom: 2px solid var(--color-primary);
+        padding: calc(var(--space-unit) * 2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .logo {
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-text);
+        letter-spacing: -0.5px;
+    }
+
+    .logo-accent {
+        color: var(--color-primary);
+    }
+
+    .top-controls {
+        display: flex;
+        gap: calc(var(--space-unit) * 2);
+        align-items: center;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+        width: 400px;
+    }
+
+    .search-bar input {
+        border: none;
+        background: none;
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--color-text);
+        width: 100%;
+        outline: none;
+    }
+
+    .search-bar input::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    .search-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: calc(var(--space-unit) * 1.5);
+        color: var(--color-text-muted);
+    }
+
+    .theme-toggle {
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+        background: var(--color-primary);
+        color: #000;
+        border-color: var(--color-primary);
+    }
+
+    .user-badge {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: var(--space-unit);
+    }
+
+    .clearance-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--color-accent-green);
+        display: inline-block;
+    }
+
+    /* Main Layout */
+    .main-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 240px;
+        background: var(--color-surface);
+        border-right: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+
+    .compose-btn {
+        margin: calc(var(--space-unit) * 2);
+        padding: calc(var(--space-unit) * 2);
+        background: var(--color-primary);
+        color: #000;
+        border: none;
+        font-family: var(--font-body);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .compose-btn:hover {
+        background: var(--color-primary-dark);
+    }
+
+    .nav-section {
+        padding: 0 calc(var(--space-unit) * 2) calc(var(--space-unit) * 2);
+    }
+
+    .nav-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: calc(var(--space-unit) * 1.5);
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: calc(var(--space-unit) * 1.5);
+        cursor: pointer;
+        border-left: 2px solid transparent;
+        transition: all 0.2s;
+        font-size: 14px;
+    }
+
+    .nav-item:hover {
+        background: var(--color-background);
+        border-left-color: var(--color-text-muted);
+    }
+
+    .nav-item.active {
+        background: var(--color-background);
+        border-left-color: var(--color-primary);
+        font-weight: 500;
+    }
+
+    .nav-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .nav-item.active .nav-count {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    /* Email List */
+    .email-list {
+        width: 380px;
+        background: var(--color-surface);
+        border-right: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+
+    .list-header {
+        padding: calc(var(--space-unit) * 2);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .list-title {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .list-actions {
+        display: flex;
+        gap: calc(var(--space-unit) * 1);
+    }
+
+    .action-btn {
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 1.5);
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--color-text);
+        font-family: var(--font-body);
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background: var(--color-primary);
+        color: #000;
+        border-color: var(--color-primary);
+    }
+
+    .email-items {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .email-item {
+        padding: calc(var(--space-unit) * 2);
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+        transition: background 0.2s;
+        position: relative;
+    }
+
+    .email-item:hover {
+        background: var(--color-background);
+    }
+
+    .email-item.active {
+        background: var(--color-background);
+        border-left: 3px solid var(--color-primary);
+    }
+
+    .email-item.unread {
+        border-left: 3px solid var(--color-accent-yellow);
+    }
+
+    .email-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .email-from {
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .email-item.unread .email-from {
+        font-weight: 700;
+    }
+
+    .email-time {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
+
+    .email-subject {
+        font-size: 13px;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+        font-weight: 500;
+    }
+
+    .email-preview {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        line-height: 1.4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .email-labels {
+        display: flex;
+        gap: calc(var(--space-unit) * 1);
+        margin-top: calc(var(--space-unit) * 1);
+    }
+
+    .label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .label.classified {
+        background: var(--color-accent-red);
+        color: #FFF;
+        border-color: var(--color-accent-red);
+    }
+
+    .label.secure {
+        background: var(--color-accent-green);
+        color: #FFF;
+        border-color: var(--color-accent-green);
+    }
+
+    /* Email Detail */
+    .email-detail {
+        flex: 1;
+        background: var(--color-surface);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .detail-header {
+        padding: calc(var(--space-unit) * 3);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .detail-actions {
+        display: flex;
+        gap: calc(var(--space-unit) * 1);
+        margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .detail-subject {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: calc(var(--space-unit) * 2);
+        line-height: 1.3;
+    }
+
+    .detail-meta-grid {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: calc(var(--space-unit) * 1.5);
+        font-size: 13px;
+    }
+
+    .meta-label {
+        font-family: var(--font-mono);
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+        font-weight: 500;
+    }
+
+    .detail-body {
+        flex: 1;
+        padding: calc(var(--space-unit) * 3);
+        overflow-y: auto;
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+    .detail-body p {
+        margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .classification-banner {
+        background: var(--color-accent-red);
+        color: #FFF;
+        padding: calc(var(--space-unit) * 1.5);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .attachment-section {
+        margin-top: calc(var(--space-unit) * 3);
+        padding-top: calc(var(--space-unit) * 3);
+        border-top: 1px solid var(--color-border);
+    }
+
+    .attachment-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: calc(var(--space-unit) * 1.5);
+    }
+
+    .attachment-item {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--space-unit) * 2);
+        padding: calc(var(--space-unit) * 1.5);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        margin-bottom: calc(var(--space-unit) * 1);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .attachment-item:hover {
+        border-color: var(--color-primary);
+    }
+
+    .attachment-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 600;
+        color: #000;
+    }
+
+    .attachment-info {
+        flex: 1;
+    }
+
+    .attachment-name {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .attachment-size {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
+
+    /* Keyboard Shortcuts */
+    .shortcuts-hint {
+        position: fixed;
+        bottom: calc(var(--space-unit) * 2);
+        right: calc(var(--space-unit) * 2);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-unit) * 2);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+        max-width: 200px;
+    }
+
+    .shortcut {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .key {
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    /* Accessibility */
+    *:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--color-background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+</style>
+
+<div class="top-bar">
+    <div class="logo">
+        RAZOR<span class="logo-accent">MAIL</span>
+    </div>
+    <div class="top-controls">
+        <div class="search-bar">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" placeholder="Search classified communications...">
+        </div>
+        <button class="theme-toggle" id="themeToggle">TOGGLE_THEME</button>
+        <div class="user-badge">
+            <span class="clearance-dot"></span>
+            <span>CLEARANCE: TOP SECRET</span>
+        </div>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        <button class="compose-btn">+ New Message</button>
+
+        <div class="nav-section">
+            <div class="nav-title">Primary</div>
+            <div class="nav-item active">
+                <span>Inbox</span>
+                <span class="nav-count">47</span>
+            </div>
+            <div class="nav-item">
+                <span>Starred</span>
+                <span class="nav-count">12</span>
+            </div>
+            <div class="nav-item">
+                <span>Sent</span>
+                <span class="nav-count">203</span>
+            </div>
+            <div class="nav-item">
+                <span>Drafts</span>
+                <span class="nav-count">8</span>
+            </div>
+            <div class="nav-item">
+                <span>Archive</span>
+                <span class="nav-count">1,429</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Classified</div>
+            <div class="nav-item">
+                <span>Top Secret</span>
+                <span class="nav-count">3</span>
+            </div>
+            <div class="nav-item">
+                <span>Secret</span>
+                <span class="nav-count">14</span>
+            </div>
+            <div class="nav-item">
+                <span>Confidential</span>
+                <span class="nav-count">29</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Departments</div>
+            <div class="nav-item">
+                <span>Operations</span>
+                <span class="nav-count">67</span>
+            </div>
+            <div class="nav-item">
+                <span>Intelligence</span>
+                <span class="nav-count">34</span>
+            </div>
+            <div class="nav-item">
+                <span>Admin</span>
+                <span class="nav-count">91</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="email-list">
+        <div class="list-header">
+            <div class="list-title">Inbox</div>
+            <div class="list-actions">
+                <button class="action-btn">↻ REFRESH</button>
+                <button class="action-btn">⚙ FILTER</button>
+            </div>
+        </div>
+
+        <div class="email-items">
+            <div class="email-item active">
+                <div class="email-meta">
+                    <div class="email-from">Director Chen, M.</div>
+                    <div class="email-time">14:32</div>
+                </div>
+                <div class="email-subject">RE: Operation Nightfall - Status Update Required</div>
+                <div class="email-preview">Per your request, attached are the latest field reports from sectors 7-12. Note the anomalous readings...</div>
+                <div class="email-labels">
+                    <span class="label classified">TOP SECRET</span>
+                    <span class="label secure">ENCRYPTED</span>
+                    <span class="label">URGENT</span>
+                </div>
+            </div>
+
+            <div class="email-item unread">
+                <div class="email-meta">
+                    <div class="email-from">Systems Alert</div>
+                    <div class="email-time">13:47</div>
+                </div>
+                <div class="email-subject">Security Protocol Update - Action Required</div>
+                <div class="email-preview">All personnel must acknowledge updated security protocols by EOD Friday. Failure to comply will result...</div>
+                <div class="email-labels">
+                    <span class="label">SYSTEM</span>
+                </div>
+            </div>
+
+            <div class="email-item">
+                <div class="email-meta">
+                    <div class="email-from">Rodriguez, J. (Ops)</div>
+                    <div class="email-time">12:15</div>
+                </div>
+                <div class="email-subject">Asset Deployment Confirmation - Grid 4A</div>
+                <div class="email-preview">Deployment successful at 1200 hours. All assets reporting nominal status. Awaiting further instructions...</div>
+                <div class="email-labels">
+                    <span class="label">SECRET</span>
+                </div>
+            </div>
+
+            <div class="email-item unread">
+                <div class="email-meta">
+                    <div class="email-from">Dr. Kowalski, T.</div>
+                    <div class="email-time">11:03</div>
+                </div>
+                <div class="email-subject">Research Data - Quarterly Analysis</div>
+                <div class="email-preview">The Q4 analysis reveals significant trends in pattern recognition algorithms. Recommend immediate review...</div>
+                <div class="email-labels">
+                    <span class="label">CONFIDENTIAL</span>
+                    <span class="label">RESEARCH</span>
+                </div>
+            </div>
+
+            <div class="email-item">
+                <div class="email-meta">
+                    <div class="email-from">HR Division</div>
+                    <div class="email-time">10:28</div>
+                </div>
+                <div class="email-subject">Mandatory Training Schedule - January 2026</div>
+                <div class="email-preview">Annual security clearance renewal training sessions scheduled for next month. Please review attached dates...</div>
+            </div>
+
+            <div class="email-item">
+                <div class="email-meta">
+                    <div class="email-from">Thompson, K. (Intel)</div>
+                    <div class="email-time">09:54</div>
+                </div>
+                <div class="email-subject">Weekly Intelligence Brief - Week 02</div>
+                <div class="email-preview">Summary of relevant signals intelligence from monitored channels. Note items 7 and 11 for priority review...</div>
+                <div class="email-labels">
+                    <span class="label">SECRET</span>
+                    <span class="label">WEEKLY</span>
+                </div>
+            </div>
+
+            <div class="email-item">
+                <div class="email-meta">
+                    <div class="email-from">Facilities</div>
+                    <div class="email-time">Yesterday</div>
+                </div>
+                <div class="email-subject">Building Maintenance Notice - Sector C</div>
+                <div class="email-preview">Scheduled maintenance in Sector C will occur on Saturday 0600-1200. Restricted access during this period...</div>
+            </div>
+
+            <div class="email-item">
+                <div class="email-meta">
+                    <div class="email-from">Director Chen, M.</div>
+                    <div class="email-time">Yesterday</div>
+                </div>
+                <div class="email-subject">Budget Review Meeting - Friday 10:00</div>
+                <div class="email-preview">Please prepare your departmental budget projections for fiscal year 2027. Conference room B is reserved...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="email-detail">
+        <div class="classification-banner">
+            ★ TOP SECRET // NOFORN // SENSITIVE COMPARTMENTED INFORMATION ★
+        </div>
+
+        <div class="detail-header">
+            <div class="detail-actions">
+                <button class="action-btn">↩ REPLY</button>
+                <button class="action-btn">↪ REPLY ALL</button>
+                <button class="action-btn">→ FORWARD</button>
+                <button class="action-btn">⚠ FLAG</button>
+                <button class="action-btn">🗑 DELETE</button>
+            </div>
+
+            <div class="detail-subject">
+                RE: Operation Nightfall - Status Update Required
+            </div>
+
+            <div class="detail-meta-grid">
+                <div class="meta-label">From:</div>
+                <div class="meta-value">Director Chen, Margaret (m.chen@gov.classified)</div>
+
+                <div class="meta-label">To:</div>
+                <div class="meta-value">operations-team@gov.classified, field-supervisors@gov.classified</div>
+
+                <div class="meta-label">Date:</div>
+                <div class="meta-value">Tuesday, January 7, 2026 at 14:32 EST</div>
+
+                <div class="meta-label">Class:</div>
+                <div class="meta-value">TOP SECRET // ENCRYPTED AES-256 // MESSAGE ID: OP-NF-2026-0107-1432</div>
+            </div>
+        </div>
+
+        <div class="detail-body">
+            <p>Team,</p>
+
+            <p>Per your request from this morning's briefing, I've compiled the latest field reports from sectors 7 through 12. The situation is developing rapidly and requires immediate attention from senior leadership.</p>
+
+            <p>Note the anomalous readings documented in sectors 9 and 11—our technical analysis team has flagged these for priority review. Initial assessment suggests a pattern that diverges significantly from baseline projections established during the planning phase.</p>
+
+            <p><strong>Key Points Requiring Action:</strong></p>
+
+            <p>1. Sector 9: Recommend deploying additional monitoring assets by Thursday 0800 hours<br>
+            2. Sector 11: Technical team requests on-site inspection within 48 hours<br>
+            3. Sectors 7, 8, 10, 12: Nominal status, continue standard protocols<br>
+            4. Cross-sector correlation analysis due Friday EOD</p>
+
+            <p>I've scheduled a classified briefing for Wednesday at 0900 in SCIF-3 to discuss implications and next steps. Attendance is mandatory for all personnel with operational oversight.</p>
+
+            <p>Please acknowledge receipt and confirm your availability for the Wednesday session. If you identify any gaps in the attached documentation, contact my office directly via secure channel.</p>
+
+            <p>The integrity of this operation depends on our ability to adapt to field conditions in real-time. Your continued professionalism is noted and appreciated.</p>
+
+            <p>Respectfully,<br>
+            <strong>Margaret Chen</strong><br>
+            Director, Field Operations Division<br>
+            Secure Line: +1-202-555-0147 (CLASSIFIED)<br>
+            Office: Building 7, Suite 3200</p>
+
+            <div class="attachment-section">
+                <div class="attachment-title">Attachments (3)</div>
+
+                <div class="attachment-item">
+                    <div class="attachment-icon">PDF</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">OPERATION_NIGHTFALL_SECTOR_7-12_REPORT.pdf</div>
+                        <div class="attachment-size">2.4 MB • ENCRYPTED</div>
+                    </div>
+                </div>
+
+                <div class="attachment-item">
+                    <div class="attachment-icon">XLS</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">ANOMALY_DATA_SECTORS_9_11.xlsx</div>
+                        <div class="attachment-size">847 KB • ENCRYPTED</div>
+                    </div>
+                </div>
+
+                <div class="attachment-item">
+                    <div class="attachment-icon">DOC</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">BRIEFING_AGENDA_2026-01-08.docx</div>
+                        <div class="attachment-size">156 KB • ENCRYPTED</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="shortcuts-hint">
+    <div style="font-weight: 600; margin-bottom: 8px;">KEYBOARD SHORTCUTS</div>
+    <div class="shortcut">
+        <span>Navigate</span>
+        <span class="key">J/K</span>
+    </div>
+    <div class="shortcut">
+        <span>Reply</span>
+        <span class="key">R</span>
+    </div>
+    <div class="shortcut">
+        <span>Forward</span>
+        <span class="key">F</span>
+    </div>
+    <div class="shortcut">
+        <span>Archive</span>
+        <span class="key">E</span>
+    </div>
+    <div class="shortcut">
+        <span>Delete</span>
+        <span class="key">⌫</span>
+    </div>
+    <div class="shortcut">
+        <span>Design Nav</span>
+        <span class="key">←/→</span>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    themeToggle.addEventListener('click', () => {
+        if (html.getAttribute('data-theme') === 'dark') {
+            html.removeAttribute('data-theme');
+            themeToggle.textContent = 'DARK_MODE';
+        } else {
+            html.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = 'LIGHT_MODE';
+        }
+    });
+
+    // Navigation script
+    const TOTAL = 100;
+    const CURRENT = 95;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

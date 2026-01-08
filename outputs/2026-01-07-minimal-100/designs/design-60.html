@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisp Urban - The flat way to creative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Righteous&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Crisp Urban - The flat way to creative
+        ABOUTME: A psychedelic-inspired meal planner that transforms weekly meal organization into a vibrant, swirling experience.
+        Features bold color gradients, organic flowing shapes, and a friendly approach to meal planning.
+
+        CSS VARIABLES:
+        --color-primary: #FF1493 (hot pink)
+        --color-secondary: #00FFFF (cyan)
+        --color-tertiary: #FFD700 (gold)
+        --color-background: #0A0014 (deep purple-black)
+        --color-surface: #1A0A2E (dark purple)
+        --color-text: #FFFFFF
+        --color-text-muted: #B8A7D9
+        --font-heading: 'Righteous' (bold psychedelic display)
+        --font-body: 'Space Grotesk' (clean, modern)
+        --space-unit: 1rem
+        --radius-default: 20px
+        --shadow-default: 0 8px 32px rgba(255, 20, 147, 0.3)
+
+        DESIGN RATIONALE:
+        The psychedelic era meets modern meal planning with swirling gradients, bold typography, and vibrant color palettes.
+        The friendly tone is achieved through rounded corners, playful color choices, and encouraging micro-copy.
+        The dark mode provides a cosmic backdrop for the neon-bright meal cards to pop against, creating that signature
+        60s/70s psychedelic poster aesthetic while maintaining functionality for weekly meal organization.
+        -->
+
+        */
+        :root {
+            --color-primary: #FF1493;
+            --color-secondary: #00FFFF;
+            --color-tertiary: #FFD700;
+            --color-quaternary: #9D4EDD;
+            --color-background: #0A0014;
+            --color-surface: #1A0A2E;
+            --color-surface-light: #2D1B4E;
+            --color-text: #FFFFFF;
+            --color-text-muted: #B8A7D9;
+            --font-heading: 'Righteous', cursive;
+            --font-body: 'Space Grotesk', sans-serif;
+            --space-unit: 1rem;
+            --radius-default: 20px;
+            --shadow-default: 0 8px 32px rgba(255, 20, 147, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Psychedelic background patterns */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(157, 78, 221, 0.1) 0%, transparent 50%);
+            animation: psychedelicSwirl 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes psychedelicSwirl {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: calc(var(--space-unit) * 3) 0;
+            margin-bottom: calc(var(--space-unit) * 3);
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 4.5rem;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 20, 147, 0.5);
+            letter-spacing: -0.02em;
+            animation: groovyPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes groovyPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        .week-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 2);
+            margin: calc(var(--space-unit) * 2) 0;
+            padding: calc(var(--space-unit) * 1.5);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+        }
+
+        .week-nav-btn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-quaternary));
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+        }
+
+        .week-nav-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 25px rgba(255, 20, 147, 0.6);
+        }
+
+        .week-nav-btn:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 3px;
+        }
+
+        .current-week {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+        }
+
+        /* Meal grid */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--space-unit) * 2);
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .day-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 1.5);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid transparent;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                var(--color-primary),
+                var(--color-secondary),
+                var(--color-tertiary),
+                var(--color-quaternary),
+                var(--color-primary)
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: rotateGradient 8s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .day-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .day-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.5);
+        }
+
+        .day-header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: calc(var(--space-unit) * 1);
+            padding-bottom: calc(var(--space-unit) * 1);
+            border-bottom: 2px solid var(--color-surface-light);
+        }
+
+        .day-name {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .day-date {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .meal-section {
+            position: relative;
+            z-index: 1;
+            margin-bottom: calc(var(--space-unit) * 1.5);
+        }
+
+        .meal-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .meal-item {
+            background: var(--color-surface-light);
+            padding: calc(var(--space-unit) * 0.75);
+            border-radius: calc(var(--radius-default) * 0.5);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .meal-item:hover {
+            background: var(--color-quaternary);
+            border-left-color: var(--color-tertiary);
+            transform: translateX(5px);
+        }
+
+        .meal-emoji {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .meal-name {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .meal-calories {
+            font-size: 0.85rem;
+            color: var(--color-tertiary);
+            font-weight: 700;
+        }
+
+        .add-meal-btn {
+            width: 100%;
+            padding: calc(var(--space-unit) * 0.75);
+            background: transparent;
+            border: 2px dashed var(--color-surface-light);
+            border-radius: calc(var(--radius-default) * 0.5);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-meal-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: rgba(255, 20, 147, 0.1);
+        }
+
+        .add-meal-btn:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Grocery list sidebar */
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: var(--color-surface);
+            border-left: 3px solid var(--color-primary);
+            padding: calc(var(--space-unit) * 2);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .sidebar-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-sidebar:hover {
+            background: var(--color-primary);
+            transform: rotate(90deg);
+        }
+
+        .close-sidebar:focus {
+            outline: 3px solid var(--color-secondary);
+        }
+
+        .grocery-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: calc(var(--space-unit) * 0.75);
+            margin-bottom: 0.5rem;
+            background: var(--color-surface-light);
+            border-radius: calc(var(--radius-default) * 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .grocery-item:hover {
+            background: var(--color-quaternary);
+        }
+
+        .grocery-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .grocery-checkbox.checked {
+            background: var(--color-primary);
+            position: relative;
+        }
+
+        .grocery-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .grocery-toggle {
+            position: fixed;
+            bottom: calc(var(--space-unit) * 3);
+            right: calc(var(--space-unit) * 3);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.6);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grocery-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.8);
+        }
+
+        .grocery-toggle:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 5px;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space-unit) * 1.5);
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding: calc(var(--space-unit) * 2);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            body::before {
+                animation: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Focus styles */
+        *:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        .meal-item:focus {
+            outline: 3px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Crisp Urban</h1>
+            <p class="tagline">The flat way to creative</p>
+        </header>
+
+        <div class="week-selector">
+            <button class="week-nav-btn" aria-label="Previous week">←</button>
+            <div class="current-week">Week of Jan 7-13</div>
+            <button class="week-nav-btn" aria-label="Next week">→</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-value">12,450</span>
+                <span class="stat-label">Weekly Calories</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">21</span>
+                <span class="stat-label">Meals Planned</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">85%</span>
+                <span class="stat-label">Prep Complete</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">$127</span>
+                <span class="stat-label">Est. Budget</span>
+            </div>
+        </div>
+
+        <div class="meal-grid">
+            <!-- Monday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Monday</div>
+                    <div class="day-date">January 7</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥑</span>
+                        <span class="meal-name">Avocado Toast Bowl</span>
+                        <span class="meal-calories">420 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥗</span>
+                        <span class="meal-name">Rainbow Quinoa Salad</span>
+                        <span class="meal-calories">580 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍝</span>
+                        <span class="meal-name">Pesto Pasta Primavera</span>
+                        <span class="meal-calories">720 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Tuesday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Tuesday</div>
+                    <div class="day-date">January 8</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥞</span>
+                        <span class="meal-name">Blueberry Pancake Stack</span>
+                        <span class="meal-calories">490 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🌮</span>
+                        <span class="meal-name">Black Bean Tacos</span>
+                        <span class="meal-calories">620 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍛</span>
+                        <span class="meal-name">Coconut Curry Bowl</span>
+                        <span class="meal-calories">680 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Wednesday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Wednesday</div>
+                    <div class="day-date">January 9</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍳</span>
+                        <span class="meal-name">Veggie Scramble Wrap</span>
+                        <span class="meal-calories">450 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥙</span>
+                        <span class="meal-name">Mediterranean Pita</span>
+                        <span class="meal-calories">540 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍜</span>
+                        <span class="meal-name">Ramen Fusion Bowl</span>
+                        <span class="meal-calories">710 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Thursday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Thursday</div>
+                    <div class="day-date">January 10</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥣</span>
+                        <span class="meal-name">Acai Power Bowl</span>
+                        <span class="meal-calories">380 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥪</span>
+                        <span class="meal-name">Caprese Panini</span>
+                        <span class="meal-calories">590 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍕</span>
+                        <span class="meal-name">Artisan Flatbread</span>
+                        <span class="meal-calories">640 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Friday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Friday</div>
+                    <div class="day-date">January 11</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🧇</span>
+                        <span class="meal-name">Belgian Waffle Delight</span>
+                        <span class="meal-calories">510 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍲</span>
+                        <span class="meal-name">Thai Noodle Soup</span>
+                        <span class="meal-calories">560 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥘</span>
+                        <span class="meal-name">Paella Celebration</span>
+                        <span class="meal-calories">750 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Saturday</div>
+                    <div class="day-date">January 12</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥐</span>
+                        <span class="meal-name">French Pastry Plate</span>
+                        <span class="meal-calories">470 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍔</span>
+                        <span class="meal-name">Portobello Burger</span>
+                        <span class="meal-calories">610 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍣</span>
+                        <span class="meal-name">Sushi Platter</span>
+                        <span class="meal-calories">690 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+
+            <!-- Sunday -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">Sunday</div>
+                    <div class="day-date">January 13</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Breakfast</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍩</span>
+                        <span class="meal-name">Weekend Brunch Box</span>
+                        <span class="meal-calories">520 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Lunch</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🥗</span>
+                        <span class="meal-name">Caesar Salad Remix</span>
+                        <span class="meal-calories">480 cal</span>
+                    </div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-label">Dinner</div>
+                    <div class="meal-item">
+                        <span class="meal-emoji">🍖</span>
+                        <span class="meal-name">Sunday Roast Feast</span>
+                        <span class="meal-calories">800 cal</span>
+                    </div>
+                    <button class="add-meal-btn">+ Add Snack</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grocery List Sidebar -->
+    <div class="sidebar" id="grocery-sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Grocery List</h2>
+            <button class="close-sidebar" aria-label="Close grocery list">×</button>
+        </div>
+        <div class="grocery-items">
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Avocados (4)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox checked"></div>
+                <span>Quinoa (500g)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Pasta (3 boxes)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Fresh Basil</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox checked"></div>
+                <span>Blueberries (2 cups)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Black Beans (3 cans)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Coconut Milk (2 cans)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Bell Peppers (6)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox checked"></div>
+                <span>Cherry Tomatoes</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Eggs (dozen)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Pita Bread (pack)</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Rice Noodles</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Portobello Mushrooms</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Fresh Herbs Mix</span>
+            </div>
+            <div class="grocery-item">
+                <div class="grocery-checkbox"></div>
+                <span>Mozzarella Cheese</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="grocery-toggle" id="grocery-toggle" aria-label="Toggle grocery list">🛒</button>
+
+    <script>
+        // Grocery list toggle
+        const groceryToggle = document.getElementById('grocery-toggle');
+        const grocerySidebar = document.getElementById('grocery-sidebar');
+        const closeSidebar = document.querySelector('.close-sidebar');
+
+        groceryToggle.addEventListener('click', () => {
+            grocerySidebar.classList.add('open');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            grocerySidebar.classList.remove('open');
+        });
+
+        // Grocery checkbox toggle
+        const checkboxes = document.querySelectorAll('.grocery-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', () => {
+                checkbox.classList.toggle('checked');
+            });
+        });
+
+        // Navigation script
+        (function() {
+            const TOTAL = 100;
+            const CURRENT = 60;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+                if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            });
+
+            let startX;
+            document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            document.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    window.location.href = diff > 0
+                        ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                        : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

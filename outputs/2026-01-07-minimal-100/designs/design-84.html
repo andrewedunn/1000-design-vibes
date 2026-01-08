@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Ash - Psychedelic Kanban Board</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Urban Ash - Psychedelic design with natural neutral tones
+ABOUTME: A kanban board for fashion workflow management that combines psychedelic visual elements (flowing shapes, organic patterns, wavy borders) with natural neutral earth tones in a dark mode palette. The design uses ash grays, warm taupes, and muted sage greens to create a serious, sophisticated psychedelic aesthetic.
+
+CSS VARIABLES:
+--color-primary: #9BA17C (muted sage)
+--color-background: #1A1816 (deep charcoal)
+--color-surface: #2B2825 (warm dark brown)
+--color-text: #E8E4DF (warm off-white)
+--color-text-muted: #9D9388 (taupe gray)
+--font-heading: 'Montserrat' (modern, serious)
+--font-body: 'Space Grotesk' (unique character with professional feel)
+--space-unit: 1rem
+--radius-default: 24px (organic, flowing)
+--shadow-default: wavy psychedelic shadows
+
+DESIGN RATIONALE:
+Urban Ash merges psychedelic aesthetics with professional kanban functionality. The natural neutral palette (ash, taupe, sage) provides sophistication while psychedelic elements (wavy borders, flowing shapes, organic patterns, gradient overlays) add visual interest. The dark background anchors the design in seriousness appropriate for fashion industry professionals. Column cards feature flowing borders and subtle pattern overlays, while drag handles use organic shapes. The overall effect is hypnotic yet functional, creative yet grounded.
+-->
+
+<style>
+:root {
+    --color-primary: #9BA17C;
+    --color-secondary: #A89379;
+    --color-accent: #7D8B6C;
+    --color-background: #1A1816;
+    --color-surface: #2B2825;
+    --color-surface-elevated: #3A3532;
+    --color-text: #E8E4DF;
+    --color-text-muted: #9D9388;
+    --color-border: #4A4642;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --space-unit: 1rem;
+    --radius-default: 24px;
+    --shadow-default: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Psychedelic background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(155, 161, 124, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(168, 147, 121, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(125, 139, 108, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: calc(var(--space-unit) * 2);
+}
+
+/* Header */
+header {
+    margin-bottom: calc(var(--space-unit) * 3);
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), transparent);
+    border-radius: 2px;
+}
+
+.header-meta {
+    display: flex;
+    gap: calc(var(--space-unit) * 1.5);
+    align-items: center;
+}
+
+.season-badge {
+    background: var(--color-surface);
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    border: 2px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.season-badge::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(155, 161, 124, 0.1) 0%, transparent 70%);
+    animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.filter-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    color: var(--color-text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(155, 161, 124, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.filter-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+/* Kanban Board */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: calc(var(--space-unit) * 1.5);
+    margin-bottom: calc(var(--space-unit) * 3);
+}
+
+.kanban-column {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 1.5);
+    min-height: 600px;
+    position: relative;
+    border: 2px solid var(--color-border);
+
+    /* Wavy psychedelic border effect */
+    box-shadow:
+        0 0 0 4px var(--color-background),
+        0 0 0 6px var(--color-border),
+        var(--shadow-default);
+}
+
+.kanban-column::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 50%,
+        var(--color-accent) 100%);
+    border-radius: var(--radius-default);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.kanban-column:hover::before {
+    opacity: 0.15;
+}
+
+.column-header {
+    margin-bottom: calc(var(--space-unit) * 1.5);
+    padding-bottom: var(--space-unit);
+    border-bottom: 2px solid var(--color-border);
+    position: relative;
+}
+
+.column-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px;
+}
+
+.column-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-count {
+    background: var(--color-surface-elevated);
+    color: var(--color-text-muted);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-unit);
+}
+
+/* Kanban Cards with psychedelic styling */
+.kanban-card {
+    background: var(--color-surface-elevated);
+    border-radius: 20px;
+    padding: var(--space-unit);
+    border: 2px solid var(--color-border);
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.kanban-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-accent),
+        var(--color-primary));
+    background-size: 200% 100%;
+    animation: waveGradient 8s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.kanban-card:hover::before {
+    opacity: 1;
+}
+
+.kanban-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(155, 161, 124, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+}
+
+.kanban-card:hover::after {
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+.kanban-card:hover {
+    transform: translateY(-4px) rotate(0.5deg);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 2px var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+    transform: scale(1.02) rotate(-0.5deg);
+}
+
+.card-drag-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    margin: 0 auto 0.75rem;
+    position: relative;
+}
+
+.card-drag-handle::before,
+.card-drag-handle::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    left: 0;
+}
+
+.card-drag-handle::before {
+    top: -8px;
+}
+
+.card-drag-handle::after {
+    top: 8px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    flex: 1;
+}
+
+.card-priority {
+    padding: 0.25rem 0.625rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+}
+
+.priority-high {
+    background: rgba(168, 147, 121, 0.2);
+    color: var(--color-secondary);
+    border: 1px solid rgba(168, 147, 121, 0.3);
+}
+
+.priority-medium {
+    background: rgba(155, 161, 124, 0.2);
+    color: var(--color-primary);
+    border: 1px solid rgba(155, 161, 124, 0.3);
+}
+
+.priority-low {
+    background: rgba(125, 139, 108, 0.2);
+    color: var(--color-accent);
+    border: 1px solid rgba(125, 139, 108, 0.3);
+}
+
+.card-description {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.card-tags {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    padding: 0.25rem 0.625rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    border: 1px solid var(--color-border);
+}
+
+.card-assignees {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.assignee-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border: 2px solid var(--color-surface-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-background);
+    position: relative;
+}
+
+.assignee-avatar:not(:first-child) {
+    margin-left: -8px;
+}
+
+.assignee-avatar::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-accent));
+    opacity: 0;
+    animation: avatarPulse 3s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* Column-specific accent colors */
+.column-ideation .column-header::after {
+    background: var(--color-accent);
+}
+
+.column-design .column-header::after {
+    background: var(--color-primary);
+}
+
+.column-production .column-header::after {
+    background: var(--color-secondary);
+}
+
+.column-review .column-header::after {
+    background: var(--color-accent);
+}
+
+/* Footer metrics */
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-unit);
+    margin-top: calc(var(--space-unit) * 2);
+}
+
+.metric-card {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 1.5);
+    border-radius: 20px;
+    border: 2px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(155, 161, 124, 0.05),
+        rgba(168, 147, 121, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.metric-card:hover::before {
+    opacity: 1;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.metric-value {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1;
+}
+
+.metric-trend {
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Animations */
+@keyframes waveGradient {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes avatarPulse {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.1);
+    }
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+.filter-btn:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.kanban-card:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .kanban-board {
+        grid-template-columns: 1fr;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
+</style>
+
+<div class="container">
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Urban Ash</h1>
+                <p style="color: var(--color-text-muted); margin-top: 0.5rem; font-size: 0.95rem;">Spring/Summer 2026 Collection Workflow</p>
+            </div>
+            <div class="header-meta">
+                <div class="season-badge">SS26</div>
+                <div class="filter-group">
+                    <button class="filter-btn active">All Items</button>
+                    <button class="filter-btn">High Priority</button>
+                    <button class="filter-btn">My Tasks</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="kanban-board">
+        <!-- Ideation Column -->
+        <div class="kanban-column column-ideation">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>Ideation</span>
+                    <span class="card-count">4</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Sustainable Denim Research</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">Explore organic cotton suppliers and eco-friendly dye processes for core denim line</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Research</span>
+                            <span class="tag">Sustainability</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">MK</div>
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Color Palette Moodboard</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Natural earth tones inspired by urban landscapes and raw materials</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Design</span>
+                            <span class="tag">Concept</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">SC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Texture Exploration</h3>
+                        <span class="card-priority priority-low">Low</span>
+                    </div>
+                    <p class="card-description">Investigate raw finishes and stonewashed effects for signature pieces</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Materials</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">AW</div>
+                            <div class="assignee-avatar">MK</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Trend Analysis SS26</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Review runway shows and street style for emerging silhouettes</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Research</span>
+                            <span class="tag">Trends</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Column -->
+        <div class="kanban-column column-design">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>Design</span>
+                    <span class="card-count">5</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Oversized Blazer Sketch</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">Deconstructed tailoring with asymmetric lapel detail in ash gray wool</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Outerwear</span>
+                            <span class="tag">Tailoring</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">SC</div>
+                            <div class="assignee-avatar">AW</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Wide-Leg Trouser Tech Pack</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">High-waisted silhouette with pleated front in taupe linen blend</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Bottoms</span>
+                            <span class="tag">Core</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">MK</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Draped Slip Dress</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Bias-cut silk charmeuse with cowl neckline in sage green</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Dresses</span>
+                            <span class="tag">Evening</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">SC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Utility Vest Development</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Multi-pocket design in washed cotton twill with adjustable drawcords</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Outerwear</span>
+                            <span class="tag">Casual</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">AW</div>
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Graphic Tee Print Series</h3>
+                        <span class="card-priority priority-low">Low</span>
+                    </div>
+                    <p class="card-description">Abstract organic motifs on premium cotton jersey basics</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Graphics</span>
+                            <span class="tag">Tops</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Production Column -->
+        <div class="kanban-column column-production">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>Production</span>
+                    <span class="card-count">3</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Sample Cutting</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">First round prototypes for core collection pieces 1-12</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Sampling</span>
+                            <span class="tag">Production</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">MK</div>
+                            <div class="assignee-avatar">AW</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Fabric Sourcing</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">Finalize suppliers for organic cotton and linen blends</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Materials</span>
+                            <span class="tag">Sourcing</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Fit Testing Session</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Model fittings for tailored pieces and adjustments documentation</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Fitting</span>
+                            <span class="tag">QA</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">SC</div>
+                            <div class="assignee-avatar">MK</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Column -->
+        <div class="kanban-column column-review">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>Review</span>
+                    <span class="card-count">2</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Creative Director Approval</h3>
+                        <span class="card-priority priority-high">High</span>
+                    </div>
+                    <p class="card-description">Final review of lookbook sequence and styling direction</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Approval</span>
+                            <span class="tag">Creative</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">SC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kanban-card" tabindex="0">
+                    <div class="card-drag-handle"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Costing Review</h3>
+                        <span class="card-priority priority-medium">Med</span>
+                    </div>
+                    <p class="card-description">Price point analysis and margin calculations for wholesale</p>
+                    <div class="card-meta">
+                        <div class="card-tags">
+                            <span class="tag">Finance</span>
+                            <span class="tag">Analysis</span>
+                        </div>
+                        <div class="card-assignees">
+                            <div class="assignee-avatar">AW</div>
+                            <div class="assignee-avatar">JL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrics Footer -->
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-label">Total Items</div>
+            <div class="metric-value">14</div>
+            <div class="metric-trend">↑ 3 this week</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">In Progress</div>
+            <div class="metric-value">9</div>
+            <div class="metric-trend">→ Stable</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Completed</div>
+            <div class="metric-value">28</div>
+            <div class="metric-trend">↑ 12 this month</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Team Members</div>
+            <div class="metric-value">4</div>
+            <div class="metric-trend">Active</div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 84;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

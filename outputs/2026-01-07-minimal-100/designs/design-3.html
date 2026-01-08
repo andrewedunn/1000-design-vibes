@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Lux - Developer Knowledge Base</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Lux - The flat way to developer
+ABOUTME: A luxurious Scandinavian modern knowledge base designed for developers. Clean lines, generous whitespace,
+and sophisticated serif headings paired with minimalist sans-serif body text create an elegant documentation experience.
+
+CSS VARIABLES:
+--color-primary: #2C5F2D (deep forest green, grounding luxury)
+--color-background: #FAFAF8 (warm off-white)
+--color-surface: #FFFFFF (pure white cards)
+--color-text: #1A1A1A (near-black for clarity)
+--color-text-muted: #6B6B6B (mid-gray for secondary content)
+--color-accent: #D4A373 (warm bronze accent)
+--font-heading: 'Playfair Display' (elegant serif for luxury)
+--font-body: 'Inter' (clean sans-serif for readability)
+--space-unit: 8px (base spacing module)
+--radius-default: 2px (minimal, Scandinavian approach)
+--shadow-default: subtle, soft shadows for depth
+
+DESIGN RATIONALE:
+Scandinavian design meets luxury through restraint. The generous whitespace and minimal geometry honor Nordic principles,
+while Playfair Display headings and bronze accents add warmth and sophistication. The knowledge base structure uses a
+sidebar navigation with categorized articles, search prominence, and clean content hierarchy. Light mode only reinforces
+the airy, open feeling characteristic of Scandinavian interiors.
+-->
+
+<style>
+:root {
+    --color-primary: #2C5F2D;
+    --color-background: #FAFAF8;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6B6B6B;
+    --color-accent: #D4A373;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 2px;
+    --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 280px;
+    background: var(--color-surface);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    padding: calc(var(--space-unit) * 6);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: calc(var(--space-unit) * 4);
+    letter-spacing: -0.02em;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: calc(var(--space-unit) * 6);
+}
+
+.search-box input {
+    width: 100%;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+    padding-left: calc(var(--space-unit) * 5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--color-background);
+    transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.08);
+}
+
+.search-icon {
+    position: absolute;
+    left: calc(var(--space-unit) * 2);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    font-size: 16px;
+}
+
+.nav-section {
+    margin-bottom: calc(var(--space-unit) * 5);
+}
+
+.nav-section-title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: var(--radius-default);
+    font-size: 14px;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.nav-link:hover {
+    background: var(--color-background);
+    color: var(--color-primary);
+}
+
+.nav-link.active {
+    background: var(--color-primary);
+    color: white;
+    font-weight: 500;
+}
+
+.nav-link-icon {
+    margin-right: calc(var(--space-unit) * 1.5);
+    font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: calc(var(--space-unit) * 8) calc(var(--space-unit) * 10);
+    max-width: 900px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--color-primary);
+}
+
+.breadcrumb-separator {
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.page-header {
+    margin-bottom: calc(var(--space-unit) * 6);
+    padding-bottom: calc(var(--space-unit) * 4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 2);
+    letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    color: var(--color-text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.meta-info {
+    display: flex;
+    gap: calc(var(--space-unit) * 4);
+    margin-top: calc(var(--space-unit) * 3);
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1);
+}
+
+/* Content Sections */
+.content-section {
+    margin-bottom: calc(var(--space-unit) * 8);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 3);
+    letter-spacing: -0.01em;
+}
+
+.section-intro {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 4);
+    font-weight: 300;
+}
+
+.content-block {
+    margin-bottom: calc(var(--space-unit) * 4);
+}
+
+.content-block h3 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 2);
+    letter-spacing: -0.01em;
+}
+
+.content-block p {
+    margin-bottom: calc(var(--space-unit) * 2);
+    line-height: 1.8;
+}
+
+/* Code Blocks */
+.code-block {
+    background: var(--color-surface);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+    margin: calc(var(--space-unit) * 3) 0;
+    overflow-x: auto;
+    box-shadow: var(--shadow-default);
+}
+
+.code-block pre {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.code-inline {
+    background: rgba(44, 95, 45, 0.06);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 14px;
+    color: var(--color-primary);
+}
+
+/* Info Boxes */
+.info-box {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: calc(var(--space-unit) * 3);
+    margin: calc(var(--space-unit) * 4) 0;
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-default);
+}
+
+.info-box-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: calc(var(--space-unit) * 1.5);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.info-box-icon {
+    color: var(--color-accent);
+    font-size: 20px;
+}
+
+.info-box p {
+    line-height: 1.7;
+    color: var(--color-text);
+}
+
+/* Lists */
+.content-list {
+    list-style: none;
+    margin: calc(var(--space-unit) * 3) 0;
+}
+
+.content-list li {
+    position: relative;
+    padding-left: calc(var(--space-unit) * 4);
+    margin-bottom: calc(var(--space-unit) * 2);
+    line-height: 1.7;
+}
+
+.content-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* Article Cards */
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: calc(var(--space-unit) * 3);
+    margin-top: calc(var(--space-unit) * 4);
+}
+
+.article-card {
+    background: var(--color-surface);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-default);
+    padding: calc(var(--space-unit) * 3);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-default);
+}
+
+.article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+    border-color: var(--color-primary);
+}
+
+.article-card-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.article-card-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 1.5);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.article-card-excerpt {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+/* Table of Contents */
+.toc-sidebar {
+    position: sticky;
+    top: calc(var(--space-unit) * 8);
+    width: 240px;
+    margin-left: calc(var(--space-unit) * 8);
+    padding: calc(var(--space-unit) * 3);
+    background: var(--color-surface);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-default);
+}
+
+.toc-title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--space-unit) * 2);
+}
+
+.toc-list {
+    list-style: none;
+}
+
+.toc-list li {
+    margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.toc-list a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: color 0.2s ease;
+}
+
+.toc-list a:hover {
+    color: var(--color-primary);
+}
+
+.toc-list a.active {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+/* Container for content + TOC */
+.content-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Focus States */
+a:focus, button:focus, input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .toc-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .main-content {
+        padding: calc(var(--space-unit) * 4);
+    }
+
+    .page-title {
+        font-size: 36px;
+    }
+
+    .article-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="sidebar">
+    <div class="logo">Modern Lux</div>
+
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search documentation..." />
+    </div>
+
+    <nav>
+        <div class="nav-section">
+            <div class="nav-section-title">Getting Started</div>
+            <a href="#" class="nav-link active">
+                <span class="nav-link-icon">📘</span>
+                Introduction
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">⚡</span>
+                Quick Start
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🎯</span>
+                Core Concepts
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Architecture</div>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🏗️</span>
+                System Design
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🔌</span>
+                API Reference
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🗄️</span>
+                Data Models
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Guides</div>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🚀</span>
+                Deployment
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🔐</span>
+                Authentication
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">⚙️</span>
+                Configuration
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Resources</div>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">💡</span>
+                Best Practices
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">🛠️</span>
+                Troubleshooting
+            </a>
+            <a href="#" class="nav-link">
+                <span class="nav-link-icon">📚</span>
+                Examples
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="content-wrapper">
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="#">Documentation</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="#">Getting Started</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Introduction</span>
+        </div>
+
+        <header class="page-header">
+            <h1 class="page-title">Introduction to Modern Lux</h1>
+            <p class="page-subtitle">A comprehensive developer knowledge base designed for clarity, elegance, and efficiency</p>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>Updated Jan 7, 2026</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>8 min read</span>
+                </div>
+                <div class="meta-item">
+                    <span>👤</span>
+                    <span>Engineering Team</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="content-section">
+            <h2 class="section-title">What is Modern Lux?</h2>
+            <p class="section-intro">Modern Lux is a sophisticated knowledge base platform built for developers who value both aesthetics and functionality. We combine Scandinavian design principles with modern development practices to create documentation that's a pleasure to read and easy to navigate.</p>
+
+            <div class="content-block">
+                <h3>Design Philosophy</h3>
+                <p>Our approach centers on three core principles that guide every decision:</p>
+
+                <ul class="content-list">
+                    <li><strong>Clarity First</strong> — Information architecture designed for immediate comprehension and effortless navigation</li>
+                    <li><strong>Luxurious Simplicity</strong> — Generous whitespace and refined typography create a premium reading experience</li>
+                    <li><strong>Developer-Centric</strong> — Code examples, API references, and technical details presented with precision and care</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">
+                    <span class="info-box-icon">💡</span>
+                    Why Choose Modern Lux?
+                </div>
+                <p>Traditional documentation often sacrifices aesthetics for utility, or vice versa. Modern Lux proves you don't have to compromise. Our Scandinavian-inspired design creates a calm, focused environment that enhances comprehension while maintaining the technical depth developers need.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title">Getting Started</h2>
+
+            <div class="content-block">
+                <h3>Installation</h3>
+                <p>Begin your journey with Modern Lux using your preferred package manager. The installation process is straightforward and takes less than a minute:</p>
+
+                <div class="code-block">
+                    <pre>npm install modern-lux --save
+
+# or using yarn
+yarn add modern-lux
+
+# or using pnpm
+pnpm add modern-lux</pre>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Basic Configuration</h3>
+                <p>Configure Modern Lux by creating a <span class="code-inline">lux.config.js</span> file in your project root. The configuration system uses sensible defaults while remaining fully customizable:</p>
+
+                <div class="code-block">
+                    <pre>export default {
+  theme: 'scandinavian',
+  colorMode: 'light',
+  typography: {
+    heading: 'Playfair Display',
+    body: 'Inter'
+  },
+  navigation: {
+    position: 'sidebar',
+    searchEnabled: true
+  },
+  content: {
+    maxWidth: '900px',
+    codeHighlighting: true
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Creating Your First Page</h3>
+                <p>Modern Lux uses markdown with extended syntax for rich documentation. Create a new file in your <span class="code-inline">docs/</span> directory:</p>
+
+                <div class="code-block">
+                    <pre>---
+title: "Your First Page"
+description: "A warm introduction"
+category: "Getting Started"
+---
+
+# Welcome to Your Documentation
+
+Start writing beautiful docs immediately.
+No complex setup required.</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title">Core Features</h2>
+
+            <div class="content-block">
+                <p>Modern Lux comes with everything you need to create world-class developer documentation:</p>
+
+                <ul class="content-list">
+                    <li><strong>Smart Search</strong> — Full-text search with instant results and keyboard shortcuts</li>
+                    <li><strong>Code Highlighting</strong> — Syntax highlighting for 150+ programming languages</li>
+                    <li><strong>Responsive Design</strong> — Perfect reading experience on any device</li>
+                    <li><strong>Version Control</strong> — Manage multiple documentation versions effortlessly</li>
+                    <li><strong>Interactive Examples</strong> — Embed runnable code samples directly in your docs</li>
+                    <li><strong>API Auto-Generation</strong> — Generate API documentation from your codebase</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title">Related Articles</h2>
+
+            <div class="article-grid">
+                <a href="#" class="article-card">
+                    <div class="article-card-tag">Guide</div>
+                    <h3 class="article-card-title">Typography System</h3>
+                    <p class="article-card-excerpt">Learn how to customize fonts, sizing, and hierarchy to match your brand.</p>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-card-tag">Reference</div>
+                    <h3 class="article-card-title">Configuration API</h3>
+                    <p class="article-card-excerpt">Complete reference for all configuration options and their defaults.</p>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-card-tag">Tutorial</div>
+                    <h3 class="article-card-title">Building Themes</h3>
+                    <p class="article-card-excerpt">Create custom themes that reflect your unique design language.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <aside class="toc-sidebar">
+        <div class="toc-title">On This Page</div>
+        <ul class="toc-list">
+            <li><a href="#" class="active">What is Modern Lux?</a></li>
+            <li><a href="#">Design Philosophy</a></li>
+            <li><a href="#">Getting Started</a></li>
+            <li><a href="#">Installation</a></li>
+            <li><a href="#">Configuration</a></li>
+            <li><a href="#">First Page</a></li>
+            <li><a href="#">Core Features</a></li>
+            <li><a href="#">Related Articles</a></li>
+        </ul>
+    </aside>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 3;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dusk Core - The flat way to creative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Dusk Core - The flat way to creative
+ABOUTME: A Y2K-era spreadsheet interface for creative project management with mysterious purple gradients, glowing cells, and metallic accents that evoke the late-90s/early-2000s digital aesthetic.
+
+CSS VARIABLES:
+--color-primary: #8B5CF6 (vibrant purple)
+--color-background: #F8F7FC (light lavender background)
+--color-surface: #FFFFFF (white surface)
+--color-text: #2D1B4E (deep purple text)
+--color-text-muted: #6B5B7F (muted purple)
+--font-heading: 'Orbitron' (tech-forward Y2K font)
+--font-body: 'Rajdhani' (clean readable body)
+--space-unit: 8px
+--radius-default: 12px
+--shadow-default: 0 4px 16px rgba(139, 92, 246, 0.15)
+
+DESIGN RATIONALE:
+Y2K spreadsheet aesthetic achieved through gradient-heavy UI, glow effects, and chrome-like borders. The mysterious tone comes from deep purple palette with subtle opacity layers. Spreadsheet functionality presented through a creative asset tracking grid with formula bar, row/column headers, and cell selection states. Glass-morphism effects and metallic gradients capture the era's digital optimism.
+-->
+
+<style>
+:root {
+    --color-primary: #8B5CF6;
+    --color-background: #F8F7FC;
+    --color-surface: #FFFFFF;
+    --color-text: #2D1B4E;
+    --color-text-muted: #6B5B7F;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --space-unit: 8px;
+    --radius-default: 12px;
+    --shadow-default: 0 4px 16px rgba(139, 92, 246, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #F8F7FC 0%, #E9E4F5 100%);
+    color: var(--color-text);
+    min-height: 100vh;
+    padding: calc(var(--space-unit) * 2);
+}
+
+.app-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    background: var(--color-surface);
+    border-radius: calc(var(--radius-default) * 1.5);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    border: 2px solid rgba(139, 92, 246, 0.2);
+}
+
+/* Header */
+.header {
+    background: linear-gradient(180deg, #9D6EFC 0%, #8B5CF6 100%);
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(255, 255, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+.tagline {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    margin-left: calc(var(--space-unit) * 2);
+}
+
+.header-actions {
+    display: flex;
+    gap: calc(var(--space-unit) * 1.5);
+}
+
+.btn {
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0EBFF 100%);
+    color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Toolbar */
+.toolbar {
+    background: linear-gradient(180deg, #F5F2FF 0%, #EBE6F8 100%);
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+    border-bottom: 2px solid rgba(139, 92, 246, 0.15);
+    flex-wrap: wrap;
+}
+
+.formula-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 2);
+    min-width: 400px;
+}
+
+.cell-ref {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-primary);
+    background: white;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+    border-radius: calc(var(--radius-default) * 0.75);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.formula-input {
+    flex: 1;
+    padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: calc(var(--radius-default) * 0.75);
+    font-family: var(--font-body);
+    font-size: 15px;
+    background: white;
+    color: var(--color-text);
+    box-shadow: inset 0 2px 4px rgba(139, 92, 246, 0.1);
+}
+
+.formula-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2),
+                inset 0 2px 4px rgba(139, 92, 246, 0.1);
+}
+
+.toolbar-icons {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+}
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: calc(var(--radius-default) * 0.75);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.1);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.icon-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Spreadsheet */
+.spreadsheet-container {
+    padding: calc(var(--space-unit) * 3);
+    overflow-x: auto;
+}
+
+.spreadsheet-wrapper {
+    border: 3px solid rgba(139, 92, 246, 0.2);
+    border-radius: calc(var(--radius-default) * 1.25);
+    overflow: hidden;
+    box-shadow: var(--shadow-default);
+    background: white;
+}
+
+.spreadsheet {
+    display: grid;
+    grid-template-columns: 60px repeat(8, 1fr);
+    min-width: 1200px;
+}
+
+.cell {
+    padding: calc(var(--space-unit) * 2);
+    border-right: 1px solid rgba(139, 92, 246, 0.15);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.cell:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.1) 100%);
+    cursor: pointer;
+}
+
+.header-cell {
+    background: linear-gradient(180deg, #9D6EFC 0%, #8B5CF6 100%);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-align: center;
+    padding: calc(var(--space-unit) * 2);
+    letter-spacing: 1px;
+    border-right: 2px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.row-header {
+    background: linear-gradient(90deg, #9D6EFC 0%, #8B5CF6 100%);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-align: center;
+    border-right: 3px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.corner-cell {
+    background: linear-gradient(135deg, #A882FC 0%, #9D6EFC 50%, #8B5CF6 100%);
+    border-right: 3px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.cell.selected {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.25) 100%);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2),
+                inset 0 0 12px rgba(139, 92, 246, 0.1);
+    z-index: 10;
+}
+
+.cell-header {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cell-status {
+    display: inline-block;
+    padding: 2px calc(var(--space-unit) * 1.5);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+    color: #4C1D95;
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+}
+
+.status-review {
+    background: linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%);
+    color: #78350F;
+    box-shadow: 0 2px 6px rgba(252, 211, 77, 0.3);
+}
+
+.status-complete {
+    background: linear-gradient(135deg, #A7F3D0 0%, #6EE7B7 100%);
+    color: #065F46;
+    box-shadow: 0 2px 6px rgba(110, 231, 183, 0.3);
+}
+
+.cell-muted {
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.cell-value {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Stats Panel */
+.stats-panel {
+    padding: calc(var(--space-unit) * 3);
+    background: linear-gradient(180deg, #F5F2FF 0%, #EBE6F8 100%);
+    border-top: 2px solid rgba(139, 92, 246, 0.15);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: calc(var(--space-unit) * 3);
+}
+
+.stat-card {
+    background: white;
+    padding: calc(var(--space-unit) * 3);
+    border-radius: var(--radius-default);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    box-shadow: var(--shadow-default);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+    border-color: var(--color-primary);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--color-primary);
+    text-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+    letter-spacing: -1px;
+}
+
+.stat-change {
+    font-size: 14px;
+    color: #059669;
+    font-weight: 600;
+    margin-top: calc(var(--space-unit) * 1);
+}
+
+.stat-change::before {
+    content: '▲ ';
+}
+
+/* Footer */
+.footer {
+    padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+    background: linear-gradient(180deg, #2D1B4E 0%, #1E1433 100%);
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    font-size: 13px;
+    border-top: 3px solid rgba(139, 92, 246, 0.4);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(var(--space-unit) * 2);
+}
+
+.footer-nav {
+    display: flex;
+    gap: calc(var(--space-unit) * 3);
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.footer-link:hover {
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: calc(var(--space-unit) * 2);
+        align-items: flex-start;
+    }
+
+    .formula-bar {
+        flex-direction: column;
+        min-width: 100%;
+    }
+
+    .spreadsheet-container {
+        padding: calc(var(--space-unit) * 2);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="app-container">
+    <header class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo">DUSK CORE</div>
+            <div class="tagline">The flat way to creative</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary">Export</button>
+            <button class="btn btn-primary">New Project</button>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="formula-bar">
+            <div class="cell-ref">C4</div>
+            <input type="text" class="formula-input" value="=SUM(C2:C10)" placeholder="Enter formula or value...">
+        </div>
+        <div class="toolbar-icons">
+            <button class="icon-btn" title="Bold">B</button>
+            <button class="icon-btn" title="Italic">I</button>
+            <button class="icon-btn" title="Function">Σ</button>
+            <button class="icon-btn" title="Chart">📊</button>
+            <button class="icon-btn" title="Filter">⚙</button>
+        </div>
+    </div>
+
+    <div class="spreadsheet-container">
+        <div class="spreadsheet-wrapper">
+            <div class="spreadsheet">
+                <!-- Header Row -->
+                <div class="cell corner-cell"></div>
+                <div class="cell header-cell">PROJECT</div>
+                <div class="cell header-cell">CLIENT</div>
+                <div class="cell header-cell">STATUS</div>
+                <div class="cell header-cell">PROGRESS</div>
+                <div class="cell header-cell">BUDGET</div>
+                <div class="cell header-cell">SPENT</div>
+                <div class="cell header-cell">DUE DATE</div>
+                <div class="cell header-cell">LEAD</div>
+
+                <!-- Row 1 -->
+                <div class="cell row-header">1</div>
+                <div class="cell selected">
+                    <div class="cell-header">Midnight Brand</div>
+                </div>
+                <div class="cell cell-value">Stellar Labs</div>
+                <div class="cell">
+                    <span class="cell-status status-active">Active</span>
+                </div>
+                <div class="cell cell-value">72%</div>
+                <div class="cell cell-value">$45,000</div>
+                <div class="cell cell-value">$32,400</div>
+                <div class="cell cell-muted">2026-02-15</div>
+                <div class="cell cell-value">Maya Chen</div>
+
+                <!-- Row 2 -->
+                <div class="cell row-header">2</div>
+                <div class="cell">
+                    <div class="cell-header">Eclipse UI Kit</div>
+                </div>
+                <div class="cell cell-value">Nebula Inc</div>
+                <div class="cell">
+                    <span class="cell-status status-review">Review</span>
+                </div>
+                <div class="cell cell-value">95%</div>
+                <div class="cell cell-value">$28,000</div>
+                <div class="cell cell-value">$26,600</div>
+                <div class="cell cell-muted">2026-01-22</div>
+                <div class="cell cell-value">Jin Park</div>
+
+                <!-- Row 3 -->
+                <div class="cell row-header">3</div>
+                <div class="cell">
+                    <div class="cell-header">Twilight Motion</div>
+                </div>
+                <div class="cell cell-value">Aurora Studios</div>
+                <div class="cell">
+                    <span class="cell-status status-complete">Complete</span>
+                </div>
+                <div class="cell cell-value">100%</div>
+                <div class="cell cell-value">$52,000</div>
+                <div class="cell cell-value">$49,800</div>
+                <div class="cell cell-muted">2026-01-10</div>
+                <div class="cell cell-value">Alex Rivera</div>
+
+                <!-- Row 4 -->
+                <div class="cell row-header">4</div>
+                <div class="cell">
+                    <div class="cell-header">Shadow Assets</div>
+                </div>
+                <div class="cell cell-value">Cosmic Media</div>
+                <div class="cell">
+                    <span class="cell-status status-active">Active</span>
+                </div>
+                <div class="cell cell-value">38%</div>
+                <div class="cell cell-value">$67,000</div>
+                <div class="cell cell-value">$25,460</div>
+                <div class="cell cell-muted">2026-03-01</div>
+                <div class="cell cell-value">Sam Taylor</div>
+
+                <!-- Row 5 -->
+                <div class="cell row-header">5</div>
+                <div class="cell">
+                    <div class="cell-header">Dusk Portfolio</div>
+                </div>
+                <div class="cell cell-value">Void Agency</div>
+                <div class="cell">
+                    <span class="cell-status status-active">Active</span>
+                </div>
+                <div class="cell cell-value">61%</div>
+                <div class="cell cell-value">$34,500</div>
+                <div class="cell cell-value">$21,045</div>
+                <div class="cell cell-muted">2026-02-08</div>
+                <div class="cell cell-value">Riley Johnson</div>
+
+                <!-- Row 6 -->
+                <div class="cell row-header">6</div>
+                <div class="cell">
+                    <div class="cell-header">Noir Campaign</div>
+                </div>
+                <div class="cell cell-value">Phantom Co</div>
+                <div class="cell">
+                    <span class="cell-status status-review">Review</span>
+                </div>
+                <div class="cell cell-value">88%</div>
+                <div class="cell cell-value">$41,000</div>
+                <div class="cell cell-value">$36,080</div>
+                <div class="cell cell-muted">2026-01-28</div>
+                <div class="cell cell-value">Chris Lee</div>
+
+                <!-- Row 7 -->
+                <div class="cell row-header">7</div>
+                <div class="cell">
+                    <div class="cell-header">Gloom Graphics</div>
+                </div>
+                <div class="cell cell-value">Enigma Ltd</div>
+                <div class="cell">
+                    <span class="cell-status status-active">Active</span>
+                </div>
+                <div class="cell cell-value">24%</div>
+                <div class="cell cell-value">$29,000</div>
+                <div class="cell cell-value">$6,960</div>
+                <div class="cell cell-muted">2026-03-15</div>
+                <div class="cell cell-value">Jordan Wu</div>
+
+                <!-- Row 8 -->
+                <div class="cell row-header">8</div>
+                <div class="cell">
+                    <div class="cell-header">Haze Website</div>
+                </div>
+                <div class="cell cell-value">Mystery Group</div>
+                <div class="cell">
+                    <span class="cell-status status-complete">Complete</span>
+                </div>
+                <div class="cell cell-value">100%</div>
+                <div class="cell cell-value">$38,000</div>
+                <div class="cell cell-value">$37,240</div>
+                <div class="cell cell-muted">2026-01-05</div>
+                <div class="cell cell-value">Dakota Moore</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Active Projects</div>
+                <div class="stat-value">8</div>
+                <div class="stat-change">+2 this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Budget</div>
+                <div class="stat-value">$334K</div>
+                <div class="stat-change">+12% vs last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Completion Rate</div>
+                <div class="stat-value">72%</div>
+                <div class="stat-change">+5% improvement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Budget Utilized</div>
+                <div class="stat-value">$235K</div>
+                <div class="stat-change">+8% efficiency</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>&copy; 2026 Dusk Core. All rights reserved.</div>
+            <nav class="footer-nav">
+                <a href="#" class="footer-link">Projects</a>
+                <a href="#" class="footer-link">Analytics</a>
+                <a href="#" class="footer-link">Settings</a>
+                <a href="#" class="footer-link">Help</a>
+            </nav>
+            <div>Use ← → arrows to navigate</div>
+        </div>
+    </footer>
+</div>
+
+<script>
+(function() {
+    const TOTAL = 100;
+    const CURRENT = 64;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

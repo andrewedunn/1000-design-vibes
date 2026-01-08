@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo Pewter - Food Delivery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Cosmo Pewter - International minimalism with natural undertones
+        ABOUTME: A food delivery interface combining Swiss International design principles with energetic real estate professionalism
+
+        CSS VARIABLES:
+        --color-primary: #2C5F2D (forest green - natural, grounded)
+        --color-accent: #D97706 (amber - energetic, food-focused)
+        --color-background: #FAFAF9 (warm off-white)
+        --color-surface: #FFFFFF (pure white)
+        --color-text: #1C1C1C (near black)
+        --color-text-muted: #737373 (pewter gray)
+        --color-border: #E5E5E5 (subtle gray)
+        --font-heading: 'Space Grotesk' (geometric, modern)
+        --font-body: 'Manrope' (clean, readable)
+        --space-unit: 8px
+        --radius-default: 2px (minimal, Swiss-inspired)
+        --shadow-subtle: 0 1px 3px rgba(0,0,0,0.06)
+
+        DESIGN RATIONALE:
+        Swiss International design emphasizes grid systems, clean typography, and objective communication.
+        The food delivery context demands clarity and speed, while the real estate industry influence
+        brings professional polish and trust signals. The energetic tone is achieved through vibrant
+        accent colors (amber) and dynamic grid layouts. Natural undertones come from the forest green
+        primary and warm neutrals. The design uses asymmetric grid balance, generous whitespace, and
+        type hierarchy to create a sophisticated yet accessible ordering experience.
+        -->
+
+        */
+        :root {
+            --color-primary: #2C5F2D;
+            --color-accent: #D97706;
+            --color-background: #FAFAF9;
+            --color-surface: #FFFFFF;
+            --color-text: #1C1C1C;
+            --color-text-muted: #737373;
+            --color-border: #E5E5E5;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Manrope', sans-serif;
+            --space-unit: 8px;
+            --radius-default: 2px;
+            --shadow-subtle: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-card: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1.5);
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .location:hover {
+            border-color: var(--color-primary);
+        }
+
+        .location-icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--color-accent);
+        }
+
+        .location-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .cart-button {
+            position: relative;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 2.5);
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cart-button:hover {
+            background: #234d24;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--color-accent);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-unit) * 5) calc(var(--space-unit) * 4);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 6);
+            margin-bottom: calc(var(--space-unit) * 8);
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: 56px;
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: calc(var(--space-unit) * 3);
+            color: var(--color-text);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+            max-width: 480px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            max-width: 560px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .search-button {
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #B45309;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #3d7a3e 100%);
+            border-radius: var(--radius-default);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+        }
+
+        .hero-image-text {
+            font-family: var(--font-heading);
+            font-size: 72px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: -0.04em;
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* Categories */
+        .categories {
+            margin-bottom: calc(var(--space-unit) * 8);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .view-all {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .view-all:hover {
+            color: var(--color-accent);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .category-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 3);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto calc(var(--space-unit) * 2);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Featured Restaurants */
+        .restaurants {
+            margin-bottom: calc(var(--space-unit) * 8);
+        }
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        .restaurant-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .restaurant-card:hover {
+            box-shadow: var(--shadow-card);
+            border-color: var(--color-primary);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .restaurant-badge {
+            position: absolute;
+            top: calc(var(--space-unit) * 2);
+            left: calc(var(--space-unit) * 2);
+            background: var(--color-accent);
+            color: white;
+            padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.5);
+            border-radius: var(--radius-default);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .restaurant-info {
+            padding: calc(var(--space-unit) * 3);
+        }
+
+        .restaurant-name {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 1);
+            letter-spacing: -0.01em;
+        }
+
+        .restaurant-cuisine {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .restaurant-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 3);
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 0.75);
+        }
+
+        .meta-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Order Tracking */
+        .order-tracking {
+            background: var(--color-primary);
+            border-radius: var(--radius-default);
+            padding: calc(var(--space-unit) * 5);
+            color: white;
+            margin-bottom: calc(var(--space-unit) * 8);
+        }
+
+        .tracking-header {
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .tracking-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .tracking-subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .tracking-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: calc(var(--space-unit) * 6);
+        }
+
+        .tracking-status {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: flex-start;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .status-dot.active {
+            background: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(217,119,6,0.3);
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: calc(var(--space-unit) * 0.5);
+        }
+
+        .status-time {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .tracking-map {
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-default);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 4);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: calc(var(--space-unit) * 6);
+        }
+
+        .footer-brand {
+            max-width: 320px;
+        }
+
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        .footer-section h3 {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--color-text);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 1.5);
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: calc(var(--space-unit) * 4) auto 0;
+            padding-top: calc(var(--space-unit) * 4);
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* Focus States */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .restaurant-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                height: 280px;
+            }
+
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tracking-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Cosmo Pewter</div>
+            <div class="header-actions">
+                <div class="location">
+                    <svg class="location-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <span class="location-text">Downtown, SF</span>
+                </div>
+                <button class="cart-button">
+                    Cart
+                    <span class="cart-badge">3</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Fresh meals delivered to your property</h1>
+                <p>Order from the finest restaurants and local kitchens. Quality ingredients, expertly prepared, delivered with care.</p>
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search restaurants or cuisines...">
+                    <button class="search-button">Search</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-image-text">FRESH</div>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="categories">
+            <div class="section-header">
+                <h2 class="section-title">Browse by Cuisine</h2>
+                <a href="#" class="view-all">View all →</a>
+            </div>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-icon">🍕</div>
+                    <div class="category-name">Italian</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍜</div>
+                    <div class="category-name">Asian</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🌮</div>
+                    <div class="category-name">Mexican</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍔</div>
+                    <div class="category-name">American</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🥗</div>
+                    <div class="category-name">Healthy</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍰</div>
+                    <div class="category-name">Desserts</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Tracking -->
+        <section class="order-tracking">
+            <div class="tracking-header">
+                <h2 class="tracking-title">Active Order #8472</h2>
+                <p class="tracking-subtitle">Estimated arrival: 25-30 minutes</p>
+            </div>
+            <div class="tracking-content">
+                <div class="tracking-status">
+                    <div class="status-item">
+                        <div class="status-dot active"></div>
+                        <div class="status-text">
+                            <div class="status-label">Order Confirmed</div>
+                            <div class="status-time">2:15 PM</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-dot active"></div>
+                        <div class="status-text">
+                            <div class="status-label">Preparing</div>
+                            <div class="status-time">2:20 PM</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-dot active"></div>
+                        <div class="status-text">
+                            <div class="status-label">Out for Delivery</div>
+                            <div class="status-time">2:35 PM (current)</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-dot"></div>
+                        <div class="status-text">
+                            <div class="status-label">Delivered</div>
+                            <div class="status-time">Expected 2:45 PM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracking-map">
+                    Live tracking map placeholder
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Restaurants -->
+        <section class="restaurants">
+            <div class="section-header">
+                <h2 class="section-title">Featured Restaurants</h2>
+                <a href="#" class="view-all">View all →</a>
+            </div>
+            <div class="restaurant-grid">
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <div class="restaurant-badge">Popular</div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Verde Kitchen</h3>
+                        <p class="restaurant-cuisine">Italian • Mediterranean</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.8</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>25-35 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <div class="restaurant-badge">New</div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Dragon Bowl</h3>
+                        <p class="restaurant-cuisine">Asian Fusion • Thai</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.9</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>20-30 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="restaurant-card">
+                    <div class="restaurant-image"></div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Harvest & Grain</h3>
+                        <p class="restaurant-cuisine">Healthy • Organic</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.7</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>15-25 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <div class="restaurant-badge">Featured</div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Ember Grill</h3>
+                        <p class="restaurant-cuisine">Steakhouse • BBQ</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.6</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>30-40 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$$$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="restaurant-card">
+                    <div class="restaurant-image"></div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Coastal Catch</h3>
+                        <p class="restaurant-cuisine">Seafood • Sushi</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.9</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>25-35 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$$$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="restaurant-card">
+                    <div class="restaurant-image"></div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">Sweet Street</h3>
+                        <p class="restaurant-cuisine">Desserts • Bakery</p>
+                        <div class="restaurant-meta">
+                            <div class="meta-item">
+                                <span>⭐</span>
+                                <span>4.8</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🕒</span>
+                                <span>15-20 min</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>💰</span>
+                                <span>$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">Cosmo Pewter</div>
+                <p class="footer-tagline">Premium food delivery service connecting you with the finest restaurants and local kitchens. Fresh ingredients, expertly prepared, delivered with care to your property.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>For Partners</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Become a Restaurant</a></li>
+                    <li><a href="#">Delivery Drivers</a></li>
+                    <li><a href="#">Property Partnerships</a></li>
+                    <li><a href="#">Corporate Catering</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Cosmo Pewter. All rights reserved. | International minimalism with natural undertones.
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        const TOTAL = 100;
+        const CURRENT = 71;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+            if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        });
+
+        let startX;
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                window.location.href = diff > 0
+                    ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                    : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

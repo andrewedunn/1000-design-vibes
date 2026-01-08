@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Chalk - Fitness Data Table</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Prime Chalk - Crafted for users with international roots
+ABOUTME: A grunge-aesthetic fitness data table combining distressed textures, raw typography, and playful energy. Features member performance tracking with torn-paper effects, chalk-dust overlays, and intentionally imperfect alignments that evoke underground gym culture.
+
+CSS VARIABLES:
+--color-primary: #D4FF00 (neon lime - high-energy accent)
+--color-background: #1A1A1A (charcoal black)
+--color-surface: #2B2B2B (distressed concrete gray)
+--color-text: #E8E8E8 (chalk white)
+--color-text-muted: #999999 (faded chalk)
+--font-heading: 'Bebas Neue' (bold, condensed poster style)
+--font-body: 'Courier Prime' (typewriter rawness)
+--space-unit: 1rem
+--radius-default: 2px (minimal, industrial)
+--shadow-default: 0 4px 12px rgba(0, 0, 0, 0.6)
+
+DESIGN RATIONALE:
+Grunge meets fitness through distressed textures, hand-drawn borders, and rebellious typography. The data table structure maintains functionality while incorporating torn edges, chalk dust effects, and playful icons. Color mode toggle presented as a worn sticker. International inclusivity shown through diverse member names and metric/imperial units. Playful tone achieved through energetic colors, casual labels, and gym culture references.
+-->
+
+<style>
+:root {
+    --color-primary: #D4FF00;
+    --color-background: #1A1A1A;
+    --color-surface: #2B2B2B;
+    --color-text: #E8E8E8;
+    --color-text-muted: #999999;
+    --font-heading: 'Bebas Neue', sans-serif;
+    --font-body: 'Courier Prime', monospace;
+    --space-unit: 1rem;
+    --radius-default: 2px;
+    --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] {
+    --color-background: #E8E3D8;
+    --color-surface: #F5F2EA;
+    --color-text: #1A1A1A;
+    --color-text-muted: #666666;
+    --shadow-default: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    padding: calc(var(--space-unit) * 2);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Grunge texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+[data-theme="light"] body::before {
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header with torn edge */
+header {
+    margin-bottom: calc(var(--space-unit) * 3);
+    padding-bottom: calc(var(--space-unit) * 2);
+    border-bottom: 3px solid var(--color-primary);
+    position: relative;
+    clip-path: polygon(
+        0 0, 100% 0, 100% calc(100% - 8px),
+        98% calc(100% - 4px), 95% calc(100% - 10px),
+        92% calc(100% - 3px), 88% calc(100% - 12px),
+        85% calc(100% - 5px), 80% calc(100% - 9px),
+        75% calc(100% - 2px), 70% calc(100% - 11px),
+        65% calc(100% - 6px), 60% calc(100% - 8px),
+        55% calc(100% - 3px), 50% calc(100% - 10px),
+        45% calc(100% - 5px), 40% calc(100% - 9px),
+        35% calc(100% - 2px), 30% calc(100% - 11px),
+        25% calc(100% - 7px), 20% calc(100% - 4px),
+        15% calc(100% - 10px), 10% calc(100% - 6px),
+        5% calc(100% - 3px), 0 calc(100% - 8px)
+    );
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+    transform: rotate(-1deg);
+    margin-bottom: calc(var(--space-unit) * 0.5);
+    line-height: 0.9;
+}
+
+.tagline {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    transform: rotate(-0.5deg);
+    margin-left: calc(var(--space-unit) * 0.5);
+}
+
+/* Theme toggle - sticker style */
+.theme-toggle {
+    position: fixed;
+    top: calc(var(--space-unit) * 2);
+    right: calc(var(--space-unit) * 2);
+    z-index: 100;
+    background: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.25);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transform: rotate(3deg);
+    box-shadow: var(--shadow-default);
+    transition: transform 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.theme-toggle:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+.theme-toggle:focus {
+    outline: 3px dashed var(--color-text);
+    outline-offset: 4px;
+}
+
+/* Stats bar - spray paint style */
+.stats-bar {
+    display: flex;
+    gap: calc(var(--space-unit) * 2);
+    margin-bottom: calc(var(--space-unit) * 3);
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 1.5);
+    border: 2px solid var(--color-text-muted);
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    transform: rotate(-0.5deg);
+    box-shadow: var(--shadow-default);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: calc(var(--space-unit) * 0.25);
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+/* Filters - handwritten tags */
+.filters {
+    display: flex;
+    gap: calc(var(--space-unit) * 1);
+    margin-bottom: calc(var(--space-unit) * 2);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-weight: 700;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 2px solid var(--color-text-muted);
+    color: var(--color-text);
+    padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transform: rotate(-1deg);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+    transform: rotate(0deg);
+}
+
+.filter-btn:focus {
+    outline: 2px dashed var(--color-primary);
+    outline-offset: 3px;
+}
+
+/* Table container with ripped edges */
+.table-container {
+    background: var(--color-surface);
+    padding: calc(var(--space-unit) * 2);
+    border: 3px solid var(--color-text-muted);
+    box-shadow: var(--shadow-default);
+    position: relative;
+    overflow-x: auto;
+    clip-path: polygon(
+        0 12px, 8px 4px, 16px 10px, 24px 2px, 32px 8px,
+        calc(100% - 32px) 8px, calc(100% - 24px) 2px,
+        calc(100% - 16px) 10px, calc(100% - 8px) 4px, 100% 12px,
+        100% calc(100% - 12px), calc(100% - 8px) calc(100% - 4px),
+        calc(100% - 16px) calc(100% - 10px), calc(100% - 24px) calc(100% - 2px),
+        calc(100% - 32px) calc(100% - 8px), 32px calc(100% - 8px),
+        24px calc(100% - 2px), 16px calc(100% - 10px),
+        8px calc(100% - 4px), 0 calc(100% - 12px)
+    );
+}
+
+/* Chalk dust effect */
+.table-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+[data-theme="light"] .table-container::after {
+    background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0,0,0,0.02) 0%, transparent 50%);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    position: relative;
+}
+
+thead {
+    background: var(--color-background);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+th {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 0.75);
+    text-align: left;
+    border-bottom: 3px solid var(--color-primary);
+    color: var(--color-primary);
+    position: relative;
+}
+
+th::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--color-primary) 0px, var(--color-primary) 10px, transparent 10px, transparent 12px);
+}
+
+td {
+    padding: calc(var(--space-unit) * 0.875) calc(var(--space-unit) * 0.75);
+    border-bottom: 1px dashed var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+tr:hover td {
+    background: rgba(212, 255, 0, 0.08);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Rank badge - stencil style */
+.rank {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    color: var(--color-background);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    line-height: 32px;
+    text-align: center;
+    transform: rotate(-5deg);
+    border: 2px solid var(--color-background);
+}
+
+/* Member name with flag emoji */
+.member-name {
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.member-country {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-left: calc(var(--space-unit) * 0.5);
+}
+
+/* Performance indicators */
+.perf-indicator {
+    display: inline-block;
+    padding: calc(var(--space-unit) * 0.25) calc(var(--space-unit) * 0.5);
+    border-radius: var(--radius-default);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.perf-indicator.improving {
+    background: rgba(0, 255, 100, 0.2);
+    color: #00FF64;
+    border: 1px solid #00FF64;
+}
+
+.perf-indicator.plateau {
+    background: rgba(255, 200, 0, 0.2);
+    color: #FFC800;
+    border: 1px solid #FFC800;
+}
+
+.perf-indicator.declining {
+    background: rgba(255, 50, 50, 0.2);
+    color: #FF3232;
+    border: 1px solid #FF3232;
+}
+
+/* PR badge - spray paint */
+.pr-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.25);
+    font-size: 0.8rem;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.pr-badge::before {
+    content: '★';
+    font-size: 1.2rem;
+}
+
+/* Footer - graffiti style */
+footer {
+    margin-top: calc(var(--space-unit) * 4);
+    padding-top: calc(var(--space-unit) * 2);
+    border-top: 2px dashed var(--color-text-muted);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--space-unit) * 2);
+    flex-wrap: wrap;
+    margin-top: calc(var(--space-unit) * 1);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-unit) * 0.5);
+}
+
+.legend-icon {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-radius: var(--radius-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .theme-toggle:hover,
+    .filter-btn:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: calc(var(--space-unit) * 1);
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .stats-bar {
+        flex-direction: column;
+    }
+
+    .table-container {
+        padding: calc(var(--space-unit) * 1);
+    }
+
+    th, td {
+        padding: calc(var(--space-unit) * 0.5);
+        font-size: 0.85rem;
+    }
+
+    .theme-toggle {
+        top: calc(var(--space-unit) * 1);
+        right: calc(var(--space-unit) * 1);
+        padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1);
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+<div class="container">
+    <header>
+        <h1>Prime Chalk</h1>
+        <p class="tagline">Crafted for users with international roots</p>
+    </header>
+
+    <button class="theme-toggle" aria-label="Toggle color mode">
+        FLIP MODE
+    </button>
+
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-label">Active Members</div>
+            <div class="stat-value">847</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Avg Weekly Sessions</div>
+            <div class="stat-value">4.2</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">PRs This Month</div>
+            <div class="stat-value">312</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Global Reach</div>
+            <div class="stat-value">42</div>
+        </div>
+    </div>
+
+    <div class="filters">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Improving</button>
+        <button class="filter-btn">Strength</button>
+        <button class="filter-btn">Cardio</button>
+        <button class="filter-btn">PRs</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Member</th>
+                    <th>Home</th>
+                    <th>Focus</th>
+                    <th>Squat PR</th>
+                    <th>Bench PR</th>
+                    <th>5K Time</th>
+                    <th>Trend</th>
+                    <th>Sessions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="rank">1</span></td>
+                    <td><span class="member-name">Amara Okafor</span></td>
+                    <td>🇳🇬 Nigeria</td>
+                    <td>Strength</td>
+                    <td><span class="pr-badge">140kg</span></td>
+                    <td>95kg</td>
+                    <td>22:45</td>
+                    <td><span class="perf-indicator improving">↑ 12%</span></td>
+                    <td>28</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">2</span></td>
+                    <td><span class="member-name">Yuki Tanaka</span></td>
+                    <td>🇯🇵 Japan</td>
+                    <td>Hybrid</td>
+                    <td>105kg</td>
+                    <td><span class="pr-badge">82kg</span></td>
+                    <td><span class="pr-badge">19:12</span></td>
+                    <td><span class="perf-indicator improving">↑ 8%</span></td>
+                    <td>32</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">3</span></td>
+                    <td><span class="member-name">Carlos Mendes</span></td>
+                    <td>🇧🇷 Brazil</td>
+                    <td>Cardio</td>
+                    <td>88kg</td>
+                    <td>70kg</td>
+                    <td><span class="pr-badge">18:03</span></td>
+                    <td><span class="perf-indicator improving">↑ 15%</span></td>
+                    <td>35</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">4</span></td>
+                    <td><span class="member-name">Fatima Al-Rashid</span></td>
+                    <td>🇸🇦 Saudi Arabia</td>
+                    <td>Strength</td>
+                    <td><span class="pr-badge">115kg</span></td>
+                    <td>75kg</td>
+                    <td>24:30</td>
+                    <td><span class="perf-indicator improving">↑ 10%</span></td>
+                    <td>26</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">5</span></td>
+                    <td><span class="member-name">Lars Bergström</span></td>
+                    <td>🇸🇪 Sweden</td>
+                    <td>Hybrid</td>
+                    <td>125kg</td>
+                    <td>88kg</td>
+                    <td>20:18</td>
+                    <td><span class="perf-indicator plateau">→ 2%</span></td>
+                    <td>24</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">6</span></td>
+                    <td><span class="member-name">Priya Sharma</span></td>
+                    <td>🇮🇳 India</td>
+                    <td>Cardio</td>
+                    <td>72kg</td>
+                    <td>52kg</td>
+                    <td><span class="pr-badge">19:45</span></td>
+                    <td><span class="perf-indicator improving">↑ 18%</span></td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">7</span></td>
+                    <td><span class="member-name">Dmitri Volkov</span></td>
+                    <td>🇷🇺 Russia</td>
+                    <td>Strength</td>
+                    <td>135kg</td>
+                    <td><span class="pr-badge">102kg</span></td>
+                    <td>25:12</td>
+                    <td><span class="perf-indicator improving">↑ 5%</span></td>
+                    <td>22</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">8</span></td>
+                    <td><span class="member-name">Mei Chen</span></td>
+                    <td>🇨🇳 China</td>
+                    <td>Hybrid</td>
+                    <td>98kg</td>
+                    <td>68kg</td>
+                    <td>21:22</td>
+                    <td><span class="perf-indicator plateau">→ 1%</span></td>
+                    <td>27</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">9</span></td>
+                    <td><span class="member-name">Ahmed Hassan</span></td>
+                    <td>🇪🇬 Egypt</td>
+                    <td>Strength</td>
+                    <td>110kg</td>
+                    <td>80kg</td>
+                    <td>23:55</td>
+                    <td><span class="perf-indicator declining">↓ 3%</span></td>
+                    <td>19</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">10</span></td>
+                    <td><span class="member-name">Sofia Rodríguez</span></td>
+                    <td>🇲🇽 Mexico</td>
+                    <td>Cardio</td>
+                    <td>85kg</td>
+                    <td>58kg</td>
+                    <td><span class="pr-badge">19:58</span></td>
+                    <td><span class="perf-indicator improving">↑ 14%</span></td>
+                    <td>31</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">11</span></td>
+                    <td><span class="member-name">Henrik Johansen</span></td>
+                    <td>🇩🇰 Denmark</td>
+                    <td>Hybrid</td>
+                    <td>118kg</td>
+                    <td>85kg</td>
+                    <td>20:45</td>
+                    <td><span class="perf-indicator improving">↑ 7%</span></td>
+                    <td>25</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">12</span></td>
+                    <td><span class="member-name">Aisha Kimathi</span></td>
+                    <td>🇰🇪 Kenya</td>
+                    <td>Cardio</td>
+                    <td>68kg</td>
+                    <td>48kg</td>
+                    <td><span class="pr-badge">17:28</span></td>
+                    <td><span class="perf-indicator improving">↑ 22%</span></td>
+                    <td>38</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">13</span></td>
+                    <td><span class="member-name">Marco Bianchi</span></td>
+                    <td>🇮🇹 Italy</td>
+                    <td>Strength</td>
+                    <td><span class="pr-badge">128kg</span></td>
+                    <td>92kg</td>
+                    <td>24:10</td>
+                    <td><span class="perf-indicator improving">↑ 9%</span></td>
+                    <td>23</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">14</span></td>
+                    <td><span class="member-name">Ling Wu</span></td>
+                    <td>🇹🇼 Taiwan</td>
+                    <td>Hybrid</td>
+                    <td>92kg</td>
+                    <td>65kg</td>
+                    <td>21:05</td>
+                    <td><span class="perf-indicator plateau">→ 0%</span></td>
+                    <td>21</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">15</span></td>
+                    <td><span class="member-name">Jean-Pierre Dubois</span></td>
+                    <td>🇫🇷 France</td>
+                    <td>Strength</td>
+                    <td>120kg</td>
+                    <td>86kg</td>
+                    <td>23:20</td>
+                    <td><span class="perf-indicator declining">↓ 2%</span></td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">16</span></td>
+                    <td><span class="member-name">Zara Patel</span></td>
+                    <td>🇬🇧 UK</td>
+                    <td>Cardio</td>
+                    <td>78kg</td>
+                    <td>55kg</td>
+                    <td><span class="pr-badge">20:12</span></td>
+                    <td><span class="perf-indicator improving">↑ 11%</span></td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">17</span></td>
+                    <td><span class="member-name">Mateo García</span></td>
+                    <td>🇦🇷 Argentina</td>
+                    <td>Hybrid</td>
+                    <td>108kg</td>
+                    <td>78kg</td>
+                    <td>22:08</td>
+                    <td><span class="perf-indicator improving">↑ 6%</span></td>
+                    <td>26</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">18</span></td>
+                    <td><span class="member-name">Nadia Kowalski</span></td>
+                    <td>🇵🇱 Poland</td>
+                    <td>Strength</td>
+                    <td>102kg</td>
+                    <td><span class="pr-badge">72kg</span></td>
+                    <td>25:45</td>
+                    <td><span class="perf-indicator improving">↑ 8%</span></td>
+                    <td>24</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">19</span></td>
+                    <td><span class="member-name">Kwame Mensah</span></td>
+                    <td>🇬🇭 Ghana</td>
+                    <td>Cardio</td>
+                    <td>82kg</td>
+                    <td>60kg</td>
+                    <td>20:55</td>
+                    <td><span class="perf-indicator plateau">→ 2%</span></td>
+                    <td>22</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">20</span></td>
+                    <td><span class="member-name">Isabella Santos</span></td>
+                    <td>🇵🇹 Portugal</td>
+                    <td>Hybrid</td>
+                    <td>95kg</td>
+                    <td>66kg</td>
+                    <td>21:38</td>
+                    <td><span class="perf-indicator improving">↑ 13%</span></td>
+                    <td>28</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>Real-time performance tracking • Updated every workout session</p>
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-icon" style="background: rgba(0, 255, 100, 0.2); border-color: #00FF64;"></span>
+                <span>Improving</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon" style="background: rgba(255, 200, 0, 0.2); border-color: #FFC800;"></span>
+                <span>Plateau</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon" style="background: rgba(255, 50, 50, 0.2); border-color: #FF3232;"></span>
+                <span>Declining</span>
+            </div>
+            <div class="legend-item">
+                <span style="color: var(--color-primary);">★</span>
+                <span>Personal Record</span>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+(function() {
+    // Navigation
+    const TOTAL = 100;
+    const CURRENT = 82;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
+        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+    });
+
+    let startX;
+    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            window.location.href = diff > 0
+                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
+                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
+        }
+    });
+
+    // Theme toggle
+    const themeToggle = document.querySelector('.theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+
+    if (currentTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    });
+
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.textContent.toLowerCase();
+
+            tableRows.forEach(row => {
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else if (filter === 'improving') {
+                    row.style.display = row.querySelector('.improving') ? '' : 'none';
+                } else if (filter === 'strength') {
+                    row.style.display = row.cells[3].textContent.toLowerCase().includes('strength') ? '' : 'none';
+                } else if (filter === 'cardio') {
+                    row.style.display = row.cells[3].textContent.toLowerCase().includes('cardio') ? '' : 'none';
+                } else if (filter === 'prs') {
+                    row.style.display = row.querySelector('.pr-badge') ? '' : 'none';
+                }
+            });
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
