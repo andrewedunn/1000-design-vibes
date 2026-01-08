@@ -172,6 +172,29 @@ Use these as creative inspiration:
 - Focus indicators on all interactive elements
 - Include `@media (prefers-reduced-motion: reduce)` block
 
+### CRITICAL: Do NOT Include
+
+**NO NAVIGATION SCRIPTS** - The viewer handles navigation between designs. Do NOT add:
+- Keyboard event listeners for ArrowLeft/ArrowRight
+- Previous/Next buttons that navigate between designs
+- Any `window.location.href` redirects to other design files
+
+**CSS COMMENTS ONLY** - Inside `<style>` blocks, use CSS comments `/* */`, never HTML comments `<!-- -->`.
+
+```css
+/* CORRECT - CSS comments inside style blocks */
+:root {
+    /* Color palette */
+    --color-primary: #6366f1;
+}
+
+/* WRONG - HTML comments break CSS parsing */
+:root {
+    <!-- Color palette -->
+    --color-primary: #6366f1;
+}
+```
+
 ---
 
 ## Documentation Block (Required)

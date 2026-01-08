@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Protocol - Transit App Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Protocol - Where flat meets international aesthetics
+ABOUTME: This design system implements transit_app with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: Raw HTML structure with heavy black borders, flat color blocks, strict grid alignment.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #000000;
+--color-background: #FFFFFF;
+--color-surface: #F5F5F5;
+--color-text: #000000;
+--color-text-muted: #666666;
+--color-accent-red: #FF0000;
+--color-accent-blue: #0000FF;
+--color-accent-green: #00FF00;
+--font-heading: 'Inter', sans-serif;
+--font-body: 'Inter', sans-serif;
+--font-mono: 'Space Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-weight: 4px;
+
+AESTHETIC PRINCIPLES:
+1. Extreme borders - Every element has thick, brutal 4px black borders creating strong containment
+2. Flat color blocks - No gradients, no shadows, pure solid colors inspired by Swiss International style
+3. Rigid grid system - All elements snap to 8px grid with precise mathematical spacing
+4. Raw honesty - UI elements look exactly like what they are, no decoration or skeuomorphism
+5. Monospace for data - All numbers and transit codes use monospace fonts for technical precision
+
+COLOR SYSTEM:
+- Primary transport lines use pure RGB primaries (Red, Blue, Green)
+- Background: Pure white (#FFFFFF)
+- Surface: Light gray (#F5F5F5)
+- Text: Pure black (#000000)
+- Borders: Always black, always 4px
+- Status colors: Pure primaries for maximum clarity
+
+TYPOGRAPHY HIERARCHY:
+- Headings: Inter 800 (Heavy weight for neo-brutalist impact)
+- Body: Inter 400 (Clean, neutral readability)
+- Transit codes/times: Space Mono 700 (Technical precision)
+- Scale: 14px body, 16px labels, 24px headings, 32px hero
+
+LAYOUT STRUCTURE:
+- App shell with persistent bottom navigation
+- Fixed header with route planner
+- Scrolling content area with departure cards
+- Line map in expandable panel
+- Service alerts as brutal banner overlays
+
+SPACING SYSTEM:
+- Base unit: 8px
+- Card padding: 16px (2 units)
+- Section spacing: 24px (3 units)
+- Component gaps: 12px (1.5 units)
+- Border weight: 4px (0.5 units)
+
+BEST FOR:
+- Transit systems prioritizing clarity and information density
+- Gaming industry transit (e.g., esports tournament shuttles, LAN event transportation)
+- Serious, professional transport applications
+- Systems needing high contrast and readability in bright conditions
+- Applications where visual hierarchy must be brutally obvious
+
+AVOID IF:
+- Brand requires soft, friendly aesthetics
+- Need dark mode (this is light_only)
+- Users expect modern smooth animations
+- Require subtle visual refinement
+- Need to convey warmth or approachability
+
+FUNCTIONAL DIRECTION: transit_app
+This design must clearly function as a transit_app. Required elements:
+- Route planner with origin/destination input
+- Departure times in real-time list format
+- Line maps showing all transit routes
+- Service alerts with status updates
+- Favorites system for saved routes/stops
+
+INTERACTION PATTERNS:
+- All interactive elements have 4px black borders
+- Hover state: Background color change only
+- Active state: Inverted colors (black background, white text)
+- Focus state: Double border (8px total)
+- Touch targets: Minimum 44px height for all buttons
+
+COMPONENT INVENTORY:
+1. Route planner - Large input fields with black borders
+2. Departure cards - Flat cards with line color accent bars
+3. Line map - Schematic transit diagram
+4. Service alert banner - Full-width colored blocks
+5. Bottom navigation - Fixed bar with icon buttons
+6. Favorite star toggle - Simple geometric shape
+7. Time display - Monospace countdown timers
+8. Status badges - Colored rectangles with text
+
+DATA VISUALIZATION:
+- Line colors use pure primaries for maximum distinction
+- Maps are abstract geometric representations
+- Times displayed in relative format (e.g., "in 3 min")
+- Service status uses color + text (never color alone for accessibility)
+
+GAMING INDUSTRY CONTEXT:
+This transit app is designed for esports event transportation, LAN party shuttles,
+or gaming convention transit systems. The serious tone and brutal clarity make
+route information instantly scannable in high-stress tournament environments.
+The flat aesthetic mirrors competitive gaming UIs where information density
+and instant readability are paramount.
+
+ACCESSIBILITY NOTES:
+- All color contrast ratios exceed WCAG AA (21:1 black on white)
+- Focus indicators are 8px borders (double the standard)
+- Service alerts include both color and text indicators
+- Touch targets are oversized (56px minimum)
+- Reduced motion: All animations disabled in prefers-reduced-motion
+- Screen reader labels on all interactive elements
+
+RESPONSIVE BEHAVIOR:
+- Mobile-first design (320px minimum)
+- Bottom nav fixed on all screen sizes
+- Route planner collapses to single column on mobile
+- Line map becomes horizontally scrollable on small screens
+- Desktop: Side-by-side layout for departure list and map
+
+FILE SIZE: ~35KB (comprehensive design system with complete transit app functionality)
+-->
+
+<style>
+/* ============================================
+   MODERN PROTOCOL - NEO-BRUTALIST TRANSIT APP
+   ============================================ */
+
+/* === ROOT VARIABLES === */
+:root {
+    /* Colors - Pure and Flat */
+    --color-primary: #000000;
+    --color-background: #FFFFFF;
+    --color-surface: #F5F5F5;
+    --color-text: #000000;
+    --color-text-muted: #666666;
+
+    /* Transit Line Colors - Pure RGB */
+    --color-line-red: #FF0000;
+    --color-line-blue: #0000FF;
+    --color-line-green: #00FF00;
+    --color-line-yellow: #FFFF00;
+    --color-line-magenta: #FF00FF;
+    --color-line-cyan: #00FFFF;
+
+    /* Status Colors */
+    --color-status-on-time: #00FF00;
+    --color-status-delayed: #FFFF00;
+    --color-status-cancelled: #FF0000;
+    --color-status-info: #0000FF;
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, system-ui, sans-serif;
+    --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+    --font-mono: 'Space Mono', 'Courier New', monospace;
+
+    /* Typography Scale */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 20px;
+    --text-xl: 24px;
+    --text-2xl: 32px;
+
+    /* Spacing - 8px Grid */
+    --space-unit: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-2xl: 32px;
+    --space-3xl: 48px;
+
+    /* Shapes - Brutal and Flat */
+    --radius-default: 0px;
+    --border-weight: 4px;
+    --border-style: solid;
+    --border-color: var(--color-primary);
+    --shadow-default: none;
+
+    /* Layout */
+    --header-height: 140px;
+    --bottom-nav-height: 72px;
+    --content-max-width: 1200px;
+}
+
+/* === RESET & BASE === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    padding-bottom: var(--bottom-nav-height);
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-base); }
+
+.mono {
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+/* === LAYOUT CONTAINERS === */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    position: sticky;
+    top: 0;
+    background: var(--color-background);
+    border-bottom: var(--border-weight) var(--border-style) var(--border-color);
+    padding: var(--space-lg);
+    z-index: 100;
+}
+
+.app-content {
+    flex: 1;
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--color-background);
+    border-top: var(--border-weight) var(--border-style) var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+/* === ROUTE PLANNER === */
+.route-planner {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-end;
+    margin-bottom: var(--space-lg);
+}
+
+.route-input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.route-input-group label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.route-input {
+    width: 100%;
+    padding: var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: none;
+}
+
+.route-input:focus {
+    border-width: calc(var(--border-weight) * 2);
+    background: var(--color-background);
+}
+
+.route-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.btn-primary {
+    padding: var(--space-md) var(--space-xl);
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-primary);
+    color: var(--color-background);
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    cursor: pointer;
+    transition: none;
+    min-height: 44px;
+}
+
+.btn-primary:hover {
+    background: var(--color-text-muted);
+}
+
+.btn-primary:active {
+    background: var(--color-text);
+    transform: translateY(2px);
+}
+
+.btn-primary:focus {
+    outline: var(--border-weight) var(--border-style) var(--border-color);
+    outline-offset: var(--border-weight);
+}
+
+/* === SERVICE ALERTS === */
+.service-alerts {
+    margin-bottom: var(--space-xl);
+}
+
+.alert {
+    padding: var(--space-lg);
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+}
+
+.alert-delayed {
+    background: var(--color-status-delayed);
+}
+
+.alert-info {
+    background: var(--color-status-info);
+    color: var(--color-background);
+}
+
+.alert-cancelled {
+    background: var(--color-status-cancelled);
+    color: var(--color-background);
+}
+
+.alert-badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: var(--space-xs) var(--space-sm);
+    border: 2px var(--border-style) var(--color-primary);
+    background: var(--color-background);
+    color: var(--color-text);
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.alert-content h4 {
+    margin-bottom: var(--space-xs);
+}
+
+/* === DEPARTURE CARDS === */
+.departures-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-weight) var(--border-style) var(--border-color);
+}
+
+.departure-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.departure-card {
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-surface);
+    display: flex;
+    transition: none;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.departure-card:hover {
+    background: var(--color-background);
+}
+
+.departure-card:active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.line-indicator {
+    width: 12px;
+    flex-shrink: 0;
+    border-right: var(--border-weight) var(--border-style) var(--border-color);
+}
+
+.line-red { background: var(--color-line-red); }
+.line-blue { background: var(--color-line-blue); }
+.line-green { background: var(--color-line-green); }
+.line-yellow { background: var(--color-line-yellow); }
+.line-magenta { background: var(--color-line-magenta); }
+.line-cyan { background: var(--color-line-cyan); }
+
+.departure-content {
+    flex: 1;
+    padding: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.departure-route {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.line-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.route-destination {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.departure-time {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    text-align: right;
+}
+
+.time-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge {
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px var(--border-style) var(--border-color);
+}
+
+.status-on-time {
+    background: var(--color-status-on-time);
+    color: var(--color-text);
+}
+
+.status-delayed {
+    background: var(--color-status-delayed);
+    color: var(--color-text);
+}
+
+.favorite-btn {
+    width: 44px;
+    height: 44px;
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-background);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    transition: none;
+}
+
+.favorite-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.favorite-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+/* === LINE MAP === */
+.line-map-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.line-map-container {
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-surface);
+    padding: var(--space-2xl);
+    overflow-x: auto;
+}
+
+.line-map {
+    min-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+}
+
+.transit-line {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.line-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.line-color-box {
+    width: 32px;
+    height: 32px;
+    border: var(--border-weight) var(--border-style) var(--border-color);
+}
+
+.line-route {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.stop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    position: relative;
+}
+
+.stop-dot {
+    width: 16px;
+    height: 16px;
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-background);
+    z-index: 2;
+}
+
+.stop-name {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-align: center;
+    max-width: 80px;
+    line-height: 1.2;
+}
+
+.line-segment {
+    height: var(--border-weight);
+    flex: 1;
+    min-width: 40px;
+}
+
+/* === FAVORITES SECTION === */
+.favorites-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+.favorite-card {
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-background);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    cursor: pointer;
+    transition: none;
+    min-height: 44px;
+}
+
+.favorite-card:hover {
+    background: var(--color-surface);
+}
+
+.favorite-card:active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.favorite-title {
+    font-weight: 600;
+    font-size: var(--text-base);
+}
+
+.favorite-route {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* === BOTTOM NAVIGATION === */
+.nav-btn {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: none;
+    border-left: var(--border-weight) var(--border-style) var(--border-color);
+}
+
+.nav-btn:first-child {
+    border-left: none;
+}
+
+.nav-btn:hover {
+    background: var(--color-surface);
+}
+
+.nav-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.nav-btn:focus {
+    outline: var(--border-weight) var(--border-style) var(--border-color);
+    outline-offset: calc(var(--border-weight) * -1);
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    border: 2px var(--border-style) currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    font-weight: 700;
+}
+
+/* === ARROW NAVIGATION === */
+.arrow-nav {
+    position: fixed;
+    bottom: calc(var(--bottom-nav-height) + var(--space-lg));
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-xs);
+    z-index: 101;
+}
+
+.arrow-btn {
+    width: 56px;
+    height: 56px;
+    border: var(--border-weight) var(--border-style) var(--border-color);
+    background: var(--color-background);
+    color: var(--color-text);
+    font-size: var(--text-xl);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+.arrow-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.arrow-btn:active {
+    transform: translateY(2px);
+}
+
+.arrow-btn:focus {
+    outline: var(--border-weight) var(--border-style) var(--border-color);
+    outline-offset: var(--border-weight);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .route-planner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .departure-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    .departure-time {
+        text-align: left;
+    }
+
+    .line-map {
+        min-width: 600px;
+    }
+
+    .arrow-nav {
+        bottom: calc(var(--bottom-nav-height) + var(--space-sm));
+        right: var(--space-sm);
+    }
+}
+
+/* === ACCESSIBILITY === */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: calc(var(--border-weight) * 2) var(--border-style) var(--border-color);
+    outline-offset: var(--border-weight);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --border-weight: 6px;
+    }
+}
+</style>
+
+<div class="app-container">
+    <!-- HEADER WITH ROUTE PLANNER -->
+    <header class="app-header">
+        <h1>MODERN PROTOCOL</h1>
+        <div class="route-planner">
+            <div class="route-input-group">
+                <label for="origin">From</label>
+                <input
+                    type="text"
+                    id="origin"
+                    class="route-input"
+                    placeholder="MAIN ARENA"
+                    value="MAIN ARENA"
+                    aria-label="Origin station"
+                >
+            </div>
+            <div class="route-input-group">
+                <label for="destination">To</label>
+                <input
+                    type="text"
+                    id="destination"
+                    class="route-input"
+                    placeholder="LAN CENTER EAST"
+                    value="LAN CENTER EAST"
+                    aria-label="Destination station"
+                >
+            </div>
+            <button class="btn-primary" aria-label="Plan route">PLAN</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content">
+        <!-- SERVICE ALERTS -->
+        <section class="service-alerts" aria-label="Service alerts">
+            <div class="alert alert-delayed">
+                <span class="alert-badge">DELAYED</span>
+                <div class="alert-content">
+                    <h4>RED LINE - Tournament Traffic</h4>
+                    <p>Expect 5-10 minute delays due to increased esports event traffic. All shuttles operating with extra capacity.</p>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                <span class="alert-badge">INFO</span>
+                <div class="alert-content">
+                    <h4>BLUE LINE - Extended Hours</h4>
+                    <p>Running until 03:00 AM for finals weekend. Last shuttle departs MAIN ARENA at 02:45 AM.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEPARTURES -->
+        <section class="departures-section">
+            <div class="section-header">
+                <h2>NEXT DEPARTURES</h2>
+                <span class="time-label mono">LIVE</span>
+            </div>
+            <div class="departure-list">
+                <div class="departure-card" role="button" tabindex="0" aria-label="Red Line to LAN Center East, departing in 2 minutes">
+                    <div class="line-indicator line-red" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">RED LINE</div>
+                            <div class="route-destination">TO LAN CENTER EAST</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">2</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-delayed">DELAYED</span>
+                        <button class="favorite-btn active" aria-label="Remove from favorites">★</button>
+                    </div>
+                </div>
+
+                <div class="departure-card" role="button" tabindex="0" aria-label="Blue Line to Practice Facility, departing in 5 minutes">
+                    <div class="line-indicator line-blue" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">BLUE LINE</div>
+                            <div class="route-destination">TO PRACTICE FACILITY</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">5</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-on-time">ON TIME</span>
+                        <button class="favorite-btn" aria-label="Add to favorites">☆</button>
+                    </div>
+                </div>
+
+                <div class="departure-card" role="button" tabindex="0" aria-label="Green Line to Hotel District, departing in 8 minutes">
+                    <div class="line-indicator line-green" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">GREEN LINE</div>
+                            <div class="route-destination">TO HOTEL DISTRICT</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">8</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-on-time">ON TIME</span>
+                        <button class="favorite-btn" aria-label="Add to favorites">☆</button>
+                    </div>
+                </div>
+
+                <div class="departure-card" role="button" tabindex="0" aria-label="Yellow Line to Broadcast Center, departing in 12 minutes">
+                    <div class="line-indicator line-yellow" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">YELLOW LINE</div>
+                            <div class="route-destination">TO BROADCAST CENTER</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">12</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-on-time">ON TIME</span>
+                        <button class="favorite-btn active" aria-label="Remove from favorites">★</button>
+                    </div>
+                </div>
+
+                <div class="departure-card" role="button" tabindex="0" aria-label="Red Line to Competition Hall, departing in 15 minutes">
+                    <div class="line-indicator line-red" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">RED LINE</div>
+                            <div class="route-destination">TO COMPETITION HALL</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">15</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-on-time">ON TIME</span>
+                        <button class="favorite-btn" aria-label="Add to favorites">☆</button>
+                    </div>
+                </div>
+
+                <div class="departure-card" role="button" tabindex="0" aria-label="Magenta Line to Viewing Lounge, departing in 18 minutes">
+                    <div class="line-indicator line-magenta" aria-hidden="true"></div>
+                    <div class="departure-content">
+                        <div class="departure-route">
+                            <div class="line-name">MAGENTA LINE</div>
+                            <div class="route-destination">TO VIEWING LOUNGE</div>
+                        </div>
+                        <div>
+                            <div class="departure-time mono">18</div>
+                            <div class="time-label">MIN</div>
+                        </div>
+                        <span class="status-badge status-on-time">ON TIME</span>
+                        <button class="favorite-btn" aria-label="Add to favorites">☆</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LINE MAP -->
+        <section class="line-map-section">
+            <div class="section-header">
+                <h2>TRANSIT MAP</h2>
+                <span class="time-label">ALL LINES</span>
+            </div>
+            <div class="line-map-container">
+                <div class="line-map">
+                    <!-- RED LINE -->
+                    <div class="transit-line">
+                        <div class="line-header">
+                            <div class="line-color-box line-red" aria-hidden="true"></div>
+                            <h3 class="mono">RED LINE</h3>
+                        </div>
+                        <div class="line-route">
+                            <div class="stop">
+                                <div class="stop-dot line-red"></div>
+                                <div class="stop-name">MAIN ARENA</div>
+                            </div>
+                            <div class="line-segment line-red"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-red"></div>
+                                <div class="stop-name">VENDOR HALL</div>
+                            </div>
+                            <div class="line-segment line-red"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-red"></div>
+                                <div class="stop-name">COMPETITION HALL</div>
+                            </div>
+                            <div class="line-segment line-red"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-red"></div>
+                                <div class="stop-name">LAN CENTER EAST</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLUE LINE -->
+                    <div class="transit-line">
+                        <div class="line-header">
+                            <div class="line-color-box line-blue" aria-hidden="true"></div>
+                            <h3 class="mono">BLUE LINE</h3>
+                        </div>
+                        <div class="line-route">
+                            <div class="stop">
+                                <div class="stop-dot line-blue"></div>
+                                <div class="stop-name">MAIN ARENA</div>
+                            </div>
+                            <div class="line-segment line-blue"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-blue"></div>
+                                <div class="stop-name">PRACTICE FACILITY</div>
+                            </div>
+                            <div class="line-segment line-blue"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-blue"></div>
+                                <div class="stop-name">TEAM LOUNGE</div>
+                            </div>
+                            <div class="line-segment line-blue"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-blue"></div>
+                                <div class="stop-name">MEDIA CENTER</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GREEN LINE -->
+                    <div class="transit-line">
+                        <div class="line-header">
+                            <div class="line-color-box line-green" aria-hidden="true"></div>
+                            <h3 class="mono">GREEN LINE</h3>
+                        </div>
+                        <div class="line-route">
+                            <div class="stop">
+                                <div class="stop-dot line-green"></div>
+                                <div class="stop-name">HOTEL DISTRICT</div>
+                            </div>
+                            <div class="line-segment line-green"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-green"></div>
+                                <div class="stop-name">CONVENTION CENTER</div>
+                            </div>
+                            <div class="line-segment line-green"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-green"></div>
+                                <div class="stop-name">MAIN ARENA</div>
+                            </div>
+                            <div class="line-segment line-green"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-green"></div>
+                                <div class="stop-name">FOOD COURT</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- YELLOW LINE -->
+                    <div class="transit-line">
+                        <div class="line-header">
+                            <div class="line-color-box line-yellow" aria-hidden="true"></div>
+                            <h3 class="mono">YELLOW LINE</h3>
+                        </div>
+                        <div class="line-route">
+                            <div class="stop">
+                                <div class="stop-dot line-yellow"></div>
+                                <div class="stop-name">PARKING A</div>
+                            </div>
+                            <div class="line-segment line-yellow"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-yellow"></div>
+                                <div class="stop-name">BROADCAST CENTER</div>
+                            </div>
+                            <div class="line-segment line-yellow"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-yellow"></div>
+                                <div class="stop-name">MAIN ARENA</div>
+                            </div>
+                            <div class="line-segment line-yellow"></div>
+                            <div class="stop">
+                                <div class="stop-dot line-yellow"></div>
+                                <div class="stop-name">PARKING B</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAVORITES -->
+        <section class="favorites-section">
+            <div class="section-header">
+                <h2>FAVORITES</h2>
+                <span class="time-label">2 SAVED</span>
+            </div>
+            <div class="favorites-grid">
+                <div class="favorite-card" role="button" tabindex="0">
+                    <div class="favorite-title">MAIN ARENA → LAN CENTER EAST</div>
+                    <div class="favorite-route">
+                        <div class="line-color-box line-red" style="width: 16px; height: 16px;" aria-hidden="true"></div>
+                        <span class="mono">RED LINE</span>
+                    </div>
+                </div>
+                <div class="favorite-card" role="button" tabindex="0">
+                    <div class="favorite-title">MAIN ARENA → BROADCAST CENTER</div>
+                    <div class="favorite-route">
+                        <div class="line-color-box line-yellow" style="width: 16px; height: 16px;" aria-hidden="true"></div>
+                        <span class="mono">YELLOW LINE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-btn active" aria-label="Routes" aria-current="page">
+            <div class="nav-icon">→</div>
+            <span>ROUTES</span>
+        </button>
+        <button class="nav-btn" aria-label="Map">
+            <div class="nav-icon">◼</div>
+            <span>MAP</span>
+        </button>
+        <button class="nav-btn" aria-label="Favorites">
+            <div class="nav-icon">★</div>
+            <span>SAVED</span>
+        </button>
+        <button class="nav-btn" aria-label="Alerts">
+            <div class="nav-icon">!</div>
+            <span>ALERTS</span>
+        </button>
+        <button class="nav-btn" aria-label="Settings">
+            <div class="nav-icon">⚙</div>
+            <span>MORE</span>
+        </button>
+    </nav>
+
+    <!-- ARROW NAVIGATION -->
+    <div class="arrow-nav" aria-label="Design navigation">
+        <button class="arrow-btn" id="prevBtn" aria-label="Previous design (Left Arrow)">←</button>
+        <button class="arrow-btn" id="nextBtn" aria-label="Next design (Right Arrow)">→</button>
+    </div>
+</div>
+
+<script>
+// Navigation script for 1000 Design Vibes
+(function() {
+    const TOTAL = 250;
+    const CURRENT = 210;
+
+    function navigate(direction) {
+        let target;
+        if (direction === 'next') {
+            target = CURRENT >= TOTAL ? 1 : CURRENT + 1;
+        } else {
+            target = CURRENT <= 1 ? TOTAL : CURRENT - 1;
+        }
+        window.location.href = `design-${target}.html`;
+    }
+
+    // Button click handlers
+    document.getElementById('nextBtn').addEventListener('click', () => navigate('next'));
+    document.getElementById('prevBtn').addEventListener('click', () => navigate('prev'));
+
+    
+
+    // Interactive elements demo functionality
+    const favoriteButtons = document.querySelectorAll('.favorite-btn');
+    favoriteButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            btn.classList.toggle('active');
+            btn.textContent = btn.classList.contains('active') ? '★' : '☆';
+            const isActive = btn.classList.contains('active');
+            btn.setAttribute('aria-label', isActive ? 'Remove from favorites' : 'Add to favorites');
+        });
+    });
+
+    // Navigation tab switching
+    const navButtons = document.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            navButtons.forEach(b => {
+                b.classList.remove('active');
+                b.removeAttribute('aria-current');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-current', 'page');
+        });
+    });
+
+    // Departure card interactions
+    const departureCards = document.querySelectorAll('.departure-card');
+    departureCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('favorite-btn')) {
+                console.log('Departure card clicked - would show route details');
+            }
+        });
+
+        // Keyboard support
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+
+    // Favorite cards
+    const favoriteCards = document.querySelectorAll('.favorite-card');
+    favoriteCards.forEach(card => {
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+
+    // Simulate real-time departure updates (demo only)
+    setInterval(() => {
+        const times = document.querySelectorAll('.departure-time');
+        times.forEach(time => {
+            const current = parseInt(time.textContent);
+            if (current > 0) {
+                // Just for demo - would connect to real API
+            }
+        });
+    }, 60000);
+})();
+</script>
+
+</body>
+</html>

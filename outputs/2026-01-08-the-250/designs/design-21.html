@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serene Stone - Grade Book Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Serene Stone - Neutral palette, natural spirit
+ABOUTME: This design system implements a grade_book with Bauhaus aesthetics and calm fashion sensibility.
+ABOUTME: Key characteristics: Geometric precision, neutral earth tones, high-contrast structure
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #8B7355;
+--color-secondary: #4A4A4A;
+--color-accent: #D4A574;
+--color-background: #FAF8F5;
+--color-surface: #FFFFFF;
+--color-text: #2C2C2C;
+--color-text-muted: #6B6B6B;
+--color-border: #D9D2CA;
+--color-grade-a: #7A9B76;
+--color-grade-b: #A8B88C;
+--color-grade-c: #C5B78C;
+--color-grade-d: #B89B7C;
+--color-grade-f: #9B776A;
+--font-heading: 'Montserrat', sans-serif;
+--font-body: 'Work Sans', sans-serif;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Bauhaus geometry drives all layout - precise grids, rectangular forms, functional structure
+2. Neutral earth palette creates calm, sophisticated atmosphere inspired by fashion minimalism
+3. High-contrast borders and dividers emphasize data organization and clarity
+4. Typography hierarchy uses geometric sans-serif with carefully balanced weights
+5. Generous whitespace around dense data tables maintains breathing room
+
+COLOR PSYCHOLOGY:
+- Warm neutrals (stone, sand, taupe) create approachable professionalism
+- Subtle earth-tone grade indicators avoid harsh red/green binary
+- Light background (#FAF8F5) reduces eye strain during extended grading sessions
+- Consistent border color (#D9D2CA) provides structure without harshness
+
+TYPOGRAPHIC SYSTEM:
+- Montserrat (geometric sans) for headings: clean, authoritative, Bauhaus spirit
+- Work Sans (humanist sans) for body/data: readable, neutral, professional
+- Scale ratio 1.250 (major third) creates clear hierarchy without drama
+- Tabular numerals in grade cells ensure column alignment
+
+SPATIAL SYSTEM:
+- Base unit: 8px - all spacing derives from this grid
+- Dense data areas (grade table) use tighter spacing (8px, 12px)
+- Surrounding UI uses generous spacing (24px, 32px, 48px) for contrast
+- Grid-based alignment throughout maintains Bauhaus order
+
+BEST FOR:
+- Educational institutions valuing calm, professional aesthetic
+- Fashion or design academies where visual refinement matters
+- Adult education environments preferring sophistication over playfulness
+- Long grading sessions requiring reduced visual fatigue
+- Contexts where data density must coexist with elegance
+
+AVOID IF:
+- You need bright, energetic colors for young students
+- Your brand requires bold, saturated color schemes
+- You're designing for dark mode contexts
+- You need strong emotional signaling (harsh failing grades)
+- Accessibility requires very high contrast (this uses softer neutrals)
+
+FUNCTIONAL DIRECTION: grade_book
+This design must clearly function as a grade_book. Required elements:
+- Student roster with names and identifying information
+- Assignment columns with grades and scores
+- Category weighting and calculation displays
+- Grade entry and editing interface
+- Statistical summaries (averages, distributions)
+- Filtering and sorting controls
+- Export and reporting functions
+- Assignment management tools
+- Grading rubric or scale display
+- Progress indicators and trends
+
+ACCESSIBILITY NOTES:
+- All color contrasts meet WCAG AA for normal text (4.5:1 minimum)
+- Large text (18px+) meets AAA (7:1)
+- Focus indicators use 3px solid outline with sufficient contrast
+- Grade colors supplemented with letter grades (not color-only)
+- Reduced motion respects prefers-reduced-motion preference
+- Keyboard navigation fully supported throughout grade table
+- Touch targets minimum 44x44px for mobile interaction
+
+TECHNICAL IMPLEMENTATION:
+- CSS Grid for main layout and data table structure
+- Flexbox for component-level alignment
+- Custom properties (CSS variables) for theming
+- No JavaScript framework dependencies
+- Responsive breakpoints at 768px and 1200px
+- Print styles optimize for grade report printing
+
+GRID SYSTEM:
+- 12-column grid for overall page layout
+- Fixed-width sidebar (280px) for navigation
+- Fluid main content area with max-width constraint
+- Grade table uses CSS Grid with fixed column widths for alignment
+- Responsive collapse to single column below 768px
+
+COMPONENT INVENTORY:
+1. Navigation sidebar with course selection
+2. Header bar with term selector and student search
+3. Grade table with editable cells
+4. Assignment header row with weights
+5. Student summary cards with GPA calculation
+6. Statistical dashboard widgets
+7. Action buttons (add assignment, export, print)
+8. Modal dialogs for detailed grade entry
+9. Filter dropdowns and search inputs
+10. Progress bars and grade distribution charts
+
+INTERACTION PATTERNS:
+- Click cell to edit grade (inline editing)
+- Hover row to highlight student across assignments
+- Hover column to highlight assignment across students
+- Drag column headers to reorder assignments
+- Right-click for contextual menus (if enhanced)
+- Keyboard arrows navigate between cells
+- Tab advances to next editable field
+- Enter saves and moves down to next student
+
+DESIGN RATIONALE:
+Bauhaus principles of "form follows function" guide every decision. The grade book's
+inherently tabular nature aligns perfectly with Bauhaus grid systems and geometric
+order. By keeping the palette neutral and calm, we allow the data and structure to
+take center stage rather than competing with decorative elements.
+
+The fashion industry influence manifests in material quality - carefully chosen
+neutrals, sophisticated typography, generous whitespace that conveys refinement.
+This isn't a playful grade book for children; it's a professional tool for
+educators who value both function and aesthetic quality.
+
+Grade color coding uses earth tones rather than traffic-light reds and greens,
+reducing anxiety and creating a more supportive grading environment. The visual
+language suggests growth and natural progression rather than harsh judgment.
+-->
+
+<style>
+:root {
+    /* Color Palette - Neutral Earth Tones */
+    --color-primary: #8B7355;
+    --color-secondary: #4A4A4A;
+    --color-accent: #D4A574;
+    --color-background: #FAF8F5;
+    --color-surface: #FFFFFF;
+    --color-text: #2C2C2C;
+    --color-text-muted: #6B6B6B;
+    --color-border: #D9D2CA;
+
+    /* Grade Colors - Subtle Earth Tones */
+    --color-grade-a: #7A9B76;
+    --color-grade-b: #A8B88C;
+    --color-grade-c: #C5B78C;
+    --color-grade-d: #B89B7C;
+    --color-grade-f: #9B776A;
+
+    /* Typography */
+    --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-size-base: 15px;
+    --font-size-sm: 13px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-size-xxl: 32px;
+
+    /* Spacing - 8px base grid */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-xxl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-default: 2px;
+    --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.12);
+    --border-width: 1px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+h1 {
+    font-size: var(--font-size-xxl);
+    font-weight: 700;
+}
+
+h2 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+}
+
+h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+/* Layout Structure */
+.app-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sidebar-section {
+    margin-bottom: var(--space-xl);
+}
+
+.sidebar-section h3 {
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    font-weight: 600;
+}
+
+.course-list {
+    list-style: none;
+}
+
+.course-item {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: var(--font-size-sm);
+}
+
+.course-item:hover {
+    background: var(--color-background);
+    border-left-color: var(--color-accent);
+}
+
+.course-item.active {
+    background: var(--color-background);
+    border-left-color: var(--color-primary);
+    font-weight: 500;
+}
+
+.course-code {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-text);
+    display: block;
+}
+
+.course-name {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+/* Main Content Area */
+.main-content {
+    padding: var(--space-xl);
+}
+
+/* Header */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.header-left h1 {
+    margin-bottom: var(--space-xs);
+}
+
+.header-meta {
+    display: flex;
+    gap: var(--space-lg);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-md);
+}
+
+/* Buttons */
+.btn {
+    padding: var(--space-sm) var(--space-lg);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-default);
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.btn:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+/* Statistics Dashboard */
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg);
+    border-radius: var(--radius-default);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xxl);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.stat-detail {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Grade Table Controls */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+}
+
+.control-group {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.control-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.select {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.select:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+.search-input {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-default);
+    width: 280px;
+    min-height: 44px;
+}
+
+.search-input:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+/* Grade Table */
+.grade-table-container {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    overflow-x: auto;
+    box-shadow: var(--shadow-subtle);
+}
+
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+.grade-table thead {
+    background: var(--color-background);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.grade-table th {
+    padding: var(--space-md);
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    border-right: var(--border-width) solid var(--color-border);
+    white-space: nowrap;
+}
+
+.grade-table th:last-child {
+    border-right: none;
+}
+
+.assignment-header {
+    min-width: 100px;
+}
+
+.assignment-name {
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.assignment-weight {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 400;
+    text-transform: none;
+}
+
+.grade-table tbody tr {
+    border-bottom: var(--border-width) solid var(--color-border);
+    transition: background-color 0.2s ease;
+}
+
+.grade-table tbody tr:hover {
+    background: var(--color-background);
+}
+
+.grade-table td {
+    padding: var(--space-md);
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.grade-table td:last-child {
+    border-right: none;
+}
+
+.student-info {
+    min-width: 200px;
+}
+
+.student-name {
+    font-weight: 500;
+    color: var(--color-text);
+    display: block;
+    margin-bottom: 2px;
+}
+
+.student-id {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.grade-cell {
+    text-align: center;
+    min-width: 80px;
+    position: relative;
+}
+
+.grade-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: var(--border-width) solid transparent;
+    background: transparent;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    border-radius: var(--radius-default);
+    transition: all 0.2s ease;
+}
+
+.grade-input:hover {
+    background: var(--color-background);
+    border-color: var(--color-border);
+}
+
+.grade-input:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+/* Grade Letter Badges */
+.grade-letter {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-default);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: var(--space-xs);
+}
+
+.grade-a {
+    background: var(--color-grade-a);
+    color: white;
+}
+
+.grade-b {
+    background: var(--color-grade-b);
+    color: var(--color-text);
+}
+
+.grade-c {
+    background: var(--color-grade-c);
+    color: var(--color-text);
+}
+
+.grade-d {
+    background: var(--color-grade-d);
+    color: var(--color-text);
+}
+
+.grade-f {
+    background: var(--color-grade-f);
+    color: white;
+}
+
+/* Final Grade Column */
+.final-grade {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    text-align: center;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: var(--space-sm);
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+/* Assignment Management Section */
+.assignment-manager {
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-xl);
+    border-top: var(--border-width) solid var(--color-border);
+}
+
+.assignment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.assignment-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg);
+    border-radius: var(--radius-default);
+    transition: all 0.2s ease;
+}
+
+.assignment-card:hover {
+    box-shadow: var(--shadow-medium);
+    border-color: var(--color-primary);
+}
+
+.assignment-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-md);
+}
+
+.assignment-title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+}
+
+.assignment-category {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.assignment-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: var(--border-width) solid var(--color-border);
+}
+
+.assignment-stat-item {
+    font-size: var(--font-size-sm);
+}
+
+.stat-item-label {
+    color: var(--color-text-muted);
+    display: block;
+    margin-bottom: 2px;
+}
+
+.stat-item-value {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Navigation Footer */
+.navigation-footer {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+    background: var(--color-surface);
+    padding: var(--space-sm);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-medium);
+}
+
+.nav-btn {
+    width: 48px;
+    height: 48px;
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.nav-btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.design-counter {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-md);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .statistics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .assignment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .main-content {
+        padding: var(--space-lg);
+    }
+
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .assignment-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .header-actions,
+    .table-controls,
+    .navigation-footer,
+    .btn {
+        display: none;
+    }
+
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .grade-table {
+        font-size: 10pt;
+    }
+
+    body {
+        background: white;
+    }
+}
+</style>
+
+<div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">Gradebook</div>
+
+        <div class="sidebar-section">
+            <h3>Current Courses</h3>
+            <ul class="course-list">
+                <li class="course-item active">
+                    <span class="course-code">FASH-301</span>
+                    <span class="course-name">Pattern & Construction</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">FASH-302</span>
+                    <span class="course-name">Textile Science</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">FASH-310</span>
+                    <span class="course-name">Fashion History</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">FASH-320</span>
+                    <span class="course-name">Digital Design</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">FASH-401</span>
+                    <span class="course-name">Portfolio Development</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Term</h3>
+            <ul class="course-list">
+                <li class="course-item active">
+                    <span class="course-code">Spring 2026</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">Fall 2025</span>
+                </li>
+                <li class="course-item">
+                    <span class="course-code">Spring 2025</span>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="content-header">
+            <div class="header-left">
+                <h1>Pattern & Construction</h1>
+                <div class="header-meta">
+                    <span>FASH-301 • Section 02</span>
+                    <span>28 Students</span>
+                    <span>Spring 2026</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn">Export</button>
+                <button class="btn">Print</button>
+                <button class="btn-primary">+ Assignment</button>
+            </div>
+        </header>
+
+        <!-- Statistics Dashboard -->
+        <div class="statistics-grid">
+            <div class="stat-card">
+                <div class="stat-label">Class Average</div>
+                <div class="stat-value">87.4%</div>
+                <div class="stat-detail">B+ overall</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Assignments</div>
+                <div class="stat-value">12</div>
+                <div class="stat-detail">8 graded, 4 pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Completion Rate</div>
+                <div class="stat-value">94%</div>
+                <div class="stat-detail">26 of 28 active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Grade Distribution</div>
+                <div class="stat-value">A-B</div>
+                <div class="stat-detail">18 students above 85%</div>
+            </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="table-controls">
+            <div class="control-group">
+                <label class="control-label">View:</label>
+                <select class="select">
+                    <option>All Assignments</option>
+                    <option>Projects Only</option>
+                    <option>Quizzes Only</option>
+                    <option>Participation</option>
+                </select>
+
+                <label class="control-label">Sort:</label>
+                <select class="select">
+                    <option>By Name (A-Z)</option>
+                    <option>By Name (Z-A)</option>
+                    <option>By Grade (High-Low)</option>
+                    <option>By Grade (Low-High)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <input type="text" class="search-input" placeholder="Search students...">
+            </div>
+        </div>
+
+        <!-- Grade Table -->
+        <div class="grade-table-container">
+            <table class="grade-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th class="assignment-header">
+                            <span class="assignment-name">Sketch Portfolio</span>
+                            <span class="assignment-weight">Project • 15%</span>
+                        </th>
+                        <th class="assignment-header">
+                            <span class="assignment-name">Pattern Draft 1</span>
+                            <span class="assignment-weight">Project • 20%</span>
+                        </th>
+                        <th class="assignment-header">
+                            <span class="assignment-name">Seam Quiz</span>
+                            <span class="assignment-weight">Quiz • 10%</span>
+                        </th>
+                        <th class="assignment-header">
+                            <span class="assignment-name">Muslin Fitting</span>
+                            <span class="assignment-weight">Project • 15%</span>
+                        </th>
+                        <th class="assignment-header">
+                            <span class="assignment-name">Final Garment</span>
+                            <span class="assignment-weight">Project • 25%</span>
+                        </th>
+                        <th>Final Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Chen, Mei-Ling</span>
+                            <span class="student-id">FS2026-001</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="94">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="91">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="88">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="96">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="93">
+                        </td>
+                        <td class="final-grade">
+                            93<span class="grade-letter grade-a">A</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Rodriguez, Sofia</span>
+                            <span class="student-id">FS2026-002</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="88">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="85">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="92">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="87">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="90">
+                        </td>
+                        <td class="final-grade">
+                            88<span class="grade-letter grade-b">B+</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Nakamura, Yuki</span>
+                            <span class="student-id">FS2026-003</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="97">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="95">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="90">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="98">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="96">
+                        </td>
+                        <td class="final-grade">
+                            95<span class="grade-letter grade-a">A</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Thompson, Jordan</span>
+                            <span class="student-id">FS2026-004</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="82">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="79">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="85">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="83">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="81">
+                        </td>
+                        <td class="final-grade">
+                            82<span class="grade-letter grade-b">B</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Patel, Anaya</span>
+                            <span class="student-id">FS2026-005</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="91">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="88">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="94">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="89">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="92">
+                        </td>
+                        <td class="final-grade">
+                            90<span class="grade-letter grade-a">A-</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Williams, Blake</span>
+                            <span class="student-id">FS2026-006</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="76">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="74">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="80">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="77">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="75">
+                        </td>
+                        <td class="final-grade">
+                            76<span class="grade-letter grade-c">C</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Kim, Min-Jun</span>
+                            <span class="student-id">FS2026-007</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="89">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="92">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="87">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="91">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="88">
+                        </td>
+                        <td class="final-grade">
+                            89<span class="grade-letter grade-b">B+</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="student-info">
+                            <span class="student-name">Martinez, Elena</span>
+                            <span class="student-id">FS2026-008</span>
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="95">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="93">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="96">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="94">
+                        </td>
+                        <td class="grade-cell">
+                            <input type="text" class="grade-input" value="97">
+                        </td>
+                        <td class="final-grade">
+                            95<span class="grade-letter grade-a">A</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Assignment Management -->
+        <section class="assignment-manager">
+            <h2>Assignment Management</h2>
+
+            <div class="assignment-grid">
+                <div class="assignment-card">
+                    <div class="assignment-card-header">
+                        <div class="assignment-title">Sketch Portfolio</div>
+                        <span class="assignment-category">Project</span>
+                    </div>
+                    <div class="assignment-stats">
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Weight</span>
+                            <span class="stat-item-value">15%</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Average</span>
+                            <span class="stat-item-value">89.2</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Submitted</span>
+                            <span class="stat-item-value">28/28</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Status</span>
+                            <span class="stat-item-value">Complete</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="assignment-card">
+                    <div class="assignment-card-header">
+                        <div class="assignment-title">Pattern Draft 1</div>
+                        <span class="assignment-category">Project</span>
+                    </div>
+                    <div class="assignment-stats">
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Weight</span>
+                            <span class="stat-item-value">20%</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Average</span>
+                            <span class="stat-item-value">87.1</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Submitted</span>
+                            <span class="stat-item-value">28/28</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Status</span>
+                            <span class="stat-item-value">Complete</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="assignment-card">
+                    <div class="assignment-card-header">
+                        <div class="assignment-title">Final Garment</div>
+                        <span class="assignment-category">Project</span>
+                    </div>
+                    <div class="assignment-stats">
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Weight</span>
+                            <span class="stat-item-value">25%</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Average</span>
+                            <span class="stat-item-value">90.3</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Submitted</span>
+                            <span class="stat-item-value">26/28</span>
+                        </div>
+                        <div class="assignment-stat-item">
+                            <span class="stat-item-label">Status</span>
+                            <span class="stat-item-value">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 93%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Navigation Footer -->
+<div class="navigation-footer">
+    <button class="nav-btn" onclick="navigateDesign(-1)" aria-label="Previous design">←</button>
+    <span class="design-counter">21 / 250</span>
+    <button class="nav-btn" onclick="navigateDesign(1)" aria-label="Next design">→</button>
+</div>
+
+<script>
+function navigateDesign(direction) {
+    const currentDesign = 21;
+    const totalDesigns = 250;
+    let nextDesign = currentDesign + direction;
+
+    // Wrap around
+    if (nextDesign < 1) nextDesign = totalDesigns;
+    if (nextDesign > totalDesigns) nextDesign = 1;
+
+    // Navigate to the next design
+    window.location.href = `design-${nextDesign}.html`;
+}
+
+
+</script>
+
+</body>
+</html>

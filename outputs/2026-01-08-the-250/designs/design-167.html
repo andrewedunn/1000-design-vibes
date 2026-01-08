@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Graphite - Photo Gallery Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Global Graphite - Crafted for users with international roots
+ABOUTME: This design system implements a photo_gallery with neo_brutalist aesthetics for the food industry.
+ABOUTME: Key characteristics: Raw HTML structure with thick borders, monochromatic base with accent colors, brutally honest grid layouts.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF6B35;
+--color-background: #FAFAFA;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #666666;
+--color-border: #000000;
+--color-accent-secondary: #00B4D8;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-weight: 4px;
+
+DARK MODE VARIABLES:
+--color-background-dark: #0A0A0A;
+--color-surface-dark: #1A1A1A;
+--color-text-dark: #FAFAFA;
+--color-text-muted-dark: #999999;
+--color-border-dark: #FFFFFF;
+
+AESTHETIC PRINCIPLES:
+1. Thick black borders define ALL elements - no subtlety, complete structural honesty
+2. Monospace typography for metadata creates technical precision and international clarity
+3. Hard grid system with no bleeding or overlap - brutalist compartmentalization
+4. High contrast color blocking for category distinction in food photography
+5. Raw, unpolished edges celebrate authentic culinary diversity
+
+BEST FOR:
+- International food photography portfolios showcasing cultural authenticity
+- Serious culinary documentation requiring clear categorical organization
+- Multi-cuisine restaurant galleries where distinct separation is essential
+- Food anthropology and research visualization projects
+- Professional chef portfolios emphasizing technique over decoration
+
+AVOID IF:
+- You need soft, appetizing food presentation (neo-brutalism is intentionally stark)
+- Your brand requires warmth and emotional connection
+- You're targeting casual dining or comfort food audiences
+- Accessibility needs require gentler contrast (though WCAG compliant, it's visually aggressive)
+
+FUNCTIONAL DIRECTION: photo_gallery
+This design must clearly function as a photo_gallery. Required elements:
+- Grid of photo thumbnails with consistent sizing
+- Lightbox or modal view for full-size images
+- Category/tag filtering system
+- Image metadata display (title, location, cuisine type)
+- Navigation between images in lightbox view
+- Responsive grid layout adapting to viewport
+- Loading states for images
+- Optional: slideshow mode, zoom functionality
+- Search and filter controls
+
+DESIGN CONTEXT:
+Industry: Food - showcasing international cuisine with documentary seriousness
+Emotional Tone: Serious - professional, respectful, educational approach to global food culture
+Color Mode: Both - full light/dark theme support for different viewing contexts
+Design Era: Neo Brutalist - raw HTML aesthetic, exposed structure, maximum honesty
+
+INTERACTION PATTERNS:
+- Click thumbnail to open lightbox with full image and metadata
+- Arrow keys navigate between images in lightbox
+- ESC closes lightbox
+- Category pills filter gallery instantly
+- Search field filters by cuisine name or location
+- Theme toggle in top-right switches light/dark mode
+- All borders remain stark and visible in both modes
+
+TYPOGRAPHY HIERARCHY:
+- Headers: Space Grotesk 700 (geometric sans, technical precision)
+- Body/Metadata: IBM Plex Mono 400 (monospace for data clarity)
+- Labels: Space Grotesk 600 (medium weight for UI elements)
+- No decorative fonts - everything serves function
+
+COLOR SYSTEM:
+Light mode: White backgrounds, black borders, orange primary accent
+Dark mode: Near-black backgrounds, white borders, same accent colors
+Accent colors mark cuisine categories (orange=Asian, blue=Mediterranean, etc.)
+No gradients, no blur - only solid fills
+
+SPATIAL SYSTEM:
+Base unit: 8px
+Grid gaps: 24px (3 units)
+Padding: 16px (2 units) for compact, 32px (4 units) for spacious
+Borders: 4px everywhere (non-negotiable brutalist weight)
+Touch targets: 48px minimum (6 units)
+
+COMPONENT INVENTORY:
+- Photo grid (3-4 columns responsive)
+- Lightbox modal with navigation
+- Category filter pills
+- Search input with border
+- Theme toggle button
+- Image metadata cards
+- Loading skeleton states
+- Navigation arrows (prev/next)
+- Close button (X)
+- Tag labels
+
+-->
+
+<style>
+:root {
+    /* Core Colors - Light Mode */
+    --color-primary: #FF6B35;
+    --color-accent-secondary: #00B4D8;
+    --color-accent-tertiary: #FFB700;
+    --color-background: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #666666;
+    --color-border: #000000;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Mono', monospace;
+    --font-size-base: 14px;
+    --font-size-small: 12px;
+    --font-size-h1: 48px;
+    --font-size-h2: 32px;
+    --font-size-h3: 24px;
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1); /* 8px */
+    --space-sm: calc(var(--space-unit) * 2); /* 16px */
+    --space-md: calc(var(--space-unit) * 3); /* 24px */
+    --space-lg: calc(var(--space-unit) * 4); /* 32px */
+    --space-xl: calc(var(--space-unit) * 6); /* 48px */
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-weight: 4px;
+    --shadow-default: none;
+
+    /* Layout */
+    --header-height: 80px;
+    --max-width: 1400px;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --color-background: #0A0A0A;
+    --color-surface: #1A1A1A;
+    --color-text: #FAFAFA;
+    --color-text-muted: #999999;
+    --color-border: #FFFFFF;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+}
+
+h1 {
+    font-size: var(--font-size-h1);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: var(--font-size-h3);
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background-color: var(--color-surface);
+    border-bottom: var(--border-weight) solid var(--color-border);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-lg);
+    transition: background-color 0.3s ease;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    width: 48px;
+    height: 48px;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.theme-toggle:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.theme-toggle:focus {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Main Content */
+.main {
+    margin-top: var(--header-height);
+    padding: var(--space-xl) var(--space-lg);
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Controls Section */
+.controls {
+    margin-bottom: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.search-box {
+    width: 100%;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 var(--border-weight) var(--color-primary);
+}
+
+.search-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Filter Pills */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.filter-label {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: var(--space-xs) 0;
+    display: flex;
+    align-items: center;
+}
+
+.filter-pill {
+    padding: var(--space-xs) var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-pill:hover {
+    background: var(--color-text);
+    color: var(--color-surface);
+}
+
+.filter-pill.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.filter-pill:focus {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.gallery-item {
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-item:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 var(--color-border);
+}
+
+.gallery-item:focus-within {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.gallery-item.hidden {
+    display: none;
+}
+
+.gallery-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+    overflow: hidden;
+    background: var(--color-text-muted);
+}
+
+.gallery-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-info {
+    padding: var(--space-sm);
+    border-top: var(--border-weight) solid var(--color-border);
+}
+
+.gallery-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+}
+
+.gallery-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.gallery-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.tag {
+    padding: 4px 8px;
+    font-size: var(--font-size-small);
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    text-transform: uppercase;
+}
+
+.tag.asian {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.tag.mediterranean {
+    background: var(--color-accent-secondary);
+    color: var(--color-surface);
+    border-color: var(--color-accent-secondary);
+}
+
+.tag.latin {
+    background: var(--color-accent-tertiary);
+    color: var(--color-text);
+    border-color: var(--color-accent-tertiary);
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-background);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox-content {
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.lightbox-image-container {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-weight) solid var(--color-border);
+    background: var(--color-surface);
+    min-height: 400px;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    color: var(--color-text);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.lightbox-nav:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.lightbox-nav:focus {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.lightbox-nav.prev {
+    left: var(--space-sm);
+}
+
+.lightbox-nav.next {
+    right: var(--space-sm);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    width: 56px;
+    height: 56px;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    color: var(--color-text);
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.lightbox-close:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.lightbox-close:focus {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.lightbox-details {
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    padding: var(--space-md);
+}
+
+.lightbox-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-sm);
+}
+
+.lightbox-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-small);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meta-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.meta-value {
+    color: var(--color-text);
+}
+
+/* Stats Footer */
+.stats {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+}
+
+.stat-item {
+    text-align: center;
+    padding: var(--space-md);
+    border: var(--border-weight) solid var(--color-border);
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* Design Navigation (Between Designs) */
+.design-nav {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 50;
+}
+
+.design-nav-btn {
+    width: 56px;
+    height: 56px;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.design-nav-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.design-nav-btn:focus {
+    outline: var(--border-weight) solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    :root {
+        --font-size-h1: 32px;
+        --font-size-h2: 24px;
+        --font-size-h3: 18px;
+    }
+
+    .header {
+        height: 64px;
+        padding: 0 var(--space-sm);
+    }
+
+    .main {
+        padding: var(--space-md) var(--space-sm);
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--space-sm);
+    }
+
+    .lightbox {
+        padding: var(--space-sm);
+    }
+
+    .lightbox-nav {
+        width: 48px;
+        height: 48px;
+    }
+
+    .design-nav {
+        bottom: var(--space-sm);
+        right: var(--space-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<header class="header">
+    <div class="logo">Global Graphite</div>
+    <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+    </div>
+</header>
+
+<main class="main">
+    <div class="controls">
+        <div class="search-box">
+            <input
+                type="text"
+                class="search-input"
+                id="searchInput"
+                placeholder="SEARCH BY DISH OR LOCATION..."
+                aria-label="Search gallery"
+            >
+        </div>
+
+        <div class="filters">
+            <span class="filter-label">FILTER:</span>
+            <button class="filter-pill active" data-category="all">ALL</button>
+            <button class="filter-pill" data-category="asian">ASIAN</button>
+            <button class="filter-pill" data-category="mediterranean">MEDITERRANEAN</button>
+            <button class="filter-pill" data-category="latin">LATIN AMERICAN</button>
+            <button class="filter-pill" data-category="african">AFRICAN</button>
+            <button class="filter-pill" data-category="european">EUROPEAN</button>
+        </div>
+    </div>
+
+    <div class="gallery-grid" id="gallery">
+        <!-- Gallery items will be populated by JavaScript -->
+    </div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-value" id="totalImages">48</div>
+            <div class="stat-label">Total Images</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="cuisineCount">12</div>
+            <div class="stat-label">Cuisines</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="countryCount">18</div>
+            <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">2024</div>
+            <div class="stat-label">Year</div>
+        </div>
+    </div>
+</main>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+        <div class="lightbox-image-container">
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Previous image">‹</button>
+            <button class="lightbox-nav next" id="lightboxNext" aria-label="Next image">›</button>
+            <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">×</button>
+        </div>
+        <div class="lightbox-details" id="lightboxDetails">
+            <!-- Details populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Design Navigation -->
+<nav class="design-nav">
+    <button class="design-nav-btn" id="prevDesign" aria-label="Previous design">←</button>
+    <button class="design-nav-btn" id="nextDesign" aria-label="Next design">→</button>
+</nav>
+
+<script>
+// Gallery Data
+const galleryData = [
+    {
+        id: 1,
+        title: "Sushi Omakase",
+        location: "Tokyo, Japan",
+        category: "asian",
+        cuisine: "Japanese",
+        photographer: "Kenji Tanaka",
+        date: "2024-03-15",
+        description: "Traditional nigiri sushi prepared by master chef with 30 years experience",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FF6B35' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3ESUSHI OMAKASE%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 2,
+        title: "Mezze Platter",
+        location: "Athens, Greece",
+        category: "mediterranean",
+        cuisine: "Greek",
+        photographer: "Maria Papadopoulos",
+        date: "2024-02-28",
+        description: "Traditional Greek mezze with hummus, tzatziki, dolmades and olives",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2300B4D8' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EMEZZE PLATTER%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 3,
+        title: "Tacos al Pastor",
+        location: "Mexico City, Mexico",
+        category: "latin",
+        cuisine: "Mexican",
+        photographer: "Carlos Mendoza",
+        date: "2024-04-10",
+        description: "Street-style tacos with marinated pork, pineapple and cilantro",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FFB700' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='40' fill='%231A1A1A' text-anchor='middle' font-family='monospace'%3ETACOS AL PASTOR%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 4,
+        title: "Jollof Rice",
+        location: "Lagos, Nigeria",
+        category: "african",
+        cuisine: "West African",
+        photographer: "Amara Okonkwo",
+        date: "2024-01-20",
+        description: "Vibrant tomato-based rice dish with vegetables and spices",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23DC2626' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EJOLLOF RICE%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 5,
+        title: "Coq au Vin",
+        location: "Lyon, France",
+        category: "european",
+        cuisine: "French",
+        photographer: "Sophie Laurent",
+        date: "2024-03-05",
+        description: "Braised chicken in red wine with mushrooms and pearl onions",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%236D28D9' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3ECOQ AU VIN%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 6,
+        title: "Pad Thai",
+        location: "Bangkok, Thailand",
+        category: "asian",
+        cuisine: "Thai",
+        photographer: "Somchai Prasert",
+        date: "2024-02-15",
+        description: "Stir-fried rice noodles with shrimp, tofu, peanuts and lime",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FF6B35' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EPAD THAI%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 7,
+        title: "Paella Valenciana",
+        location: "Valencia, Spain",
+        category: "mediterranean",
+        cuisine: "Spanish",
+        photographer: "Juan Garcia",
+        date: "2024-04-22",
+        description: "Traditional saffron rice with rabbit, chicken and green beans",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2300B4D8' width='800' height='600'/%3E%3Ctext x='400' y='280' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3EPAELLA%3C/text%3E%3Ctext x='400' y='330' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3EVALENCIANA%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 8,
+        title: "Ceviche",
+        location: "Lima, Peru",
+        category: "latin",
+        cuisine: "Peruvian",
+        photographer: "Isabella Rodriguez",
+        date: "2024-03-18",
+        description: "Fresh fish marinated in citrus with onions, cilantro and sweet potato",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FFB700' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='%231A1A1A' text-anchor='middle' font-family='monospace'%3ECEVICHE%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 9,
+        title: "Tagine",
+        location: "Marrakech, Morocco",
+        category: "african",
+        cuisine: "Moroccan",
+        photographer: "Fatima El Amrani",
+        date: "2024-02-08",
+        description: "Slow-cooked lamb with apricots, almonds and aromatic spices",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23DC2626' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3ETAGINE%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 10,
+        title: "Wiener Schnitzel",
+        location: "Vienna, Austria",
+        category: "european",
+        cuisine: "Austrian",
+        photographer: "Klaus Weber",
+        date: "2024-01-30",
+        description: "Breaded veal cutlet served with potato salad and lingonberry",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%236D28D9' width='800' height='600'/%3E%3Ctext x='400' y='280' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3EWIENER%3C/text%3E%3Ctext x='400' y='330' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3ESCHNITZEL%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 11,
+        title: "Bibimbap",
+        location: "Seoul, South Korea",
+        category: "asian",
+        cuisine: "Korean",
+        photographer: "Ji-woo Kim",
+        date: "2024-04-05",
+        description: "Mixed rice bowl with vegetables, beef, egg and gochujang sauce",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FF6B35' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EBIBIMBAP%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 12,
+        title: "Shakshuka",
+        location: "Tel Aviv, Israel",
+        category: "mediterranean",
+        cuisine: "Israeli",
+        photographer: "Yael Cohen",
+        date: "2024-03-25",
+        description: "Poached eggs in spicy tomato sauce with peppers and onions",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2300B4D8' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3ESHAKSHUKA%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 13,
+        title: "Empanadas",
+        location: "Buenos Aires, Argentina",
+        category: "latin",
+        cuisine: "Argentine",
+        photographer: "Diego Martinez",
+        date: "2024-02-18",
+        description: "Baked pastries filled with seasoned beef, olives and hard-boiled egg",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FFB700' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='%231A1A1A' text-anchor='middle' font-family='monospace'%3EEMPANADAS%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 14,
+        title: "Bunny Chow",
+        location: "Durban, South Africa",
+        category: "african",
+        cuisine: "South African",
+        photographer: "Thabo Mthembu",
+        date: "2024-04-12",
+        description: "Hollowed bread loaf filled with curry, street food classic",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23DC2626' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EBUNNY CHOW%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 15,
+        title: "Goulash",
+        location: "Budapest, Hungary",
+        category: "european",
+        cuisine: "Hungarian",
+        photographer: "Anna Kovacs",
+        date: "2024-03-08",
+        description: "Hearty beef stew with paprika, vegetables and caraway seeds",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%236D28D9' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EGOULASH%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 16,
+        title: "Dim Sum",
+        location: "Hong Kong, China",
+        category: "asian",
+        cuisine: "Chinese",
+        photographer: "Wei Zhang",
+        date: "2024-01-25",
+        description: "Assorted steamed dumplings and buns in bamboo steamers",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FF6B35' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EDIM SUM%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 17,
+        title: "Moussaka",
+        location: "Santorini, Greece",
+        category: "mediterranean",
+        cuisine: "Greek",
+        photographer: "Nikos Alexandrou",
+        date: "2024-04-18",
+        description: "Layered eggplant casserole with spiced meat and bechamel sauce",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2300B4D8' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EMOUSSAKA%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 18,
+        title: "Arepas",
+        location: "Caracas, Venezuela",
+        category: "latin",
+        cuisine: "Venezuelan",
+        photographer: "Lucia Fernandez",
+        date: "2024-03-12",
+        description: "Corn cakes stuffed with cheese, beans and shredded beef",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FFB700' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='%231A1A1A' text-anchor='middle' font-family='monospace'%3EAREPAS%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 19,
+        title: "Injera & Wat",
+        location: "Addis Ababa, Ethiopia",
+        category: "african",
+        cuisine: "Ethiopian",
+        photographer: "Mekdes Bekele",
+        date: "2024-02-22",
+        description: "Spongy sourdough flatbread with spicy stew and vegetables",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23DC2626' width='800' height='600'/%3E%3Ctext x='400' y='280' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3EINJERA %26%3C/text%3E%3Ctext x='400' y='330' font-size='42' fill='white' text-anchor='middle' font-family='monospace'%3EWAT%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 20,
+        title: "Pierogi",
+        location: "Krakow, Poland",
+        category: "european",
+        cuisine: "Polish",
+        photographer: "Piotr Nowak",
+        date: "2024-04-08",
+        description: "Filled dumplings with potato, cheese and caramelized onions",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%236D28D9' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EPIEROGI%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 21,
+        title: "Pho",
+        location: "Hanoi, Vietnam",
+        category: "asian",
+        cuisine: "Vietnamese",
+        photographer: "Linh Nguyen",
+        date: "2024-01-15",
+        description: "Aromatic beef noodle soup with herbs and lime",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FF6B35' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EPHO%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 22,
+        title: "Falafel Wrap",
+        location: "Beirut, Lebanon",
+        category: "mediterranean",
+        cuisine: "Lebanese",
+        photographer: "Layla Khoury",
+        date: "2024-03-30",
+        description: "Crispy chickpea fritters in pita with tahini and vegetables",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2300B4D8' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EFALAFEL WRAP%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 23,
+        title: "Feijoada",
+        location: "Rio de Janeiro, Brazil",
+        category: "latin",
+        cuisine: "Brazilian",
+        photographer: "Rafael Silva",
+        date: "2024-02-14",
+        description: "Black bean stew with pork, sausage, rice and collard greens",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23FFB700' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='%231A1A1A' text-anchor='middle' font-family='monospace'%3EFEIJOADA%3C/text%3E%3C/svg%3E"
+    },
+    {
+        id: 24,
+        title: "Bobotie",
+        location: "Cape Town, South Africa",
+        category: "african",
+        cuisine: "South African",
+        photographer: "Zanele Dlamini",
+        date: "2024-04-01",
+        description: "Spiced minced meat casserole with egg topping and raisins",
+        image: "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23DC2626' width='800' height='600'/%3E%3Ctext x='400' y='300' font-size='48' fill='white' text-anchor='middle' font-family='monospace'%3EBOBOTIE%3C/text%3E%3C/svg%3E"
+    }
+];
+
+// State
+let currentFilter = 'all';
+let currentSearchTerm = '';
+let currentLightboxIndex = -1;
+let filteredData = [...galleryData];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    renderGallery();
+    initializeEventListeners();
+    updateStats();
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+// Render Gallery
+function renderGallery() {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+
+    filteredData = galleryData.filter(item => {
+        const matchesFilter = currentFilter === 'all' || item.category === currentFilter;
+        const matchesSearch = currentSearchTerm === '' ||
+            item.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+            item.location.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+            item.cuisine.toLowerCase().includes(currentSearchTerm.toLowerCase());
+        return matchesFilter && matchesSearch;
+    });
+
+    filteredData.forEach((item, index) => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.setAttribute('tabindex', '0');
+        galleryItem.innerHTML = `
+            <div class="gallery-image-wrapper">
+                <img class="gallery-image" src="${item.image}" alt="${item.title}">
+            </div>
+            <div class="gallery-info">
+                <h3 class="gallery-title">${item.title}</h3>
+                <div class="gallery-meta">
+                    <span>${item.location}</span>
+                </div>
+                <div class="gallery-tags">
+                    <span class="tag ${item.category}">${item.cuisine.toUpperCase()}</span>
+                </div>
+            </div>
+        `;
+        galleryItem.addEventListener('click', () => openLightbox(index));
+        galleryItem.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') openLightbox(index);
+        });
+        gallery.appendChild(galleryItem);
+    });
+
+    updateStats();
+}
+
+// Initialize Event Listeners
+function initializeEventListeners() {
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+    // Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentSearchTerm = e.target.value;
+        renderGallery();
+    });
+
+    // Filter pills
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.category;
+            renderGallery();
+        });
+    });
+
+    // Lightbox controls
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', () => navigateLightbox(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => navigateLightbox(1));
+
+    // Design navigation
+    document.getElementById('prevDesign').addEventListener('click', () => navigateDesigns(-1));
+    document.getElementById('nextDesign').addEventListener('click', () => navigateDesigns(1));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', handleKeyDown);
+}
+
+// Theme Toggle
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// Lightbox Functions
+function openLightbox(index) {
+    currentLightboxIndex = index;
+    const item = filteredData[index];
+
+    document.getElementById('lightboxImage').src = item.image;
+    document.getElementById('lightboxImage').alt = item.title;
+
+    document.getElementById('lightboxDetails').innerHTML = `
+        <h2 class="lightbox-title">${item.title}</h2>
+        <div class="lightbox-meta">
+            <div class="meta-item">
+                <div class="meta-label">Location</div>
+                <div class="meta-value">${item.location}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Cuisine</div>
+                <div class="meta-value">${item.cuisine}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Photographer</div>
+                <div class="meta-value">${item.photographer}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Date</div>
+                <div class="meta-value">${item.date}</div>
+            </div>
+        </div>
+        <div class="gallery-tags">
+            <span class="tag ${item.category}">${item.category.toUpperCase()}</span>
+        </div>
+        <p style="margin-top: 16px; line-height: 1.6;">${item.description}</p>
+    `;
+
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+    currentLightboxIndex = -1;
+}
+
+function navigateLightbox(direction) {
+    currentLightboxIndex += direction;
+    if (currentLightboxIndex < 0) currentLightboxIndex = filteredData.length - 1;
+    if (currentLightboxIndex >= filteredData.length) currentLightboxIndex = 0;
+    openLightbox(currentLightboxIndex);
+}
+
+// Design Navigation
+function navigateDesigns(direction) {
+    const currentDesign = 167;
+    const totalDesigns = 250;
+    let nextDesign = currentDesign + direction;
+
+    if (nextDesign < 1) nextDesign = totalDesigns;
+    if (nextDesign > totalDesigns) nextDesign = 1;
+
+    window.location.href = `design-${nextDesign}.html`;
+}
+
+// Keyboard Navigation
+function handleKeyDown(e) {
+    const lightboxActive = document.getElementById('lightbox').classList.contains('active');
+
+    if (lightboxActive) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            navigateLightbox(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateLightbox(1);
+        }
+    } else {
+        if (e.key === 'ArrowLeft') {
+            navigateDesigns(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateDesigns(1);
+        }
+    }
+}
+
+// Update Stats
+function updateStats() {
+    document.getElementById('totalImages').textContent = filteredData.length;
+
+    const uniqueCuisines = new Set(filteredData.map(item => item.cuisine));
+    document.getElementById('cuisineCount').textContent = uniqueCuisines.size;
+
+    // Count unique countries from locations
+    const countries = filteredData.map(item => item.location.split(',')[1]?.trim()).filter(Boolean);
+    const uniqueCountries = new Set(countries);
+    document.getElementById('countryCount').textContent = uniqueCountries.size;
+}
+</script>
+
+</body>
+</html>

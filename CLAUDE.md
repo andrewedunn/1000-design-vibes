@@ -6,7 +6,7 @@ Instructions for AI assistants working on this project.
 
 1000 Design Vibes generates unique, self-contained design system showcases. Each design is an HTML file that works as both a visual demo and LLM-readable documentation.
 
-**Current state:** 370 designs across 10 batches. Goal is 1000.
+**Current state:** 620 designs across 12 batches. Goal is 1000.
 
 **Key insight**: Less is more. Use `--core-only` to specify just 5 dimensions and let the agent pick the rest. This produces more coherent designs than specifying all 35 dimensions randomly.
 
@@ -25,8 +25,7 @@ python design_vibes.py status --path outputs/2026-01-07-batch1
 # Validate designs for CSS issues
 python design_vibes.py validate --path outputs/2026-01-07-batch1 --fix
 
-# Rebuild galleries after generation
-python design_vibes.py build-indexes
+# Rebuild viewer after generation
 python design_vibes.py build-viewer
 
 # Browse designs
@@ -43,8 +42,9 @@ When asked to generate designs:
 4. Each agent reads `DESIGN_GUIDE_MINIMAL.md` (for core-only) or `DESIGN_GUIDE_LOOSE.md` and writes to `.staging/`
 5. **Validate outputs** using `python design_vibes.py validate --path {batch} --fix`
 6. **Move valid designs** from `.staging/` to `designs/`
-7. Run `build-indexes` and `build-viewer` to update galleries
-8. Repeat until batch complete
+7. Run `build-viewer` to update the viewer
+8. **Update about.html** with the new batch (see Post-Batch Checklist below)
+9. Repeat until batch complete
 
 ### Spawning a Design Agent (Core-Only)
 
@@ -68,7 +68,8 @@ Core Dimensions:
 You choose all other design details (typography, colors, spacing, etc.) to create a coherent design.
 
 Write to: outputs/{batch}/.staging/design-{id}.html
-Navigation script: TOTAL={total}, CURRENT={id}
+
+IMPORTANT: Do NOT add navigation scripts (ArrowLeft/ArrowRight handlers). The viewer handles navigation.
 ```
 
 ### Validation Checklist
@@ -77,9 +78,34 @@ Before moving from staging:
 - File size > 10KB (aim for 25KB+)
 - Contains `<!DOCTYPE html>`
 - Contains `<style>` block with proper CSS comments (/* */, not <!-- -->)
+- **NO navigation scripts** (ArrowLeft/ArrowRight handlers) - viewer handles this
 - Clearly reflects the functional_direction
 
 Run `python design_vibes.py validate --path {batch} --fix` to auto-fix CSS comment issues.
+
+**IMPORTANT:** After moving designs from staging, always run validation AND check for navigation scripts:
+```bash
+python design_vibes.py validate --path {batch} --fix
+# Then strip any navigation scripts (they break the viewer):
+grep -l "ArrowRight" outputs/{batch}/designs/design-*.html
+# If any found, remove the keydown event listeners
+```
+
+### Post-Batch Checklist
+
+After completing a batch, update the following:
+
+1. **about.html** - The "What the heck is this?" page
+   - Update the stats row at the top (total designs, batch count, remaining)
+   - Add the new batch to the "Design Runs" list (click to expand with approach info)
+
+2. **CLAUDE.md** - This file
+   - Update the "Current state" line with new totals
+
+3. **Rebuild viewer**
+   ```bash
+   python design_vibes.py build-viewer
+   ```
 
 ## Multi-Session Batch Execution
 
@@ -102,8 +128,7 @@ The `status` command shows:
 | `src/dimensions.py` | 35 dimensions, 412 values, 158 functional directions |
 | `src/manifest.py` | Manifest generation with --core-only support |
 | `src/naming.py` | Creative name generation |
-| `src/index.py` | Batch gallery builder |
-| `src/viewer.py` | Main gallery builder |
+| `src/viewer.py` | Main viewer/gallery builder |
 | `src/validate.py` | Design validation and CSS fix |
 | `src/status.py` | Progress reporting with resume prompts |
 
@@ -115,8 +140,8 @@ outputs/{date}-{name}/
   failures.json     # Failed attempts (if any)
   .staging/         # In-progress designs
   designs/
-    index.html      # Batch gallery
     design-1.html   # Completed designs
+    design-2.html
     ...
 ```
 
@@ -140,6 +165,7 @@ outputs/{date}-{name}/
 
 | Doc | Purpose |
 |-----|---------|
+| [about.html](about.html) | Public "What is this?" page - **UPDATE AFTER EACH BATCH** |
 | [README.md](README.md) | Full usage docs with the evolution story |
 | [ROADMAP.md](docs/ROADMAP.md) | Version history, experiments log, future plans |
 | [BATCH_EXECUTION.md](docs/BATCH_EXECUTION.md) | Multi-session batch guide with resume instructions |

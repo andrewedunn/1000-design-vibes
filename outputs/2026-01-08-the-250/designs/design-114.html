@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<!--
+DESIGN: Bloom Hub - The flat way to fitness
+ABOUTME: This design system implements a video_call interface with psychedelic flat aesthetics.
+ABOUTME: Key characteristics: Vibrant swirling color palette, groovy organic shapes, friendly rounded typography
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF6B9D;
+--color-secondary: #FFA500;
+--color-tertiary: #9D4EDD;
+--color-background: #FFF8F0;
+--color-surface: #FFFFFF;
+--color-text: #2D1B4E;
+--color-text-muted: #6B5B8C;
+--color-accent-pink: #FF1B8D;
+--color-accent-orange: #FF8C42;
+--color-accent-purple: #C77DFF;
+--color-accent-green: #06FFA5;
+--font-heading: 'Righteous', cursive;
+--font-body: 'Nunito', sans-serif;
+--radius-default: 24px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Psychedelic color gradients create energetic, flowing visual rhythm
+2. Flat design with bold outlines and no shadows keeps interface crisp
+3. Organic flowing shapes and curves evoke 1960s/70s psychedelic poster art
+4. High contrast flat colors maintain readability while expressing vibrancy
+5. Friendly rounded typography and generous spacing create welcoming atmosphere
+
+BEST FOR:
+- Fitness and wellness video sessions
+- Group exercise classes online
+- Personal training video calls
+- Yoga and meditation video platforms
+- Community fitness experiences
+
+AVOID IF:
+- You need corporate/professional aesthetic
+- Target audience prefers minimal/serious design
+- Brand identity requires muted colors
+- Accessibility requires simpler visual patterns
+
+FUNCTIONAL DIRECTION: video_call
+This design must clearly function as a video_call interface. Required elements:
+- Video feed grid/layout showing participant video streams
+- Audio/video control buttons (mute, camera, share screen)
+- Participant list with status indicators
+- Chat/messaging panel
+- Screen sharing area
+- Call controls (leave, settings)
+- Connection quality indicators
+- Active speaker highlighting
+
+COLOR PALETTE RATIONALE:
+The psychedelic era palette uses vibrant flat colors - hot pinks, electric oranges,
+deep purples, and neon greens arranged in flowing gradients that recall 1960s
+concert posters while maintaining the crisp clarity of flat design.
+
+TYPOGRAPHY RATIONALE:
+Righteous provides groovy, friendly display letterforms perfect for headings.
+Nunito offers rounded, approachable body text that's highly legible for UI elements.
+
+LAYOUT RATIONALE:
+Video grid dominates the interface as primary content, with floating controls
+and a collapsible sidebar for chat/participants. Organic background patterns
+add psychedelic flair without interfering with video content.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom Hub - The flat way to fitness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #FF6B9D;
+            --color-secondary: #FFA500;
+            --color-tertiary: #9D4EDD;
+            --color-background: #FFF8F0;
+            --color-surface: #FFFFFF;
+            --color-text: #2D1B4E;
+            --color-text-muted: #6B5B8C;
+            --color-accent-pink: #FF1B8D;
+            --color-accent-orange: #FF8C42;
+            --color-accent-purple: #C77DFF;
+            --color-accent-green: #06FFA5;
+            --color-border: #2D1B4E;
+
+            /* Typography */
+            --font-heading: 'Righteous', cursive;
+            --font-body: 'Nunito', sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 20px;
+            --font-size-xl: 28px;
+            --font-size-2xl: 40px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+            --space-2xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 24px;
+            --radius-sm: 12px;
+            --radius-lg: 32px;
+            --radius-full: 999px;
+            --border-width: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Psychedelic background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 107, 157, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 165, 0, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main container */
+        .app-container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            z-index: 1;
+        }
+
+        /* Top header */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-lg);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-accent-green);
+            border: 2px solid var(--color-border);
+        }
+
+        .time-display {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            color: var(--color-text);
+        }
+
+        /* Main video area */
+        .video-main {
+            flex: 1;
+            padding: calc(70px + var(--space-lg)) var(--space-lg) calc(90px + var(--space-lg)) var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .video-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            min-height: 0;
+        }
+
+        .video-tile {
+            position: relative;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-tile.active {
+            border-color: var(--color-primary);
+            border-width: 4px;
+        }
+
+        .video-tile.speaking {
+            animation: pulse-border 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% {
+                border-color: var(--color-primary);
+            }
+            50% {
+                border-color: var(--color-accent-green);
+            }
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: var(--color-surface);
+            font-weight: 800;
+        }
+
+        .participant-info {
+            position: absolute;
+            bottom: var(--space-md);
+            left: var(--space-md);
+            background: rgba(255, 255, 255, 0.95);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-full);
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+        }
+
+        .mic-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-accent-green);
+        }
+
+        .mic-indicator.muted {
+            background: var(--color-text-muted);
+        }
+
+        /* Bottom control bar */
+        .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            padding: 0 var(--space-lg);
+            z-index: 100;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-full);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            font-size: 24px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            background: var(--color-surface);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 3px;
+        }
+
+        .control-btn.active {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .control-btn.danger {
+            background: var(--color-accent-pink);
+            color: var(--color-surface);
+        }
+
+        .control-btn.danger:hover {
+            background: #FF1B8D;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: var(--color-surface);
+            border-left: var(--border-width) solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            margin-top: 70px;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: var(--space-md);
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            color: var(--color-text-muted);
+            transition: color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .sidebar-tab.active {
+            color: var(--color-text);
+            background: var(--color-background);
+        }
+
+        .sidebar-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .sidebar-tab:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+        }
+
+        /* Participants list */
+        .participant-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-sm);
+        }
+
+        .participant-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            border: var(--border-width) solid var(--color-border);
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--color-surface);
+            flex-shrink: 0;
+        }
+
+        .participant-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .participant-name {
+            font-weight: 700;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .participant-status {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-accent-green);
+            border: 2px solid var(--color-border);
+        }
+
+        /* Chat */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .chat-message {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--color-border);
+            background: linear-gradient(135deg, var(--color-tertiary), var(--color-primary));
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-surface);
+            font-weight: 800;
+            font-size: var(--font-size-xs);
+        }
+
+        .chat-content {
+            flex: 1;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .chat-name {
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+        }
+
+        .chat-time {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        .chat-text {
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+        }
+
+        .chat-input-container {
+            position: sticky;
+            bottom: 0;
+            background: var(--color-surface);
+            padding-top: var(--space-md);
+            border-top: var(--border-width) solid var(--color-border);
+            margin-top: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            background: var(--color-background);
+            resize: none;
+        }
+
+        .chat-input:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Screen share indicator */
+        .screen-share-banner {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-accent-orange);
+            color: var(--color-surface);
+            padding: var(--space-sm) var(--space-lg);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            z-index: 101;
+            display: none;
+        }
+
+        .screen-share-banner.active {
+            display: block;
+        }
+
+        /* Floating action buttons */
+        .floating-actions {
+            position: fixed;
+            bottom: 110px;
+            right: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            z-index: 50;
+        }
+
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-size: 24px;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 3px;
+        }
+
+        /* Settings panel overlay */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 27, 78, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .settings-overlay.active {
+            display: flex;
+        }
+
+        .settings-panel {
+            background: var(--color-surface);
+            border: 4px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-header {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .settings-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .settings-label {
+            font-weight: 700;
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-sm);
+            display: block;
+        }
+
+        .settings-select {
+            width: 100%;
+            padding: var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            background: var(--color-background);
+            cursor: pointer;
+        }
+
+        .settings-select:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-family: var(--font-body);
+            font-weight: 800;
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:focus {
+            outline: 3px solid var(--color-tertiary);
+            outline-offset: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 70px;
+                right: -340px;
+                bottom: 90px;
+                transition: right 0.3s;
+                z-index: 150;
+            }
+
+            .sidebar.open {
+                right: 0;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">Bloom Hub</div>
+            <div class="header-controls">
+                <div class="connection-status">
+                    <span class="status-dot"></span>
+                    <span>Excellent</span>
+                </div>
+                <div class="time-display">42:18</div>
+            </div>
+        </header>
+
+        <!-- Screen share banner -->
+        <div class="screen-share-banner" id="screenShareBanner">
+            You are sharing your screen
+        </div>
+
+        <!-- Main video area -->
+        <main class="video-main">
+            <div class="video-grid">
+                <div class="video-tile active speaking">
+                    <div class="video-placeholder">JM</div>
+                    <div class="participant-info">
+                        <span class="mic-indicator"></span>
+                        <span>Jamie Martinez (You)</span>
+                    </div>
+                </div>
+                <div class="video-tile">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, #FFA500, #9D4EDD);">SK</div>
+                    <div class="participant-info">
+                        <span class="mic-indicator"></span>
+                        <span>Sam Kim</span>
+                    </div>
+                </div>
+                <div class="video-tile">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, #06FFA5, #FF6B9D);">AP</div>
+                    <div class="participant-info">
+                        <span class="mic-indicator muted"></span>
+                        <span>Alex Patel</span>
+                    </div>
+                </div>
+                <div class="video-tile">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, #C77DFF, #FF8C42);">TR</div>
+                    <div class="participant-info">
+                        <span class="mic-indicator"></span>
+                        <span>Taylor Rodriguez</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Control bar -->
+        <div class="control-bar">
+            <button class="control-btn" id="micBtn" title="Mute microphone" aria-label="Mute microphone">
+                🎤
+            </button>
+            <button class="control-btn" id="cameraBtn" title="Turn off camera" aria-label="Turn off camera">
+                📹
+            </button>
+            <button class="control-btn" id="shareBtn" title="Share screen" aria-label="Share screen">
+                🖥️
+            </button>
+            <button class="control-btn" id="participantsBtn" title="View participants" aria-label="View participants">
+                👥
+            </button>
+            <button class="control-btn" id="chatBtn" title="Open chat" aria-label="Open chat">
+                💬
+            </button>
+            <button class="control-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+                ⚙️
+            </button>
+            <button class="control-btn danger" id="leaveBtn" title="Leave call" aria-label="Leave call">
+                📞
+            </button>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-tab="participants">Participants</button>
+                <button class="sidebar-tab" data-tab="chat">Chat</button>
+            </div>
+            <div class="sidebar-content">
+                <!-- Participants panel -->
+                <div class="tab-panel" id="participantsPanel">
+                    <div class="participant-item">
+                        <div class="participant-avatar">JM</div>
+                        <div class="participant-details">
+                            <div class="participant-name">Jamie Martinez (You)</div>
+                            <div class="participant-status">
+                                <span class="status-icon"></span>
+                                <span>Host • Speaking</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background: linear-gradient(135deg, #FFA500, #9D4EDD);">SK</div>
+                        <div class="participant-details">
+                            <div class="participant-name">Sam Kim</div>
+                            <div class="participant-status">
+                                <span class="status-icon"></span>
+                                <span>Instructor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background: linear-gradient(135deg, #06FFA5, #FF6B9D);">AP</div>
+                        <div class="participant-details">
+                            <div class="participant-name">Alex Patel</div>
+                            <div class="participant-status">
+                                <span class="status-icon" style="background: var(--color-text-muted);"></span>
+                                <span>Muted</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background: linear-gradient(135deg, #C77DFF, #FF8C42);">TR</div>
+                        <div class="participant-details">
+                            <div class="participant-name">Taylor Rodriguez</div>
+                            <div class="participant-status">
+                                <span class="status-icon"></span>
+                                <span>Member</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background: linear-gradient(135deg, #FF1B8D, #06FFA5);">MC</div>
+                        <div class="participant-details">
+                            <div class="participant-name">Morgan Chen</div>
+                            <div class="participant-status">
+                                <span class="status-icon"></span>
+                                <span>Member</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat panel -->
+                <div class="tab-panel hidden" id="chatPanel">
+                    <div class="chat-messages">
+                        <div class="chat-message">
+                            <div class="chat-avatar" style="background: linear-gradient(135deg, #FFA500, #9D4EDD);">SK</div>
+                            <div class="chat-content">
+                                <div class="chat-header">
+                                    <span class="chat-name">Sam Kim</span>
+                                    <span class="chat-time">10:23 AM</span>
+                                </div>
+                                <div class="chat-text">Welcome everyone! Ready for an amazing HIIT session? 🔥</div>
+                            </div>
+                        </div>
+                        <div class="chat-message">
+                            <div class="chat-avatar" style="background: linear-gradient(135deg, #C77DFF, #FF8C42);">TR</div>
+                            <div class="chat-content">
+                                <div class="chat-header">
+                                    <span class="chat-name">Taylor Rodriguez</span>
+                                    <span class="chat-time">10:24 AM</span>
+                                </div>
+                                <div class="chat-text">So excited! Let's do this!</div>
+                            </div>
+                        </div>
+                        <div class="chat-message">
+                            <div class="chat-avatar" style="background: linear-gradient(135deg, #06FFA5, #FF6B9D);">AP</div>
+                            <div class="chat-content">
+                                <div class="chat-header">
+                                    <span class="chat-name">Alex Patel</span>
+                                    <span class="chat-time">10:25 AM</span>
+                                </div>
+                                <div class="chat-text">Can someone share the playlist from last week's session?</div>
+                            </div>
+                        </div>
+                        <div class="chat-message">
+                            <div class="chat-avatar" style="background: linear-gradient(135deg, #FF1B8D, #06FFA5);">MC</div>
+                            <div class="chat-content">
+                                <div class="chat-header">
+                                    <span class="chat-name">Morgan Chen</span>
+                                    <span class="chat-time">10:26 AM</span>
+                                </div>
+                                <div class="chat-text">First time joining! This looks awesome 💪</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <textarea class="chat-input" placeholder="Send a message..." rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Settings overlay -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-panel">
+            <h2 class="settings-header">Settings</h2>
+
+            <div class="settings-group">
+                <label class="settings-label" for="cameraSelect">Camera</label>
+                <select class="settings-select" id="cameraSelect">
+                    <option>MacBook Pro Camera (Built-in)</option>
+                    <option>External Webcam HD</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label" for="micSelect">Microphone</label>
+                <select class="settings-select" id="micSelect">
+                    <option>MacBook Pro Microphone (Built-in)</option>
+                    <option>External USB Microphone</option>
+                    <option>AirPods Pro</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label" for="speakerSelect">Speaker</label>
+                <select class="settings-select" id="speakerSelect">
+                    <option>MacBook Pro Speakers (Built-in)</option>
+                    <option>AirPods Pro</option>
+                    <option>External Speakers</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label" for="qualitySelect">Video Quality</label>
+                <select class="settings-select" id="qualitySelect">
+                    <option>Auto (Recommended)</option>
+                    <option>1080p HD</option>
+                    <option>720p</option>
+                    <option>480p</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" id="closeSettings">Done</button>
+        </div>
+    </div>
+
+    
+</body>
+</html>

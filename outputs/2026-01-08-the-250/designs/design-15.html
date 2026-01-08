@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo Pewter - Grunge-inspired design for users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Cosmo Pewter - Grunge-inspired design for users
+        ABOUTME: This design system implements tutorial_walkthrough with grunge aesthetics.
+        ABOUTME: Key characteristics: Textured surfaces, worn paper feel, calm neutral palette with organic imperfections.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #8B7355;
+        --color-background: #E8E4DD;
+        --color-surface: #F5F3EF;
+        --color-text: #2B2520;
+        --color-text-muted: #6B6158;
+        --color-accent: #A68A6E;
+        --color-success: #7A9070;
+        --font-heading: 'Oswald', sans-serif;
+        --font-body: 'Source Sans 3', sans-serif;
+        --radius-default: 2px;
+        --space-unit: 8px;
+        --texture-opacity: 0.05;
+
+        AESTHETIC PRINCIPLES:
+        1. Textured overlays create authentic, worn surfaces reminiscent of vintage cookbooks
+        2. Muted earth tones provide calm, approachable learning environment
+        3. Rough edges and subtle noise effects add organic grunge character
+        4. Heavy typography contrasts with soft backgrounds for clear hierarchy
+        5. Hand-drawn style checkmarks and progress indicators feel personal
+
+        BEST FOR:
+        - Food preparation tutorials and cooking guides
+        - Step-by-step recipe walkthroughs
+        - Culinary technique education
+        - Cooking skill development platforms
+        - Farm-to-table educational content
+        - Sustainable food practice guides
+
+        AVOID IF:
+        - Need ultra-modern, clinical aesthetic
+        - Require high-gloss, polished appearance
+        - Targeting corporate/enterprise audience
+        - Need bright, energetic color schemes
+        - Want minimalist, pristine layouts
+
+        FUNCTIONAL DIRECTION: tutorial_walkthrough
+        This design must clearly function as a tutorial_walkthrough. Required elements:
+        - Step-by-step panels showing sequential progression through content
+        - Code snippets (adapted as recipe/ingredient blocks for food context)
+        - Try-it areas where users can interact or practice
+        - Checkpoints to mark progress and validate understanding
+        - Clear navigation between tutorial steps
+        - Progress tracking visualization
+        - Content sections with visual hierarchy
+
+        DESIGN ERA: Grunge
+        Implements grunge through:
+        - Textured, worn surfaces with noise overlay
+        - Earth-tone palette with desaturated colors
+        - Rough, imperfect edges on containers
+        - Layered paper-like surfaces
+        - Authentic, unpolished visual language
+        - Organic, hand-crafted feel
+
+        EMOTIONAL TONE: Calm
+        Achieved through:
+        - Soft, neutral color palette
+        - Generous whitespace and breathing room
+        - Gentle transitions and interactions
+        - Unhurried pacing in content presentation
+        - Soothing earth tones throughout
+        - Low-contrast, easy-on-eyes design
+
+        INDUSTRY: Food
+        Contextual adaptations:
+        - Recipe-style code snippets
+        - Ingredient lists as structured data
+        - Cooking technique demonstrations
+        - Kitchen equipment references
+        - Food safety checkpoints
+        - Culinary terminology
+        - Prep time and cooking duration indicators
+
+        COLOR MODE: Light Only
+        Optimized for daylight reading with warm, paper-like backgrounds
+        */
+
+        :root {
+            /* Colors - Warm neutrals with pewter accents */
+            --color-primary: #8B7355;
+            --color-background: #E8E4DD;
+            --color-surface: #F5F3EF;
+            --color-text: #2B2520;
+            --color-text-muted: #6B6158;
+            --color-accent: #A68A6E;
+            --color-success: #7A9070;
+            --color-warning: #B88C5F;
+            --color-border: #D4CEC5;
+            --color-hover: #9F8366;
+
+            /* Typography */
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Source Sans 3', sans-serif;
+            --type-scale: 1.25;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 2px;
+            --shadow-default: 0 2px 8px rgba(43, 37, 32, 0.12), 0 1px 3px rgba(43, 37, 32, 0.08);
+            --shadow-raised: 0 4px 12px rgba(43, 37, 32, 0.15), 0 2px 4px rgba(43, 37, 32, 0.1);
+
+            /* Texture */
+            --texture-opacity: 0.05;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--color-text);
+            background: var(--color-background);
+            position: relative;
+        }
+
+        /* Grunge texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image:
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="200" height="200" filter="url(%23noise)" opacity="0.05"/></svg>');
+            opacity: var(--texture-opacity);
+            z-index: 1;
+        }
+
+        .tutorial-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            padding-bottom: var(--space-xl);
+            border-bottom: 3px solid var(--color-border);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--color-primary);
+            transform: scaleX(0);
+            animation: progressBar 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes progressBar {
+            to { transform: scaleX(1); }
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-sm);
+            line-height: 1.1;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        /* Progress tracker */
+        .progress-tracker {
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(139, 115, 85, 0.03) 100%);
+            pointer-events: none;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            position: relative;
+        }
+
+        .progress-label {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+        }
+
+        .progress-count {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--color-border);
+            border-radius: var(--radius-default);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 40%;
+            transition: width 0.6s ease-out;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Step panel */
+        .step-panel {
+            background: var(--color-surface);
+            border: 3px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .step-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--color-primary);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 2px dashed var(--color-border);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-default);
+        }
+
+        .step-title {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--color-text);
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+
+        .step-content {
+            margin-bottom: var(--space-lg);
+        }
+
+        .step-content p {
+            margin-bottom: var(--space-md);
+        }
+
+        .step-content ul {
+            margin-left: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .step-content li {
+            margin-bottom: var(--space-sm);
+            padding-left: var(--space-xs);
+        }
+
+        /* Recipe/ingredient block (code snippet equivalent) */
+        .recipe-block {
+            background: rgba(139, 115, 85, 0.08);
+            border: 2px solid var(--color-border);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            font-family: var(--font-body);
+            position: relative;
+        }
+
+        .recipe-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" /></filter><rect width="100" height="100" filter="url(%23paper)" opacity="0.03"/></svg>');
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .recipe-header {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+        }
+
+        .recipe-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        .ingredient-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .ingredient-list li {
+            padding: var(--space-xs) 0;
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-sm);
+        }
+
+        .ingredient-list li::before {
+            content: '▪';
+            color: var(--color-accent);
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        /* Try-it area */
+        .try-it-area {
+            background: rgba(122, 144, 112, 0.08);
+            border: 2px dashed var(--color-success);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+        }
+
+        .try-it-header {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: var(--color-success);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .try-it-header::before {
+            content: '→';
+            font-size: 1.5rem;
+        }
+
+        .try-it-content {
+            color: var(--color-text);
+        }
+
+        .try-it-input {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            margin-top: var(--space-sm);
+            background: var(--color-surface);
+            color: var(--color-text);
+            transition: border-color 0.2s;
+        }
+
+        .try-it-input:focus {
+            outline: none;
+            border-color: var(--color-success);
+            box-shadow: 0 0 0 3px rgba(122, 144, 112, 0.15);
+        }
+
+        /* Checkpoint */
+        .checkpoint {
+            background: var(--color-surface);
+            border: 3px solid var(--color-success);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin: var(--space-xl) 0;
+            box-shadow: var(--shadow-raised);
+            position: relative;
+        }
+
+        .checkpoint::before {
+            content: '✓';
+            position: absolute;
+            top: -20px;
+            right: var(--space-lg);
+            width: 40px;
+            height: 40px;
+            background: var(--color-success);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-raised);
+        }
+
+        .checkpoint-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            color: var(--color-success);
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+        }
+
+        .checkpoint-content {
+            color: var(--color-text);
+        }
+
+        .checkpoint-list {
+            list-style: none;
+            margin-top: var(--space-sm);
+        }
+
+        .checkpoint-list li {
+            padding: var(--space-xs) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+        }
+
+        .checkpoint-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        /* Navigation buttons */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--space-md);
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-xl);
+            border-top: 3px solid var(--color-border);
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            border: 3px solid var(--color-primary);
+            background: var(--color-surface);
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: var(--radius-default);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            min-height: 56px;
+            box-shadow: var(--shadow-default);
+        }
+
+        .nav-button:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-raised);
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+
+        .nav-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.25);
+        }
+
+        .nav-button.secondary {
+            border-color: var(--color-border);
+            color: var(--color-text-muted);
+        }
+
+        .nav-button.secondary:hover {
+            background: var(--color-text-muted);
+            color: var(--color-surface);
+            border-color: var(--color-text-muted);
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: rgba(184, 140, 95, 0.12);
+            border-left: 4px solid var(--color-warning);
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-default);
+        }
+
+        .info-box-title {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: var(--color-warning);
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .info-box-content {
+            font-size: 0.95rem;
+            color: var(--color-text);
+        }
+
+        /* Duration badge */
+        .duration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: var(--color-primary);
+            color: var(--color-surface);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .duration-badge::before {
+            content: '◷';
+            font-size: 1.2em;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tutorial-container {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .step-title {
+                font-size: 1.4rem;
+            }
+
+            .nav-controls {
+                flex-direction: column;
+            }
+
+            .step-header {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tutorial-container">
+        <header>
+            <h1>Cosmo Pewter</h1>
+            <p class="tagline">Master the Art of Sourdough Bread</p>
+        </header>
+
+        <div class="progress-tracker">
+            <div class="progress-info">
+                <span class="progress-label">Tutorial Progress</span>
+                <span class="progress-count">Step 2 of 5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%;"></div>
+            </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-panel">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Creating Your Starter</h2>
+            </div>
+            <div class="step-content">
+                <p><span class="duration-badge">5 days</span></p>
+                <p>A sourdough starter is a living culture of wild yeast and beneficial bacteria. This natural leavening agent gives sourdough its characteristic tangy flavor and chewy texture. Building a strong starter takes time, but the results are worth the patience.</p>
+
+                <div class="recipe-block">
+                    <div class="recipe-header">Initial Mixture</div>
+                    <div class="recipe-content">
+                        <ul class="ingredient-list">
+                            <li>50g whole wheat flour (for wild yeast)</li>
+                            <li>50g filtered water (room temperature)</li>
+                            <li>Clean glass jar (at least 500ml capacity)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p><strong>Instructions:</strong> Mix flour and water in your jar until no dry flour remains. The consistency should be thick but stirrable, like pancake batter. Cover loosely with a cloth or lid (don't seal tightly—the starter needs to breathe). Store at room temperature, away from direct sunlight.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">Temperature Matters</div>
+                    <div class="info-box-content">Keep your starter between 70-75°F (21-24°C). Warmer temperatures speed up fermentation, while cooler temps slow it down. Consistent temperature yields the most reliable results.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 (Current) -->
+        <div class="step-panel">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Daily Feeding Routine</h2>
+            </div>
+            <div class="step-content">
+                <p><span class="duration-badge">10 min/day</span></p>
+                <p>For the next 5-7 days, you'll feed your starter daily. This process removes old waste products and provides fresh food for the yeast and bacteria. Watch for bubbles and a pleasant sour smell—these are signs of healthy fermentation.</p>
+
+                <div class="recipe-block">
+                    <div class="recipe-header">Daily Feeding Recipe</div>
+                    <div class="recipe-content">
+                        <ul class="ingredient-list">
+                            <li>Discard half of your starter (about 50g)</li>
+                            <li>Add 50g all-purpose flour</li>
+                            <li>Add 50g filtered water</li>
+                            <li>Stir thoroughly until combined</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p><strong>What to Look For:</strong></p>
+                <ul>
+                    <li><strong>Day 1-2:</strong> Little to no activity—this is normal</li>
+                    <li><strong>Day 3-4:</strong> Small bubbles appear, slight sour smell develops</li>
+                    <li><strong>Day 5-7:</strong> Starter doubles in size between feedings, lots of bubbles</li>
+                </ul>
+
+                <div class="try-it-area">
+                    <div class="try-it-header">Track Your Progress</div>
+                    <div class="try-it-content">
+                        <p>Mark the starter level on your jar with a rubber band or tape after feeding. Check 4-6 hours later to see if it's doubled.</p>
+                        <label for="observation" style="display: block; margin-top: var(--space-sm); font-size: 0.9rem; color: var(--color-text-muted);">Record your observations:</label>
+                        <input type="text" id="observation" class="try-it-input" placeholder="e.g., 'Day 4: Doubled in 5 hours, smells like yogurt'">
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">Pro Tip</div>
+                    <div class="info-box-content">Save your discarded starter! Use it for pancakes, crackers, or waffles. There are countless recipes that put this "waste" to delicious use.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkpoint -->
+        <div class="checkpoint">
+            <h3 class="checkpoint-title">Checkpoint: Is Your Starter Ready?</h3>
+            <div class="checkpoint-content">
+                <p>Before moving to the next step, verify your starter meets these criteria:</p>
+                <ul class="checkpoint-list">
+                    <li>Doubles in size within 4-6 hours after feeding</li>
+                    <li>Has a pleasant, tangy (not unpleasant) smell</li>
+                    <li>Shows lots of bubbles throughout, not just on top</li>
+                    <li>Passes the float test (a spoonful floats in water)</li>
+                    <li>Has been consistently active for at least 2 days</li>
+                </ul>
+                <p style="margin-top: var(--space-md);"><strong>Not quite there?</strong> Keep feeding daily. Some starters take 7-10 days to become fully active. Patience is key!</p>
+            </div>
+        </div>
+
+        <!-- Step 3 Preview -->
+        <div class="step-panel" style="opacity: 0.6;">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Mixing Your Dough</h2>
+            </div>
+            <div class="step-content">
+                <p><span class="duration-badge">30 min</span></p>
+                <p>Once your starter is active and healthy, you're ready to mix your first sourdough dough. This step combines your starter with flour, water, and salt to create the foundation of your bread.</p>
+                <div class="info-box" style="background: rgba(107, 97, 88, 0.15); border-color: var(--color-text-muted);">
+                    <div class="info-box-title" style="color: var(--color-text-muted);">Locked</div>
+                    <div class="info-box-content">Complete the checkpoint above to unlock this step.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-controls">
+            <button class="nav-button secondary" onclick="navigateTo(-1)">
+                <span>←</span>
+                <span>Previous Step</span>
+            </button>
+            <button class="nav-button" onclick="navigateTo(1)">
+                <span>Next Step</span>
+                <span>→</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        // Navigation between designs in the gallery
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 15;
+
+        function navigateTo(direction) {
+            let nextDesign = CURRENT_DESIGN + direction;
+
+            // Wrap around
+            if (nextDesign > TOTAL_DESIGNS) nextDesign = 1;
+            if (nextDesign < 1) nextDesign = TOTAL_DESIGNS;
+
+            // Navigate to the next design
+            window.location.href = `design-${nextDesign}.html`;
+        }
+
+        
+
+        // Progress animation
+        window.addEventListener('load', () => {
+            const progressFill = document.querySelector('.progress-fill');
+            if (progressFill) {
+                progressFill.style.width = '40%';
+            }
+        });
+
+        // Try-it area interactivity
+        const observationInput = document.getElementById('observation');
+        if (observationInput) {
+            observationInput.addEventListener('input', (e) => {
+                // Save to localStorage for persistence
+                localStorage.setItem('sourdough-observation', e.target.value);
+            });
+
+            // Load saved observation
+            const saved = localStorage.getItem('sourdough-observation');
+            if (saved) {
+                observationInput.value = saved;
+            }
+        }
+    </script>
+</body>
+</html>

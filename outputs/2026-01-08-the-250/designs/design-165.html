@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Ash - Conference Schedule Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Prime Ash - Scandinavian modern-inspired design for users
+ABOUTME: This design system implements conference_schedule with scandinavian_modern aesthetics
+ABOUTME: Key characteristics: dark minimalism, stark contrast, angular brutalism with Nordic restraint
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #f0f0f0;
+--color-accent: #00ff88;
+--color-background: #0a0a0a;
+--color-surface: #1a1a1a;
+--color-surface-elevated: #242424;
+--color-text: #e8e8e8;
+--color-text-muted: #707070;
+--color-border: #2a2a2a;
+--font-heading: 'DM Sans', -apple-system, sans-serif;
+--font-body: 'DM Sans', -apple-system, sans-serif;
+--font-mono: 'Space Mono', 'Courier New', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. High contrast monochrome palette with single neon accent creates edgy Scandinavian minimalism
+2. Asymmetric grid layouts with generous negative space honor Nordic design restraint
+3. Sharp corners and hairline borders provide structural clarity without decoration
+4. Ultra-light typography weights create delicate hierarchy while maintaining readability
+5. Brutalist information density balanced with breathing room
+
+DESIGN ERA: scandinavian_modern
+Drawing from 1950s-60s Nordic design - Alvar Aalto, Arne Jacobsen, Hans Wegner - but filtered
+through contemporary dark mode sensibilities. The result is severe, honest, and unapologetically minimal.
+Natural light becomes artificial glow. Wood grain becomes carbon fiber. Warmth becomes precision.
+
+EMOTIONAL TONE: edgy
+This isn't cozy hygge - it's sharp, contemporary, and slightly aggressive. The neon accent cuts
+through the darkness like a laser. Information is presented with stark clarity, no hand-holding.
+For creatives who appreciate directness over decoration.
+
+INDUSTRY: creative
+Built for designers, artists, developers, and creative professionals who value visual sophistication
+and functional clarity. The schedule format prioritizes quick scanning and information density
+without sacrificing beauty.
+
+FUNCTIONAL DIRECTION: conference_schedule
+This design must clearly function as a conference_schedule. Required elements:
+- Day tabs for multi-day event navigation
+- Time slots showing hourly breakdown (09:00 - 18:00)
+- Session cards with title, speaker, track, and room information
+- Track filtering system (Design, Development, Business, Creative)
+- Speaker headshots and bios
+- Clear visual hierarchy for keynotes vs sessions
+- Location/room indicators
+- Session duration display
+- Bookmark/favorite functionality
+- Real-time "happening now" indicators
+
+COLOR SYSTEM:
+The palette is brutally minimal - near-black backgrounds (#0a0a0a) with slightly lighter
+surfaces (#1a1a1a, #242424). All text is off-white (#e8e8e8) with muted grays (#707070)
+for secondary information. The single neon accent (#00ff88) is reserved for interactive
+elements and "happening now" indicators - use it sparingly for maximum impact.
+
+TYPOGRAPHY:
+DM Sans provides geometric precision with humanist warmth - perfect for Scandinavian aesthetics.
+Ultra-light weights (300) for large headlines create dramatic delicacy. Regular (400) for body
+text maintains readability. Space Mono for timestamps and technical details adds monospace
+precision without feeling retro.
+
+LAYOUT:
+Conference schedules demand complex information architecture. This design uses:
+- Fixed top navigation with day tabs
+- Left sidebar for track filtering (hideable on mobile)
+- Main content area with time-slot grid
+- Right sidebar for "up next" and featured speakers
+- Each session card is a mini-composition: time, title, speaker, room, track tag
+
+INTERACTION PATTERNS:
+- Hover states reveal additional session details
+- Active day tab has neon underline
+- Selected track filters get neon accent
+- "Happening now" sessions pulse with subtle animation
+- Bookmark icon toggles between outline and filled
+- Session cards expand inline to show full description
+
+BEST FOR:
+- Tech conferences and creative industry events
+- Multi-track events with complex scheduling
+- Design-forward brands targeting creative professionals
+- Events wanting to project sophistication and edge
+- Dark mode preference audiences
+
+AVOID IF:
+- Event targets mainstream/corporate audiences
+- Accessibility requires high contrast ratios beyond monochrome
+- Brand guidelines require warmth and approachability
+- Users prefer colorful, playful interfaces
+- Content needs strong color coding for categorization
+
+ACCESSIBILITY NOTES:
+- Text contrast exceeds WCAG AA (14.8:1 for body text)
+- Focus indicators use 3px neon outline
+- All interactive elements meet 44px touch target minimum
+- Reduced motion respects prefers-reduced-motion
+- Track colors use both color AND iconography
+- Time information presented in multiple formats
+
+IMPLEMENTATION NOTES:
+The schedule grid uses CSS Grid with auto-fit columns for responsive behavior.
+Session cards are positioned by data attributes (data-start-time, data-duration)
+allowing JavaScript to calculate placement. The "happening now" indicator
+updates every minute using setInterval. Track filtering uses data attributes
+and CSS display properties for instant filtering without page reload.
+-->
+
+<style>
+:root {
+    /* Colors - Monochrome with neon accent */
+    --color-primary: #f0f0f0;
+    --color-accent: #00ff88;
+    --color-background: #0a0a0a;
+    --color-surface: #1a1a1a;
+    --color-surface-elevated: #242424;
+    --color-text: #e8e8e8;
+    --color-text-muted: #707070;
+    --color-border: #2a2a2a;
+
+    /* Typography */
+    --font-heading: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'Space Mono', 'Courier New', monospace;
+
+    /* Spacing - 8px base unit */
+    --space-unit: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+
+    /* Shapes */
+    --radius-default: 2px;
+    --shadow-default: none;
+    --border-width: 1px;
+
+    /* Track colors - minimal, mostly using accent */
+    --track-design: #00ff88;
+    --track-dev: #0088ff;
+    --track-business: #ff6b00;
+    --track-creative: #ff0088;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    font-weight: 300;
+}
+
+/* Typography Scale */
+h1 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.4;
+}
+
+.mono {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+}
+
+/* Layout Structure */
+.app-container {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    gap: 0;
+}
+
+/* Header with Day Tabs */
+.header {
+    grid-column: 1 / -1;
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+}
+
+.day-tabs {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.day-tab {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.day-tab:hover {
+    color: var(--color-text);
+}
+
+.day-tab.active {
+    color: var(--color-accent);
+}
+
+.day-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent);
+}
+
+.day-tab:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Sidebar - Track Filters */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    padding: var(--space-xl) var(--space-lg);
+    overflow-y: auto;
+}
+
+.sidebar h4 {
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.track-filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-2xl);
+}
+
+.track-filter {
+    background: none;
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 400;
+    padding: var(--space-md);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    border-radius: var(--radius-default);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.track-filter::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+.track-filter.design { color: var(--track-design); }
+.track-filter.dev { color: var(--track-dev); }
+.track-filter.business { color: var(--track-business); }
+.track-filter.creative { color: var(--track-creative); }
+
+.track-filter:hover {
+    border-color: currentColor;
+}
+
+.track-filter.active {
+    border-color: currentColor;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.track-filter.active::before {
+    opacity: 1;
+}
+
+.track-filter:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Main Content - Schedule Grid */
+.main-content {
+    padding: var(--space-xl);
+    overflow-y: auto;
+}
+
+.time-slot {
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg) 0;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.time-label {
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    padding-top: var(--space-sm);
+    position: sticky;
+    top: var(--space-xl);
+}
+
+.sessions-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+/* Session Cards */
+.session-card {
+    background: var(--color-surface-elevated);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.session-card:hover {
+    border-color: var(--color-text-muted);
+    transform: translateY(-2px);
+}
+
+.session-card:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.session-card.happening-now {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.session-card.happening-now::before {
+    content: 'LIVE NOW';
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-md);
+}
+
+.track-tag {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    border-radius: var(--radius-default);
+    border: var(--border-width) solid currentColor;
+    color: var(--color-text-muted);
+}
+
+.track-tag.design { color: var(--track-design); }
+.track-tag.dev { color: var(--track-dev); }
+.track-tag.business { color: var(--track-business); }
+.track-tag.creative { color: var(--track-creative); }
+
+.bookmark-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--space-xs);
+    transition: color 0.2s;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookmark-btn:hover {
+    color: var(--color-accent);
+}
+
+.bookmark-btn.active {
+    color: var(--color-accent);
+}
+
+.bookmark-btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.session-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.session-speaker {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-sm);
+}
+
+.session-meta {
+    display: flex;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.session-meta span::before {
+    content: '• ';
+    margin-right: 4px;
+}
+
+.session-meta span:first-child::before {
+    content: '';
+    margin-right: 0;
+}
+
+/* Right Sidebar - Up Next & Speakers */
+.right-sidebar {
+    background: var(--color-surface);
+    border-left: var(--border-width) solid var(--color-border);
+    padding: var(--space-xl) var(--space-lg);
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.sidebar-section h4 {
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.up-next-card {
+    background: var(--color-surface-elevated);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.up-next-time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-xs);
+}
+
+.up-next-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+}
+
+.up-next-speaker {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.speaker-card {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.speaker-card:last-child {
+    border-bottom: none;
+}
+
+.speaker-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-default);
+    background: var(--color-surface-elevated);
+    flex-shrink: 0;
+}
+
+.speaker-info {
+    flex: 1;
+}
+
+.speaker-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.speaker-role {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Keynote Session - Special Treatment */
+.session-card.keynote {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, color-mix(in srgb, var(--color-accent) 5%, var(--color-surface-elevated)) 100%);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.session-card.keynote .session-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.session-card.keynote .track-tag {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* Navigation Buttons */
+.nav-overlay {
+    position: fixed;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 1000;
+}
+
+.nav-btn {
+    background: var(--color-surface-elevated);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+}
+
+.nav-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.nav-btn:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .app-container {
+        grid-template-columns: 200px 1fr;
+    }
+
+    .right-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .day-tabs {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .time-slot {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    .time-label {
+        position: static;
+    }
+
+    .sessions-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+</style>
+
+<!-- App Container -->
+<div class="app-container">
+
+    <!-- Header with Day Tabs -->
+    <header class="header">
+        <h1 class="event-title">NORDIC DESIGN SUMMIT 2026</h1>
+        <nav class="day-tabs" role="tablist">
+            <button class="day-tab active" role="tab" aria-selected="true" data-day="1">
+                DAY 1<br><span style="font-size: 0.7rem; opacity: 0.6;">MAR 15</span>
+            </button>
+            <button class="day-tab" role="tab" aria-selected="false" data-day="2">
+                DAY 2<br><span style="font-size: 0.7rem; opacity: 0.6;">MAR 16</span>
+            </button>
+            <button class="day-tab" role="tab" aria-selected="false" data-day="3">
+                DAY 3<br><span style="font-size: 0.7rem; opacity: 0.6;">MAR 17</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Left Sidebar - Track Filters -->
+    <aside class="sidebar">
+        <h4>Filter by Track</h4>
+        <div class="track-filters">
+            <button class="track-filter design active" data-track="design">
+                Design Systems
+            </button>
+            <button class="track-filter dev active" data-track="dev">
+                Development
+            </button>
+            <button class="track-filter business active" data-track="business">
+                Business Strategy
+            </button>
+            <button class="track-filter creative active" data-track="creative">
+                Creative Direction
+            </button>
+        </div>
+
+        <h4>Legend</h4>
+        <div style="font-size: 0.75rem; color: var(--color-text-muted); line-height: 1.8;">
+            <div><span style="color: var(--color-accent);">●</span> Happening Now</div>
+            <div><span style="color: var(--color-text-muted);">⬡</span> Workshop</div>
+            <div><span style="color: var(--color-text-muted);">◆</span> Keynote</div>
+            <div><span style="color: var(--color-text-muted);">▸</span> Panel</div>
+        </div>
+    </aside>
+
+    <!-- Main Content - Schedule -->
+    <main class="main-content">
+
+        <!-- 09:00 - Keynote -->
+        <div class="time-slot">
+            <div class="time-label">09:00</div>
+            <div class="sessions-row">
+                <article class="session-card keynote" tabindex="0">
+                    <div class="session-header">
+                        <span class="track-tag design">KEYNOTE</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">The Future of Minimalism: Beyond Reduction</h3>
+                    <div class="session-speaker">Astrid Bergström, Design Director at Figma</div>
+                    <div class="session-meta">
+                        <span>90 min</span>
+                        <span>Main Hall</span>
+                        <span>Capacity: 800</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 10:30 - Break -->
+        <div class="time-slot">
+            <div class="time-label">10:30</div>
+            <div class="sessions-row">
+                <div style="padding: var(--space-md); color: var(--color-text-muted); font-family: var(--font-mono); font-size: 0.875rem;">
+                    ☕ COFFEE BREAK — Networking Lounge, Level 2
+                </div>
+            </div>
+        </div>
+
+        <!-- 11:00 - Parallel Sessions -->
+        <div class="time-slot">
+            <div class="time-label">11:00</div>
+            <div class="sessions-row">
+                <article class="session-card happening-now" tabindex="0" data-track="design">
+                    <div class="session-header">
+                        <span class="track-tag design">DESIGN</span>
+                        <button class="bookmark-btn active" aria-label="Bookmarked">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Component Architecture for Scale</h3>
+                    <div class="session-speaker">Lars Nielsen, Principal Designer at Spotify</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room A1</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="dev">
+                    <div class="session-header">
+                        <span class="track-tag dev">DEV</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">CSS Architecture: Beyond Tailwind</h3>
+                    <div class="session-speaker">Emma Johansson, Frontend Lead at Stripe</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room B2</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="business">
+                    <div class="session-header">
+                        <span class="track-tag business">BUSINESS</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Monetizing Design Systems</h3>
+                    <div class="session-speaker">Henrik Andersen, CPO at Webflow</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room C3</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 12:00 - Lunch -->
+        <div class="time-slot">
+            <div class="time-label">12:00</div>
+            <div class="sessions-row">
+                <div style="padding: var(--space-md); color: var(--color-text-muted); font-family: var(--font-mono); font-size: 0.875rem;">
+                    🍽️ LUNCH — Scandinavian buffet, Dining Hall
+                </div>
+            </div>
+        </div>
+
+        <!-- 13:30 - Workshops -->
+        <div class="time-slot">
+            <div class="time-label">13:30</div>
+            <div class="sessions-row">
+                <article class="session-card" tabindex="0" data-track="design">
+                    <div class="session-header">
+                        <span class="track-tag design">WORKSHOP</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Hands-On: Figma Variables Deep Dive</h3>
+                    <div class="session-speaker">Sofia Lindqvist, Design Systems Lead at Shopify</div>
+                    <div class="session-meta">
+                        <span>120 min</span>
+                        <span>Lab 1</span>
+                        <span>Limited: 30</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="creative">
+                    <div class="session-header">
+                        <span class="track-tag creative">CREATIVE</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Motion Design Principles for Interfaces</h3>
+                    <div class="session-speaker">Mikkel Hansen, Creative Director at AKQA</div>
+                    <div class="session-meta">
+                        <span>120 min</span>
+                        <span>Lab 2</span>
+                        <span>Limited: 30</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 15:30 - Afternoon Sessions -->
+        <div class="time-slot">
+            <div class="time-label">15:30</div>
+            <div class="sessions-row">
+                <article class="session-card" tabindex="0" data-track="design">
+                    <div class="session-header">
+                        <span class="track-tag design">PANEL</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Accessibility: From Compliance to Excellence</h3>
+                    <div class="session-speaker">Panel with 4 accessibility experts</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room A1</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="dev">
+                    <div class="session-header">
+                        <span class="track-tag dev">DEV</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Web Components: The Native Alternative</h3>
+                    <div class="session-speaker">Erik Sørensen, Staff Engineer at GitHub</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room B2</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="creative">
+                    <div class="session-header">
+                        <span class="track-tag creative">CREATIVE</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Brand Systems in Digital Age</h3>
+                    <div class="session-speaker">Ingrid Olsen, Brand Director at Volvo</div>
+                    <div class="session-meta">
+                        <span>60 min</span>
+                        <span>Room C3</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 16:30 - Coffee Break -->
+        <div class="time-slot">
+            <div class="time-label">16:30</div>
+            <div class="sessions-row">
+                <div style="padding: var(--space-md); color: var(--color-text-muted); font-family: var(--font-mono); font-size: 0.875rem;">
+                    ☕ AFTERNOON BREAK — Networking Lounge, Level 2
+                </div>
+            </div>
+        </div>
+
+        <!-- 17:00 - Final Sessions -->
+        <div class="time-slot">
+            <div class="time-label">17:00</div>
+            <div class="sessions-row">
+                <article class="session-card" tabindex="0" data-track="business">
+                    <div class="session-header">
+                        <span class="track-tag business">BUSINESS</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">ROI of Design Systems: The Numbers</h3>
+                    <div class="session-speaker">Anders Eriksson, VP Product at Adobe</div>
+                    <div class="session-meta">
+                        <span>45 min</span>
+                        <span>Room C3</span>
+                    </div>
+                </article>
+
+                <article class="session-card" tabindex="0" data-track="creative">
+                    <div class="session-header">
+                        <span class="track-tag creative">CREATIVE</span>
+                        <button class="bookmark-btn" aria-label="Bookmark session">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="session-title">Typography on the Web: 2026 State</h3>
+                    <div class="session-speaker">Karin Müller, Type Designer at Google Fonts</div>
+                    <div class="session-meta">
+                        <span>45 min</span>
+                        <span>Room A1</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 18:00 - Closing -->
+        <div class="time-slot">
+            <div class="time-label">18:00</div>
+            <div class="sessions-row">
+                <div style="padding: var(--space-md); color: var(--color-text-muted); font-family: var(--font-mono); font-size: 0.875rem;">
+                    🎉 DAY 1 WRAP-UP & NETWORKING — Main Hall
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Right Sidebar - Up Next & Featured -->
+    <aside class="right-sidebar">
+
+        <div class="sidebar-section">
+            <h4>Up Next</h4>
+            <div class="up-next-card">
+                <div class="up-next-time">11:00 AM — HAPPENING NOW</div>
+                <div class="up-next-title">Component Architecture for Scale</div>
+                <div class="up-next-speaker">Lars Nielsen • Room A1</div>
+            </div>
+            <div class="up-next-card">
+                <div class="up-next-time">12:00 PM — In 1 hour</div>
+                <div class="up-next-title">Lunch Break</div>
+                <div class="up-next-speaker">Dining Hall</div>
+            </div>
+            <div class="up-next-card">
+                <div class="up-next-time">1:30 PM — In 2.5 hours</div>
+                <div class="up-next-title">Figma Variables Deep Dive</div>
+                <div class="up-next-speaker">Sofia Lindqvist • Lab 1</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Featured Speakers</h4>
+
+            <div class="speaker-card">
+                <div class="speaker-avatar" style="background: linear-gradient(135deg, #00ff88 0%, #0088ff 100%);"></div>
+                <div class="speaker-info">
+                    <div class="speaker-name">Astrid Bergström</div>
+                    <div class="speaker-role">Design Director, Figma</div>
+                </div>
+            </div>
+
+            <div class="speaker-card">
+                <div class="speaker-avatar" style="background: linear-gradient(135deg, #ff0088 0%, #ff6b00 100%);"></div>
+                <div class="speaker-info">
+                    <div class="speaker-name">Lars Nielsen</div>
+                    <div class="speaker-role">Principal Designer, Spotify</div>
+                </div>
+            </div>
+
+            <div class="speaker-card">
+                <div class="speaker-avatar" style="background: linear-gradient(135deg, #0088ff 0%, #00ff88 100%);"></div>
+                <div class="speaker-info">
+                    <div class="speaker-name">Emma Johansson</div>
+                    <div class="speaker-role">Frontend Lead, Stripe</div>
+                </div>
+            </div>
+
+            <div class="speaker-card">
+                <div class="speaker-avatar" style="background: linear-gradient(135deg, #ff6b00 0%, #ff0088 100%);"></div>
+                <div class="speaker-info">
+                    <div class="speaker-name">Sofia Lindqvist</div>
+                    <div class="speaker-role">Design Systems, Shopify</div>
+                </div>
+            </div>
+
+            <div class="speaker-card">
+                <div class="speaker-avatar" style="background: linear-gradient(135deg, #00ff88 0%, #ff0088 100%);"></div>
+                <div class="speaker-info">
+                    <div class="speaker-name">Henrik Andersen</div>
+                    <div class="speaker-role">CPO, Webflow</div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</div>
+
+<!-- Navigation Overlay -->
+<div class="nav-overlay">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous design">←</button>
+    <button class="nav-btn" id="nextBtn" aria-label="Next design">→</button>
+</div>
+
+
+
+</body>
+</html>

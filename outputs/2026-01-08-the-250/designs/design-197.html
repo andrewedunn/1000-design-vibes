@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom Marble - Video Player Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Bloom Marble - International minimalism with natural undertones
+        ABOUTME: This design system implements a video_player interface with Scandinavian modern aesthetics.
+        ABOUTME: Key characteristics: Natural color palette with marble-inspired textures, generous breathing room, warm neutrals with organic accents.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #8B7355;
+        --color-background: #FAF8F5;
+        --color-surface: #FFFFFF;
+        --color-text: #3A3632;
+        --color-text-muted: #9B8F85;
+        --color-accent: #C9A88A;
+        --color-border: #E8E3DC;
+        --font-heading: 'Lora', Georgia, serif;
+        --font-body: 'DM Sans', -apple-system, sans-serif;
+        --radius-default: 12px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Natural, warm neutrals create calming viewing environment - marble whites, warm stones
+        2. Generous whitespace and breathing room around all controls for uncluttered experience
+        3. Soft rounded corners and subtle shadows suggest organic, approachable interface
+        4. Typography balances elegant serif headings with clean sans-serif UI
+        5. Fashion industry context reflected in sophisticated color choices and refined details
+
+        BEST FOR:
+        - Fashion film showcases, lookbooks, behind-the-scenes content
+        - Editorial video content requiring elegant, minimal player
+        - Brand video presentations where player shouldn't overpower content
+        - Designer portfolio video sections
+        - Luxury retail product videos
+
+        AVOID IF:
+        - Need dark mode or high-contrast viewing
+        - Require dense information display alongside video
+        - Sports or action content needing aggressive styling
+        - Technical/gaming content requiring futuristic aesthetic
+
+        FUNCTIONAL DIRECTION: video_player
+        This design must clearly function as a video_player. Required elements:
+        - Video viewport/display area (16:9 or similar aspect ratio)
+        - Play/pause controls with clear visual states
+        - Progress/seek bar showing current position and buffering
+        - Volume controls with mute toggle
+        - Timestamp display (current time / duration)
+        - Fullscreen toggle button
+        - Quality/settings menu
+        - Optional: playlist, captions toggle, playback speed
+
+        DESIGN ERA: scandinavian_modern
+        Scandinavian modern design emphasizes:
+        - Light, airy spaces with natural light influence
+        - Minimal ornamentation, focus on function
+        - Natural materials and organic forms
+        - Neutral color palettes with warm undertones
+        - Quality over quantity - every element serves purpose
+
+        COLOR MODE: light_only
+        Optimized exclusively for light backgrounds. No dark mode variant.
+
+        INDUSTRY: fashion
+        Fashion industry context influences:
+        - Sophisticated, refined color choices
+        - Attention to typographic detail and hierarchy
+        - Clean, editorial-style layouts
+        - Focus on visual content with minimal UI interference
+        - Aspirational yet approachable aesthetic
+
+        EMOTIONAL TONE: friendly
+        Friendly tone achieved through:
+        - Warm neutral colors rather than cold grays
+        - Soft, rounded corners instead of sharp edges
+        - Generous spacing reduces visual stress
+        - Clear, readable typography without intimidation
+        - Approachable rather than austere minimalism
+
+        IMPLEMENTATION NOTES:
+        - Video player uses marble-textured background pattern subtly
+        - Controls appear on hover but with soft fade transitions
+        - Seek bar uses warm accent color for progress
+        - All interactive elements have 44px minimum touch targets
+        - Focus states use warm color outline for accessibility
+        - Reduced motion preferences respected throughout
+        */
+
+        :root {
+            /* Core Colors */
+            --color-primary: #8B7355;
+            --color-background: #FAF8F5;
+            --color-surface: #FFFFFF;
+            --color-text: #3A3632;
+            --color-text-muted: #9B8F85;
+            --color-accent: #C9A88A;
+            --color-border: #E8E3DC;
+            --color-error: #C27563;
+
+            /* Typography */
+            --font-heading: 'Lora', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-sm: 8px;
+            --radius-default: 12px;
+            --radius-lg: 16px;
+            --radius-full: 999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(58, 54, 50, 0.06);
+            --shadow-default: 0 4px 12px rgba(58, 54, 50, 0.08);
+            --shadow-lg: 0 12px 32px rgba(58, 54, 50, 0.12);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-default: 250ms ease;
+            --transition-slow: 400ms ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: var(--space-lg);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            line-height: 1.3;
+            margin-bottom: var(--space-md);
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+
+        p {
+            margin-bottom: var(--space-md);
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: var(--space-2xl);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .header p {
+            color: var(--color-text-muted);
+            font-size: 1.125rem;
+            margin-bottom: 0;
+        }
+
+        /* Video Player - Main Component */
+        .video-player {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: var(--space-2xl);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-viewport {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #F5F1ED 0%, #E8E3DC 100%);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Marble texture overlay */
+        .video-viewport::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(201, 168, 138, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(245, 241, 237, 0.5) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(245, 241, 237, 0.9) 0%, rgba(232, 227, 220, 0.9) 100%);
+        }
+
+        .video-placeholder-content {
+            text-align: center;
+            padding: var(--space-lg);
+        }
+
+        .video-placeholder-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto var(--space-md);
+            background: var(--color-surface);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-default);
+        }
+
+        .video-placeholder-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: var(--color-primary);
+        }
+
+        .video-placeholder h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .video-placeholder p {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Video Controls */
+        .video-controls {
+            background: var(--color-surface);
+            padding: var(--space-md) var(--space-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .progress-section {
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--color-border);
+            border-radius: var(--radius-full);
+            position: relative;
+            cursor: pointer;
+            transition: height var(--transition-fast);
+        }
+
+        .progress-bar:hover {
+            height: 8px;
+        }
+
+        .progress-bar-buffered {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(201, 168, 138, 0.3);
+            border-radius: var(--radius-full);
+            width: 75%;
+        }
+
+        .progress-bar-played {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--color-primary);
+            border-radius: var(--radius-full);
+            width: 35%;
+            transition: width var(--transition-fast);
+        }
+
+        .progress-handle {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--color-surface);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .progress-bar:hover .progress-handle {
+            opacity: 1;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-xs);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .controls-left,
+        .controls-center,
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .controls-left {
+            flex: 1;
+        }
+
+        .controls-center {
+            flex: 0 0 auto;
+        }
+
+        .controls-right {
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            color: var(--color-text);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--color-background);
+            color: var(--color-primary);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .control-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .control-btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-default);
+        }
+
+        .control-btn-primary:hover {
+            background: #755E45;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .control-btn-primary svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Volume Control */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            border-radius: var(--radius-full);
+            background: var(--color-border);
+            position: relative;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity var(--transition-fast), width var(--transition-default);
+            width: 0;
+        }
+
+        .volume-control:hover .volume-slider {
+            opacity: 1;
+            width: 100px;
+        }
+
+        .volume-slider-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--color-primary);
+            border-radius: var(--radius-full);
+            width: 70%;
+        }
+
+        /* Settings Menu */
+        .settings-menu {
+            position: relative;
+        }
+
+        .settings-dropdown {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: var(--space-sm);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-lg);
+            padding: var(--space-xs);
+            min-width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(8px);
+            transition: all var(--transition-default);
+        }
+
+        .settings-menu:hover .settings-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .settings-dropdown-item {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--color-text);
+            font-size: 0.9rem;
+        }
+
+        .settings-dropdown-item:hover {
+            background: var(--color-background);
+        }
+
+        .settings-dropdown-item.active {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        /* Playlist Sidebar */
+        .player-with-playlist {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: var(--space-lg);
+            max-width: 1600px;
+            margin: 0 auto var(--space-2xl);
+        }
+
+        .playlist {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-default);
+            padding: var(--space-lg);
+            height: fit-content;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .playlist h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+        }
+
+        .playlist-item {
+            display: flex;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            margin-bottom: var(--space-xs);
+        }
+
+        .playlist-item:hover {
+            background: var(--color-background);
+        }
+
+        .playlist-item.active {
+            background: rgba(139, 115, 85, 0.1);
+        }
+
+        .playlist-item-thumbnail {
+            width: 80px;
+            height: 45px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--color-border) 0%, var(--color-background) 100%);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-item-thumbnail::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 30% 40%, rgba(201, 168, 138, 0.2) 0%, transparent 60%);
+        }
+
+        .playlist-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .playlist-item-title {
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.95rem;
+        }
+
+        .playlist-item-meta {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Component Showcase Section */
+        .showcase-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .showcase-section h2 {
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            color: var(--color-primary);
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .component-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-default);
+        }
+
+        .component-card h3 {
+            font-size: 1.125rem;
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+        }
+
+        /* Button Variations */
+        .button {
+            padding: var(--space-sm) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        .button-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .button-primary:hover {
+            background: #755E45;
+            box-shadow: var(--shadow-default);
+            transform: translateY(-1px);
+        }
+
+        .button-secondary {
+            background: var(--color-background);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .button-secondary:hover {
+            background: var(--color-surface);
+            border-color: var(--color-accent);
+        }
+
+        .button-ghost {
+            background: transparent;
+            color: var(--color-primary);
+        }
+
+        .button-ghost:hover {
+            background: rgba(139, 115, 85, 0.1);
+        }
+
+        .button:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text);
+            background: var(--color-surface);
+            transition: all var(--transition-fast);
+            min-height: 44px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: var(--color-border);
+            transition: var(--transition-default);
+            border-radius: var(--radius-full);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--color-surface);
+            transition: var(--transition-default);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .toggle input:focus-visible + .toggle-slider {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            border: none;
+            background: var(--color-surface);
+            color: var(--color-text);
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(58, 54, 50, 0.16);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .player-with-playlist {
+                grid-template-columns: 1fr;
+            }
+
+            .playlist {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-md);
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls-row {
+                gap: var(--space-xs);
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .control-btn-primary {
+                width: 48px;
+                height: 48px;
+            }
+
+            .volume-slider {
+                display: none;
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: var(--space-2xl) 0;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Bloom Marble</h1>
+            <p>International minimalism with natural undertones</p>
+        </header>
+
+        <!-- Main Video Player with Playlist -->
+        <div class="player-with-playlist">
+            <div class="video-player">
+                <div class="video-viewport">
+                    <div class="video-placeholder">
+                        <div class="video-placeholder-content">
+                            <div class="video-placeholder-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <h3>Spring Collection 2024</h3>
+                            <p>Behind the Scenes: Natural Elegance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-controls">
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div class="progress-bar-buffered"></div>
+                            <div class="progress-bar-played">
+                                <div class="progress-handle"></div>
+                            </div>
+                        </div>
+                        <div class="time-display">
+                            <span>2:34</span>
+                            <span>7:18</span>
+                        </div>
+                    </div>
+
+                    <div class="controls-row">
+                        <div class="controls-left">
+                            <button class="control-btn" aria-label="Previous video">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                </svg>
+                            </button>
+                            <button class="control-btn" aria-label="Rewind 10 seconds">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1.1 11h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.12-.32.04-.29.04-.48v-.97z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="controls-center">
+                            <button class="control-btn control-btn-primary" aria-label="Play">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="controls-right">
+                            <button class="control-btn" aria-label="Forward 10 seconds">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8zm-1.1 11h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.12-.32.04-.29.04-.48v-.97z"/>
+                                </svg>
+                            </button>
+                            <button class="control-btn" aria-label="Next video">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 18h2V6h-2zm-11-7l8.5-6v12z"/>
+                                </svg>
+                            </button>
+
+                            <div class="volume-control">
+                                <button class="control-btn" aria-label="Volume">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                    </svg>
+                                </button>
+                                <div class="volume-slider">
+                                    <div class="volume-slider-fill"></div>
+                                </div>
+                            </div>
+
+                            <button class="control-btn" aria-label="Captions">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1z"/>
+                                </svg>
+                            </button>
+
+                            <div class="settings-menu">
+                                <button class="control-btn" aria-label="Settings">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                                    </svg>
+                                </button>
+                                <div class="settings-dropdown">
+                                    <div class="settings-dropdown-item active">
+                                        <span>Quality</span>
+                                        <span>1080p</span>
+                                    </div>
+                                    <div class="settings-dropdown-item">
+                                        <span></span>
+                                        <span>720p</span>
+                                    </div>
+                                    <div class="settings-dropdown-item">
+                                        <span></span>
+                                        <span>480p</span>
+                                    </div>
+                                    <div class="settings-dropdown-item">
+                                        <span></span>
+                                        <span>Auto</span>
+                                    </div>
+                                    <div class="settings-dropdown-item" style="border-top: 1px solid var(--color-border); margin-top: 8px; padding-top: 16px;">
+                                        <span>Speed</span>
+                                        <span>1x</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="control-btn" aria-label="Fullscreen">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Playlist -->
+            <aside class="playlist">
+                <h3>Current Playlist</h3>
+                <div class="playlist-item active">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Spring Collection 2024 BTS</div>
+                        <div class="playlist-item-meta">7:18 • Now Playing</div>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Natural Fabrics: The Story</div>
+                        <div class="playlist-item-meta">5:42</div>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Designer Interview: Minimal Forms</div>
+                        <div class="playlist-item-meta">8:15</div>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Runway Highlights</div>
+                        <div class="playlist-item-meta">4:23</div>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Sustainable Fashion Movement</div>
+                        <div class="playlist-item-meta">6:50</div>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-item-thumbnail"></div>
+                    <div class="playlist-item-info">
+                        <div class="playlist-item-title">Campaign Photos: A Video Essay</div>
+                        <div class="playlist-item-meta">3:38</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Design System Components Showcase -->
+        <section class="showcase-section">
+            <h2>Design System Components</h2>
+
+            <div class="component-grid">
+                <!-- Buttons -->
+                <div class="component-card">
+                    <h3>Buttons</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="button button-primary">Primary Action</button>
+                        <button class="button button-secondary">Secondary Action</button>
+                        <button class="button button-ghost">Ghost Button</button>
+                        <button class="button button-primary" disabled>Disabled</button>
+                    </div>
+                </div>
+
+                <!-- Form Elements -->
+                <div class="component-card">
+                    <h3>Form Inputs</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input class="form-input" id="email" type="email" placeholder="you@example.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="message">Message</label>
+                        <textarea class="form-input" id="message" rows="3" placeholder="Your message..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Toggles -->
+                <div class="component-card">
+                    <h3>Toggle Switches</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Enable Notifications</span>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Autoplay Videos</span>
+                            <label class="toggle">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>HD Quality</span>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typography -->
+                <div class="component-card">
+                    <h3>Typography Scale</h3>
+                    <h1 style="margin-bottom: 8px;">Heading 1</h1>
+                    <h2 style="margin-bottom: 8px;">Heading 2</h2>
+                    <h3 style="margin-bottom: 8px;">Heading 3</h3>
+                    <h4 style="margin-bottom: 8px;">Heading 4</h4>
+                    <p style="margin-bottom: 0;">Body text with natural reading rhythm and comfortable line height for extended viewing.</p>
+                </div>
+
+                <!-- Color Palette -->
+                <div class="component-card">
+                    <h3>Color Palette</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div>
+                            <div style="height: 60px; background: var(--color-primary); border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+                            <div style="font-size: 0.85rem; color: var(--color-text-muted);">Primary</div>
+                        </div>
+                        <div>
+                            <div style="height: 60px; background: var(--color-accent); border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+                            <div style="font-size: 0.85rem; color: var(--color-text-muted);">Accent</div>
+                        </div>
+                        <div>
+                            <div style="height: 60px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+                            <div style="font-size: 0.85rem; color: var(--color-text-muted);">Background</div>
+                        </div>
+                        <div>
+                            <div style="height: 60px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+                            <div style="font-size: 0.85rem; color: var(--color-text-muted);">Surface</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spacing System -->
+                <div class="component-card">
+                    <h3>Spacing System</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 8px; height: 8px; background: var(--color-primary); border-radius: 2px;"></div>
+                            <span style="font-size: 0.9rem;">XS (8px)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 16px; height: 16px; background: var(--color-primary); border-radius: 2px;"></div>
+                            <span style="font-size: 0.9rem;">SM (16px)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 24px; height: 24px; background: var(--color-primary); border-radius: 2px;"></div>
+                            <span style="font-size: 0.9rem;">MD (24px)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 32px; height: 32px; background: var(--color-primary); border-radius: 2px;"></div>
+                            <span style="font-size: 0.9rem;">LG (32px)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Design #197 of 1000 Design Vibes • Bloom Marble Design System</p>
+        </footer>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous design">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next design">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 197;
+
+        function navigateToDesign(designNumber) {
+            if (designNumber >= 1 && designNumber <= TOTAL_DESIGNS) {
+                window.location.href = `design-${designNumber}.html`;
+            }
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            navigateToDesign(CURRENT_DESIGN - 1);
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            navigateToDesign(CURRENT_DESIGN + 1);
+        });
+
+        
+
+        // Video player interactions (demo only)
+        const playButton = document.querySelector('.control-btn-primary');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressPlayed = document.querySelector('.progress-bar-played');
+
+        let isPlaying = false;
+
+        playButton.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playButton.innerHTML = isPlaying
+                ? '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+                : '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+            playButton.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width * 100;
+            progressPlayed.style.width = `${percent}%`;
+        });
+
+        // Playlist interaction
+        document.querySelectorAll('.playlist-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.playlist-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Volume slider interaction
+        const volumeSlider = document.querySelector('.volume-slider');
+        const volumeFill = document.querySelector('.volume-slider-fill');
+
+        volumeSlider.addEventListener('click', (e) => {
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width * 100;
+            volumeFill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+        });
+    </script>
+</body>
+</html>

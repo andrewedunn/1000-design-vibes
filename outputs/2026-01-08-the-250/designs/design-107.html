@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spark Steel - Settings Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Spark Steel - A flat approach meets international sensibility
+ABOUTME: This design system implements a settings_panel with flat aesthetics and psychedelic energy.
+ABOUTME: Key characteristics: vibrant color blocking, bold geometric shapes, energetic visual rhythm
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF2D95;
+--color-secondary: #FFD600;
+--color-tertiary: #00E5FF;
+--color-accent: #B026FF;
+--color-background: #FAFAFA;
+--color-background-dark: #121212;
+--color-surface: #FFFFFF;
+--color-surface-dark: #1E1E1E;
+--color-text: #1A1A1A;
+--color-text-dark: #FFFFFF;
+--color-text-muted: #666666;
+--color-text-muted-dark: #999999;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Space Grotesk', sans-serif;
+--font-mono: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--shadow-default: none;
+
+AESTHETIC PRINCIPLES:
+1. Flat design with zero shadows - pure color and shape define hierarchy
+2. Psychedelic color blocking creates energetic visual rhythm without gradients
+3. Sharp geometric divisions and bold borders segment the interface
+4. High contrast color combinations maintain accessibility while feeling vibrant
+5. Monospace accents give technical precision to settings values
+
+BEST FOR:
+- Media applications requiring frequent setting adjustments
+- Creative tools where users expect bold, energetic interfaces
+- Applications targeting younger, design-conscious audiences
+- Settings panels that need clear visual organization without depth cues
+
+AVOID IF:
+- Your brand requires subtle, muted aesthetics
+- Users expect traditional enterprise software patterns
+- The application context requires calm, minimal interfaces
+- Accessibility needs demand lower visual stimulation
+
+FUNCTIONAL DIRECTION: settings_panel
+This design must clearly function as a settings_panel. Required elements:
+- Toggle groups organized by category
+- Preference sections with clear visual separation
+- Save/Apply buttons for committing changes
+- Category navigation for organizing settings
+- Various control types (toggles, dropdowns, sliders, inputs)
+- Light/dark mode toggle demonstrating the dual color mode
+- Clear visual feedback for interactive states
+
+DESIGN ERA: Psychedelic
+Interpreted through flat design principles - bold color blocking, high contrast combinations,
+repetitive geometric patterns, and energetic visual rhythm. No gradients or depth effects,
+staying true to flat UI paradigm while channeling psychedelic energy through color.
+
+INDUSTRY: Media
+Settings appropriate for media applications - playback preferences, quality settings,
+content organization, sharing options, notification controls for new content.
+
+EMOTIONAL TONE: Energetic
+Fast visual rhythm through color blocking, clear actionable buttons, immediate visual
+feedback, bold typography, and high-contrast interactive elements.
+
+COLOR MODE: Both (Light + Dark)
+Includes full light and dark mode implementations with theme toggle.
+-->
+
+<style>
+:root {
+    /* Light Mode Colors */
+    --color-primary: #FF2D95;
+    --color-secondary: #FFD600;
+    --color-tertiary: #00E5FF;
+    --color-accent: #B026FF;
+    --color-background: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #666666;
+    --color-border: #1A1A1A;
+    --color-success: #00FF88;
+    --color-warning: #FF9500;
+    --color-error: #FF3B30;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --shadow-default: none;
+    --border-width: 3px;
+    --border-thin: 2px;
+}
+
+[data-theme="dark"] {
+    --color-background: #121212;
+    --color-surface: #1E1E1E;
+    --color-text: #FFFFFF;
+    --color-text-muted: #999999;
+    --color-border: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Layout */
+.settings-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    padding: var(--space-xl);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+}
+
+.logo-highlight {
+    color: var(--color-primary);
+}
+
+.nav-category {
+    margin-bottom: var(--space-lg);
+}
+
+.nav-category-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
+    background: transparent;
+    border: var(--border-thin) solid transparent;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: var(--color-background);
+    border-color: var(--color-border);
+}
+
+.nav-item.active {
+    background: var(--color-primary);
+    color: #FFFFFF;
+    border-color: var(--color-border);
+}
+
+.nav-item:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Main Content */
+.main-content {
+    padding: var(--space-2xl);
+    max-width: 900px;
+}
+
+.header {
+    margin-bottom: var(--space-2xl);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-bottom: var(--space-lg);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+}
+
+.header-title {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.theme-toggle:hover {
+    background: var(--color-secondary);
+}
+
+.theme-toggle:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.header-description {
+    font-size: 16px;
+    color: var(--color-text-muted);
+    max-width: 600px;
+}
+
+/* Settings Sections */
+.settings-section {
+    margin-bottom: var(--space-2xl);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-xl);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.section-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary);
+    border: var(--border-thin) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.section-description {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+/* Setting Items */
+.setting-item {
+    padding: var(--space-lg);
+    background: var(--color-background);
+    border: var(--border-thin) solid var(--color-border);
+    margin-bottom: var(--space-sm);
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-xs);
+}
+
+.setting-label {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--color-text);
+}
+
+.setting-description {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 56px;
+    height: 28px;
+    background: var(--color-text-muted);
+    border: var(--border-thin) solid var(--color-border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    transition: transform 0.2s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    transform: translateX(28px);
+}
+
+.toggle-switch input:checked ~ .toggle-bg {
+    background: var(--color-primary);
+}
+
+.toggle-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--color-text-muted);
+    transition: background 0.2s ease;
+}
+
+.toggle-switch:focus-within {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Select Dropdown */
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    min-width: 200px;
+}
+
+.custom-select {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    appearance: none;
+}
+
+.custom-select:hover {
+    background: var(--color-tertiary);
+}
+
+.custom-select:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.select-arrow {
+    position: absolute;
+    right: var(--space-md);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    color: var(--color-text);
+}
+
+/* Range Slider */
+.range-wrapper {
+    margin-top: var(--space-md);
+}
+
+.range-slider {
+    width: 100%;
+    height: 8px;
+    background: var(--color-background);
+    border: var(--border-thin) solid var(--color-border);
+    outline: none;
+    appearance: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--color-secondary);
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+}
+
+.range-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--color-secondary);
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+}
+
+.range-slider:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.range-value {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-left: var(--space-sm);
+}
+
+/* Input Field */
+.input-field {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    margin-top: var(--space-sm);
+}
+
+.input-field:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+    background: var(--color-tertiary);
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    cursor: pointer;
+}
+
+.radio-option:hover {
+    background: var(--color-background);
+}
+
+.radio-option input {
+    width: 20px;
+    height: 20px;
+    border: var(--border-thin) solid var(--color-border);
+    appearance: none;
+    background: var(--color-surface);
+    cursor: pointer;
+    position: relative;
+}
+
+.radio-option input:checked {
+    background: var(--color-accent);
+}
+
+.radio-option input:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.radio-option input:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.radio-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.btn {
+    padding: var(--space-md) var(--space-xl);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background: var(--color-accent);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: var(--color-secondary);
+}
+
+.btn:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn:active {
+    transform: translateY(2px);
+}
+
+/* Color Grid */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.color-swatch {
+    aspect-ratio: 1;
+    border: var(--border-thin) solid var(--color-border);
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.color-swatch:hover {
+    transform: scale(1.05);
+}
+
+.color-swatch:focus-visible {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.color-swatch.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 4px var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: var(--border-thin) solid var(--color-border);
+    margin-left: var(--space-sm);
+}
+
+.badge-new {
+    background: var(--color-success);
+    color: #000000;
+}
+
+.badge-beta {
+    background: var(--color-warning);
+    color: #000000;
+}
+
+/* Footer Actions */
+.footer-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--color-surface);
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg) var(--space-2xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-info {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .main-content {
+        padding: var(--space-lg);
+    }
+
+    .header-top {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+
+<div class="settings-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <span class="logo-highlight">◆</span> SPARK STEEL
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title">General</div>
+            <a href="#" class="nav-item active">Media Playback</a>
+            <a href="#" class="nav-item">Content Library</a>
+            <a href="#" class="nav-item">Notifications</a>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title">Preferences</div>
+            <a href="#" class="nav-item">Appearance</a>
+            <a href="#" class="nav-item">Audio & Video</a>
+            <a href="#" class="nav-item">Downloads</a>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title">Account</div>
+            <a href="#" class="nav-item">Profile</a>
+            <a href="#" class="nav-item">Privacy</a>
+            <a href="#" class="nav-item">Subscriptions</a>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title">Advanced</div>
+            <a href="#" class="nav-item">Performance</a>
+            <a href="#" class="nav-item">Data Usage</a>
+            <a href="#" class="nav-item">Accessibility</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-top">
+                <h1 class="header-title">Media Playback</h1>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span id="themeIcon">☀</span>
+                    <span id="themeLabel">LIGHT</span>
+                </button>
+            </div>
+            <p class="header-description">
+                Configure your playback preferences, quality settings, and media behavior. Changes are saved automatically.
+            </p>
+        </header>
+
+        <!-- Playback Section -->
+        <section class="settings-section">
+            <div class="section-header">
+                <div class="section-icon">▶</div>
+                <div>
+                    <h2 class="section-title">Playback Controls</h2>
+                </div>
+            </div>
+            <p class="section-description">
+                Manage how media content plays across the application.
+            </p>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="autoplay">Autoplay Next Item</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoplay" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Automatically play the next item in queue when current item ends
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="crossfade">Enable Crossfade</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="crossfade">
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Smoothly blend between tracks with audio crossfading
+                </p>
+
+                <div class="range-wrapper">
+                    <label for="crossfade-duration">
+                        Crossfade Duration: <span class="range-value" id="crossfade-value">5s</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="crossfade-duration"
+                        class="range-slider"
+                        min="1"
+                        max="12"
+                        value="5"
+                        oninput="updateRangeValue('crossfade-value', this.value)"
+                    >
+                    <div class="range-labels">
+                        <span>1s</span>
+                        <span>12s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label">Default Playback Speed</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="playback-speed">
+                            <option value="0.5">0.5x</option>
+                            <option value="0.75">0.75x</option>
+                            <option value="1" selected>1.0x</option>
+                            <option value="1.25">1.25x</option>
+                            <option value="1.5">1.5x</option>
+                            <option value="2">2.0x</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                </div>
+                <p class="setting-description">
+                    Set the default speed for video and audio playback
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="normalize-volume">Normalize Volume</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="normalize-volume" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Balance volume levels across different media for consistent playback
+                </p>
+            </div>
+        </section>
+
+        <!-- Quality Section -->
+        <section class="settings-section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--color-secondary);">◇</div>
+                <div>
+                    <h2 class="section-title">Quality & Performance</h2>
+                </div>
+            </div>
+            <p class="section-description">
+                Adjust streaming quality and performance settings based on your connection.
+            </p>
+
+            <div class="setting-item">
+                <label class="setting-label">Video Quality Preference</label>
+                <p class="setting-description">Choose your preferred streaming quality</p>
+
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="quality" value="auto" checked>
+                        <span class="radio-label">Auto (Adaptive)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="quality" value="high">
+                        <span class="radio-label">High (1080p)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="quality" value="medium">
+                        <span class="radio-label">Medium (720p)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="quality" value="low">
+                        <span class="radio-label">Low (480p) - Data Saver</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="hardware-accel">Hardware Acceleration</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="hardware-accel" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Use GPU for video decoding to improve performance and reduce CPU usage
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <label class="setting-label" for="buffer-size">Buffer Size</label>
+                <p class="setting-description">
+                    How much content to buffer ahead during playback
+                </p>
+
+                <div class="range-wrapper">
+                    <span class="range-value" id="buffer-value">30s</span>
+                    <input
+                        type="range"
+                        id="buffer-size"
+                        class="range-slider"
+                        min="10"
+                        max="120"
+                        value="30"
+                        step="10"
+                        oninput="updateRangeValue('buffer-value', this.value)"
+                    >
+                    <div class="range-labels">
+                        <span>10s (Fast Start)</span>
+                        <span>120s (Reliable)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Appearance Section -->
+        <section class="settings-section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--color-tertiary); color: #000000;">●</div>
+                <div>
+                    <h2 class="section-title">
+                        Appearance
+                        <span class="badge badge-new">New</span>
+                    </h2>
+                </div>
+            </div>
+            <p class="section-description">
+                Customize the visual appearance of the media player interface.
+            </p>
+
+            <div class="setting-item">
+                <label class="setting-label">Player Theme Color</label>
+                <p class="setting-description">
+                    Choose an accent color for the player controls and UI elements
+                </p>
+
+                <div class="color-grid">
+                    <button class="color-swatch selected" style="background: #FF2D95;" aria-label="Hot Pink" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #FFD600;" aria-label="Electric Yellow" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #00E5FF;" aria-label="Cyan" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #B026FF;" aria-label="Purple" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #00FF88;" aria-label="Mint" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #FF9500;" aria-label="Orange" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #FF3B30;" aria-label="Red" tabindex="0"></button>
+                    <button class="color-swatch" style="background: #5856D6;" aria-label="Indigo" tabindex="0"></button>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="show-visualizer">Show Audio Visualizer</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-visualizer" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Display animated waveform visualizer during audio playback
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="show-lyrics">Show Synchronized Lyrics</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-lyrics">
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Display time-synced lyrics when available for the current track
+                </p>
+            </div>
+        </section>
+
+        <!-- Notifications Section -->
+        <section class="settings-section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--color-accent);">◆</div>
+                <div>
+                    <h2 class="section-title">Notifications</h2>
+                </div>
+            </div>
+            <p class="section-description">
+                Control when and how you receive notifications about new content.
+            </p>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="notify-releases">New Release Alerts</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="notify-releases" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Get notified when artists you follow release new content
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-header">
+                    <label class="setting-label" for="notify-recommendations">Personalized Recommendations</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="notify-recommendations" checked>
+                        <div class="toggle-bg"></div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="setting-description">
+                    Receive suggestions based on your listening habits
+                </p>
+            </div>
+
+            <div class="setting-item">
+                <label class="setting-label" for="notification-email">Notification Email</label>
+                <p class="setting-description">
+                    Email address for receiving notifications
+                </p>
+                <input
+                    type="email"
+                    id="notification-email"
+                    class="input-field"
+                    placeholder="your.email@example.com"
+                    value="user@sparksteel.media"
+                >
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button class="btn btn-primary">Save All Changes</button>
+            <button class="btn btn-secondary">Reset to Defaults</button>
+        </div>
+    </main>
+</div>
+
+<!-- Footer Actions -->
+<footer class="footer-actions">
+    <div class="footer-info">
+        Last saved: Today at 3:42 PM • Auto-save enabled
+    </div>
+    <button class="btn btn-secondary" style="min-width: auto; padding: var(--space-sm) var(--space-md);">
+        Export Settings
+    </button>
+</footer>
+
+<script>
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    if (newTheme === 'dark') {
+        icon.textContent = '☾';
+        label.textContent = 'DARK';
+    } else {
+        icon.textContent = '☀';
+        label.textContent = 'LIGHT';
+    }
+}
+
+// Range Value Updates
+function updateRangeValue(targetId, value) {
+    document.getElementById(targetId).textContent = value + 's';
+}
+
+// Color Swatch Selection
+document.querySelectorAll('.color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', function() {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// Navigation Keyboard Support
+/* Navigation removed */
+
+// Auto-save simulation
+let saveTimeout;
+document.querySelectorAll('input, select').forEach(input => {
+    input.addEventListener('change', () => {
+        clearTimeout(saveTimeout);
+        const footerInfo = document.querySelector('.footer-info');
+        footerInfo.textContent = 'Saving...';
+
+        saveTimeout = setTimeout(() => {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+            footerInfo.textContent = `Last saved: Today at ${time} • Auto-save enabled`;
+        }, 800);
+    });
+});
+</script>
+
+</body>
+</html>

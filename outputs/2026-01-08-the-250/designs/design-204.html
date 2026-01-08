@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Steel - Web2 Glossy Comic Reader for Fitness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+DESIGN: Shadow Steel - Web2 glossy-inspired design for users
+ABOUTME: This design system implements a comic_reader with Web 2.0 glossy aesthetics.
+ABOUTME: Key characteristics: High-gloss surfaces with dramatic lighting, bold reflective buttons, mysterious dark gradients
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00d4ff;
+--color-secondary: #ff006e;
+--color-background: #0a0e1a;
+--color-surface: #151b2e;
+--color-text: #e8ecf5;
+--color-text-muted: #8a95b0;
+--font-heading: 'Rajdhani', sans-serif;
+--font-body: 'Exo 2', sans-serif;
+--radius-default: 8px;
+--space-unit: 16px;
+
+AESTHETIC PRINCIPLES:
+1. Glossy reflective surfaces with specular highlights evoke Web 2.0 polish
+2. Deep gradients with metallic sheens create mysterious atmosphere
+3. Neon accent colors pierce through dark backgrounds for dramatic contrast
+4. Heavy drop shadows and inner glows separate layered UI elements
+5. Fitness-themed iconography integrated into comic reader interface
+
+BEST FOR:
+- Media consumption interfaces requiring immersive focus
+- Dark-mode applications with dramatic visual hierarchy
+- Fitness content with bold, motivational aesthetics
+- Comic/manga readers with modern, polished feel
+
+AVOID IF:
+- Minimalist design is required
+- Light-mode only environment
+- Accessibility needs preclude dark backgrounds
+- Print-focused or text-heavy applications
+
+FUNCTIONAL DIRECTION: comic_reader
+This design must clearly function as a comic reader. Required elements:
+- Page view with comic panel display
+- Panel zoom functionality
+- Chapter navigation controls
+- Reading progress indicator
+- Chapter list/selector
+- Full-screen reading mode
+- Page turning controls
+
+COLOR THEORY: Analogous blues and cyans with neon pink accent
+EMOTIONAL TONE: Mysterious - dark palettes, dramatic lighting, hidden depth
+INDUSTRY: Fitness - athletic energy, progress tracking, motivational design
+UI PARADIGM: Glossy Web 2.0 - reflective surfaces, gradients, specular highlights
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #00d4ff;
+            --color-secondary: #ff006e;
+            --color-accent: #00ff88;
+            --color-background: #0a0e1a;
+            --color-surface: #151b2e;
+            --color-surface-elevated: #1d2642;
+            --color-text: #e8ecf5;
+            --color-text-muted: #8a95b0;
+            --color-border: #2a3654;
+
+            /* Typography */
+            --font-heading: 'Rajdhani', sans-serif;
+            --font-body: 'Exo 2', sans-serif;
+
+            /* Spacing */
+            --space-unit: 16px;
+            --space-xs: calc(var(--space-unit) * 0.25);
+            --space-sm: calc(var(--space-unit) * 0.5);
+            --space-md: var(--space-unit);
+            --space-lg: calc(var(--space-unit) * 1.5);
+            --space-xl: calc(var(--space-unit) * 2);
+            --space-2xl: calc(var(--space-unit) * 3);
+
+            /* Shapes */
+            --radius-default: 8px;
+            --radius-sm: 4px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            /* Shadows - Web 2.0 glossy style */
+            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.4),
+                             inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.5),
+                             inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            --shadow-dramatic: 0 8px 32px rgba(0, 0, 0, 0.7),
+                               0 0 24px rgba(0, 212, 255, 0.2),
+                               inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            --shadow-glow-primary: 0 0 20px rgba(0, 212, 255, 0.5),
+                                   0 0 40px rgba(0, 212, 255, 0.3);
+            --shadow-glow-secondary: 0 0 20px rgba(255, 0, 110, 0.5),
+                                     0 0 40px rgba(255, 0, 110, 0.3);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #0a0e1a 0%, #151b2e 50%, #0d1120 100%);
+            background-attachment: fixed;
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Glossy surface utility */
+        .glossy-surface {
+            background: linear-gradient(145deg,
+                        rgba(255, 255, 255, 0.1) 0%,
+                        rgba(255, 255, 255, 0.05) 50%,
+                        rgba(0, 0, 0, 0.1) 100%);
+            box-shadow: var(--shadow-medium);
+            position: relative;
+        }
+
+        .glossy-surface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.15) 0%,
+                        transparent 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg,
+                        rgba(21, 27, 46, 0.98) 0%,
+                        rgba(21, 27, 46, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: var(--space-md) var(--space-xl);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            letter-spacing: -0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        /* Glossy buttons */
+        .btn {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            padding: var(--space-sm) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg,
+                        rgba(0, 212, 255, 1) 0%,
+                        rgba(0, 180, 255, 0.9) 100%);
+            color: #000;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                        transparent 0%,
+                        rgba(255, 255, 255, 0.3) 50%,
+                        transparent 100%);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg,
+                        rgba(29, 38, 66, 1) 0%,
+                        rgba(21, 27, 46, 1) 100%);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(145deg,
+                        rgba(42, 54, 84, 1) 0%,
+                        rgba(29, 38, 66, 1) 100%);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-xl);
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Chapter sidebar */
+        .chapter-sidebar {
+            background: linear-gradient(145deg,
+                        rgba(21, 27, 46, 0.8) 0%,
+                        rgba(15, 20, 35, 0.8) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-medium);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            border: 1px solid var(--color-border);
+        }
+
+        .chapter-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.08) 0%,
+                        transparent 100%);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            pointer-events: none;
+        }
+
+        .chapter-sidebar h2 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chapter-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .chapter-item {
+            padding: var(--space-md);
+            background: linear-gradient(135deg,
+                        rgba(29, 38, 66, 0.6) 0%,
+                        rgba(21, 27, 46, 0.6) 100%);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .chapter-item:hover {
+            background: linear-gradient(135deg,
+                        rgba(42, 54, 84, 0.8) 0%,
+                        rgba(29, 38, 66, 0.8) 100%);
+            border-color: var(--color-primary);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+
+        .chapter-item.active {
+            background: linear-gradient(135deg,
+                        rgba(0, 212, 255, 0.2) 0%,
+                        rgba(0, 180, 255, 0.15) 100%);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-number {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chapter-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: var(--space-xs);
+        }
+
+        /* Reading area */
+        .reading-area {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        /* Progress bar */
+        .progress-container {
+            background: linear-gradient(145deg,
+                        rgba(21, 27, 46, 0.8) 0%,
+                        rgba(15, 20, 35, 0.8) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.08) 0%,
+                        transparent 100%);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            pointer-events: none;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-stats {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                        var(--color-secondary) 0%,
+                        var(--color-primary) 100%);
+            border-radius: var(--radius-full);
+            width: 68%;
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.6);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Comic viewer */
+        .comic-viewer {
+            background: linear-gradient(145deg,
+                        rgba(10, 14, 26, 0.9) 0%,
+                        rgba(15, 20, 35, 0.9) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-dramatic);
+            border: 1px solid var(--color-border);
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-display {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 3 / 4;
+            background: linear-gradient(145deg, #1a2235 0%, #0f1422 100%);
+            border-radius: var(--radius-default);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8),
+                        0 0 0 1px rgba(0, 212, 255, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Simulated comic page content */
+        .comic-page {
+            width: 100%;
+            height: 100%;
+            padding: var(--space-xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .panel {
+            background: linear-gradient(135deg,
+                        rgba(0, 212, 255, 0.15) 0%,
+                        rgba(0, 180, 255, 0.08) 100%);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.1) 0%,
+                        transparent 100%);
+            pointer-events: none;
+        }
+
+        .panel:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .panel-large {
+            grid-column: span 2;
+        }
+
+        .panel-content {
+            text-align: center;
+            padding: var(--space-md);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .panel-icon {
+            font-size: 32px;
+            margin-bottom: var(--space-sm);
+            opacity: 0.6;
+        }
+
+        /* Navigation controls */
+        .viewer-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-top: var(--space-xl);
+            gap: var(--space-lg);
+        }
+
+        .nav-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(145deg,
+                        rgba(0, 212, 255, 1) 0%,
+                        rgba(0, 180, 255, 0.9) 100%);
+            color: #000;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.3) 0%,
+                        transparent 100%);
+            pointer-events: none;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(0, 212, 255, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .page-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .page-number {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-total {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+        }
+
+        /* Zoom controls */
+        .zoom-controls {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+            background: linear-gradient(145deg,
+                        rgba(21, 27, 46, 0.95) 0%,
+                        rgba(15, 20, 35, 0.95) 100%);
+            color: var(--color-text);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .zoom-btn:hover {
+            background: linear-gradient(145deg,
+                        rgba(42, 54, 84, 0.95) 0%,
+                        rgba(29, 38, 66, 0.95) 100%);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Stats panel */
+        .stats-panel {
+            background: linear-gradient(145deg,
+                        rgba(21, 27, 46, 0.8) 0%,
+                        rgba(15, 20, 35, 0.8) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--color-border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            position: relative;
+        }
+
+        .stats-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg,
+                        rgba(255, 255, 255, 0.08) 0%,
+                        transparent 100%);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            pointer-events: none;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Fitness workout integration */
+        .workout-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: linear-gradient(135deg,
+                        rgba(255, 0, 110, 0.2) 0%,
+                        rgba(255, 0, 110, 0.1) 100%);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states */
+        button:focus-visible,
+        .chapter-item:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .chapter-sidebar {
+                position: static;
+            }
+
+            .stats-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: var(--space-md);
+            }
+
+            .comic-viewer {
+                padding: var(--space-md);
+            }
+
+            .page-display {
+                aspect-ratio: 2 / 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">⚡ Shadow Steel Comics</div>
+            <div class="header-controls">
+                <span class="workout-badge">
+                    <span>💪</span>
+                    <span>Fitness Edition</span>
+                </span>
+                <button class="btn btn-secondary">Bookmarks</button>
+                <button class="btn btn-primary">Subscribe</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Chapter Sidebar -->
+        <aside class="chapter-sidebar">
+            <h2>Chapters</h2>
+            <ul class="chapter-list">
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 01</div>
+                    <div class="chapter-title">The First Rep</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 02</div>
+                    <div class="chapter-title">Iron Will Rising</div>
+                </li>
+                <li class="chapter-item active">
+                    <div class="chapter-number">Chapter 03</div>
+                    <div class="chapter-title">Shadow Training</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 04</div>
+                    <div class="chapter-title">Breaking Limits</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 05</div>
+                    <div class="chapter-title">The Final Set</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 06</div>
+                    <div class="chapter-title">Steel Forged</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 07</div>
+                    <div class="chapter-title">Power Unleashed</div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-number">Chapter 08</div>
+                    <div class="chapter-title">Midnight Burn</div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Reading Area -->
+        <div class="reading-area">
+            <!-- Progress -->
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="progress-title">Reading Progress</div>
+                    <div class="progress-stats">Chapter 3 of 8 • 68% Complete</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Comic Viewer -->
+            <div class="comic-viewer">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" aria-label="Zoom in">+</button>
+                    <button class="zoom-btn" aria-label="Zoom out">−</button>
+                    <button class="zoom-btn" aria-label="Fullscreen">⛶</button>
+                </div>
+
+                <div class="page-display">
+                    <div class="comic-page">
+                        <div class="panel panel-large">
+                            <div class="panel-content">
+                                <div class="panel-icon">🏋️</div>
+                                Opening Panel: Training Begins
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-content">
+                                <div class="panel-icon">⚡</div>
+                                Action Scene
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-content">
+                                <div class="panel-icon">💪</div>
+                                Power Up
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-content">
+                                <div class="panel-icon">🔥</div>
+                                Intense Focus
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-content">
+                                <div class="panel-icon">⭐</div>
+                                Victory Pose
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viewer-controls">
+                    <button class="nav-btn" aria-label="Previous page" id="prevBtn">‹</button>
+                    <div class="page-info">
+                        <div class="page-number" id="pageNumber">Page 12</div>
+                        <div class="page-total">of 24 pages</div>
+                    </div>
+                    <button class="nav-btn" aria-label="Next page" id="nextBtn">›</button>
+                </div>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Pages Read</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8.5</div>
+                    <div class="stat-label">Hours Reading</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">Completion</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation state
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 204;
+        let currentPage = 12;
+        const totalPages = 24;
+
+        // Page navigation
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageNumber = document.getElementById('pageNumber');
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePageDisplay();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePageDisplay();
+            }
+        });
+
+        function updatePageDisplay() {
+            pageNumber.textContent = `Page ${currentPage}`;
+
+            // Update progress
+            const progress = (currentPage / totalPages) * 100;
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
+        }
+
+        // Panel zoom interaction
+        const panels = document.querySelectorAll('.panel');
+        panels.forEach(panel => {
+            panel.addEventListener('click', () => {
+                // Simple zoom effect on click
+                panel.style.transition = 'transform 0.3s ease';
+                panel.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    panel.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // Chapter navigation
+        const chapterItems = document.querySelectorAll('.chapter-item');
+        chapterItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                chapterItems.forEach(ch => ch.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Keyboard navigation between designs
+        /* Navigation removed */
+
+        // Zoom controls
+        const zoomBtns = document.querySelectorAll('.zoom-btn');
+        zoomBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.target.textContent;
+                if (action === '+') {
+                    console.log('Zoom in');
+                } else if (action === '−') {
+                    console.log('Zoom out');
+                } else if (action === '⛶') {
+                    document.querySelector('.comic-viewer').requestFullscreen?.();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

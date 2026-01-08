@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zigzag Nexus - Hotel Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Zigzag Nexus - Neutral palette, natural spirit
+ABOUTME: This design system implements hotel_search with swiss_international aesthetics.
+ABOUTME: Key characteristics: Zigzag grid patterns, strict modular layout, playful geometric accents with serious structure
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #2D5016;
+--color-secondary: #E8A838;
+--color-background: #F5F3EF;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #6B6B6B;
+--color-border: #D4CFC4;
+--font-heading: 'Inter', -apple-system, sans-serif;
+--font-body: 'Inter', -apple-system, sans-serif;
+--font-mono: 'DM Mono', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+--grid-unit: 40px;
+
+AESTHETIC PRINCIPLES:
+1. Swiss precision meets organic playfulness - rigid grid system with natural color palette
+2. Zigzag patterns guide the eye through modular content blocks
+3. Typography hierarchy is mathematical and systematic (perfect fourths scale)
+4. Geometric shapes (squares, triangles) provide playful punctuation without compromising clarity
+5. Neutral earth tones with vibrant accent colors for actions
+
+BEST FOR:
+- Hotel and hospitality search interfaces
+- Food-focused accommodation discovery
+- Travel booking platforms emphasizing culinary experiences
+- Property comparison tools requiring clear data presentation
+
+AVOID IF:
+- You need emotional, photo-driven experiences
+- Brand requires curved, soft aesthetics
+- Target audience expects luxury/premium visual language
+
+FUNCTIONAL DIRECTION: hotel_search
+This design must clearly function as a hotel_search interface. Required elements:
+- Property cards with images, ratings, amenities
+- Map view toggle for geographic search
+- Advanced filters (price, location, amenities, dietary options)
+- Review summaries with ratings
+- Clear booking call-to-action buttons
+- Search bar with location and date inputs
+
+DESIGN ERA INTERPRETATION (swiss_international):
+The Swiss International style brings mathematical precision, grid-based layouts,
+objective sans-serif typography, and asymmetric balance. We honor this through:
+- Strict 40px grid system underlying all layout decisions
+- Left-aligned, hierarchical typography with generous whitespace
+- Neutral color palette with systematic accent usage
+- Clean borders and right angles over decorative elements
+
+PLAYFUL ELEMENTS (emotional_tone):
+While maintaining Swiss rigor, playfulness emerges through:
+- Zigzag dividers between sections (hence "Zigzag Nexus")
+- Small triangular corner accents on cards
+- Bouncy hover states with subtle scale transforms
+- Unexpected color pops (saffron yellow for ratings)
+- Whimsical food/ingredient icons as amenity markers
+
+COLOR MODE SYSTEM:
+Both light and dark modes supported via toggle. Colors invert systematically:
+- Light: warm neutral background (#F5F3EF), dark text
+- Dark: charcoal background (#1A1A1A), cream text
+- Accent colors remain consistent for brand recognition
+-->
+
+<style>
+:root {
+    /* Color System - Light Mode (Default) */
+    --color-primary: #2D5016;
+    --color-primary-hover: #3F6B1F;
+    --color-secondary: #E8A838;
+    --color-secondary-hover: #D49628;
+    --color-accent: #C85A3F;
+    --color-background: #F5F3EF;
+    --color-surface: #FFFFFF;
+    --color-surface-alt: #FAF8F5;
+    --color-border: #D4CFC4;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6B6B6B;
+    --color-text-inverse: #FFFFFF;
+    --color-rating: #E8A838;
+    --color-success: #2D5016;
+    --color-map-bg: #E8E3D8;
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'DM Mono', 'Courier New', monospace;
+
+    /* Type Scale - Perfect Fourth (1.333) */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.333rem;
+    --text-xl: 1.777rem;
+    --text-2xl: 2.369rem;
+    --text-3xl: 3.157rem;
+
+    /* Spacing - 8px base unit */
+    --space-unit: 8px;
+    --space-1: calc(var(--space-unit) * 1);
+    --space-2: calc(var(--space-unit) * 2);
+    --space-3: calc(var(--space-unit) * 3);
+    --space-4: calc(var(--space-unit) * 4);
+    --space-5: calc(var(--space-unit) * 5);
+    --space-6: calc(var(--space-unit) * 6);
+    --space-8: calc(var(--space-unit) * 8);
+    --space-10: calc(var(--space-unit) * 10);
+
+    /* Grid System - 40px module */
+    --grid-unit: 40px;
+
+    /* Shapes */
+    --radius-default: 2px;
+    --radius-small: 1px;
+    --border-width: 2px;
+
+    /* Shadows - Minimal, Swiss style */
+    --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.12);
+    --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.16);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+}
+
+[data-theme="dark"] {
+    --color-primary: #5A9B34;
+    --color-primary-hover: #6BB03E;
+    --color-secondary: #E8A838;
+    --color-secondary-hover: #F4B948;
+    --color-accent: #E07856;
+    --color-background: #1A1A1A;
+    --color-surface: #2A2A2A;
+    --color-surface-alt: #222222;
+    --color-border: #3A3A3A;
+    --color-text: #F5F3EF;
+    --color-text-muted: #A0A0A0;
+    --color-text-inverse: #1A1A1A;
+    --color-rating: #E8A838;
+    --color-success: #5A9B34;
+    --color-map-bg: #2F2F2F;
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+
+/* Layout Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+/* Header - Swiss Grid Precision */
+.header {
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-4);
+    height: calc(var(--grid-unit) * 2);
+    padding: 0 var(--space-4);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: -0.03em;
+    position: relative;
+}
+
+.logo::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid var(--color-secondary);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: var(--color-surface-alt);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--color-text);
+}
+
+.theme-toggle:hover {
+    background: var(--color-border);
+}
+
+/* Search Bar - Hero Element */
+.search-section {
+    background: var(--color-surface);
+    padding: var(--space-6) 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+    position: relative;
+}
+
+/* Zigzag Divider - Playful Swiss Element */
+.zigzag-divider {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: linear-gradient(135deg, var(--color-background) 25%, transparent 25%),
+                linear-gradient(225deg, var(--color-background) 25%, transparent 25%);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 0;
+}
+
+.search-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: var(--space-2);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.search-input-group {
+    position: relative;
+}
+
+.search-label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+}
+
+.search-button {
+    align-self: flex-end;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: var(--border-width) solid var(--color-primary);
+    border-radius: var(--radius-default);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.search-button:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+}
+
+.search-button::after {
+    content: '→';
+    margin-left: var(--space-1);
+}
+
+/* Main Layout - Sidebar + Content */
+.main-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-4);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-4);
+}
+
+/* Filters Sidebar */
+.filters-sidebar {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-4);
+    height: fit-content;
+    position: sticky;
+    top: calc(var(--grid-unit) * 2 + var(--space-4));
+}
+
+.filter-section {
+    margin-bottom: var(--space-5);
+}
+
+.filter-section:last-child {
+    margin-bottom: 0;
+}
+
+.filter-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+    position: relative;
+    padding-left: var(--space-2);
+}
+
+.filter-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid var(--color-secondary);
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    padding: var(--space-1);
+    border-radius: var(--radius-small);
+    transition: background var(--transition-fast);
+}
+
+.filter-option:hover {
+    background: var(--color-surface-alt);
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-small);
+    position: relative;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+}
+
+.checkbox.checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text-inverse);
+    font-size: var(--text-xs);
+    font-weight: 700;
+}
+
+.filter-label {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+}
+
+.price-range {
+    margin-top: var(--space-2);
+}
+
+.range-slider {
+    width: 100%;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    margin: var(--space-3) 0;
+    position: relative;
+}
+
+.range-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 2px;
+    width: 60%;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+}
+
+/* Results Header */
+.results-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3) 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.results-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+}
+
+.results-count strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.view-toggle {
+    display: flex;
+    gap: var(--space-1);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-1);
+}
+
+.view-button {
+    padding: var(--space-1) var(--space-3);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-small);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--color-text-muted);
+}
+
+.view-button.active {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+}
+
+.view-button:hover:not(.active) {
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+}
+
+/* Property Cards - Swiss Grid */
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: var(--space-4);
+}
+
+.property-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.property-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+    border-color: var(--color-primary);
+}
+
+/* Triangle Accent - Playful Element */
+.property-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 24px solid var(--color-secondary);
+    border-left: 24px solid transparent;
+    z-index: 1;
+}
+
+.property-image {
+    width: 100%;
+    height: 240px;
+    background: var(--color-map-bg);
+    position: relative;
+    overflow: hidden;
+}
+
+.property-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.property-badge {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-small);
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+}
+
+.property-content {
+    padding: var(--space-4);
+}
+
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-2);
+}
+
+.property-name {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+}
+
+.property-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex-shrink: 0;
+    background: var(--color-surface-alt);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-small);
+    padding: var(--space-1) var(--space-2);
+}
+
+.rating-star {
+    color: var(--color-rating);
+    font-size: var(--text-sm);
+}
+
+.rating-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.property-location {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+}
+
+.property-description {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.6;
+    margin-bottom: var(--space-3);
+}
+
+/* Amenities - Food Focus */
+.amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.amenity-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.amenity-icon {
+    font-size: var(--text-sm);
+}
+
+.property-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+}
+
+.property-price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.price-amount {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.price-period {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.book-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: var(--border-width) solid var(--color-primary);
+    border-radius: var(--radius-default);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    min-width: 120px;
+}
+
+.book-button:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: scale(1.05);
+}
+
+.book-button:active {
+    transform: scale(0.98);
+}
+
+/* Map View */
+.map-view {
+    display: none;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-view.active {
+    display: block;
+}
+
+.map-canvas {
+    width: 100%;
+    height: 100%;
+    background: var(--color-map-bg);
+    position: relative;
+}
+
+.map-marker {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    border: var(--border-width) solid var(--color-surface);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.map-marker:hover {
+    background: var(--color-secondary);
+    transform: rotate(-45deg) scale(1.2);
+}
+
+.map-marker::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-surface);
+    border-radius: 50%;
+}
+
+/* Navigation Arrows */
+.nav-arrows {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+    z-index: 1000;
+}
+
+.nav-arrow {
+    width: 48px;
+    height: 48px;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.nav-arrow:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    transform: scale(1.1);
+}
+
+.nav-info {
+    position: fixed;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    z-index: 1000;
+}
+
+/* Focus Styles - Accessibility */
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline-offset: 0;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-sidebar {
+        position: static;
+    }
+
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .properties-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .header-inner {
+        grid-template-columns: auto 1fr;
+    }
+
+    .theme-toggle {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .nav-arrows {
+        bottom: var(--space-2);
+        right: var(--space-2);
+    }
+
+    .nav-info {
+        display: none;
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-inner">
+        <a href="#" class="logo">ZIGZAG_NEXUS</a>
+        <div></div>
+        <button class="theme-toggle" onclick="toggleTheme()">◐ THEME</button>
+    </div>
+</header>
+
+<section class="search-section">
+    <div class="container">
+        <form class="search-form" onsubmit="event.preventDefault();">
+            <div class="search-input-group">
+                <label class="search-label">Location / Cuisine</label>
+                <input type="text" class="search-input" placeholder="e.g., Tokyo, Italian, Farm-to-table" value="Portland, Oregon">
+            </div>
+            <div class="search-input-group">
+                <label class="search-label">Check-in</label>
+                <input type="date" class="search-input" value="2026-02-15">
+            </div>
+            <div class="search-input-group">
+                <label class="search-label">Check-out</label>
+                <input type="date" class="search-input" value="2026-02-18">
+            </div>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+    <div class="zigzag-divider"></div>
+</section>
+
+<div class="main-layout">
+    <aside class="filters-sidebar">
+        <div class="filter-section">
+            <h3 class="filter-title">Price Range</h3>
+            <div class="price-range">
+                <div class="range-slider">
+                    <div class="range-fill"></div>
+                </div>
+                <div class="range-labels">
+                    <span>$50</span>
+                    <span>$500+</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3 class="filter-title">Culinary Focus</h3>
+            <div class="filter-options">
+                <label class="filter-option">
+                    <div class="checkbox checked"></div>
+                    <span class="filter-label">Farm-to-table</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox checked"></div>
+                    <span class="filter-label">Michelin-starred</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Vegan/Vegetarian</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Local Specialties</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Wine Pairing</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3 class="filter-title">Amenities</h3>
+            <div class="filter-options">
+                <label class="filter-option">
+                    <div class="checkbox checked"></div>
+                    <span class="filter-label">On-site Restaurant</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Cooking Classes</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Rooftop Dining</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Chef's Table</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">Organic Garden</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3 class="filter-title">Rating</h3>
+            <div class="filter-options">
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">4.5+ Excellent</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox checked"></div>
+                    <span class="filter-label">4.0+ Very Good</span>
+                </label>
+                <label class="filter-option">
+                    <div class="checkbox"></div>
+                    <span class="filter-label">3.5+ Good</span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <main class="results-content">
+        <div class="results-header">
+            <div class="results-count">
+                <strong>47</strong> culinary hotels found in Portland, Oregon
+            </div>
+            <div class="view-toggle">
+                <button class="view-button active" onclick="showGridView()">GRID</button>
+                <button class="view-button" onclick="showMapView()">MAP</button>
+            </div>
+        </div>
+
+        <div class="properties-grid" id="gridView">
+            <article class="property-card">
+                <div class="property-image">
+                    <div class="property-badge">FEATURED</div>
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">The Harvest Inn at Cedar Grove</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.8</span>
+                        </div>
+                    </div>
+                    <p class="property-location">Pearl District, Portland • 2.4 km from center</p>
+                    <p class="property-description">
+                        Farm-to-table luxury boutique hotel with Michelin-starred restaurant featuring ingredients from our 5-acre organic farm.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🌾</span> Farm-to-table</span>
+                        <span class="amenity-tag"><span class="amenity-icon">⭐</span> Michelin Star</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🍷</span> Wine Cellar</span>
+                        <span class="amenity-tag"><span class="amenity-icon">👨‍🍳</span> Chef's Table</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$285</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="property-card">
+                <div class="property-image">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #5A7C65 0%, #3F5D48 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">Artisan Table Suites</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.6</span>
+                        </div>
+                    </div>
+                    <p class="property-location">Alberta Arts District • 3.8 km from center</p>
+                    <p class="property-description">
+                        Modern boutique hotel partnered with local artisan food producers. Daily breakfast features rotating chef collaborations.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🥐</span> Artisan Bakery</span>
+                        <span class="amenity-tag"><span class="amenity-icon">☕</span> Craft Coffee</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🧀</span> Local Cheese</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🌱</span> Vegan Options</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$195</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="property-card">
+                <div class="property-image">
+                    <div class="property-badge">NEW</div>
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #B67352 0%, #8E5A3F 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">Willamette Valley Wine Lodge</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.9</span>
+                        </div>
+                    </div>
+                    <p class="property-location">West Hills • 8.2 km from center</p>
+                    <p class="property-description">
+                        Intimate wine country retreat with vineyard views. Chef-led wine pairing dinners every evening featuring Oregon terroir.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🍇</span> Vineyard Tours</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🍷</span> Wine Tasting</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🔥</span> Fire Pit Dining</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🌄</span> Scenic Views</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$340</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="property-card">
+                <div class="property-image">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #6B8E7F 0%, #4A6B5C 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">The Garden House Hotel</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.7</span>
+                        </div>
+                    </div>
+                    <p class="property-location">Hawthorne District • 4.1 km from center</p>
+                    <p class="property-description">
+                        Eco-conscious boutique hotel with rooftop organic garden. Guests can harvest herbs for their complimentary cooking class.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🌿</span> Organic Garden</span>
+                        <span class="amenity-tag"><span class="amenity-icon">👨‍🍳</span> Cooking Classes</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🥗</span> Farm Fresh</span>
+                        <span class="amenity-tag"><span class="amenity-icon">♻️</span> Zero Waste</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$220</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="property-card">
+                <div class="property-image">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #A67C52 0%, #7D5A3C 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">Timber & Spice Downtown</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.5</span>
+                        </div>
+                    </div>
+                    <p class="property-location">Downtown Core • 0.3 km from center</p>
+                    <p class="property-description">
+                        Contemporary hotel featuring Pacific Northwest cuisine. Ground-floor restaurant specializes in sustainable seafood and wild game.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🐟</span> Seafood Focus</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🍻</span> Craft Brewery</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🏔️</span> Local Sourcing</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🎯</span> Central Location</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$175</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="property-card">
+                <div class="property-image">
+                    <div class="property-badge">FEATURED</div>
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #7B6B5D 0%, #5A4D41 100%);"></div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <h3 class="property-name">Forager's Rest Inn</h3>
+                        <div class="property-rating">
+                            <span class="rating-star">★</span>
+                            <span class="rating-value">4.8</span>
+                        </div>
+                    </div>
+                    <p class="property-location">Forest Park Area • 6.5 km from center</p>
+                    <p class="property-description">
+                        Woodland retreat hotel offering guided foraging tours. Chef transforms wild ingredients into seasonal tasting menus.
+                    </p>
+                    <div class="amenities">
+                        <span class="amenity-tag"><span class="amenity-icon">🍄</span> Foraging Tours</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🌲</span> Nature Trails</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🍴</span> Tasting Menu</span>
+                        <span class="amenity-tag"><span class="amenity-icon">🔬</span> Fermentation Lab</span>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            <span class="price-label">From</span>
+                            <div>
+                                <span class="price-amount">$265</span>
+                                <span class="price-period">/night</span>
+                            </div>
+                        </div>
+                        <button class="book-button">Book Now</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="map-view" id="mapView">
+            <div class="map-canvas">
+                <div class="map-marker" style="top: 35%; left: 42%;"></div>
+                <div class="map-marker" style="top: 48%; left: 55%;"></div>
+                <div class="map-marker" style="top: 28%; left: 68%;"></div>
+                <div class="map-marker" style="top: 62%; left: 38%;"></div>
+                <div class="map-marker" style="top: 45%; left: 25%;"></div>
+                <div class="map-marker" style="top: 58%; left: 72%;"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="nav-arrows">
+    <a href="#" class="nav-arrow" onclick="navigateDesign(-1); return false;" aria-label="Previous design">←</a>
+    <a href="#" class="nav-arrow" onclick="navigateDesign(1); return false;" aria-label="Next design">→</a>
+</div>
+
+<div class="nav-info">
+    Design <span id="currentNum">111</span> of <span id="totalNum">250</span>
+</div>
+
+<script>
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// Load saved theme
+(function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+
+// View Toggle
+function showGridView() {
+    document.getElementById('gridView').style.display = 'grid';
+    document.getElementById('mapView').classList.remove('active');
+    document.querySelectorAll('.view-button')[0].classList.add('active');
+    document.querySelectorAll('.view-button')[1].classList.remove('active');
+}
+
+function showMapView() {
+    document.getElementById('gridView').style.display = 'none';
+    document.getElementById('mapView').classList.add('active');
+    document.querySelectorAll('.view-button')[0].classList.remove('active');
+    document.querySelectorAll('.view-button')[1].classList.add('active');
+}
+
+// Filter Interactions
+document.querySelectorAll('.filter-option').forEach(option => {
+    option.addEventListener('click', function() {
+        const checkbox = this.querySelector('.checkbox');
+        checkbox.classList.toggle('checked');
+    });
+});
+
+// Navigation
+const TOTAL = 250;
+const CURRENT = 111;
+
+document.getElementById('currentNum').textContent = CURRENT;
+document.getElementById('totalNum').textContent = TOTAL;
+
+function navigateDesign(direction) {
+    let next = CURRENT + direction;
+    if (next < 1) next = TOTAL;
+    if (next > TOTAL) next = 1;
+
+    window.location.href = `design-${next}.html`;
+}
+
+// Keyboard Navigation
+{
+        navigateDesign(1);
+    }
+});
+
+// Book Button Interactions
+document.querySelectorAll('.book-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const card = this.closest('.property-card');
+        const hotelName = card.querySelector('.property-name').textContent;
+        alert(`Booking flow would start for: ${hotelName}\n\nIn a real implementation, this would open a booking modal or redirect to a checkout page.`);
+    });
+});
+
+// Map Marker Interactions
+document.querySelectorAll('.map-marker').forEach(marker => {
+    marker.addEventListener('click', function() {
+        alert('Property details popup would appear here\n\nShowing: Quick preview with price, rating, and "View Details" button');
+    });
+});
+</script>
+
+</body>
+</html>

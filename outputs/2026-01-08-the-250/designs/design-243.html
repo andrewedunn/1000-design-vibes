@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Prime - Shipping Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Stark Prime - Web2 glossy-inspired design for users
+        ABOUTME: This design system implements a shipping_tracker with web2_glossy aesthetics.
+        ABOUTME: Key characteristics: Luxurious dark surfaces with glossy reflective finishes, dramatic gradients, high-contrast status indicators.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #D4AF37;
+        --color-primary-glossy: linear-gradient(180deg, #F4D03F 0%, #D4AF37 45%, #B8941E 100%);
+        --color-background: #0A0A0F;
+        --color-surface: #1A1A24;
+        --color-surface-elevated: #252533;
+        --color-text: #FFFFFF;
+        --color-text-muted: #A8A8B8;
+        --color-success: #4CAF50;
+        --color-transit: #2196F3;
+        --font-heading: 'Orbitron', sans-serif;
+        --font-body: 'Inter', sans-serif;
+        --radius-default: 12px;
+        --space-unit: 8px;
+        --shadow-glossy: inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 24px rgba(0,0,0,0.4);
+
+        AESTHETIC PRINCIPLES:
+        1. Glossy, reflective surfaces with subtle highlights mimic Web 2.0 button aesthetics
+        2. Gold accent color (#D4AF37) conveys luxury and premium quality
+        3. Deep blacks (#0A0A0F) create dramatic contrast and sophistication
+        4. Layered gradients add depth and dimension to interactive elements
+        5. Generous spacing and typography hierarchy emphasize clarity
+
+        FUNCTIONAL DIRECTION: shipping_tracker
+        This design must clearly function as a shipping_tracker. Required elements:
+        - Package status indicator with clear current state
+        - Visual timeline showing progression from order to delivery
+        - Map display showing current package location
+        - Delivery estimate with date and time window
+        - Package details including tracking number, carrier, weight, dimensions
+
+        BEST FOR:
+        - Premium ecommerce brands
+        - Luxury goods tracking
+        - High-value shipment monitoring
+        - Customer-facing tracking portals
+
+        AVOID IF:
+        - Minimalist aesthetic required
+        - Light mode preference
+        - Budget/discount brand positioning
+        - Requires ultra-fast load times (gradients are render-intensive)
+
+        COLOR PALETTE:
+        Primary: #D4AF37 (Gold) - Premium, luxury, attention
+        Background: #0A0A0F (Near Black) - Sophisticated, dramatic
+        Surface: #1A1A24 (Dark Navy) - Layering, depth
+        Surface Elevated: #252533 (Lighter Navy) - Cards, modals
+        Text: #FFFFFF (White) - Maximum contrast
+        Text Muted: #A8A8B8 (Gray) - Secondary information
+        Success: #4CAF50 (Green) - Delivered, completed
+        Transit: #2196F3 (Blue) - In transit, active
+        Warning: #FF9800 (Orange) - Delayed, attention needed
+
+        TYPOGRAPHY SYSTEM:
+        Heading Font: Orbitron (geometric, futuristic, premium feel)
+        Body Font: Inter (clean, readable, modern)
+        Scale Ratio: 1.25 (Major Third)
+        Base Size: 16px
+        Sizes: 12px, 14px, 16px, 20px, 25px, 31px, 39px, 49px
+
+        SPACING SYSTEM:
+        Base Unit: 8px
+        Scale: 8px, 16px, 24px, 32px, 40px, 48px, 64px, 80px
+        Content max-width: 1200px
+
+        COMPONENT PATTERNS:
+        - Glossy buttons with gradient overlays and inner highlights
+        - Timeline steps with glossy status bubbles
+        - Map container with elevated surface treatment
+        - Status badges with reflective finishes
+        - Information cards with subtle bevels
+
+        INTERACTION STATES:
+        - Hover: Brightness increase, subtle lift
+        - Focus: Gold outline, 2px offset
+        - Active: Slight scale reduction, deeper shadow
+        - Disabled: 40% opacity, grayscale
+
+        ACCESSIBILITY:
+        - WCAG AA contrast maintained (4.5:1 minimum)
+        - Focus indicators on all interactive elements
+        - Reduced motion support for animations
+        - Semantic HTML structure
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #D4AF37;
+            --color-primary-dark: #B8941E;
+            --color-primary-light: #F4D03F;
+            --color-background: #0A0A0F;
+            --color-surface: #1A1A24;
+            --color-surface-elevated: #252533;
+            --color-text: #FFFFFF;
+            --color-text-muted: #A8A8B8;
+            --color-success: #4CAF50;
+            --color-success-dark: #388E3C;
+            --color-transit: #2196F3;
+            --color-transit-dark: #1976D2;
+            --color-warning: #FF9800;
+            --color-warning-dark: #F57C00;
+            --color-error: #F44336;
+
+            /* Typography */
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 20px;
+            --font-size-xl: 25px;
+            --font-size-2xl: 31px;
+            --font-size-3xl: 39px;
+            --font-size-4xl: 49px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+            --space-8: 64px;
+            --space-10: 80px;
+
+            /* Shapes */
+            --radius-sm: 6px;
+            --radius-default: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-default: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-glossy: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            background-image:
+                radial-gradient(ellipse at top, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(33, 150, 243, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, rgba(26, 26, 36, 0.95) 0%, rgba(26, 26, 36, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3) var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 50%, var(--color-primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .nav-button {
+            padding: var(--space-unit) var(--space-3);
+            background: var(--color-surface-elevated);
+            border: none;
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-button:hover {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-default);
+            transform: translateY(-1px);
+        }
+
+        .nav-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6) var(--space-4);
+        }
+
+        /* Status Banner */
+        .status-banner {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary), var(--color-transit));
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+        }
+
+        .status-banner h1 {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+            color: var(--color-text);
+        }
+
+        .tracking-number {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-muted);
+            font-weight: 300;
+            margin-bottom: var(--space-4);
+        }
+
+        .tracking-number span {
+            color: var(--color-primary);
+            font-family: monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-unit);
+            padding: var(--space-2) var(--space-4);
+            background: linear-gradient(180deg, var(--color-transit) 0%, var(--color-transit-dark) 100%);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            box-shadow: var(--shadow-glossy);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: var(--space-5);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--color-success) 0%, var(--color-transit) 50%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: var(--radius-full);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-4);
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -32px;
+            top: 4px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+            box-shadow: var(--shadow-glossy);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: linear-gradient(180deg, var(--color-success) 0%, var(--color-success-dark) 100%);
+            color: white;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background: linear-gradient(180deg, var(--color-transit) 0%, var(--color-transit-dark) 100%);
+            color: white;
+            box-shadow: var(--shadow-glossy), 0 0 24px rgba(33, 150, 243, 0.6);
+        }
+
+        .timeline-item.pending .timeline-dot {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: var(--color-text-muted);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-content h3 {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            margin-bottom: var(--space-unit);
+            color: var(--color-text);
+        }
+
+        .timeline-content p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        .timeline-time {
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            font-weight: 500;
+            margin-top: var(--space-unit);
+        }
+
+        /* Map Section */
+        .map-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .map-container {
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-inset);
+            margin-bottom: var(--space-3);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(45deg, rgba(212, 175, 55, 0.03) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(212, 175, 55, 0.03) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(212, 175, 55, 0.03) 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+        }
+
+        .map-route {
+            position: absolute;
+            top: 30%;
+            left: 20%;
+            right: 20%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-success) 0%, var(--color-transit) 100%);
+            border-radius: var(--radius-full);
+            box-shadow: 0 0 16px rgba(33, 150, 243, 0.5);
+        }
+
+        .map-marker {
+            position: absolute;
+            top: calc(30% - 16px);
+            left: 60%;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: var(--shadow-glossy);
+            border: 2px solid white;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: rotate(-45deg) translateY(0); }
+            50% { transform: rotate(-45deg) translateY(-8px); }
+        }
+
+        .location-info {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--space-3);
+        }
+
+        .location-card {
+            flex: 1;
+            background: var(--color-surface-elevated);
+            padding: var(--space-3);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .location-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-unit);
+            font-weight: 600;
+        }
+
+        .location-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        /* Details Section */
+        .details-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: var(--space-6);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .detail-item {
+            background: var(--color-surface-elevated);
+            padding: var(--space-3);
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-sm);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .detail-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-unit);
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: var(--font-size-lg);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* Delivery Estimate */
+        .estimate-section {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .estimate-label {
+            font-size: var(--font-size-base);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .estimate-date {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-4xl);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-2);
+            text-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+        }
+
+        .estimate-time {
+            font-size: var(--font-size-lg);
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        /* Action Button */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 45%, var(--color-primary-dark) 100%);
+            border: none;
+            border-radius: var(--radius-default);
+            color: var(--color-background);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: var(--shadow-glossy);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 32px rgba(212, 175, 55, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-button:focus {
+            outline: 2px solid white;
+            outline-offset: 3px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-3);
+        }
+
+        /* Footer */
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6) var(--space-4);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: var(--space-3);
+                align-items: stretch;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            .logo {
+                text-align: center;
+                font-size: var(--font-size-xl);
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .location-info {
+                flex-direction: column;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+
+            .estimate-date {
+                font-size: var(--font-size-3xl);
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Visible */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: fixed;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            display: flex;
+            gap: var(--space-2);
+            z-index: 1000;
+        }
+
+        .nav-controls button {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: var(--color-background);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-glossy);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-controls button:hover {
+            transform: scale(1.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 32px rgba(212, 175, 55, 0.4);
+        }
+
+        .nav-controls button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">STARK PRIME</div>
+            <nav>
+                <button class="nav-button">Track Package</button>
+                <button class="nav-button">My Orders</button>
+                <button class="nav-button">Support</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="status-banner">
+            <h1>Package In Transit</h1>
+            <p class="tracking-number">Tracking Number: <span>SP-8492-KLM-3847</span></p>
+            <div class="status-badge">In Transit to Delivery Hub</div>
+        </section>
+
+        <section class="estimate-section">
+            <div class="estimate-label">Estimated Delivery</div>
+            <div class="estimate-date">JAN 10</div>
+            <div class="estimate-time">Before 8:00 PM</div>
+        </section>
+
+        <div class="content-grid">
+            <div class="timeline-section">
+                <h2 class="section-title">Tracking Timeline</h2>
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot">✓</div>
+                        <div class="timeline-content">
+                            <h3>Order Placed</h3>
+                            <p>Your order has been confirmed and processed. Payment received.</p>
+                            <div class="timeline-time">Jan 6, 2026 - 2:34 PM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot">✓</div>
+                        <div class="timeline-content">
+                            <h3>Package Prepared</h3>
+                            <p>Items securely packaged and labeled at our premium fulfillment center.</p>
+                            <div class="timeline-time">Jan 6, 2026 - 6:15 PM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot">✓</div>
+                        <div class="timeline-content">
+                            <h3>Picked Up by Carrier</h3>
+                            <p>Package collected by Stark Express Premium Service.</p>
+                            <div class="timeline-time">Jan 7, 2026 - 8:42 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="timeline-dot">●</div>
+                        <div class="timeline-content">
+                            <h3>In Transit</h3>
+                            <p>Package is currently en route to regional delivery hub. Last scanned in Chicago, IL.</p>
+                            <div class="timeline-time">Jan 8, 2026 - 11:23 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item pending">
+                        <div class="timeline-dot">○</div>
+                        <div class="timeline-content">
+                            <h3>Out for Delivery</h3>
+                            <p>Package will be loaded onto delivery vehicle for final mile service.</p>
+                            <div class="timeline-time">Expected: Jan 10, 2026</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item pending">
+                        <div class="timeline-dot">○</div>
+                        <div class="timeline-content">
+                            <h3>Delivered</h3>
+                            <p>Package will be delivered to your specified address with signature confirmation.</p>
+                            <div class="timeline-time">Expected: Jan 10, 2026 - Before 8:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-section">
+                <h2 class="section-title">Live Location</h2>
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <div class="map-route"></div>
+                        <div class="map-marker"></div>
+                    </div>
+                </div>
+                <div class="location-info">
+                    <div class="location-card">
+                        <div class="location-label">Origin</div>
+                        <div class="location-text">Los Angeles, CA</div>
+                    </div>
+                    <div class="location-card">
+                        <div class="location-label">Current Location</div>
+                        <div class="location-text">Chicago, IL</div>
+                    </div>
+                    <div class="location-card">
+                        <div class="location-label">Destination</div>
+                        <div class="location-text">New York, NY</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="details-section">
+            <h2 class="section-title">Package Details</h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Carrier</div>
+                    <div class="detail-value">Stark Express</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Service Level</div>
+                    <div class="detail-value">Premium 3-Day</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Weight</div>
+                    <div class="detail-value">8.5 lbs</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Dimensions</div>
+                    <div class="detail-value">18×12×8 in</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Shipped From</div>
+                    <div class="detail-value">Los Angeles, CA 90012</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Ship Date</div>
+                    <div class="detail-value">Jan 7, 2026</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="button-container">
+            <button class="action-button">
+                <span>📧</span>
+                <span>Email Updates</span>
+            </button>
+            <button class="action-button">
+                <span>📱</span>
+                <span>SMS Alerts</span>
+            </button>
+            <button class="action-button">
+                <span>📞</span>
+                <span>Contact Support</span>
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-text">© 2026 Stark Prime. Premium shipping tracking for discerning customers.</p>
+        <div class="footer-links">
+            <a href="#" class="footer-link">Terms of Service</a>
+            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="#" class="footer-link">Shipping FAQ</a>
+            <a href="#" class="footer-link">Contact Us</a>
+            <a href="#" class="footer-link">Careers</a>
+        </div>
+    </footer>
+
+    <div class="nav-controls">
+        <button id="prevBtn" aria-label="Previous design">←</button>
+        <button id="nextBtn" aria-label="Next design">→</button>
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warm Hub - Neutral palette, natural spirit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Warm Hub - Neutral palette, natural spirit
+ABOUTME: This design system implements a pos_terminal with Bauhaus aesthetics for real estate.
+ABOUTME: Key characteristics: Geometric precision, warm neutrals on dark, friendly functional forms.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4A574;
+--color-secondary: #8B7355;
+--color-success: #7FA98B;
+--color-background: #1A1814;
+--color-surface: #2A2520;
+--color-surface-raised: #3A342D;
+--color-border: #4A443C;
+--color-text: #E8E4DE;
+--color-text-muted: #A39B8F;
+--font-heading: 'Work Sans', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Bauhaus geometry: Everything aligns to an 8px grid with precise rectangular forms
+2. Warm industrial palette: Rich browns and tans bring friendliness to dark mode
+3. Functional clarity: Every element serves a purpose, no decoration for decoration's sake
+4. Real estate context: Property listings become "products" with price, sqft, and features
+
+PHILOSOPHY:
+This POS terminal reimagines real estate transactions with Bauhaus principles. The geometric
+precision conveys professionalism while warm neutrals create an approachable, human experience.
+Clean rectangles and circles organize complex information without visual clutter. The dark
+background focuses attention on property cards and transaction details.
+
+BEST FOR:
+- Real estate point-of-sale systems
+- Property rental terminals
+- Commercial real estate kiosks
+- Property management checkout systems
+- Modern real estate offices wanting a distinctive terminal experience
+
+AVOID IF:
+- You need complex property details (this focuses on transaction flow)
+- You require light mode (this is dark-only by design)
+- You prefer ornamental or decorative interfaces
+- Your brand doesn't align with geometric modernism
+
+FUNCTIONAL DIRECTION: pos_terminal
+This design must clearly function as a POS terminal. Required elements:
+- Product grid: Property listings with images, prices, and key details
+- Cart: Selected properties with running total
+- Payment buttons: Multiple payment methods (Cash, Card, Transfer)
+- Receipt preview: Transaction summary before payment
+- Numpad: For entering custom amounts or property codes
+
+BAUHAUS INTERPRETATION:
+The Bauhaus era valued "form follows function" - every element here serves the transaction flow.
+Primary geometric shapes (rectangles for cards, circles for buttons) create visual rhythm.
+The grid system ensures mathematical precision. Typography is clean and legible. Color is used
+sparingly for emphasis (warm tan for primary actions, green for success states).
+
+REAL ESTATE CONTEXT:
+Properties are presented as purchasable items with key metrics (sqft, bed/bath counts, location).
+The friendly emotional tone comes through in rounded button corners (2px), warm color temperature,
+and conversational microcopy ("Add to Cart" rather than clinical "Select Property").
+
+INTERACTION PATTERNS:
+- Click property cards to add to cart
+- Cart items can be removed
+- Payment method selection is clear and button-based
+- Numpad supports quick property code entry
+- Receipt preview before final transaction
+
+TECHNICAL NOTES:
+- All measurements use 8px base unit
+- Bauhaus grid system ensures alignment
+- Dark mode optimized for extended use
+- Touch-friendly 44px minimum targets
+- Reduced motion support for accessibility
+-->
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        /* Colors - Warm neutral palette on dark */
+        --color-primary: #D4A574;
+        --color-secondary: #8B7355;
+        --color-success: #7FA98B;
+        --color-background: #1A1814;
+        --color-surface: #2A2520;
+        --color-surface-raised: #3A342D;
+        --color-border: #4A443C;
+        --color-text: #E8E4DE;
+        --color-text-muted: #A39B8F;
+        --color-danger: #C77866;
+
+        /* Typography */
+        --font-heading: 'Work Sans', sans-serif;
+        --font-body: 'Inter', sans-serif;
+
+        /* Spacing - 8px base unit (Bauhaus grid) */
+        --space-unit: 8px;
+        --space-xs: calc(var(--space-unit) * 1);
+        --space-sm: calc(var(--space-unit) * 2);
+        --space-md: calc(var(--space-unit) * 3);
+        --space-lg: calc(var(--space-unit) * 4);
+        --space-xl: calc(var(--space-unit) * 6);
+
+        /* Shapes - Subtle geometry */
+        --radius-default: 2px;
+        --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.5;
+        overflow: hidden;
+    }
+
+    /* POS Terminal Layout */
+    .terminal-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        height: 100vh;
+        gap: 0;
+    }
+
+    /* Left Panel - Product Grid */
+    .products-panel {
+        background: var(--color-background);
+        display: flex;
+        flex-direction: column;
+        border-right: 2px solid var(--color-border);
+    }
+
+    .panel-header {
+        background: var(--color-surface);
+        padding: var(--space-md);
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .panel-header h1 {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: var(--space-xs);
+        letter-spacing: -0.5px;
+    }
+
+    .panel-header p {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    /* Search and Filters */
+    .search-bar {
+        padding: var(--space-md);
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        gap: var(--space-sm);
+    }
+
+    .search-input {
+        flex: 1;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-sm) var(--space-md);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 14px;
+    }
+
+    .search-input:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 0;
+    }
+
+    .filter-btn {
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-sm) var(--space-md);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .filter-btn:hover {
+        background: var(--color-primary);
+        color: var(--color-background);
+        border-color: var(--color-primary);
+    }
+
+    .filter-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Product Grid */
+    .product-grid {
+        padding: var(--space-md);
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: var(--space-md);
+        align-content: start;
+    }
+
+    .product-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-medium);
+        border-color: var(--color-primary);
+    }
+
+    .product-card:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 160px;
+        background: var(--color-background);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .product-info {
+        padding: var(--space-md);
+    }
+
+    .product-name {
+        font-family: var(--font-heading);
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--space-xs);
+    }
+
+    .product-location {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-sm);
+    }
+
+    .product-features {
+        display: flex;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-sm);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .product-price {
+        font-family: var(--font-heading);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+
+    /* Right Panel - Cart & Checkout */
+    .checkout-panel {
+        background: var(--color-surface);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cart-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .cart-header {
+        padding: var(--space-md);
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .cart-header h2 {
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-text);
+    }
+
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--space-md);
+    }
+
+    .cart-item {
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        margin-bottom: var(--space-sm);
+    }
+
+    .cart-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: var(--space-xs);
+    }
+
+    .cart-item-name {
+        font-family: var(--font-heading);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: var(--color-danger);
+        cursor: pointer;
+        font-size: 18px;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-default);
+        transition: background 0.2s ease;
+    }
+
+    .remove-btn:hover {
+        background: var(--color-danger);
+        color: var(--color-background);
+    }
+
+    .remove-btn:focus {
+        outline: 2px solid var(--color-danger);
+        outline-offset: 2px;
+    }
+
+    .cart-item-price {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-top: var(--space-xs);
+    }
+
+    .cart-empty {
+        text-align: center;
+        padding: var(--space-xl);
+        color: var(--color-text-muted);
+        font-size: 14px;
+    }
+
+    /* Cart Totals */
+    .cart-totals {
+        padding: var(--space-md);
+        background: var(--color-background);
+        border-top: 2px solid var(--color-border);
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--space-sm);
+        font-size: 14px;
+    }
+
+    .total-row.grand-total {
+        font-family: var(--font-heading);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-top: var(--space-sm);
+        padding-top: var(--space-sm);
+        border-top: 1px solid var(--color-border);
+    }
+
+    /* Payment Section */
+    .payment-section {
+        padding: var(--space-md);
+    }
+
+    .payment-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: var(--space-sm);
+    }
+
+    .payment-methods {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-sm);
+        margin-bottom: var(--space-md);
+    }
+
+    .payment-btn {
+        background: var(--color-surface-raised);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 64px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .payment-btn .icon {
+        font-size: 24px;
+    }
+
+    .payment-btn:hover {
+        border-color: var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-background);
+    }
+
+    .payment-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .payment-btn.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: var(--color-background);
+    }
+
+    /* Numpad */
+    .numpad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-xs);
+        margin-bottom: var(--space-md);
+    }
+
+    .numpad-display {
+        grid-column: 1 / -1;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        text-align: right;
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+        min-height: 56px;
+    }
+
+    .numpad-btn {
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        color: var(--color-text);
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 48px;
+    }
+
+    .numpad-btn:hover {
+        background: var(--color-border);
+    }
+
+    .numpad-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .numpad-btn:active {
+        transform: scale(0.95);
+    }
+
+    .numpad-btn.wide {
+        grid-column: span 2;
+    }
+
+    /* Complete Transaction Button */
+    .complete-btn {
+        width: 100%;
+        background: var(--color-success);
+        border: none;
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        color: var(--color-background);
+        font-family: var(--font-heading);
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 56px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .complete-btn:hover {
+        background: #8FB99A;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .complete-btn:focus {
+        outline: 2px solid var(--color-success);
+        outline-offset: 2px;
+    }
+
+    .complete-btn:active {
+        transform: translateY(0);
+    }
+
+    .complete-btn:disabled {
+        background: var(--color-border);
+        color: var(--color-text-muted);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Receipt Preview */
+    .receipt-preview {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .receipt-preview.active {
+        display: flex;
+    }
+
+    .receipt {
+        background: var(--color-surface);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-xl);
+        max-width: 400px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .receipt-header {
+        text-align: center;
+        padding-bottom: var(--space-md);
+        border-bottom: 2px dashed var(--color-border);
+        margin-bottom: var(--space-md);
+    }
+
+    .receipt-title {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: var(--space-xs);
+    }
+
+    .receipt-date {
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .receipt-items {
+        margin-bottom: var(--space-md);
+    }
+
+    .receipt-item {
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .receipt-item-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .receipt-item-price {
+        color: var(--color-text-muted);
+    }
+
+    .receipt-footer {
+        padding-top: var(--space-md);
+        border-top: 2px dashed var(--color-border);
+    }
+
+    .receipt-total {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-heading);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: var(--space-md);
+    }
+
+    .receipt-actions {
+        display: flex;
+        gap: var(--space-sm);
+    }
+
+    .receipt-btn {
+        flex: 1;
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-md);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 44px;
+    }
+
+    .receipt-btn.primary {
+        background: var(--color-success);
+        border-color: var(--color-success);
+        color: var(--color-background);
+    }
+
+    .receipt-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-subtle);
+    }
+
+    .receipt-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Navigation */
+    .nav-indicator {
+        position: fixed;
+        bottom: var(--space-md);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 20px;
+        padding: var(--space-xs) var(--space-md);
+        font-size: 12px;
+        color: var(--color-text-muted);
+        box-shadow: var(--shadow-medium);
+        z-index: 100;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--color-background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+        border-radius: var(--radius-default);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .terminal-container {
+            grid-template-columns: 1fr;
+        }
+
+        .checkout-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            box-shadow: var(--shadow-medium);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .checkout-panel.active {
+            transform: translateX(0);
+        }
+    }
+</style>
+
+<div class="terminal-container">
+    <!-- Left Panel: Products -->
+    <div class="products-panel">
+        <div class="panel-header">
+            <h1>Warm Hub</h1>
+            <p>Premium Properties · Real Estate Terminal</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search properties by code or name...">
+            <button class="filter-btn" aria-label="Filter properties">⚙</button>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card" tabindex="0" role="button" data-name="Oak Residence" data-price="485000">
+                <div class="product-image">🏡</div>
+                <div class="product-info">
+                    <div class="product-name">Oak Residence</div>
+                    <div class="product-location">Westside District</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 3 bed</span>
+                        <span class="feature">🚿 2 bath</span>
+                        <span class="feature">📏 2,100 sqft</span>
+                    </div>
+                    <div class="product-price">$485,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Cedar Heights" data-price="625000">
+                <div class="product-image">🏢</div>
+                <div class="product-info">
+                    <div class="product-name">Cedar Heights</div>
+                    <div class="product-location">Downtown Core</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 4 bed</span>
+                        <span class="feature">🚿 3 bath</span>
+                        <span class="feature">📏 2,800 sqft</span>
+                    </div>
+                    <div class="product-price">$625,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Pine Studio" data-price="295000">
+                <div class="product-image">🏘</div>
+                <div class="product-info">
+                    <div class="product-name">Pine Studio</div>
+                    <div class="product-location">Arts Quarter</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 1 bed</span>
+                        <span class="feature">🚿 1 bath</span>
+                        <span class="feature">📏 850 sqft</span>
+                    </div>
+                    <div class="product-price">$295,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Maple Estates" data-price="875000">
+                <div class="product-image">🏰</div>
+                <div class="product-info">
+                    <div class="product-name">Maple Estates</div>
+                    <div class="product-location">North Hills</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 5 bed</span>
+                        <span class="feature">🚿 4 bath</span>
+                        <span class="feature">📏 3,500 sqft</span>
+                    </div>
+                    <div class="product-price">$875,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Birch Loft" data-price="425000">
+                <div class="product-image">🏗</div>
+                <div class="product-info">
+                    <div class="product-name">Birch Loft</div>
+                    <div class="product-location">Warehouse District</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 2 bed</span>
+                        <span class="feature">🚿 2 bath</span>
+                        <span class="feature">📏 1,600 sqft</span>
+                    </div>
+                    <div class="product-price">$425,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Willow Court" data-price="535000">
+                <div class="product-image">🏛</div>
+                <div class="product-info">
+                    <div class="product-name">Willow Court</div>
+                    <div class="product-location">Garden District</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 3 bed</span>
+                        <span class="feature">🚿 2.5 bath</span>
+                        <span class="feature">📏 2,300 sqft</span>
+                    </div>
+                    <div class="product-price">$535,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Elm Terrace" data-price="385000">
+                <div class="product-image">🏚</div>
+                <div class="product-info">
+                    <div class="product-name">Elm Terrace</div>
+                    <div class="product-location">East End</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 2 bed</span>
+                        <span class="feature">🚿 1 bath</span>
+                        <span class="feature">📏 1,200 sqft</span>
+                    </div>
+                    <div class="product-price">$385,000</div>
+                </div>
+            </div>
+
+            <div class="product-card" tabindex="0" role="button" data-name="Aspen Tower" data-price="725000">
+                <div class="product-image">🗼</div>
+                <div class="product-info">
+                    <div class="product-name">Aspen Tower</div>
+                    <div class="product-location">Skyline District</div>
+                    <div class="product-features">
+                        <span class="feature">🛏 3 bed</span>
+                        <span class="feature">🚿 3 bath</span>
+                        <span class="feature">📏 2,600 sqft</span>
+                    </div>
+                    <div class="product-price">$725,000</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel: Checkout -->
+    <div class="checkout-panel">
+        <div class="cart-section">
+            <div class="cart-header">
+                <h2>Transaction Cart</h2>
+            </div>
+
+            <div class="cart-items" id="cartItems">
+                <div class="cart-empty">
+                    Select properties to begin transaction
+                </div>
+            </div>
+
+            <div class="cart-totals">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0</span>
+                </div>
+                <div class="total-row">
+                    <span>Processing Fee:</span>
+                    <span id="fee">$0</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total:</span>
+                    <span id="grandTotal">$0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <div class="payment-label">Payment Method</div>
+            <div class="payment-methods">
+                <button class="payment-btn" data-method="cash">
+                    <span class="icon">💵</span>
+                    <span>Cash</span>
+                </button>
+                <button class="payment-btn" data-method="card">
+                    <span class="icon">💳</span>
+                    <span>Card</span>
+                </button>
+                <button class="payment-btn" data-method="transfer">
+                    <span class="icon">🏦</span>
+                    <span>Transfer</span>
+                </button>
+            </div>
+
+            <div class="payment-label">Quick Entry</div>
+            <div class="numpad">
+                <div class="numpad-display" id="numpadDisplay"></div>
+                <button class="numpad-btn">1</button>
+                <button class="numpad-btn">2</button>
+                <button class="numpad-btn">3</button>
+                <button class="numpad-btn">4</button>
+                <button class="numpad-btn">5</button>
+                <button class="numpad-btn">6</button>
+                <button class="numpad-btn">7</button>
+                <button class="numpad-btn">8</button>
+                <button class="numpad-btn">9</button>
+                <button class="numpad-btn">C</button>
+                <button class="numpad-btn">0</button>
+                <button class="numpad-btn">⌫</button>
+            </div>
+
+            <button class="complete-btn" id="completeBtn" disabled>
+                Complete Transaction
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Receipt Preview Modal -->
+<div class="receipt-preview" id="receiptPreview">
+    <div class="receipt">
+        <div class="receipt-header">
+            <div class="receipt-title">Warm Hub</div>
+            <div class="receipt-date" id="receiptDate"></div>
+        </div>
+        <div class="receipt-items" id="receiptItems"></div>
+        <div class="receipt-footer">
+            <div class="receipt-total">
+                <span>Total:</span>
+                <span id="receiptTotal">$0</span>
+            </div>
+            <div class="receipt-actions">
+                <button class="receipt-btn" onclick="closeReceipt()">Cancel</button>
+                <button class="receipt-btn primary" onclick="confirmTransaction()">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Indicator -->
+<div class="nav-indicator">Design 104 of 250 · Use ← → arrow keys</div>
+
+<script>
+    // Cart State
+    let cart = [];
+    let selectedPaymentMethod = null;
+    let numpadValue = '';
+
+    // Product Card Click Handlers
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('click', () => addToCart(card));
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                addToCart(card);
+            }
+        });
+    });
+
+    function addToCart(card) {
+        const name = card.dataset.name;
+        const price = parseInt(card.dataset.price);
+
+        // Check if already in cart
+        if (cart.find(item => item.name === name)) {
+            return;
+        }
+
+        cart.push({ name, price });
+        updateCart();
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartItemsEl = document.getElementById('cartItems');
+
+        if (cart.length === 0) {
+            cartItemsEl.innerHTML = '<div class="cart-empty">Select properties to begin transaction</div>';
+            document.getElementById('completeBtn').disabled = true;
+        } else {
+            cartItemsEl.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div class="cart-item-header">
+                        <div class="cart-item-name">${item.name}</div>
+                        <button class="remove-btn" onclick="removeFromCart(${index})" aria-label="Remove ${item.name}">×</button>
+                    </div>
+                    <div class="cart-item-price">$${item.price.toLocaleString()}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('completeBtn').disabled = !selectedPaymentMethod;
+        }
+
+        updateTotals();
+    }
+
+    function updateTotals() {
+        const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+        const fee = Math.round(subtotal * 0.015); // 1.5% processing fee
+        const total = subtotal + fee;
+
+        document.getElementById('subtotal').textContent = `$${subtotal.toLocaleString()}`;
+        document.getElementById('fee').textContent = `$${fee.toLocaleString()}`;
+        document.getElementById('grandTotal').textContent = `$${total.toLocaleString()}`;
+    }
+
+    // Payment Method Selection
+    document.querySelectorAll('.payment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedPaymentMethod = btn.dataset.method;
+            document.getElementById('completeBtn').disabled = cart.length === 0;
+        });
+    });
+
+    // Numpad
+    document.querySelectorAll('.numpad-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const value = btn.textContent;
+
+            if (value === 'C') {
+                numpadValue = '';
+            } else if (value === '⌫') {
+                numpadValue = numpadValue.slice(0, -1);
+            } else {
+                numpadValue += value;
+            }
+
+            document.getElementById('numpadDisplay').textContent = numpadValue || '';
+        });
+    });
+
+    // Complete Transaction
+    document.getElementById('completeBtn').addEventListener('click', () => {
+        if (cart.length === 0 || !selectedPaymentMethod) return;
+
+        showReceipt();
+    });
+
+    function showReceipt() {
+        const date = new Date().toLocaleString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+        document.getElementById('receiptDate').textContent = date;
+
+        const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+        const fee = Math.round(subtotal * 0.015);
+        const total = subtotal + fee;
+
+        document.getElementById('receiptItems').innerHTML = cart.map(item => `
+            <div class="receipt-item">
+                <div class="receipt-item-name">${item.name}</div>
+                <div class="receipt-item-price">$${item.price.toLocaleString()}</div>
+            </div>
+        `).join('') + `
+            <div class="receipt-item">
+                <div class="receipt-item-name">Processing Fee</div>
+                <div class="receipt-item-price">$${fee.toLocaleString()}</div>
+            </div>
+        `;
+
+        document.getElementById('receiptTotal').textContent = `$${total.toLocaleString()}`;
+        document.getElementById('receiptPreview').classList.add('active');
+    }
+
+    function closeReceipt() {
+        document.getElementById('receiptPreview').classList.remove('active');
+    }
+
+    function confirmTransaction() {
+        alert('Transaction completed successfully! Receipt sent to email.');
+        cart = [];
+        selectedPaymentMethod = null;
+        numpadValue = '';
+        document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('numpadDisplay').textContent = '';
+        updateCart();
+        closeReceipt();
+    }
+
+    // Arrow Key Navigation
+
+    // Expose functions to global scope for inline handlers
+    window.removeFromCart = removeFromCart;
+    window.closeReceipt = closeReceipt;
+    window.confirmTransaction = confirmTransaction;
+</script>
+
+</body>
+</html>

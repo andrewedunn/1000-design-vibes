@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fracture Cosmo - Natural vibes for nonprofit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+/*
+DESIGN: Fracture Cosmo - Natural vibes for nonprofit
+ABOUTME: This design system implements an audio_visualizer with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: Aggressive black borders, raw waveform visualization, high-contrast brutalist interface
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00ff41;
+--color-secondary: #ff0066;
+--color-background: #ffffff;
+--color-surface: #f5f5f5;
+--color-text: #000000;
+--color-text-muted: #666666;
+--color-border: #000000;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-width: 4px;
+
+AESTHETIC PRINCIPLES:
+1. Thick black borders define every element - no subtlety, pure structural honesty
+2. Monospace typography creates technical precision and nonprofit authenticity
+3. Neon accent colors (green/pink) fracture the brutalist foundation with energy
+4. Raw waveform visualization exposes the audio data structure directly
+5. High contrast ensures accessibility while maintaining aggressive edge
+
+BEST FOR:
+- Community radio stations and music collectives
+- Activist organizations needing bold audio content platforms
+- Underground music scenes and DIY venues
+- Educational nonprofits teaching audio production
+- Podcast platforms with social justice missions
+
+AVOID IF:
+- You need subtle, refined aesthetics
+- Corporate professionalism is required
+- Your audience expects polished mainstream design
+- Accessibility concerns override bold contrast choices
+
+FUNCTIONAL DIRECTION: audio_visualizer
+This design must clearly function as an audio visualizer. Required elements:
+- Real-time waveform/frequency visualization display
+- Playback controls (play/pause, skip, volume)
+- Track information and metadata display
+- Progress indicator with time stamps
+- Playlist or track selection interface
+- Visual feedback synchronized to audio playback
+
+DESIGN ERA: neo_brutalist
+Raw HTML aesthetic with exposed structure, aggressive borders, stark typography,
+and honest display of underlying technical architecture. No gradients, no shadows,
+just pure geometric forms and high contrast.
+
+EMOTIONAL TONE: edgy
+Aggressive, unconventional, pushes boundaries. Not safe or comfortable.
+Appeals to audiences who reject mainstream aesthetics.
+
+INDUSTRY: nonprofit
+Purpose-driven messaging, community focus, transparent about mission.
+Design choices reflect values over commercial polish.
+
+COLOR MODE: both
+Includes light and dark mode support with theme switcher.
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Light Mode */
+            --color-primary: #00ff41;
+            --color-secondary: #ff0066;
+            --color-background: #ffffff;
+            --color-surface: #f5f5f5;
+            --color-text: #000000;
+            --color-text-muted: #666666;
+            --color-border: #000000;
+            --color-accent: #00ccff;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'IBM Plex Mono', monospace;
+            --scale: 1.25;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 0px;
+            --shadow-default: none;
+            --border-width: 4px;
+            --border-style: solid var(--color-border) var(--border-width);
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #00ff41;
+            --color-secondary: #ff0066;
+            --color-background: #000000;
+            --color-surface: #1a1a1a;
+            --color-text: #ffffff;
+            --color-text-muted: #999999;
+            --color-border: #ffffff;
+            --color-accent: #00ccff;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--color-background);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--color-primary);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .theme-toggle:focus {
+            outline: var(--border-width) solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-background);
+        }
+
+        .nav-btn:focus {
+            outline: var(--border-width) solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        /* Main Layout */
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr 280px;
+            min-height: 0;
+        }
+
+        /* Playlist Sidebar */
+        .playlist-sidebar {
+            border-right: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            overflow-y: auto;
+        }
+
+        .playlist-header {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        .playlist-header h2 {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .playlist-info {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+        }
+
+        .track-list {
+            list-style: none;
+        }
+
+        .track-item {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .track-item:hover {
+            background: var(--color-background);
+        }
+
+        .track-item.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .track-number {
+            font-weight: 600;
+            width: 30px;
+            flex-shrink: 0;
+        }
+
+        .track-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .track-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        .track-item.active .track-artist {
+            color: var(--color-background);
+            opacity: 0.8;
+        }
+
+        .track-duration {
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Visualizer Area */
+        .visualizer-area {
+            display: flex;
+            flex-direction: column;
+            background: var(--color-background);
+        }
+
+        .now-playing {
+            padding: var(--space-xl);
+            border-bottom: var(--border-width) solid var(--color-border);
+            text-align: center;
+        }
+
+        .now-playing-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .now-playing-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+        }
+
+        .now-playing-artist {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+        }
+
+        .visualizer-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xl);
+            position: relative;
+            min-height: 300px;
+        }
+
+        .waveform {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: var(--space-lg);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--color-primary);
+            border: 2px solid var(--color-border);
+            transition: height 0.1s ease;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { height: 20%; }
+            50% { height: 60%; }
+        }
+
+        .bar:nth-child(2n) {
+            animation-delay: 0.1s;
+            background: var(--color-secondary);
+        }
+
+        .bar:nth-child(3n) {
+            animation-delay: 0.2s;
+            background: var(--color-accent);
+        }
+
+        .bar:nth-child(4n) {
+            animation-delay: 0.15s;
+        }
+
+        .bar:nth-child(5n) {
+            animation-delay: 0.25s;
+        }
+
+        /* Controls */
+        .controls-area {
+            padding: var(--space-lg);
+            border-top: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .progress-container {
+            margin-bottom: var(--space-md);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+            font-size: 0.875rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 35%;
+            transition: width 0.1s linear;
+        }
+
+        .playback-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .control-btn {
+            min-width: 44px;
+            height: 44px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            padding: 0 var(--space-sm);
+        }
+
+        .control-btn:hover {
+            background: var(--color-text);
+            color: var(--color-background);
+        }
+
+        .control-btn:focus {
+            outline: var(--border-width) solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .control-btn.primary {
+            background: var(--color-primary);
+            min-width: 80px;
+            font-weight: 700;
+        }
+
+        .control-btn.primary:hover {
+            background: var(--color-secondary);
+            color: var(--color-background);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .volume-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 12px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: var(--color-accent);
+            width: 70%;
+        }
+
+        /* Info Sidebar */
+        .info-sidebar {
+            border-left: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            overflow-y: auto;
+        }
+
+        .mission-panel {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        .mission-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        .mission-panel p {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: var(--color-text-muted);
+        }
+
+        .stats-grid {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .stat {
+            margin-bottom: var(--space-md);
+        }
+
+        .stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .listeners-panel {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .listeners-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        .listener-count {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .listener-location {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .support-cta {
+            padding: var(--space-md);
+        }
+
+        .cta-box {
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-md);
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .cta-box h3 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cta-box p {
+            font-size: 0.75rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            width: 100%;
+            padding: var(--space-sm);
+            border: var(--border-width) solid var(--color-background);
+            background: var(--color-background);
+            color: var(--color-text);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            min-height: 44px;
+            transition: all 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-background);
+            color: var(--color-background);
+        }
+
+        .cta-btn:focus {
+            outline: var(--border-width) solid var(--color-background);
+            outline-offset: 2px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 250px 1fr;
+            }
+
+            .info-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            .playlist-sidebar {
+                border-right: none;
+                border-bottom: var(--border-width) solid var(--color-border);
+                max-height: 200px;
+            }
+
+            .now-playing-title {
+                font-size: 1.5rem;
+            }
+
+            .waveform {
+                height: 150px;
+            }
+        }
+
+        /* Focus indicators */
+        button:focus,
+        .track-item:focus {
+            outline: var(--border-width) solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <header>
+        <div class="logo">
+            <span>FRACTURE</span> COSMO
+        </div>
+        <div class="header-controls">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀️</button>
+            <button class="nav-btn" id="prevDesign" aria-label="Previous design">←</button>
+            <button class="nav-btn" id="nextDesign" aria-label="Next design">→</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Playlist Sidebar -->
+        <aside class="playlist-sidebar">
+            <div class="playlist-header">
+                <h2>Community Voices</h2>
+                <div class="playlist-info">12 tracks • 48 min</div>
+            </div>
+            <ul class="track-list">
+                <li class="track-item active" tabindex="0" role="button">
+                    <span class="track-number">01</span>
+                    <div class="track-details">
+                        <div class="track-title">Voices from the Ground</div>
+                        <div class="track-artist">Grassroots Collective</div>
+                    </div>
+                    <span class="track-duration">4:23</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">02</span>
+                    <div class="track-details">
+                        <div class="track-title">Ecosystem Rhythms</div>
+                        <div class="track-artist">Field Recordings</div>
+                    </div>
+                    <span class="track-duration">6:15</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">03</span>
+                    <div class="track-details">
+                        <div class="track-title">Direct Action Anthem</div>
+                        <div class="track-artist">The Organizers</div>
+                    </div>
+                    <span class="track-duration">3:47</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">04</span>
+                    <div class="track-details">
+                        <div class="track-title">Mutual Aid Manifesto</div>
+                        <div class="track-artist">Community Kitchen</div>
+                    </div>
+                    <span class="track-duration">5:02</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">05</span>
+                    <div class="track-details">
+                        <div class="track-title">Urban Garden Symphony</div>
+                        <div class="track-artist">Soil Stewards</div>
+                    </div>
+                    <span class="track-duration">4:38</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">06</span>
+                    <div class="track-details">
+                        <div class="track-title">Justice Frequency</div>
+                        <div class="track-artist">Legal Defense Network</div>
+                    </div>
+                    <span class="track-duration">3:29</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">07</span>
+                    <div class="track-details">
+                        <div class="track-title">River Restoration Blues</div>
+                        <div class="track-artist">Watershed Alliance</div>
+                    </div>
+                    <span class="track-duration">5:41</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">08</span>
+                    <div class="track-details">
+                        <div class="track-title">Solidarity Session</div>
+                        <div class="track-artist">Union Hall Recordings</div>
+                    </div>
+                    <span class="track-duration">4:15</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">09</span>
+                    <div class="track-details">
+                        <div class="track-title">Commons Calling</div>
+                        <div class="track-artist">Land Trust Ensemble</div>
+                    </div>
+                    <span class="track-duration">3:55</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">10</span>
+                    <div class="track-details">
+                        <div class="track-title">Youth Movement March</div>
+                        <div class="track-artist">Student Coalition</div>
+                    </div>
+                    <span class="track-duration">4:08</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">11</span>
+                    <div class="track-details">
+                        <div class="track-title">Repair Cafe Sessions</div>
+                        <div class="track-artist">Right to Fix</div>
+                    </div>
+                    <span class="track-duration">3:32</span>
+                </li>
+                <li class="track-item" tabindex="0" role="button">
+                    <span class="track-number">12</span>
+                    <div class="track-details">
+                        <div class="track-title">Tomorrow's Broadcast</div>
+                        <div class="track-artist">Pirate Radio Collective</div>
+                    </div>
+                    <span class="track-duration">5:19</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Visualizer Area -->
+        <section class="visualizer-area">
+            <div class="now-playing">
+                <div class="now-playing-label">Now Playing</div>
+                <h1 class="now-playing-title">Voices from the Ground</h1>
+                <div class="now-playing-artist">Grassroots Collective</div>
+            </div>
+
+            <div class="visualizer-container">
+                <div class="waveform" role="img" aria-label="Audio waveform visualization">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+
+            <div class="controls-area">
+                <div class="progress-container">
+                    <div class="time-display">
+                        <span>1:32</span>
+                        <span>4:23</span>
+                    </div>
+                    <div class="progress-bar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="263" aria-valuenow="92">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="playback-controls">
+                    <button class="control-btn" aria-label="Shuffle">⇄</button>
+                    <button class="control-btn" aria-label="Previous track">⏮</button>
+                    <button class="control-btn primary" aria-label="Play">▶ PLAY</button>
+                    <button class="control-btn" aria-label="Next track">⏭</button>
+                    <button class="control-btn" aria-label="Repeat">🔁</button>
+                </div>
+
+                <div class="volume-control">
+                    <span class="volume-label">Volume</span>
+                    <div class="volume-slider" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+                        <div class="volume-fill"></div>
+                    </div>
+                    <span class="volume-label">70%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Sidebar -->
+        <aside class="info-sidebar">
+            <div class="mission-panel">
+                <h3>Our Mission</h3>
+                <p>Fracture Cosmo is a community-powered audio platform amplifying voices for environmental and social justice. 100% volunteer-run, zero corporate funding.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-label">Total Listens</div>
+                    <div class="stat-value">847K</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Contributors</div>
+                    <div class="stat-value">2,341</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Hours Content</div>
+                    <div class="stat-value">18.7K</div>
+                </div>
+            </div>
+
+            <div class="listeners-panel">
+                <h3>Live Now</h3>
+                <div class="listener-count">1,247</div>
+                <div class="listener-location">🌍 Berlin • 342</div>
+                <div class="listener-location">🌍 São Paulo • 289</div>
+                <div class="listener-location">🌍 Portland • 178</div>
+                <div class="listener-location">🌍 Melbourne • 156</div>
+            </div>
+
+            <div class="support-cta">
+                <div class="cta-box">
+                    <h3>Support Us</h3>
+                    <p>Help keep our broadcasts free and independent. Every contribution sustains the collective.</p>
+                    <button class="cta-btn">Contribute</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'light' ? '☀️' : '🌙';
+        });
+
+        // Track Selection
+        const trackItems = document.querySelectorAll('.track-item');
+        const nowPlayingTitle = document.querySelector('.now-playing-title');
+        const nowPlayingArtist = document.querySelector('.now-playing-artist');
+
+        trackItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all tracks
+                trackItems.forEach(t => t.classList.remove('active'));
+
+                // Add active class to clicked track
+                item.classList.add('active');
+
+                // Update now playing
+                const title = item.querySelector('.track-title').textContent;
+                const artist = item.querySelector('.track-artist').textContent;
+                nowPlayingTitle.textContent = title;
+                nowPlayingArtist.textContent = artist;
+            });
+
+            // Keyboard support
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+
+        // Play/Pause Toggle
+        const playBtn = document.querySelector('.control-btn.primary');
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playBtn.textContent = isPlaying ? '⏸ PAUSE' : '▶ PLAY';
+            playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+        });
+
+        // Progress Bar Interaction
+        const progressBar = document.querySelector('.progress-bar');
+        const progressFill = document.querySelector('.progress-fill');
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = ((e.clientX - rect.left) / rect.width) * 100;
+            progressFill.style.width = percent + '%';
+        });
+
+        // Volume Control
+        const volumeSlider = document.querySelector('.volume-slider');
+        const volumeFill = document.querySelector('.volume-fill');
+        const volumeLabel = document.querySelector('.volume-control .volume-label:last-child');
+
+        volumeSlider.addEventListener('click', (e) => {
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+            volumeFill.style.width = percent + '%';
+            volumeLabel.textContent = percent + '%';
+        });
+
+        // Navigation
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 37;
+
+        document.getElementById('prevDesign').addEventListener('click', () => {
+            const prevId = CURRENT_DESIGN === 1 ? TOTAL_DESIGNS : CURRENT_DESIGN - 1;
+            window.location.href = `design-${prevId}.html`;
+        });
+
+        document.getElementById('nextDesign').addEventListener('click', () => {
+            const nextId = CURRENT_DESIGN === TOTAL_DESIGNS ? 1 : CURRENT_DESIGN + 1;
+            window.location.href = `design-${nextId}.html`;
+        });
+
+        
+    </script>
+</body>
+</html>

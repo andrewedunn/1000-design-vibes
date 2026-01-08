@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Metro - Neo brutalist-inspired design for users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Clean Metro - Neo brutalist-inspired design for users
+ABOUTME: This design system implements recipe_card with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: stark borders, raw HTML structure, high-contrast monochrome palette with bold accents.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00ff00;
+--color-background: #0a0a0a;
+--color-surface: #1a1a1a;
+--color-text: #ffffff;
+--color-text-muted: #888888;
+--color-border: #333333;
+--color-accent: #00ff00;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-width: 3px;
+
+AESTHETIC PRINCIPLES:
+1. Brutal honesty - Heavy borders define every element, structure is exposed not hidden
+2. Monochrome foundation - Dark mode only with single accent color (lime green) for interaction
+3. Grid precision - Strict alignment and geometric proportions create visual tension
+4. Typography as structure - Monospace body and geometric headers reinforce the systematic approach
+
+BEST FOR:
+- E-commerce product pages that need clear information hierarchy
+- Recipe databases where scanning efficiency matters
+- Technical documentation requiring serious, no-nonsense presentation
+- Content-heavy interfaces that benefit from stark contrast
+- Brands wanting to convey precision and transparency
+
+AVOID IF:
+- You need soft, welcoming aesthetics
+- Your content requires emotional warmth
+- Users expect playful or whimsical design
+- Accessibility requires lower contrast
+- Brand guidelines prohibit stark geometric treatments
+
+FUNCTIONAL DIRECTION: recipe_card
+This design must clearly function as a recipe_card. Required elements:
+- Recipe title and featured image prominently displayed
+- Prep time, cook time, total time, and servings information
+- Complete ingredient list with quantities and measurements
+- Step-by-step cooking instructions numbered sequentially
+- Difficulty level indicator
+- Cuisine type/category classification
+- Nutritional information (calories, protein, carbs, fat)
+- Rating system and review count
+- Print/save/share functionality
+- Scaling calculator for adjusting servings
+- Chef notes or tips section
+- Related recipes suggestions
+
+DIMENSION RATIONALE:
+- ui_paradigm: brutalist - Raw structure, exposed grid, thick borders
+- design_era: neo_brutalist - Modern take on web brutalism with dark mode
+- emotional_tone: serious - Professional, focused, no frivolity
+- industry: ecommerce - Product-like presentation of recipe content
+- color_mode: dark_only - Stark black background with high contrast
+- page_structure: sidebar_main - Ingredient sidebar + main instructions
+- navigation_pattern: top_fixed - Persistent utility navigation
+- content_flow: list_detail - Ingredients list + instruction detail
+- color_theory: monochromatic - Single accent color on dark
+- typography_heading: geometric_sans - Space Grotesk for structure
+- typography_body: monospace - IBM Plex Mono for precision
+- spatial_density: balanced - Neither cramped nor excessive space
+- corner_style: sharp - Zero border radius reinforces brutalism
+- border_treatment: thick - 3px borders create visual weight
+- shadow_treatment: none - No shadows, flat structure
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #00ff00;
+    --color-background: #0a0a0a;
+    --color-surface: #1a1a1a;
+    --color-border: #333333;
+    --color-text: #ffffff;
+    --color-text-muted: #888888;
+    --color-accent: #00ff00;
+    --color-warning: #ff3366;
+    --color-info: #00ccff;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'IBM Plex Mono', 'Courier New', monospace;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-width: 3px;
+    --shadow-default: none;
+
+    /* Layout */
+    --sidebar-width: 340px;
+    --max-content-width: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    font-size: 14px;
+    overflow-x: hidden;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-lg);
+    height: 60px;
+}
+
+.nav-brand {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+.nav-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.nav-btn {
+    background: transparent;
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+}
+
+.nav-btn:hover {
+    background: var(--color-accent);
+    color: var(--color-background);
+    border-color: var(--color-accent);
+}
+
+.nav-btn:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.nav-btn.primary {
+    background: var(--color-accent);
+    color: var(--color-background);
+    border-color: var(--color-accent);
+}
+
+.nav-btn.primary:hover {
+    background: transparent;
+    color: var(--color-accent);
+}
+
+/* Main Layout */
+.recipe-container {
+    margin-top: 60px;
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar - Ingredients */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.sidebar-section {
+    padding: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.sidebar-header {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+    letter-spacing: 0.5px;
+}
+
+.servings-calculator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.servings-calculator label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+.servings-control {
+    display: flex;
+    align-items: center;
+    border: var(--border-width) solid var(--color-border);
+}
+
+.servings-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.servings-btn:hover {
+    background: var(--color-accent);
+    color: var(--color-background);
+}
+
+.servings-value {
+    padding: 0 var(--space-sm);
+    border-left: var(--border-width) solid var(--color-border);
+    border-right: var(--border-width) solid var(--color-border);
+    min-width: 40px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.ingredient-list {
+    list-style: none;
+}
+
+.ingredient-item {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: flex-start;
+}
+
+.ingredient-item:last-child {
+    border-bottom: none;
+}
+
+.ingredient-checkbox {
+    margin-top: 2px;
+    width: 20px;
+    height: 20px;
+    border: var(--border-width) solid var(--color-border);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    appearance: none;
+    transition: all 0.15s ease;
+}
+
+.ingredient-checkbox:checked {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    position: relative;
+}
+
+.ingredient-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-background);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ingredient-text {
+    flex: 1;
+    font-size: 13px;
+}
+
+.ingredient-amount {
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: var(--space-xl);
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+}
+
+.recipe-header {
+    margin-bottom: var(--space-xl);
+}
+
+.recipe-meta {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--border-width) solid var(--color-border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.meta-badge.difficulty-easy {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.meta-badge.difficulty-medium {
+    border-color: var(--color-info);
+    color: var(--color-info);
+}
+
+.meta-badge.difficulty-hard {
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+}
+
+.recipe-title {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: var(--space-md);
+    letter-spacing: -1px;
+}
+
+.recipe-description {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+    max-width: 700px;
+}
+
+.recipe-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.stat-card {
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    background: var(--color-surface);
+}
+
+.stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.rating-stars {
+    font-size: 20px;
+    color: var(--color-accent);
+    letter-spacing: 2px;
+}
+
+.rating-text {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.rating-count {
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Featured Image */
+.recipe-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-xl);
+    border: var(--border-width) solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, var(--color-surface) 25%, transparent 25%, transparent 75%, var(--color-surface) 75%, var(--color-surface)),
+                linear-gradient(45deg, var(--color-surface) 25%, transparent 25%, transparent 75%, var(--color-surface) 75%, var(--color-surface));
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* Instructions */
+.instructions-section {
+    margin-bottom: var(--space-xl);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-lg);
+    letter-spacing: -0.5px;
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.instruction-list {
+    list-style: none;
+    counter-reset: instruction-counter;
+}
+
+.instruction-step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    counter-increment: instruction-counter;
+}
+
+.step-number {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+    text-align: right;
+}
+
+.step-number::before {
+    content: counter(instruction-counter, decimal-leading-zero);
+}
+
+.step-content {
+    border-left: var(--border-width) solid var(--color-border);
+    padding-left: var(--space-lg);
+    padding-top: var(--space-xs);
+}
+
+.step-text {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: var(--space-sm);
+}
+
+.step-tip {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    padding: var(--space-sm);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    margin-top: var(--space-sm);
+}
+
+.step-tip::before {
+    content: 'TIP: ';
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+/* Chef Notes */
+.chef-notes {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border: var(--border-width) solid var(--color-accent);
+    background: var(--color-surface);
+}
+
+.chef-notes h3 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+}
+
+.chef-notes ul {
+    list-style: none;
+    padding-left: var(--space-md);
+}
+
+.chef-notes li {
+    margin-bottom: var(--space-sm);
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.chef-notes li::before {
+    content: '■';
+    position: absolute;
+    left: calc(var(--space-md) * -1);
+    color: var(--color-accent);
+}
+
+/* Nutrition */
+.nutrition-section {
+    margin-bottom: var(--space-xl);
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-md);
+}
+
+.nutrition-item {
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    text-align: center;
+    background: var(--color-surface);
+}
+
+.nutrition-value {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.nutrition-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+/* Related Recipes */
+.related-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.related-card {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.related-card:hover {
+    border-color: var(--color-accent);
+}
+
+.related-card:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.related-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--color-background);
+    border-bottom: var(--border-width) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.related-content {
+    padding: var(--space-md);
+}
+
+.related-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+}
+
+.related-meta {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus styles */
+a:focus, button:focus, input:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .recipe-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .main-content {
+        padding: var(--space-lg);
+    }
+
+    .recipe-title {
+        font-size: 36px;
+    }
+
+    .instruction-step {
+        grid-template-columns: 40px 1fr;
+        gap: var(--space-md);
+    }
+
+    .step-number {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 640px) {
+    .recipe-title {
+        font-size: 28px;
+    }
+
+    .recipe-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nav-actions {
+        gap: var(--space-xs);
+    }
+
+    .nav-btn {
+        padding: var(--space-xs);
+        font-size: 10px;
+    }
+}
+</style>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-brand">CLEAN METRO</div>
+    <div class="nav-actions">
+        <button class="nav-btn">PRINT</button>
+        <button class="nav-btn">SHARE</button>
+        <button class="nav-btn primary">SAVE</button>
+    </div>
+</nav>
+
+<!-- Recipe Container -->
+<div class="recipe-container">
+    <!-- Sidebar: Ingredients -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h2 class="sidebar-header">Ingredients</h2>
+
+            <div class="servings-calculator">
+                <label>SERVINGS:</label>
+                <div class="servings-control">
+                    <button class="servings-btn" aria-label="Decrease servings">−</button>
+                    <span class="servings-value" id="servings">4</span>
+                    <button class="servings-btn" aria-label="Increase servings">+</button>
+                </div>
+            </div>
+
+            <ul class="ingredient-list">
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing1">
+                    <label for="ing1" class="ingredient-text">
+                        <span class="ingredient-amount">500g</span> fresh pasta sheets
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing2">
+                    <label for="ing2" class="ingredient-text">
+                        <span class="ingredient-amount">400g</span> ground beef (80% lean)
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing3">
+                    <label for="ing3" class="ingredient-text">
+                        <span class="ingredient-amount">300g</span> Italian sausage, casings removed
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing4">
+                    <label for="ing4" class="ingredient-text">
+                        <span class="ingredient-amount">800g</span> crushed San Marzano tomatoes
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing5">
+                    <label for="ing5" class="ingredient-text">
+                        <span class="ingredient-amount">450g</span> whole milk ricotta cheese
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing6">
+                    <label for="ing6" class="ingredient-text">
+                        <span class="ingredient-amount">350g</span> fresh mozzarella, shredded
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing7">
+                    <label for="ing7" class="ingredient-text">
+                        <span class="ingredient-amount">100g</span> Parmigiano-Reggiano, grated
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing8">
+                    <label for="ing8" class="ingredient-text">
+                        <span class="ingredient-amount">1</span> large egg
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing9">
+                    <label for="ing9" class="ingredient-text">
+                        <span class="ingredient-amount">4 cloves</span> garlic, minced
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing10">
+                    <label for="ing10" class="ingredient-text">
+                        <span class="ingredient-amount">1</span> medium yellow onion, diced
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing11">
+                    <label for="ing11" class="ingredient-text">
+                        <span class="ingredient-amount">2 tbsp</span> tomato paste
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing12">
+                    <label for="ing12" class="ingredient-text">
+                        <span class="ingredient-amount">1 tbsp</span> dried oregano
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing13">
+                    <label for="ing13" class="ingredient-text">
+                        <span class="ingredient-amount">1 tsp</span> red pepper flakes
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing14">
+                    <label for="ing14" class="ingredient-text">
+                        <span class="ingredient-amount">3 tbsp</span> extra virgin olive oil
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing15">
+                    <label for="ing15" class="ingredient-text">
+                        <span class="ingredient-amount">¼ cup</span> fresh basil leaves, torn
+                    </label>
+                </li>
+                <li class="ingredient-item">
+                    <input type="checkbox" class="ingredient-checkbox" id="ing16">
+                    <label for="ing16" class="ingredient-text">
+                        <span class="ingredient-amount">to taste</span> kosher salt & black pepper
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content: Recipe Details -->
+    <main class="main-content">
+        <div class="recipe-header">
+            <div class="recipe-meta">
+                <span class="meta-badge difficulty-medium">DIFFICULTY: MEDIUM</span>
+                <span class="meta-badge">CUISINE: ITALIAN</span>
+                <span class="meta-badge">MAIN COURSE</span>
+            </div>
+
+            <h1 class="recipe-title">Classic Three-Meat Lasagna</h1>
+
+            <p class="recipe-description">
+                A rich, layered masterpiece featuring ground beef, Italian sausage, and three premium cheeses. This traditional lasagna delivers deep, savory flavors with a perfectly balanced meat-to-cheese ratio. The secret lies in the slow-simmered sauce and strategic layering technique that ensures every bite is perfectly proportioned.
+            </p>
+
+            <div class="recipe-stats">
+                <div class="stat-card">
+                    <div class="stat-label">PREP TIME</div>
+                    <div class="stat-value">30m</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">COOK TIME</div>
+                    <div class="stat-value">90m</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL TIME</div>
+                    <div class="stat-value">2h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SERVINGS</div>
+                    <div class="stat-value">8-10</div>
+                </div>
+            </div>
+
+            <div class="rating-display">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-text">
+                    <span class="rating-count">4.8</span> / 5.0 from <span class="rating-count">2,847</span> reviews
+                </span>
+            </div>
+        </div>
+
+        <div class="recipe-image">
+            <div class="image-placeholder">[ LASAGNA CROSS-SECTION ]</div>
+        </div>
+
+        <section class="instructions-section">
+            <h2 class="section-title">Instructions</h2>
+
+            <ol class="instruction-list">
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Heat olive oil in a large Dutch oven over medium-high heat. Add ground beef and Italian sausage, breaking up meat with a wooden spoon. Cook until deeply browned, approximately 8-10 minutes. Remove meat and set aside, leaving 2 tablespoons of fat in the pot.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Reduce heat to medium. Add diced onion and cook until softened and translucent, about 5 minutes. Add minced garlic and cook until fragrant, about 1 minute. Stir in tomato paste and cook for 2 minutes to caramelize.
+                        </p>
+                        <div class="step-tip">
+                            Don't skip the tomato paste caramelization step—it adds critical depth to the sauce.
+                        </div>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Return browned meat to the pot. Add crushed tomatoes, oregano, red pepper flakes, salt, and pepper. Bring to a simmer, then reduce heat to low. Cook uncovered for 30-40 minutes, stirring occasionally, until sauce thickens and flavors meld.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            While sauce simmers, prepare the cheese mixture. In a large bowl, combine ricotta, egg, half the Parmigiano-Reggiano, half the torn basil, ½ teaspoon salt, and ¼ teaspoon black pepper. Mix until smooth and well incorporated.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Preheat oven to 375°F (190°C). Spread 1 cup of meat sauce across the bottom of a 9x13 inch baking dish. Layer 3-4 pasta sheets, overlapping slightly. Spread one-third of the ricotta mixture, then one-quarter of the mozzarella. Top with 1½ cups meat sauce.
+                        </p>
+                        <div class="step-tip">
+                            Ensure pasta sheets overlap by about ½ inch to prevent gaps during baking.
+                        </div>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Repeat layering process two more times: pasta, ricotta mixture, mozzarella, meat sauce. For the final layer, add pasta sheets, remaining meat sauce, remaining mozzarella, and finish with remaining Parmigiano-Reggiano.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Cover tightly with aluminum foil (spray foil with cooking spray to prevent cheese sticking). Bake for 45 minutes. Remove foil and bake an additional 15 minutes until top is golden brown and edges are bubbling vigorously.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="instruction-step">
+                    <div class="step-number"></div>
+                    <div class="step-content">
+                        <p class="step-text">
+                            Remove from oven and let rest for 15-20 minutes before slicing. This crucial step allows the layers to set, ensuring clean cuts. Garnish with remaining torn basil leaves and serve immediately.
+                        </p>
+                        <div class="step-tip">
+                            Patience is key—cutting too early results in a sloppy presentation. The wait is worth it.
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <div class="chef-notes">
+            <h3>Chef Notes</h3>
+            <ul>
+                <li>For best results, use high-quality San Marzano tomatoes—their natural sweetness balances the richness of the meat</li>
+                <li>Fresh pasta sheets produce superior texture compared to dried noodles and don't require pre-cooking</li>
+                <li>This lasagna freezes beautifully for up to 3 months; assemble completely, wrap tightly, and bake from frozen (add 30 minutes)</li>
+                <li>Day-old lasagna often tastes even better as flavors continue to develop; reheat covered at 350°F</li>
+                <li>For a lighter version, substitute half the ground beef with ground turkey—maintain the sausage for flavor</li>
+            </ul>
+        </div>
+
+        <section class="nutrition-section">
+            <h2 class="section-title">Nutrition Per Serving</h2>
+
+            <div class="nutrition-grid">
+                <div class="nutrition-item">
+                    <span class="nutrition-value">485</span>
+                    <span class="nutrition-label">CALORIES</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="nutrition-value">32g</span>
+                    <span class="nutrition-label">PROTEIN</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="nutrition-value">28g</span>
+                    <span class="nutrition-label">FAT</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="nutrition-value">38g</span>
+                    <span class="nutrition-label">CARBS</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="nutrition-value">4g</span>
+                    <span class="nutrition-label">FIBER</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="nutrition-value">890mg</span>
+                    <span class="nutrition-label">SODIUM</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="related-section">
+            <h2 class="section-title">You Might Also Like</h2>
+
+            <div class="related-grid">
+                <div class="related-card" tabindex="0">
+                    <div class="related-image">[ IMAGE ]</div>
+                    <div class="related-content">
+                        <h3 class="related-title">Baked Ziti with Four Cheeses</h3>
+                        <p class="related-meta">45 MIN • ITALIAN • MEDIUM</p>
+                    </div>
+                </div>
+
+                <div class="related-card" tabindex="0">
+                    <div class="related-image">[ IMAGE ]</div>
+                    <div class="related-content">
+                        <h3 class="related-title">Eggplant Parmigiana Stack</h3>
+                        <p class="related-meta">60 MIN • ITALIAN • MEDIUM</p>
+                    </div>
+                </div>
+
+                <div class="related-card" tabindex="0">
+                    <div class="related-image">[ IMAGE ]</div>
+                    <div class="related-content">
+                        <h3 class="related-title">Classic Spaghetti Bolognese</h3>
+                        <p class="related-meta">90 MIN • ITALIAN • EASY</p>
+                    </div>
+                </div>
+
+                <div class="related-card" tabindex="0">
+                    <div class="related-image">[ IMAGE ]</div>
+                    <div class="related-content">
+                        <h3 class="related-title">Ricotta Stuffed Shells</h3>
+                        <p class="related-meta">50 MIN • ITALIAN • EASY</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+// Arrow key navigation
+/* Navigation removed */
+
+// Servings calculator
+const servingsValue = document.getElementById('servings');
+const servingsBtns = document.querySelectorAll('.servings-btn');
+let currentServings = 4;
+const baseServings = 4;
+
+servingsBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const isIncrease = btn.textContent === '+';
+
+        if (isIncrease && currentServings < 20) {
+            currentServings++;
+        } else if (!isIncrease && currentServings > 1) {
+            currentServings--;
+        }
+
+        servingsValue.textContent = currentServings;
+        updateIngredientQuantities();
+    });
+});
+
+function updateIngredientQuantities() {
+    const multiplier = currentServings / baseServings;
+    const ingredientAmounts = document.querySelectorAll('.ingredient-amount');
+
+    // Base quantities (in grams or units)
+    const baseQuantities = [500, 400, 300, 800, 450, 350, 100, 1, 4, 1, 2, 1, 1, 3, 0.25];
+    const units = ['g', 'g', 'g', 'g', 'g', 'g', 'g', '', ' cloves', '', ' tbsp', ' tbsp', ' tsp', ' tbsp', ' cup'];
+
+    ingredientAmounts.forEach((element, index) => {
+        if (index < baseQuantities.length) {
+            const newValue = (baseQuantities[index] * multiplier).toFixed(baseQuantities[index] < 10 ? 1 : 0);
+            element.textContent = newValue + units[index];
+        }
+    });
+}
+
+// Print functionality
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const action = btn.textContent.toLowerCase();
+
+        if (action === 'print') {
+            window.print();
+        } else if (action === 'share') {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Classic Three-Meat Lasagna',
+                    text: 'Check out this amazing recipe!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share functionality requires browser support');
+            }
+        } else if (action === 'save') {
+            alert('Recipe saved to your collection');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

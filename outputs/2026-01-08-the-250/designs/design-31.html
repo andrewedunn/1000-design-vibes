@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo Slate - Retro Game HUD Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Echo Slate - Grunge design with natural neutral tones
+        ABOUTME: This design system implements retro_game_hud with grunge aesthetics.
+        ABOUTME: Key characteristics: Weathered textures, pixel-perfect retro typography, earth-toned neutrals
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #8b7355;
+        --color-background: #2a2520;
+        --color-surface: #3d3530;
+        --color-text: #d8cfc4;
+        --color-accent: #a68968;
+        --color-health: #7a8b6f;
+        --color-mana: #6b7a8b;
+        --color-warning: #8b6f55;
+        --font-heading: 'Press Start 2P', monospace;
+        --font-body: 'VT323', monospace;
+        --radius-default: 0px;
+        --space-unit: 8px;
+        --border-width: 3px;
+
+        AESTHETIC PRINCIPLES:
+        1. Weathered textures and noise overlay create authentic grunge feel
+        2. Pixel-perfect borders and retro bitmap fonts honor 90s gaming aesthetics
+        3. Natural earth tones (browns, tans, muted greens) replace typical bright game UI colors
+        4. Sharp corners and thick borders emphasize the brutalist retro approach
+        5. Asymmetric layout with overlapping panels mimics classic JRPG interfaces
+
+        BEST FOR:
+        - Retro-inspired game interfaces
+        - Nostalgic gaming experiences
+        - Indie games with grunge aesthetic
+        - Portfolio pieces for game UI designers
+        - Gaming communities and forums
+
+        AVOID IF:
+        - You need modern, clean aesthetics
+        - Accessibility is paramount (pixel fonts can be hard to read at small sizes)
+        - You're targeting non-gaming audiences
+        - Brand requires polished, corporate look
+
+        FUNCTIONAL DIRECTION: retro_game_hud
+        This design must clearly function as a retro_game_hud. Required elements:
+        - HP/MP bars with numeric displays
+        - Character portrait/avatar display
+        - Item inventory grid (6-8 slots minimum)
+        - Mini-map or location indicator
+        - Experience/level indicator
+        - Currency/gold counter
+        - Active quest/objective display
+        - Equipment slots (weapon, armor)
+        - Status effect indicators (buffs/debuffs)
+        - Action buttons (attack, magic, item, defend)
+        - Pixel-art styling elements
+        - Retro game typography
+
+        DESIGN ERA: grunge
+        Characterized by:
+        - Textured, worn, and weathered surfaces
+        - Imperfect edges and distressed elements
+        - Layered transparency and overlays
+        - Natural, muted color palettes
+        - Handcrafted, authentic feel
+        - Anti-polished aesthetic
+
+        EMOTIONAL TONE: calm
+        Achieved through:
+        - Muted, desaturated earth tones
+        - Slow, gentle transitions
+        - Generous spacing preventing visual overwhelm
+        - Soft texture overlays rather than harsh contrasts
+        - Balanced information density
+
+        INDUSTRY: fashion
+        Fashion influence manifests in:
+        - Sophisticated neutral color story
+        - Emphasis on texture and material quality
+        - Asymmetric, editorial-style layout
+        - Curated, minimal component selection
+        - High attention to typographic detail
+
+        COLOR MODE: dark_only
+        Single dark theme with:
+        - Deep brown-black backgrounds (#2a2520)
+        - Warm neutral midtones (#3d3530, #8b7355)
+        - Light text for contrast (#d8cfc4)
+        - No light mode alternative
+        -->
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Core Colors - Natural earth tones */
+            --color-primary: #8b7355;
+            --color-background: #2a2520;
+            --color-surface: #3d3530;
+            --color-surface-elevated: #4a4138;
+            --color-text: #d8cfc4;
+            --color-text-muted: #9a9088;
+            --color-accent: #a68968;
+
+            /* Functional Colors */
+            --color-health: #7a8b6f;
+            --color-mana: #6b7a8b;
+            --color-stamina: #8b7a6f;
+            --color-warning: #8b6f55;
+            --color-danger: #8b5555;
+            --color-success: #6f8b6f;
+
+            /* Typography */
+            --font-heading: 'Press Start 2P', monospace;
+            --font-body: 'VT323', monospace;
+            --font-size-xs: 16px;
+            --font-size-sm: 20px;
+            --font-size-base: 24px;
+            --font-size-lg: 28px;
+            --font-size-xl: 32px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 2);
+            --space-lg: calc(var(--space-unit) * 3);
+            --space-xl: calc(var(--space-unit) * 4);
+
+            /* Layout */
+            --border-width: 3px;
+            --radius-default: 0px;
+            --shadow-default: none;
+
+            /* Textures */
+            --noise-opacity: 0.15;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.4;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Grunge texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+            opacity: var(--noise-opacity);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Additional grunge texture layer */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(107, 122, 139, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Game viewport (central play area) */
+        .game-viewport {
+            position: absolute;
+            top: 60px;
+            left: 280px;
+            right: 280px;
+            bottom: 100px;
+            background: linear-gradient(135deg, #3d3530 0%, #2a2520 100%);
+            border: var(--border-width) solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .game-viewport::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(139, 115, 85, 0.02) 20px, rgba(139, 115, 85, 0.02) 40px);
+            pointer-events: none;
+        }
+
+        .viewport-content {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-align: center;
+            padding: var(--space-lg);
+            letter-spacing: 2px;
+            line-height: 2;
+        }
+
+        /* Top HUD Bar */
+        .hud-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-md);
+            z-index: 100;
+        }
+
+        .game-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            color: var(--color-accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .time-display {
+            display: flex;
+            gap: var(--space-lg);
+            font-size: var(--font-size-sm);
+        }
+
+        .time-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .time-label {
+            color: var(--color-text-muted);
+            font-size: var(--font-size-xs);
+        }
+
+        .time-value {
+            color: var(--color-text);
+            font-weight: bold;
+        }
+
+        /* Left HUD Panel - Character Stats */
+        .hud-left {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 280px;
+            bottom: 100px;
+            background: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 90;
+        }
+
+        .hud-section {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-primary);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Character Portrait */
+        .character-portrait {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-primary);
+            margin-bottom: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-portrait::before {
+            content: '';
+            position: absolute;
+            inset: var(--space-sm);
+            border: 2px solid var(--color-text-muted);
+            opacity: 0.3;
+        }
+
+        .portrait-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 48px;
+            color: var(--color-text-muted);
+            letter-spacing: 4px;
+        }
+
+        /* Character Info */
+        .character-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+        }
+
+        .info-label {
+            color: var(--color-text-muted);
+        }
+
+        .info-value {
+            color: var(--color-text);
+            font-weight: bold;
+        }
+
+        /* Stat Bars */
+        .stat-bars {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .stat-bar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+        }
+
+        .stat-name {
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat-numbers {
+            color: var(--color-text);
+            font-weight: bold;
+        }
+
+        .stat-bar-container {
+            width: 100%;
+            height: 20px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .stat-bar-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 4px,
+                rgba(0, 0, 0, 0.1) 4px,
+                rgba(0, 0, 0, 0.1) 8px
+            );
+        }
+
+        .stat-bar-fill.health {
+            background: var(--color-health);
+        }
+
+        .stat-bar-fill.mana {
+            background: var(--color-mana);
+        }
+
+        .stat-bar-fill.stamina {
+            background: var(--color-stamina);
+        }
+
+        /* Status Effects */
+        .status-effects {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .status-icon {
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: 2px solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 10px;
+            color: var(--color-text-muted);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .status-icon:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+        }
+
+        .status-icon:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .status-icon.active {
+            background: var(--color-success);
+            color: var(--color-text);
+            border-color: var(--color-success);
+        }
+
+        /* Right HUD Panel - Inventory & Equipment */
+        .hud-right {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 280px;
+            bottom: 100px;
+            background: var(--color-surface);
+            border-left: var(--border-width) solid var(--color-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 90;
+        }
+
+        /* Equipment Slots */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .equipment-slot {
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .equipment-slot:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+        }
+
+        .equipment-slot:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .equipment-slot.equipped {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+        }
+
+        .equipment-icon {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            color: var(--color-text);
+        }
+
+        .equipment-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Inventory Grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: 2px solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 16px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .inventory-slot:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+        }
+
+        .inventory-slot:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .inventory-slot.filled {
+            color: var(--color-text);
+            background: var(--color-surface-elevated);
+        }
+
+        .item-count {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            color: var(--color-accent);
+        }
+
+        /* Currency Display */
+        .currency-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-primary);
+            margin-top: var(--space-md);
+        }
+
+        .currency-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .currency-amount {
+            font-size: var(--font-size-lg);
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* Bottom HUD Bar - Actions & Mini-map */
+        .hud-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-primary);
+            display: flex;
+            z-index: 100;
+        }
+
+        /* Mini-map */
+        .minimap-container {
+            width: 200px;
+            height: 100%;
+            border-right: var(--border-width) solid var(--color-primary);
+            padding: var(--space-sm);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .minimap {
+            flex: 1;
+            background: var(--color-background);
+            border: 2px solid var(--color-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .minimap::before {
+            content: '';
+            position: absolute;
+            inset: var(--space-sm);
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    var(--color-primary),
+                    var(--color-primary) 1px,
+                    transparent 1px,
+                    transparent 10px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    var(--color-primary),
+                    var(--color-primary) 1px,
+                    transparent 1px,
+                    transparent 10px
+                );
+            opacity: 0.2;
+        }
+
+        .player-marker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border: 2px solid var(--color-text);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .location-name {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            padding: var(--space-md);
+        }
+
+        .action-button {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-primary);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            min-height: 44px;
+            padding: var(--space-sm);
+        }
+
+        .action-button:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+        }
+
+        .action-button:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--color-background);
+            border-color: var(--color-text-muted);
+        }
+
+        .action-icon {
+            font-family: var(--font-heading);
+            font-size: 10px;
+        }
+
+        .action-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Quest Panel */
+        .quest-panel {
+            width: 300px;
+            border-left: var(--border-width) solid var(--color-primary);
+            padding: var(--space-md);
+            overflow-y: auto;
+        }
+
+        .quest-title {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .quest-objective {
+            font-size: var(--font-size-xs);
+            color: var(--color-text);
+            line-height: 1.6;
+            margin-bottom: var(--space-xs);
+        }
+
+        .quest-progress {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            padding-top: var(--space-xs);
+            border-top: 1px solid var(--color-primary);
+        }
+
+        /* Navigation Controls */
+        .navigation {
+            position: fixed;
+            bottom: var(--space-md);
+            right: var(--space-md);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 1000;
+        }
+
+        .nav-button {
+            width: 44px;
+            height: 44px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-primary);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent);
+            transform: scale(1.05);
+        }
+
+        .nav-button:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .hud-left,
+            .hud-right {
+                width: 220px;
+            }
+
+            .game-viewport {
+                left: 220px;
+                right: 220px;
+            }
+
+            .quest-panel {
+                width: 250px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hud-left,
+            .hud-right {
+                width: 180px;
+            }
+
+            .game-viewport {
+                left: 180px;
+                right: 180px;
+                top: 50px;
+                bottom: 80px;
+            }
+
+            .hud-top {
+                height: 50px;
+            }
+
+            .hud-bottom {
+                height: 80px;
+            }
+
+            .minimap-container {
+                width: 150px;
+            }
+
+            .quest-panel {
+                width: 200px;
+            }
+
+            .action-buttons {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Scrollbar styling */
+        .hud-left::-webkit-scrollbar,
+        .hud-right::-webkit-scrollbar,
+        .quest-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .hud-left::-webkit-scrollbar-track,
+        .hud-right::-webkit-scrollbar-track,
+        .quest-panel::-webkit-scrollbar-track {
+            background: var(--color-background);
+        }
+
+        .hud-left::-webkit-scrollbar-thumb,
+        .hud-right::-webkit-scrollbar-thumb,
+        .quest-panel::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border: 1px solid var(--color-background);
+        }
+
+        .hud-left::-webkit-scrollbar-thumb:hover,
+        .hud-right::-webkit-scrollbar-thumb:hover,
+        .quest-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Top HUD Bar -->
+        <div class="hud-top">
+            <div class="game-title">Echo Slate</div>
+            <div class="time-display">
+                <div class="time-item">
+                    <span class="time-label">Day:</span>
+                    <span class="time-value">127</span>
+                </div>
+                <div class="time-item">
+                    <span class="time-label">Time:</span>
+                    <span class="time-value">14:32</span>
+                </div>
+                <div class="time-item">
+                    <span class="time-label">Season:</span>
+                    <span class="time-value">Autumn</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left HUD Panel - Character Stats -->
+        <div class="hud-left">
+            <div class="hud-section">
+                <div class="section-title">Character</div>
+
+                <div class="character-portrait">
+                    <div class="portrait-placeholder">ASH</div>
+                </div>
+
+                <div class="character-info">
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">Ash Walker</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Class:</span>
+                        <span class="info-value">Ranger</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Level:</span>
+                        <span class="info-value">24</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">EXP:</span>
+                        <span class="info-value">14,827/18,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-section">
+                <div class="section-title">Vital Stats</div>
+
+                <div class="stat-bars">
+                    <div class="stat-bar">
+                        <div class="stat-header">
+                            <span class="stat-name">Health</span>
+                            <span class="stat-numbers">340/450</span>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-bar-fill health" style="width: 76%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-bar">
+                        <div class="stat-header">
+                            <span class="stat-name">Mana</span>
+                            <span class="stat-numbers">180/280</span>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-bar-fill mana" style="width: 64%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-bar">
+                        <div class="stat-header">
+                            <span class="stat-name">Stamina</span>
+                            <span class="stat-numbers">85/100</span>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-bar-fill stamina" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-section">
+                <div class="section-title">Status Effects</div>
+
+                <div class="status-effects">
+                    <div class="status-icon active" tabindex="0" role="button" aria-label="Strength buff active">STR+</div>
+                    <div class="status-icon" tabindex="0" role="button" aria-label="Defense buff inactive">DEF</div>
+                    <div class="status-icon" tabindex="0" role="button" aria-label="Speed buff inactive">SPD</div>
+                    <div class="status-icon active" tabindex="0" role="button" aria-label="Regeneration active">REG</div>
+                    <div class="status-icon" tabindex="0" role="button" aria-label="Fire resistance inactive">FIR</div>
+                    <div class="status-icon" tabindex="0" role="button" aria-label="Poison resistance inactive">POI</div>
+                </div>
+            </div>
+
+            <div class="hud-section">
+                <div class="section-title">Attributes</div>
+
+                <div class="character-info">
+                    <div class="info-row">
+                        <span class="info-label">Strength:</span>
+                        <span class="info-value">32</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Agility:</span>
+                        <span class="info-value">28</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Vitality:</span>
+                        <span class="info-value">26</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Intelligence:</span>
+                        <span class="info-value">18</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Wisdom:</span>
+                        <span class="info-value">22</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Luck:</span>
+                        <span class="info-value">15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Viewport -->
+        <div class="game-viewport">
+            <div class="viewport-content">
+                GAME WORLD<br>
+                RENDERED<br>
+                HERE<br><br>
+                [Retro HUD Overlay]
+            </div>
+        </div>
+
+        <!-- Right HUD Panel - Equipment & Inventory -->
+        <div class="hud-right">
+            <div class="hud-section">
+                <div class="section-title">Equipment</div>
+
+                <div class="equipment-grid">
+                    <div class="equipment-slot equipped" tabindex="0" role="button" aria-label="Weapon slot equipped">
+                        <div class="equipment-icon">⚔</div>
+                        <div class="equipment-label">Weapon</div>
+                    </div>
+                    <div class="equipment-slot equipped" tabindex="0" role="button" aria-label="Armor slot equipped">
+                        <div class="equipment-icon">🛡</div>
+                        <div class="equipment-label">Armor</div>
+                    </div>
+                    <div class="equipment-slot equipped" tabindex="0" role="button" aria-label="Helmet slot equipped">
+                        <div class="equipment-icon">⛑</div>
+                        <div class="equipment-label">Helmet</div>
+                    </div>
+                    <div class="equipment-slot" tabindex="0" role="button" aria-label="Accessory slot empty">
+                        <div class="equipment-icon">○</div>
+                        <div class="equipment-label">Access</div>
+                    </div>
+                </div>
+
+                <div class="currency-display">
+                    <span class="currency-label">Gold:</span>
+                    <span class="currency-amount">8,432</span>
+                </div>
+            </div>
+
+            <div class="hud-section">
+                <div class="section-title">Inventory</div>
+
+                <div class="inventory-grid">
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Health potion, quantity 5">
+                        ❤<span class="item-count">5</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Mana potion, quantity 3">
+                        ◆<span class="item-count">3</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Antidote, quantity 2">
+                        ✚<span class="item-count">2</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Phoenix down, quantity 1">
+                        ★<span class="item-count">1</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Elixir, quantity 1">
+                        ✦<span class="item-count">1</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Herb, quantity 8">
+                        ❋<span class="item-count">8</span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Key item">
+                        🗝<span class="item-count"></span>
+                    </div>
+                    <div class="inventory-slot filled" tabindex="0" role="button" aria-label="Scroll">
+                        📜<span class="item-count"></span>
+                    </div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                    <div class="inventory-slot" tabindex="0" role="button" aria-label="Empty inventory slot">○</div>
+                </div>
+            </div>
+
+            <div class="hud-section">
+                <div class="section-title">Quick Stats</div>
+
+                <div class="character-info">
+                    <div class="info-row">
+                        <span class="info-label">Attack:</span>
+                        <span class="info-value">142</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Defense:</span>
+                        <span class="info-value">98</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Magic Atk:</span>
+                        <span class="info-value">76</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Magic Def:</span>
+                        <span class="info-value">84</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Speed:</span>
+                        <span class="info-value">112</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Evasion:</span>
+                        <span class="info-value">18%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom HUD Bar -->
+        <div class="hud-bottom">
+            <!-- Mini-map -->
+            <div class="minimap-container">
+                <div class="minimap">
+                    <div class="player-marker"></div>
+                </div>
+                <div class="location-name">Ashen Woods</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="action-button" aria-label="Attack">
+                    <div class="action-icon">⚔</div>
+                    <div class="action-label">Attack</div>
+                </button>
+                <button class="action-button" aria-label="Magic">
+                    <div class="action-icon">✦</div>
+                    <div class="action-label">Magic</div>
+                </button>
+                <button class="action-button" aria-label="Items">
+                    <div class="action-icon">💼</div>
+                    <div class="action-label">Items</div>
+                </button>
+                <button class="action-button" aria-label="Defend">
+                    <div class="action-icon">🛡</div>
+                    <div class="action-label">Defend</div>
+                </button>
+            </div>
+
+            <!-- Quest Panel -->
+            <div class="quest-panel">
+                <div class="quest-title">Active Quest</div>
+                <div class="quest-objective">
+                    Find the ancient relic hidden deep within the Ashen Woods. Follow the trail of stone markers.
+                </div>
+                <div class="quest-progress">
+                    <span>Progress:</span>
+                    <span>2/5 Markers</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" aria-label="Previous design">◄</button>
+        <button class="nav-button" id="nextBtn" aria-label="Next design">►</button>
+    </div>
+
+    
+</body>
+</html>

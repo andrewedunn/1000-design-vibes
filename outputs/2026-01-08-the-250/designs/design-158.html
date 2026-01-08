@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Whisper - Video Call Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+DESIGN: Modern Whisper - Natural meets neutral: a scandinavian modern perspective
+ABOUTME: This design system implements video_call with scandinavian_modern aesthetics for finance industry.
+ABOUTME: Key characteristics: Light, airy spaces with natural warmth; minimal ornamentation; functional clarity
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #F4F0EB;
+--color-background: #FDFCFB;
+--color-surface: #FFFFFF;
+--color-text: #3E3E3E;
+--color-text-muted: #8B8B8B;
+--color-accent: #D9C6B0;
+--color-accent-dark: #A89582;
+--color-border: #E8E4DF;
+--color-success: #7A9B76;
+--color-warning: #C9A66B;
+--font-heading: 'DM Sans', -apple-system, sans-serif;
+--font-body: 'Inter', -apple-system, sans-serif;
+--radius-default: 8px;
+--space-unit: 8px;
+--shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+AESTHETIC PRINCIPLES:
+1. Generous negative space creates breathing room and reduces visual stress
+2. Warm neutral palette with natural wood-like accents reflects calm professionalism
+3. Subtle elevation and soft shadows maintain depth without harshness
+4. Typography hierarchy uses weight variation over size contrast
+5. Functional elements are immediately recognizable through consistent iconography
+
+BEST FOR:
+- Professional financial advisory video consultations
+- Client meetings requiring calm, trustworthy atmosphere
+- Long-duration calls where visual comfort is paramount
+- Enterprise environments valuing understated elegance
+- Scenarios where branding should feel human, not corporate
+
+AVOID IF:
+- Need for vibrant, energetic brand expression
+- High-density information display is priority
+- Dark mode is essential (this is light-only)
+- Gaming or entertainment contexts
+- Rapid-action interfaces requiring high contrast
+
+FUNCTIONAL DIRECTION: video_call
+This design must clearly function as a video_call interface. Required elements:
+- Video grid displaying participant video streams
+- Participant list showing all attendees with status indicators
+- Controls bar with microphone, camera, screen share, and leave buttons
+- Chat sidebar for text communication during call
+- Screen share view capability for presentations
+
+DESIGN SYSTEM TOKENS:
+
+Colors:
+- Primary: #F4F0EB (warm off-white)
+- Background: #FDFCFB (barely-there warmth)
+- Surface: #FFFFFF (pure white for elevation)
+- Text: #3E3E3E (soft black)
+- Text Muted: #8B8B8B (medium gray)
+- Accent: #D9C6B0 (sand/wood tone)
+- Accent Dark: #A89582 (deeper wood)
+- Border: #E8E4DF (barely-there lines)
+- Success: #7A9B76 (muted sage)
+- Warning: #C9A66B (warm amber)
+
+Typography:
+- Headings: DM Sans (geometric warmth)
+- Body: Inter (neutral clarity)
+- Scale: 1.125 (major second)
+
+Spacing:
+- Base unit: 8px
+- Scale: 8, 12, 16, 24, 32, 48, 64
+
+Shapes:
+- Corners: 8px (subtle rounding)
+- Shadows: Soft, barely-there (0 2px 8px rgba(0,0,0,0.04))
+- Borders: Hairline to thin (1-2px)
+
+Component States:
+- Hover: Slight background tint, no dramatic changes
+- Focus: Subtle outline in accent color
+- Active: Slight scale reduction (0.98)
+- Disabled: Reduced opacity (0.5)
+
+ACCESSIBILITY:
+- All text meets WCAG AA contrast requirements (4.5:1 minimum)
+- Focus indicators visible on all interactive elements
+- Touch targets minimum 44px
+- Reduced motion support included
+- Semantic HTML throughout
+
+SCANDINAVIAN MODERN INTERPRETATION:
+This design embodies Scandinavian principles through:
+- Light, natural color palette inspired by birch and linen
+- Functional minimalism without coldness
+- Emphasis on usability and clarity
+- Warmth through subtle beige/sand tones
+- Generous whitespace as a design element
+- Quality over decoration
+
+FINANCE INDUSTRY CONTEXT:
+Tailored for financial services through:
+- Professional, trustworthy aesthetic
+- Calm environment for important discussions
+- Clear hierarchy for financial data sharing
+- Subdued palette suitable for long meetings
+- Screen share optimization for charts and documents
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #F4F0EB;
+    --color-background: #FDFCFB;
+    --color-surface: #FFFFFF;
+    --color-text: #3E3E3E;
+    --color-text-muted: #8B8B8B;
+    --color-accent: #D9C6B0;
+    --color-accent-dark: #A89582;
+    --color-border: #E8E4DF;
+    --color-success: #7A9B76;
+    --color-warning: #C9A66B;
+    --color-danger: #C87A6F;
+
+    /* Typography */
+    --font-heading: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Shapes */
+    --radius-default: 8px;
+    --radius-sm: 4px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --shadow-large: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+    /* Borders */
+    --border-width: 1px;
+    --border-color: var(--color-border);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout Structure */
+.call-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: 1fr auto;
+    height: 100vh;
+    gap: 0;
+}
+
+.main-stage {
+    grid-column: 1;
+    grid-row: 1;
+    position: relative;
+    background: var(--color-primary);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.sidebar {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    background: var(--color-surface);
+    border-left: var(--border-width) solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.controls-bar {
+    grid-column: 1;
+    grid-row: 2;
+    background: var(--color-surface);
+    border-top: var(--border-width) solid var(--border-color);
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+}
+
+/* Video Grid */
+.video-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    align-content: start;
+}
+
+.video-tile {
+    position: relative;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-default);
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-tile.active {
+    grid-column: span 2;
+    aspect-ratio: 16 / 9;
+}
+
+.video-tile.screen-share {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: 16 / 9;
+}
+
+.video-placeholder {
+    width: 80px;
+    height: 80px;
+    background: var(--color-primary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--color-accent-dark);
+}
+
+.video-tile-info {
+    position: absolute;
+    bottom: var(--space-sm);
+    left: var(--space-sm);
+    right: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+}
+
+.participant-name {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    box-shadow: var(--shadow-default);
+}
+
+.mic-status {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-default);
+}
+
+.mic-status.muted {
+    background: rgba(200, 122, 111, 0.95);
+    color: var(--color-surface);
+}
+
+/* Screen Share Content */
+.screen-share-content {
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl);
+}
+
+.share-preview {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-surface) 100%);
+    border-radius: var(--radius-default);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: var(--space-2xl);
+}
+
+.share-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-medium);
+}
+
+.share-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.share-subtitle {
+    font-size: 15px;
+    color: var(--color-text-muted);
+}
+
+/* Controls Bar */
+.controls-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.control-btn {
+    width: 56px;
+    height: 56px;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 20px;
+    color: var(--color-text);
+    position: relative;
+}
+
+.control-btn:hover {
+    background: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-default);
+}
+
+.control-btn:active {
+    transform: scale(0.98);
+}
+
+.control-btn:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.control-btn.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent-dark);
+}
+
+.control-btn.danger {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+    color: var(--color-surface);
+}
+
+.control-btn.danger:hover {
+    background: #B66A5F;
+    transform: translateY(-2px);
+}
+
+.control-btn.muted {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+    color: var(--color-surface);
+}
+
+.meeting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.meeting-title {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.meeting-time {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Sidebar Tabs */
+.sidebar-tabs {
+    display: flex;
+    border-bottom: var(--border-width) solid var(--border-color);
+    background: var(--color-surface);
+}
+
+.sidebar-tab {
+    flex: 1;
+    padding: var(--space-md) var(--space-sm);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-tab:hover {
+    color: var(--color-text);
+    background: var(--color-primary);
+}
+
+.sidebar-tab.active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent-dark);
+}
+
+.sidebar-tab:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+}
+
+/* Participants List */
+.participants-panel,
+.chat-panel {
+    flex: 1;
+    overflow-y: auto;
+    display: none;
+}
+
+.participants-panel.active,
+.chat-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    padding: var(--space-lg) var(--space-lg) var(--space-md);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.panel-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+.participants-list {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.participant-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-default);
+    transition: background 0.2s ease;
+}
+
+.participant-item:hover {
+    background: var(--color-primary);
+}
+
+.participant-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-accent-dark);
+    flex-shrink: 0;
+}
+
+.participant-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.participant-info-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.participant-info-status {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.participant-icons {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.participant-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.participant-icon.muted {
+    color: var(--color-warning);
+}
+
+/* Chat Panel */
+.chat-messages {
+    flex: 1;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    overflow-y: auto;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.chat-message-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+}
+
+.chat-message-sender {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.chat-message-time {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.chat-message-body {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text);
+    background: var(--color-primary);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-default);
+}
+
+.chat-input-container {
+    padding: var(--space-md);
+    border-top: var(--border-width) solid var(--border-color);
+    background: var(--color-surface);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-end;
+}
+
+.chat-input {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    resize: none;
+    min-height: 44px;
+    max-height: 120px;
+    transition: all 0.2s ease;
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--color-accent-dark);
+    box-shadow: 0 0 0 3px rgba(217, 198, 176, 0.1);
+}
+
+.chat-send-btn {
+    width: 44px;
+    height: 44px;
+    background: var(--color-accent-dark);
+    border: none;
+    border-radius: var(--radius-default);
+    color: var(--color-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.chat-send-btn:hover {
+    background: #968371;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-default);
+}
+
+.chat-send-btn:active {
+    transform: scale(0.98);
+}
+
+.chat-send-btn:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 2px solid var(--color-accent-dark);
+    outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .call-container {
+        grid-template-columns: 1fr 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .call-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto auto;
+    }
+
+    .sidebar {
+        grid-column: 1;
+        grid-row: 3;
+        border-left: none;
+        border-top: var(--border-width) solid var(--border-color);
+        max-height: 40vh;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-tile.active,
+    .video-tile.screen-share {
+        grid-column: span 1;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-dark);
+}
+</style>
+
+<div class="call-container">
+    <!-- Main Video Stage -->
+    <div class="main-stage">
+        <div class="video-grid">
+            <!-- Screen Share -->
+            <div class="video-tile screen-share">
+                <div class="screen-share-content">
+                    <div class="share-preview">
+                        <div class="share-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="share-title">Q4 Financial Overview</div>
+                        <div class="share-subtitle">Shared by Marcus Chen</div>
+                    </div>
+                </div>
+                <div class="video-tile-info">
+                    <span class="participant-name">Marcus Chen (Presenting)</span>
+                </div>
+            </div>
+
+            <!-- Participant Videos -->
+            <div class="video-tile">
+                <div class="video-placeholder">SC</div>
+                <div class="video-tile-info">
+                    <span class="participant-name">Sarah Clarke</span>
+                    <div class="mic-status">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder">JL</div>
+                <div class="video-tile-info">
+                    <span class="participant-name">James Liu</span>
+                    <div class="mic-status muted">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder">EA</div>
+                <div class="video-tile-info">
+                    <span class="participant-name">Emma Anderson</span>
+                    <div class="mic-status">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder">DK</div>
+                <div class="video-tile-info">
+                    <span class="participant-name">David Kim</span>
+                    <div class="mic-status">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder">ML</div>
+                <div class="video-tile-info">
+                    <span class="participant-name">Maria Lopez</span>
+                    <div class="mic-status muted">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+        <div class="meeting-info">
+            <div class="meeting-title">Q4 Financial Review</div>
+            <div class="meeting-time">42:18 elapsed</div>
+        </div>
+
+        <div class="controls-group">
+            <button class="control-btn muted" aria-label="Unmute microphone" title="Unmute">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                </svg>
+            </button>
+
+            <button class="control-btn" aria-label="Turn off camera" title="Camera">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 7l-7 5 7 5V7z"/>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                </svg>
+            </button>
+
+            <button class="control-btn active" aria-label="Stop sharing" title="Stop Share">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+            </button>
+
+            <button class="control-btn" aria-label="More options" title="More">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="5" r="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <circle cx="12" cy="19" r="2"/>
+                </svg>
+            </button>
+
+            <button class="control-btn danger" aria-label="Leave call" title="Leave">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div style="width: 200px;"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-tabs">
+            <button class="sidebar-tab active" data-panel="participants">Participants</button>
+            <button class="sidebar-tab" data-panel="chat">Chat</button>
+        </div>
+
+        <!-- Participants Panel -->
+        <div class="participants-panel active">
+            <div class="panel-header">
+                <div class="panel-title">In this call (6)</div>
+            </div>
+            <div class="participants-list">
+                <div class="participant-item">
+                    <div class="participant-avatar">MC</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">Marcus Chen</div>
+                        <div class="participant-info-status">Senior Advisor</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-item">
+                    <div class="participant-avatar">SC</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">Sarah Clarke</div>
+                        <div class="participant-info-status">Portfolio Manager</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-item">
+                    <div class="participant-avatar">JL</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">James Liu</div>
+                        <div class="participant-info-status">Financial Analyst</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon muted">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-item">
+                    <div class="participant-avatar">EA</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">Emma Anderson</div>
+                        <div class="participant-info-status">Client Relations</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-item">
+                    <div class="participant-avatar">DK</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">David Kim</div>
+                        <div class="participant-info-status">Investment Strategist</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-item">
+                    <div class="participant-avatar">ML</div>
+                    <div class="participant-info">
+                        <div class="participant-info-name">Maria Lopez</div>
+                        <div class="participant-info-status">Compliance Officer</div>
+                    </div>
+                    <div class="participant-icons">
+                        <div class="participant-icon muted">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                            </svg>
+                        </div>
+                        <div class="participant-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <div class="chat-messages">
+                <div class="chat-message">
+                    <div class="chat-message-header">
+                        <span class="chat-message-sender">Emma Anderson</span>
+                        <span class="chat-message-time">10:32 AM</span>
+                    </div>
+                    <div class="chat-message-body">
+                        Good morning everyone! Looking forward to reviewing the Q4 numbers.
+                    </div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-message-header">
+                        <span class="chat-message-sender">Marcus Chen</span>
+                        <span class="chat-message-time">10:33 AM</span>
+                    </div>
+                    <div class="chat-message-body">
+                        Thanks for joining. I'll share the presentation in just a moment.
+                    </div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-message-header">
+                        <span class="chat-message-sender">David Kim</span>
+                        <span class="chat-message-time">10:41 AM</span>
+                    </div>
+                    <div class="chat-message-body">
+                        The portfolio diversification strategy looks solid. Can we discuss the international allocation in more detail?
+                    </div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-message-header">
+                        <span class="chat-message-sender">Sarah Clarke</span>
+                        <span class="chat-message-time">10:43 AM</span>
+                    </div>
+                    <div class="chat-message-body">
+                        I have some questions about the risk assessment metrics on slide 7.
+                    </div>
+                </div>
+
+                <div class="chat-message">
+                    <div class="chat-message-header">
+                        <span class="chat-message-sender">Marcus Chen</span>
+                        <span class="chat-message-time">10:45 AM</span>
+                    </div>
+                    <div class="chat-message-body">
+                        Great questions - I'll address both of those in the next section.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea class="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                    <button class="chat-send-btn" aria-label="Send message">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Sidebar tab switching
+const tabs = document.querySelectorAll('.sidebar-tab');
+const panels = {
+    'participants': document.querySelector('.participants-panel'),
+    'chat': document.querySelector('.chat-panel')
+};
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const panelName = tab.dataset.panel;
+
+        // Update tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Update panels
+        Object.values(panels).forEach(p => p.classList.remove('active'));
+        panels[panelName].classList.add('active');
+    });
+});
+
+// Chat auto-resize textarea
+const chatInput = document.querySelector('.chat-input');
+if (chatInput) {
+    chatInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Send on Enter (but Shift+Enter for new line)
+    chatInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            // Would send message here
+            this.value = '';
+            this.style.height = 'auto';
+        }
+    });
+}
+
+// Arrow key navigation
+/* Navigation removed */
+
+// Control button interactions (demo)
+document.querySelectorAll('.control-btn').forEach(btn => {
+    if (!btn.classList.contains('danger')) {
+        btn.addEventListener('click', function() {
+            if (this.classList.contains('muted') || this.classList.contains('active')) {
+                this.classList.remove('muted', 'active');
+            } else {
+                // Some buttons toggle to active, some to muted
+                if (this.querySelector('path[d*="M19 11h-1.7"]')) {
+                    this.classList.add('muted');
+                } else {
+                    this.classList.add('active');
+                }
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>

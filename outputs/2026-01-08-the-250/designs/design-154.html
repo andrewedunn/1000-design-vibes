@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helix Chalk - Character Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Helix Chalk - Natural meets neutral: a scandinavian modern perspective
+ABOUTME: This design system implements character_sheet with flat aesthetics and scandinavian_modern era influence.
+ABOUTME: Key characteristics: clean monochrome palette, precise geometric layouts, restrained contrast with subtle warmth
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4C5B0;
+--color-secondary: #9B8F7E;
+--color-background: #1A1A1A;
+--color-surface: #252525;
+--color-surface-raised: #2E2E2E;
+--color-text: #E8E8E8;
+--color-text-muted: #A8A8A8;
+--color-border: #3A3A3A;
+--color-accent: #C4A87A;
+--font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+--font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+--font-mono: 'JetBrains Mono', 'Courier New', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+--shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+AESTHETIC PRINCIPLES:
+1. Scandinavian minimalism with dark mode warmth - natural beige tones soften the serious finance context
+2. Geometric precision in all layouts - strict 8px grid system creates calm, predictable rhythm
+3. Flat surfaces with subtle elevation through borders and careful spacing rather than shadows
+4. Restrained color palette emphasizes content hierarchy through weight and spacing, not decoration
+
+DESIGN DIMENSIONS:
+- UI Paradigm: flat - Clean surfaces, minimal shadows, emphasis on typography and spacing
+- Design Era: scandinavian_modern - Light touch, functional beauty, natural materials (expressed through warm neutrals)
+- Emotional Tone: serious - Professional, focused, no-nonsense presentation suitable for finance
+- Industry: finance - Trustworthy, precise, data-focused character attributes and inventory
+- Color Mode: dark_only - Sophisticated dark background with warm neutral accents
+- Typography: Humanist sans (Inter) for clarity and warmth, monospace for numerical data
+- Density: balanced - Neither cramped nor wasteful, comfortable information display
+- Corners: sharp - 2px radius maintains clean geometric aesthetic
+- Borders: thin - Subtle 1px dividers create structure without heaviness
+
+BEST FOR:
+- RPG character management systems requiring clear stat presentation
+- Finance-themed gaming applications where numbers matter
+- Professional tools that need warmth without sacrificing seriousness
+- Dark-mode interfaces prioritizing readability and calm focus
+- Data-heavy character sheets where hierarchy guides the eye naturally
+
+AVOID IF:
+- You need bright, energetic, game-like aesthetics
+- Your content requires elaborate decorative elements
+- Light mode is a requirement for your context
+- You want strong shadows or depth effects
+- Playful or whimsical tone is needed
+
+FUNCTIONAL DIRECTION: character_sheet
+This design must clearly function as a character_sheet. Required elements:
+- Stats block showing character attributes with clear labels and values
+- Inventory grid displaying equipped and available items
+- Abilities section with skill names, descriptions, and power levels
+- Character portrait or avatar area
+- Level and experience progression display
+- Health/resource indicators
+- Equipment slots visualization
+
+ACCESSIBILITY NOTES:
+- All text meets WCAG AA contrast requirements (4.5:1 minimum)
+- Focus indicators use primary color with 2px outline
+- Touch targets are minimum 44x44px for mobile usability
+- Reduced motion preferences respected for all animations
+- Semantic HTML structure supports screen readers
+
+COLOR PSYCHOLOGY:
+The warm beige (Helix Chalk) against dark backgrounds creates:
+- Trust and stability (finance industry requirement)
+- Natural warmth that softens the serious tone
+- Scandinavian balance of minimal and welcoming
+- Professional restraint with subtle personality
+
+TYPOGRAPHY SYSTEM:
+Scale Ratio: 1.250 (Major Third)
+- Base: 16px
+- Small: 13px
+- Large: 20px
+- XL: 25px
+- XXL: 31px
+- Display: 39px
+
+Weight Strategy:
+- Headings: 600-700 (strong hierarchy)
+- Body: 400 (optimal readability)
+- Labels: 500 (subtle emphasis)
+- Data: 300-400 mono (clarity without heaviness)
+
+SPATIAL SYSTEM:
+8px base unit creates predictable rhythm:
+- Tight: 8px (related elements)
+- Normal: 16px (component padding)
+- Relaxed: 24px (section spacing)
+- Loose: 32px (major sections)
+- Generous: 48px (page-level separation)
+
+COMPONENT PATTERNS:
+- Stat cards: Minimal border, label above value, mono numbers
+- Inventory slots: Square grid, border on empty, subtle fill on occupied
+- Ability cards: Compact horizontal layout, icon space + text
+- Progress bars: Thin linear indicators, no gradients
+- Buttons: Flat with border, state changes through background fill
+-->
+
+<style>
+    :root {
+        /* Core Colors */
+        --color-primary: #D4C5B0;
+        --color-secondary: #9B8F7E;
+        --color-background: #1A1A1A;
+        --color-surface: #252525;
+        --color-surface-raised: #2E2E2E;
+        --color-text: #E8E8E8;
+        --color-text-muted: #A8A8A8;
+        --color-border: #3A3A3A;
+        --color-accent: #C4A87A;
+
+        /* Status Colors */
+        --color-health: #A8D4A8;
+        --color-mana: #A8C4D4;
+        --color-stamina: #D4C5A8;
+        --color-warning: #D4A87A;
+        --color-critical: #D47A7A;
+
+        /* Typography */
+        --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+        /* Type Scale (Major Third - 1.250) */
+        --text-xs: 0.8125rem;
+        --text-sm: 0.875rem;
+        --text-base: 1rem;
+        --text-lg: 1.25rem;
+        --text-xl: 1.563rem;
+        --text-2xl: 1.953rem;
+        --text-3xl: 2.441rem;
+
+        /* Spacing (8px system) */
+        --space-unit: 8px;
+        --space-1: 8px;
+        --space-2: 16px;
+        --space-3: 24px;
+        --space-4: 32px;
+        --space-5: 40px;
+        --space-6: 48px;
+
+        /* Layout */
+        --radius-default: 2px;
+        --border-width: 1px;
+        --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+        /* Transitions */
+        --transition-fast: 150ms ease;
+        --transition-base: 250ms ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: var(--text-base);
+        line-height: 1.6;
+        color: var(--color-text);
+        background-color: var(--color-background);
+        padding: var(--space-3);
+        min-height: 100vh;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--color-primary);
+    }
+
+    h1 {
+        font-size: var(--text-3xl);
+        font-weight: 700;
+        margin-bottom: var(--space-2);
+    }
+
+    h2 {
+        font-size: var(--text-xl);
+        margin-bottom: var(--space-2);
+    }
+
+    h3 {
+        font-size: var(--text-lg);
+        margin-bottom: var(--space-2);
+    }
+
+    label {
+        font-size: var(--text-xs);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-muted);
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    /* Layout Structure */
+    .character-sheet {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: var(--space-3);
+    }
+
+    /* Sidebar - Character Identity */
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .card {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-3);
+    }
+
+    .card-compact {
+        padding: var(--space-2);
+    }
+
+    /* Character Portrait */
+    .portrait-section {
+        text-align: center;
+    }
+
+    .portrait {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto var(--space-2);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        background: var(--color-surface-raised);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        color: var(--color-primary);
+    }
+
+    .character-name {
+        font-size: var(--text-2xl);
+        margin-bottom: 4px;
+        color: var(--color-text);
+    }
+
+    .character-class {
+        font-size: var(--text-sm);
+        color: var(--color-secondary);
+        margin-bottom: var(--space-2);
+    }
+
+    .level-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--color-surface-raised);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        font-family: var(--font-mono);
+        font-size: var(--text-sm);
+        color: var(--color-accent);
+    }
+
+    /* Experience Progress */
+    .xp-section {
+        margin-top: var(--space-2);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--color-surface-raised);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: 1px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--color-primary);
+        transition: width var(--transition-base);
+    }
+
+    .xp-text {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4px;
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+    }
+
+    /* Resource Bars */
+    .resources {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+
+    .resource {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .resource-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .resource-label {
+        font-size: var(--text-xs);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .resource-value {
+        font-family: var(--font-mono);
+        font-size: var(--text-sm);
+        font-weight: 300;
+    }
+
+    .resource-bar {
+        height: 20px;
+        background: var(--color-surface-raised);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .resource-bar-fill {
+        height: 100%;
+        transition: width var(--transition-base);
+    }
+
+    .resource-bar-fill.health { background: var(--color-health); }
+    .resource-bar-fill.mana { background: var(--color-mana); }
+    .resource-bar-fill.stamina { background: var(--color-stamina); }
+
+    /* Main Content Area */
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: var(--space-2);
+    }
+
+    .stat-block {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-2);
+        text-align: center;
+        transition: border-color var(--transition-fast);
+    }
+
+    .stat-block:hover {
+        border-color: var(--color-primary);
+    }
+
+    .stat-value {
+        font-family: var(--font-mono);
+        font-size: var(--text-3xl);
+        font-weight: 300;
+        color: var(--color-text);
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .stat-modifier {
+        font-family: var(--font-mono);
+        font-size: var(--text-sm);
+        color: var(--color-secondary);
+    }
+
+    /* Abilities Section */
+    .abilities-section {
+        display: grid;
+        gap: var(--space-3);
+    }
+
+    .abilities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-2);
+    }
+
+    .ability-card {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-2);
+        transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .ability-card:hover {
+        border-color: var(--color-primary);
+        background: var(--color-surface-raised);
+    }
+
+    .ability-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: var(--space-1);
+    }
+
+    .ability-name {
+        font-weight: 600;
+        font-size: var(--text-base);
+        color: var(--color-text);
+    }
+
+    .ability-level {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-accent);
+        padding: 2px 8px;
+        background: var(--color-surface-raised);
+        border-radius: var(--radius-default);
+    }
+
+    .ability-description {
+        font-size: var(--text-sm);
+        color: var(--color-text-muted);
+        line-height: 1.5;
+        margin-bottom: var(--space-1);
+    }
+
+    .ability-stats {
+        display: flex;
+        gap: var(--space-2);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+    }
+
+    .ability-stat {
+        display: flex;
+        gap: 4px;
+    }
+
+    .ability-stat-label {
+        color: var(--color-text-muted);
+    }
+
+    .ability-stat-value {
+        color: var(--color-text);
+    }
+
+    /* Inventory Grid */
+    .inventory-section {
+        display: grid;
+        gap: var(--space-2);
+    }
+
+    .equipment-slots {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: var(--space-2);
+        margin-bottom: var(--space-3);
+    }
+
+    .equipment-slot {
+        aspect-ratio: 1;
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        padding: var(--space-2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: border-color var(--transition-fast), background-color var(--transition-fast);
+        cursor: pointer;
+    }
+
+    .equipment-slot:hover {
+        border-color: var(--color-primary);
+        background: var(--color-surface-raised);
+    }
+
+    .equipment-slot.equipped {
+        background: var(--color-surface-raised);
+        border-color: var(--color-secondary);
+    }
+
+    .equipment-icon {
+        font-size: 40px;
+        margin-bottom: var(--space-1);
+        color: var(--color-primary);
+    }
+
+    .equipment-slot.empty .equipment-icon {
+        color: var(--color-border);
+    }
+
+    .equipment-name {
+        font-size: var(--text-xs);
+        font-weight: 500;
+        color: var(--color-text);
+        margin-bottom: 4px;
+    }
+
+    .equipment-type {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+    }
+
+    .equipment-slot.empty .equipment-type {
+        color: var(--color-border);
+    }
+
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: var(--space-1);
+    }
+
+    .inventory-item {
+        aspect-ratio: 1;
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: var(--color-primary);
+        cursor: pointer;
+        transition: border-color var(--transition-fast), background-color var(--transition-fast);
+        position: relative;
+    }
+
+    .inventory-item:hover {
+        border-color: var(--color-primary);
+        background: var(--color-surface-raised);
+    }
+
+    .inventory-item.empty {
+        background: transparent;
+        color: var(--color-border);
+    }
+
+    .item-count {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-text);
+        background: var(--color-background);
+        padding: 2px 4px;
+        border-radius: 1px;
+    }
+
+    /* Navigation */
+    .navigation {
+        position: fixed;
+        bottom: var(--space-3);
+        right: var(--space-3);
+        display: flex;
+        gap: var(--space-1);
+        z-index: 100;
+    }
+
+    .nav-button {
+        width: 48px;
+        height: 48px;
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        color: var(--color-text);
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast);
+    }
+
+    .nav-button:hover {
+        background: var(--color-surface-raised);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .nav-button:active {
+        transform: translateY(1px);
+    }
+
+    .nav-button:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Focus States */
+    *:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    button:focus-visible,
+    .stat-block:focus-visible,
+    .ability-card:focus-visible,
+    .equipment-slot:focus-visible,
+    .inventory-item:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .character-sheet {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        body {
+            padding: var(--space-2);
+        }
+
+        .sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .abilities-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .equipment-slots {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .inventory-grid {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .navigation {
+            bottom: var(--space-2);
+            right: var(--space-2);
+        }
+    }
+</style>
+
+<div class="character-sheet">
+    <!-- Sidebar: Character Identity & Resources -->
+    <aside class="sidebar">
+        <!-- Portrait & Identity -->
+        <section class="card portrait-section">
+            <div class="portrait" role="img" aria-label="Character portrait">⚔️</div>
+            <h1 class="character-name">Aldric Stonehaven</h1>
+            <div class="character-class">Financial Warden · Human</div>
+            <span class="level-badge">Level 18</span>
+
+            <div class="xp-section">
+                <label>Experience</label>
+                <div class="progress-bar" role="progressbar" aria-valuenow="7420" aria-valuemin="0" aria-valuemax="9500">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                </div>
+                <div class="xp-text">
+                    <span>7,420</span>
+                    <span>9,500</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resource Bars -->
+        <section class="card card-compact resources">
+            <h3>Resources</h3>
+
+            <div class="resource">
+                <div class="resource-header">
+                    <span class="resource-label">Health</span>
+                    <span class="resource-value">180/240</span>
+                </div>
+                <div class="resource-bar" role="progressbar" aria-valuenow="180" aria-valuemin="0" aria-valuemax="240">
+                    <div class="resource-bar-fill health" style="width: 75%;"></div>
+                </div>
+            </div>
+
+            <div class="resource">
+                <div class="resource-header">
+                    <span class="resource-label">Mana</span>
+                    <span class="resource-value">95/160</span>
+                </div>
+                <div class="resource-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="160">
+                    <div class="resource-bar-fill mana" style="width: 59%;"></div>
+                </div>
+            </div>
+
+            <div class="resource">
+                <div class="resource-header">
+                    <span class="resource-label">Stamina</span>
+                    <span class="resource-value">120/120</span>
+                </div>
+                <div class="resource-bar" role="progressbar" aria-valuenow="120" aria-valuemin="0" aria-valuemax="120">
+                    <div class="resource-bar-fill stamina" style="width: 100%;"></div>
+                </div>
+            </div>
+        </section>
+    </aside>
+
+    <!-- Main Content: Stats, Abilities, Inventory -->
+    <main class="main-content">
+        <!-- Core Stats -->
+        <section>
+            <h2>Core Attributes</h2>
+            <div class="stats-grid">
+                <div class="stat-block" tabindex="0">
+                    <label>Strength</label>
+                    <span class="stat-value">16</span>
+                    <span class="stat-modifier">+3</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Dexterity</label>
+                    <span class="stat-value">12</span>
+                    <span class="stat-modifier">+1</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Constitution</label>
+                    <span class="stat-value">18</span>
+                    <span class="stat-modifier">+4</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Intelligence</label>
+                    <span class="stat-value">14</span>
+                    <span class="stat-modifier">+2</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Wisdom</label>
+                    <span class="stat-value">15</span>
+                    <span class="stat-modifier">+2</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Charisma</label>
+                    <span class="stat-value">10</span>
+                    <span class="stat-modifier">+0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Combat Stats -->
+        <section>
+            <h2>Combat Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-block" tabindex="0">
+                    <label>Armor Class</label>
+                    <span class="stat-value">19</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Initiative</label>
+                    <span class="stat-value">+1</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Speed</label>
+                    <span class="stat-value">30</span>
+                    <span class="stat-modifier">ft</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Hit Dice</label>
+                    <span class="stat-value">18d10</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Proficiency</label>
+                    <span class="stat-value">+6</span>
+                </div>
+
+                <div class="stat-block" tabindex="0">
+                    <label>Spell Save DC</label>
+                    <span class="stat-value">14</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Abilities -->
+        <section class="abilities-section">
+            <h2>Abilities & Skills</h2>
+            <div class="abilities-grid">
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Valuation Strike</span>
+                        <span class="ability-level">Lv 5</span>
+                    </div>
+                    <p class="ability-description">Channel financial expertise into a devastating blow. Deal damage equal to target's perceived worth divided by 100.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">25 MP</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cooldown:</span>
+                            <span class="ability-stat-value">8s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Portfolio Defense</span>
+                        <span class="ability-level">Lv 4</span>
+                    </div>
+                    <p class="ability-description">Diversify incoming damage across multiple defensive assets. Reduce damage by 40% for 10 seconds.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">30 MP</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cooldown:</span>
+                            <span class="ability-stat-value">15s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Compound Interest</span>
+                        <span class="ability-level">Lv 6</span>
+                    </div>
+                    <p class="ability-description">Each successful hit increases damage by 8% for the next strike, stacking up to 5 times.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">Passive</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Type:</span>
+                            <span class="ability-stat-value">Stacking</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Risk Assessment</span>
+                        <span class="ability-level">Lv 5</span>
+                    </div>
+                    <p class="ability-description">Analyze enemy weaknesses. Reveals optimal attack patterns and increases critical hit chance by 15%.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">20 MP</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Duration:</span>
+                            <span class="ability-stat-value">30s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Liquidate Assets</span>
+                        <span class="ability-level">Lv 3</span>
+                    </div>
+                    <p class="ability-description">Convert equipped items into temporary power boost. Sacrifice one equipment slot for +50% damage for 20 seconds.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">1 Item</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cooldown:</span>
+                            <span class="ability-stat-value">120s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ability-card" tabindex="0">
+                    <div class="ability-header">
+                        <span class="ability-name">Market Manipulation</span>
+                        <span class="ability-level">Lv 4</span>
+                    </div>
+                    <p class="ability-description">Alter the battlefield economy. Increase ally attack speed by 20%, decrease enemy accuracy by 15%.</p>
+                    <div class="ability-stats">
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Cost:</span>
+                            <span class="ability-stat-value">45 MP</span>
+                        </div>
+                        <div class="ability-stat">
+                            <span class="ability-stat-label">Range:</span>
+                            <span class="ability-stat-value">30 ft</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipment -->
+        <section class="inventory-section">
+            <h2>Equipment</h2>
+            <div class="equipment-slots">
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">⚔️</div>
+                    <div class="equipment-name">Ledger Blade</div>
+                    <div class="equipment-type">Weapon</div>
+                </div>
+
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">🛡️</div>
+                    <div class="equipment-name">Balance Shield</div>
+                    <div class="equipment-type">Shield</div>
+                </div>
+
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">👑</div>
+                    <div class="equipment-name">Crown of Dividends</div>
+                    <div class="equipment-type">Helm</div>
+                </div>
+
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">🧥</div>
+                    <div class="equipment-name">Vested Armor</div>
+                    <div class="equipment-type">Chest</div>
+                </div>
+
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">🧤</div>
+                    <div class="equipment-name">Trader's Gloves</div>
+                    <div class="equipment-type">Hands</div>
+                </div>
+
+                <div class="equipment-slot empty" tabindex="0">
+                    <div class="equipment-icon">○</div>
+                    <div class="equipment-type">Ring</div>
+                </div>
+
+                <div class="equipment-slot equipped" tabindex="0">
+                    <div class="equipment-icon">📿</div>
+                    <div class="equipment-name">Bull Market Amulet</div>
+                    <div class="equipment-type">Amulet</div>
+                </div>
+
+                <div class="equipment-slot empty" tabindex="0">
+                    <div class="equipment-icon">○</div>
+                    <div class="equipment-type">Trinket</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory -->
+        <section class="inventory-section">
+            <h2>Inventory</h2>
+            <div class="inventory-grid">
+                <div class="inventory-item" tabindex="0">
+                    🗡️
+                    <span class="item-count">1</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    ⚗️
+                    <span class="item-count">5</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    📜
+                    <span class="item-count">3</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    💎
+                    <span class="item-count">12</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    🔑
+                    <span class="item-count">2</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    📖
+                    <span class="item-count">1</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    🍖
+                    <span class="item-count">8</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    🧪
+                    <span class="item-count">4</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    💰
+                    <span class="item-count">450</span>
+                </div>
+                <div class="inventory-item" tabindex="0">
+                    🏹
+                    <span class="item-count">1</span>
+                </div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+                <div class="inventory-item empty" tabindex="0">○</div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Navigation Controls -->
+<nav class="navigation" aria-label="Design navigation">
+    <button class="nav-button" id="prevBtn" aria-label="Previous design">←</button>
+    <button class="nav-button" id="nextBtn" aria-label="Next design">→</button>
+</nav>
+
+<script>
+    // Navigation functionality
+    const TOTAL_DESIGNS = 250;
+    const CURRENT_DESIGN = 154;
+
+    function navigate(direction) {
+        let nextDesign = CURRENT_DESIGN + direction;
+
+        // Wrap around
+        if (nextDesign < 1) nextDesign = TOTAL_DESIGNS;
+        if (nextDesign > TOTAL_DESIGNS) nextDesign = 1;
+
+        window.location.href = `design-${nextDesign}.html`;
+    }
+
+    // Button click handlers
+    document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+
+    
+
+    // Interactive hover effects for inventory items
+    document.querySelectorAll('.inventory-item:not(.empty)').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Interactive hover effects for ability cards
+    document.querySelectorAll('.ability-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-1px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+
+</body>
+</html>

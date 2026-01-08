@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Nexus - Grunge Healthcare Comment Section</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Stark Nexus - Grunge design with natural neutral tones
+ABOUTME: This design system implements a comment_section with grunge aesthetics for healthcare discussions.
+ABOUTME: Key characteristics: Worn textures, raw authenticity, serious medical discourse presentation
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #6B5D4F;
+--color-primary-dark: #4A3F35;
+--color-background: #E8E4DE;
+--color-surface: #F5F2ED;
+--color-surface-alt: #D9D4CC;
+--color-text: #2A2420;
+--color-text-muted: #6B6359;
+--color-border: #B8B0A5;
+--color-accent: #8B7355;
+--color-upvote: #7A6B54;
+--color-downvote: #A89B89;
+--font-heading: 'Instrument Serif', Georgia, serif;
+--font-body: 'IBM Plex Mono', 'Courier New', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+--texture-opacity: 0.08;
+
+AESTHETIC PRINCIPLES:
+1. Textured surfaces and worn edges create authentic grunge character without compromising readability
+2. Monospace typography ensures clarity for technical medical terminology and medication names
+3. Earthy neutral palette conveys seriousness appropriate for healthcare discourse
+4. Raw borders and subtle noise patterns reflect unpolished authenticity
+5. Hierarchical threading uses indentation and vertical connection lines
+
+BEST FOR:
+- Medical professional discussion forums
+- Healthcare policy comment sections
+- Clinical case study discussions
+- Patient advocacy platforms
+- Medical research paper comments
+- Continuing medical education forums
+
+AVOID IF:
+- Bright, optimistic health & wellness content needed
+- Consumer-facing patient portals (too technical)
+- Emergency or urgent care contexts
+- Pediatric or family-friendly health content
+
+FUNCTIONAL DIRECTION: comment_section
+This design must clearly function as a comment_section. Required elements:
+- Threaded comments with visual hierarchy
+- Reply forms with text input and submit actions
+- Vote buttons (upvote/downvote) with counters
+- User avatars with credentials display
+- Timestamp and metadata display
+- Nested comment structure with clear parent-child relationships
+- Comment sorting and filtering controls
+- User profile indicators (verified healthcare professionals)
+
+DESIGN ERA: grunge
+Grunge design emphasizes authenticity, texture, and a worn aesthetic. This implementation uses:
+- Subtle paper-like textures
+- Distressed borders and edges
+- Natural, desaturated color palette
+- Raw, honest typography choices
+- Imperfect alignment and organic spacing
+- Layered surface treatments
+
+INDUSTRY: healthcare
+Healthcare context demands:
+- High readability for medical terminology
+- Clear information hierarchy
+- Professional credibility indicators
+- Serious, trustworthy presentation
+- Accessibility compliance for diverse users
+- Proper contrast for clinical environments
+
+EMOTIONAL TONE: serious
+Serious tone achieved through:
+- Muted, professional color palette
+- Clean, structured layouts
+- Formal typography treatment
+- Absence of playful or decorative elements
+- Focus on content over ornamentation
+-->
+
+<style>
+:root {
+    /* Core Colors - Natural neutrals inspired by aged paper and stone */
+    --color-primary: #6B5D4F;
+    --color-primary-dark: #4A3F35;
+    --color-background: #E8E4DE;
+    --color-surface: #F5F2ED;
+    --color-surface-alt: #D9D4CC;
+    --color-text: #2A2420;
+    --color-text-muted: #6B6359;
+    --color-border: #B8B0A5;
+    --color-accent: #8B7355;
+    --color-upvote: #7A6B54;
+    --color-downvote: #A89B89;
+    --color-verified: #5D7A5F;
+
+    /* Typography */
+    --font-heading: 'Instrument Serif', Georgia, serif;
+    --font-body: 'IBM Plex Mono', 'Courier New', monospace;
+    --font-size-base: 14px;
+    --font-size-small: 12px;
+    --font-size-large: 16px;
+    --font-size-xl: 20px;
+    --line-height-tight: 1.4;
+    --line-height-normal: 1.6;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+
+    /* Shapes & Effects */
+    --radius-default: 2px;
+    --border-width: 1px;
+    --border-heavy: 2px;
+    --texture-opacity: 0.08;
+    --shadow-subtle: 2px 2px 0 rgba(42, 36, 32, 0.1);
+    --shadow-medium: 3px 3px 0 rgba(42, 36, 32, 0.15);
+}
+
+/* Base & Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(107, 93, 79, 0.02) 2px,
+            rgba(107, 93, 79, 0.02) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(107, 93, 79, 0.02) 2px,
+            rgba(107, 93, 79, 0.02) 4px
+        );
+    background-size: 100% 100%, 100% 100%;
+}
+
+/* Navigation */
+.nav {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 1000;
+}
+
+.nav-button {
+    width: 48px;
+    height: 48px;
+    background: var(--color-surface);
+    border: var(--border-heavy) solid var(--color-border);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: var(--font-size-large);
+    color: var(--color-text);
+    transition: all 0.2s;
+    box-shadow: var(--shadow-subtle);
+    position: relative;
+}
+
+.nav-button::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    border-radius: var(--radius-default);
+}
+
+.nav-button:hover::before {
+    opacity: 1;
+}
+
+.nav-button:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow-medium);
+}
+
+.nav-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Header */
+.header {
+    background: var(--color-surface);
+    border-bottom: var(--border-heavy) solid var(--color-border);
+    padding: var(--space-lg) var(--space-md);
+    position: relative;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-border),
+        var(--color-border) 4px,
+        transparent 4px,
+        transparent 8px
+    );
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    margin-bottom: var(--space-xs);
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* Comment Controls */
+.controls {
+    max-width: 900px;
+    margin: var(--space-lg) auto;
+    padding: 0 var(--space-md);
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.control-button {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.control-button:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+}
+
+.control-button.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary-dark);
+}
+
+.control-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Main Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-md);
+    padding-bottom: 100px;
+}
+
+/* Comment Section */
+.comment-thread {
+    margin-bottom: var(--space-xl);
+}
+
+.comment {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    position: relative;
+    box-shadow: var(--shadow-subtle);
+}
+
+.comment::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(42, 36, 32, 0.01) 10px,
+            rgba(42, 36, 32, 0.01) 20px
+        );
+    pointer-events: none;
+    border-radius: var(--radius-default);
+}
+
+.comment.reply {
+    margin-left: var(--space-xl);
+    margin-top: calc(var(--space-md) * -0.5);
+    border-left: var(--border-heavy) solid var(--color-accent);
+}
+
+.comment.reply-level-2 {
+    margin-left: calc(var(--space-xl) * 2);
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: var(--border-width) dashed var(--color-border);
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-default);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--font-size-large);
+    color: var(--color-primary);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+}
+
+.avatar.verified {
+    border-color: var(--color-verified);
+    border-width: var(--border-heavy);
+}
+
+.comment-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: var(--color-verified);
+    color: var(--color-surface);
+    font-size: 10px;
+    border-radius: var(--radius-default);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.credentials {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.timestamp {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.comment-body {
+    margin-bottom: var(--space-md);
+    line-height: var(--line-height-normal);
+}
+
+.comment-body p {
+    margin-bottom: var(--space-sm);
+}
+
+.comment-body p:last-child {
+    margin-bottom: 0;
+}
+
+.comment-body strong {
+    font-weight: 700;
+    color: var(--color-primary-dark);
+}
+
+.comment-body em {
+    font-style: italic;
+    font-family: var(--font-heading);
+}
+
+.comment-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: var(--border-width) dashed var(--color-border);
+}
+
+.vote-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-surface-alt);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+}
+
+.vote-button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    transition: all 0.2s;
+    border-radius: var(--radius-default);
+}
+
+.vote-button:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.vote-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+}
+
+.vote-button.upvote:hover,
+.vote-button.upvote.active {
+    color: var(--color-upvote);
+}
+
+.vote-button.downvote:hover,
+.vote-button.downvote.active {
+    color: var(--color-downvote);
+}
+
+.vote-count {
+    font-weight: 700;
+    color: var(--color-text);
+    min-width: 32px;
+    text-align: center;
+    font-size: var(--font-size-base);
+}
+
+.reply-button,
+.share-button,
+.report-button {
+    padding: var(--space-xs) var(--space-sm);
+    background: transparent;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reply-button:hover,
+.share-button:hover {
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+}
+
+.report-button:hover {
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+}
+
+.reply-button:focus,
+.share-button:focus,
+.report-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reply Form */
+.reply-form {
+    margin-top: var(--space-md);
+    margin-left: var(--space-xl);
+    padding: var(--space-md);
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    border-left: var(--border-heavy) solid var(--color-accent);
+    border-radius: var(--radius-default);
+    display: none;
+}
+
+.reply-form.active {
+    display: block;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    resize: vertical;
+    transition: all 0.2s;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(107, 93, 79, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.form-button {
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 44px;
+}
+
+.form-button.primary {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary-dark);
+}
+
+.form-button.primary:hover {
+    background: var(--color-primary-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow-medium);
+}
+
+.form-button.secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.form-button.secondary:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+}
+
+.form-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Load More */
+.load-more {
+    text-align: center;
+    margin-top: var(--space-xl);
+}
+
+.load-more-button {
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-surface);
+    border: var(--border-heavy) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-subtle);
+    min-height: 44px;
+}
+
+.load-more-button:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow-medium);
+}
+
+.load-more-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .comment.reply {
+        margin-left: var(--space-md);
+    }
+
+    .comment.reply-level-2 {
+        margin-left: calc(var(--space-md) * 2);
+    }
+
+    .reply-form {
+        margin-left: var(--space-md);
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-group {
+        width: 100%;
+    }
+
+    .control-button {
+        flex: 1;
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-content">
+        <h1 class="title">Clinical Discussion Forum</h1>
+        <p class="subtitle">Professional discourse on case management and treatment protocols</p>
+    </div>
+</header>
+
+<div class="controls">
+    <div class="control-group">
+        <button class="control-button active">Newest</button>
+        <button class="control-button">Top Rated</button>
+        <button class="control-button">Most Replies</button>
+    </div>
+    <div class="control-group">
+        <button class="control-button">All Comments</button>
+        <button class="control-button">Verified Only</button>
+    </div>
+</div>
+
+<main class="container">
+    <div class="comment-thread">
+        <!-- Root Comment 1 -->
+        <article class="comment">
+            <div class="comment-header">
+                <div class="avatar verified">DM</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Maria Chen
+                        <span class="verified-badge">Verified MD</span>
+                    </div>
+                    <div class="credentials">Board Certified Internal Medicine, Johns Hopkins</div>
+                </div>
+                <time class="timestamp">2h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>I've been reviewing the latest guidelines on hypertension management in elderly patients with multiple comorbidities. The <strong>ACC/AHA 2023 updates</strong> suggest more individualized target BP ranges rather than the traditional 130/80 threshold.</p>
+                <p>In my practice, I've noticed improved outcomes when titrating medications more conservatively in patients over 75, particularly those with baseline orthostatic hypotension. Has anyone else modified their approach based on the new evidence?</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote active" aria-label="Upvote">▲</button>
+                    <span class="vote-count">247</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-1')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 1 -->
+        <div id="reply-1" class="reply-form">
+            <label class="form-label" for="reply-1-text">Reply to Dr. Maria Chen</label>
+            <textarea id="reply-1-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-1')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Reply to Comment 1 -->
+        <article class="comment reply">
+            <div class="comment-header">
+                <div class="avatar verified">RK</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Robert Kim
+                        <span class="verified-badge">Verified MD</span>
+                    </div>
+                    <div class="credentials">Cardiology, Mayo Clinic</div>
+                </div>
+                <time class="timestamp">1h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Excellent point, Dr. Chen. We've implemented a similar protocol in our cardiology department. The key factor we've found is <em>baseline renal function</em> - patients with CKD Stage 3b or higher require particularly careful monitoring during any BP medication adjustments.</p>
+                <p>Our internal data shows a 23% reduction in adverse events when using the individualized approach versus the standard guidelines.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">183</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-1-1')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 1-1 -->
+        <div id="reply-1-1" class="reply-form">
+            <label class="form-label" for="reply-1-1-text">Reply to Dr. Robert Kim</label>
+            <textarea id="reply-1-1-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-1-1')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Nested Reply -->
+        <article class="comment reply reply-level-2">
+            <div class="comment-header">
+                <div class="avatar">SA</div>
+                <div class="comment-meta">
+                    <div class="author-name">Sarah Anderson</div>
+                    <div class="credentials">Nephrology NP, Cleveland Clinic</div>
+                </div>
+                <time class="timestamp">45m ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Dr. Kim, could you share more details about your monitoring protocol? We're looking to implement something similar in our nephrology practice. Specifically interested in the frequency of creatinine checks during titration.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">56</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-1-1-1')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 1-1-1 -->
+        <div id="reply-1-1-1" class="reply-form">
+            <label class="form-label" for="reply-1-1-1-text">Reply to Sarah Anderson</label>
+            <textarea id="reply-1-1-1-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-1-1-1')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Another Reply to Comment 1 -->
+        <article class="comment reply">
+            <div class="comment-header">
+                <div class="avatar verified">AL</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Ahmed Li
+                        <span class="verified-badge">Verified MD</span>
+                    </div>
+                    <div class="credentials">Geriatric Medicine, Stanford Medical</div>
+                </div>
+                <time class="timestamp">30m ago</time>
+            </div>
+            <div class="comment-body">
+                <p>I appreciate both perspectives here. In geriatric medicine, we also factor in <strong>frailty indices</strong> and <strong>polypharmacy burden</strong>. The Clinical Frailty Scale score significantly influences our BP targets - a score of 6 or higher typically indicates more conservative management.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">142</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-1-2')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 1-2 -->
+        <div id="reply-1-2" class="reply-form">
+            <label class="form-label" for="reply-1-2-text">Reply to Dr. Ahmed Li</label>
+            <textarea id="reply-1-2-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-1-2')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Root Comment 2 -->
+    <div class="comment-thread">
+        <article class="comment">
+            <div class="comment-header">
+                <div class="avatar verified">JP</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Jennifer Park
+                        <span class="verified-badge">Verified MD</span>
+                    </div>
+                    <div class="credentials">Emergency Medicine, Mass General</div>
+                </div>
+                <time class="timestamp">4h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Question for the hospitalists: What's your current protocol for anticoagulation in patients with atrial fibrillation presenting with acute stroke? The <strong>ELAN trial results</strong> from last month are making me reconsider our ED pathway.</p>
+                <p>Specifically, the early initiation (within 48 hours) showed non-inferiority to delayed anticoagulation, but I'm concerned about hemorrhagic conversion risk in our patient population.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">198</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-2')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 2 -->
+        <div id="reply-2" class="reply-form">
+            <label class="form-label" for="reply-2-text">Reply to Dr. Jennifer Park</label>
+            <textarea id="reply-2-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-2')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Reply to Comment 2 -->
+        <article class="comment reply">
+            <div class="comment-header">
+                <div class="avatar verified">TW</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Thomas Williams
+                        <span class="verified-badge">Verified MD</span>
+                    </div>
+                    <div class="credentials">Neurology & Stroke, UCSF Medical</div>
+                </div>
+                <time class="timestamp">3h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Dr. Park - we revised our stroke protocol in September based on the ELAN data. Key considerations:</p>
+                <p>1. <strong>Imaging is critical</strong> - we require CT perfusion or MRI with DWI before any anticoagulation decision<br>
+                2. <strong>Stroke severity matters</strong> - NIHSS score below 10 gets earlier anticoagulation consideration<br>
+                3. <strong>Age stratification</strong> - patients over 80 still get the 5-7 day wait unless low hemorrhage risk on imaging</p>
+                <p>Our neurology team created a decision algorithm that I can share if you're interested. It's reduced our decision-making time by 40%.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote active" aria-label="Upvote">▲</button>
+                    <span class="vote-count">224</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-2-1')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 2-1 -->
+        <div id="reply-2-1" class="reply-form">
+            <label class="form-label" for="reply-2-1-text">Reply to Dr. Thomas Williams</label>
+            <textarea id="reply-2-1-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-2-1')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Root Comment 3 -->
+    <div class="comment-thread">
+        <article class="comment">
+            <div class="comment-header">
+                <div class="avatar">MR</div>
+                <div class="comment-meta">
+                    <div class="author-name">Marcus Rodriguez</div>
+                    <div class="credentials">Pharmacy Resident, Duke University Hospital</div>
+                </div>
+                <time class="timestamp">6h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Observing an interesting trend in our ICU: increased incidence of <strong>vancomycin-associated nephrotoxicity</strong> despite trough-based dosing. Literature suggests AUC-guided dosing might be superior, but implementation barriers are significant.</p>
+                <p>Any institutions successfully transitioned to AUC monitoring? What challenges did you encounter?</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">87</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-3')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 3 -->
+        <div id="reply-3" class="reply-form">
+            <label class="form-label" for="reply-3-text">Reply to Marcus Rodriguez</label>
+            <textarea id="reply-3-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-3')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Reply to Comment 3 -->
+        <article class="comment reply">
+            <div class="comment-header">
+                <div class="avatar verified">LN</div>
+                <div class="comment-meta">
+                    <div class="author-name">
+                        Dr. Lisa Nguyen
+                        <span class="verified-badge">Verified PharmD</span>
+                    </div>
+                    <div class="credentials">Clinical Pharmacy, Michigan Medicine</div>
+                </div>
+                <time class="timestamp">5h ago</time>
+            </div>
+            <div class="comment-body">
+                <p>Marcus - we implemented AUC-based vancomycin dosing last year. The main challenges:</p>
+                <p><strong>Software integration:</strong> Required EHR modifications and dedicated pharmacokinetic software<br>
+                <strong>Staff education:</strong> 6-month training period for pharmacy and nursing<br>
+                <strong>Cost:</strong> Initial investment around $50K including software and training</p>
+                <p>Results after 12 months: 31% reduction in AKI incidence and improved therapeutic target achievement. Worth the effort but requires institutional commitment.</p>
+            </div>
+            <div class="comment-footer">
+                <div class="vote-controls">
+                    <button class="vote-button upvote" aria-label="Upvote">▲</button>
+                    <span class="vote-count">134</span>
+                    <button class="vote-button downvote" aria-label="Downvote">▼</button>
+                </div>
+                <button class="reply-button" onclick="toggleReply('reply-3-1')">Reply</button>
+                <button class="share-button">Share</button>
+                <button class="report-button">Report</button>
+            </div>
+        </article>
+
+        <!-- Reply Form 3-1 -->
+        <div id="reply-3-1" class="reply-form">
+            <label class="form-label" for="reply-3-1-text">Reply to Dr. Lisa Nguyen</label>
+            <textarea id="reply-3-1-text" class="form-textarea" placeholder="Share your professional perspective..."></textarea>
+            <div class="form-actions">
+                <button class="form-button primary">Post Reply</button>
+                <button class="form-button secondary" onclick="toggleReply('reply-3-1')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="load-more">
+        <button class="load-more-button">Load More Comments</button>
+    </div>
+</main>
+
+<!-- Navigation -->
+<nav class="nav">
+    <button class="nav-button" onclick="navigatePrev()" aria-label="Previous design">←</button>
+    <button class="nav-button" onclick="navigateNext()" aria-label="Next design">→</button>
+</nav>
+
+<script>
+// Navigation
+const TOTAL_DESIGNS = 250;
+const CURRENT_ID = 8;
+
+function navigateNext() {
+    const nextId = CURRENT_ID >= TOTAL_DESIGNS ? 1 : CURRENT_ID + 1;
+    window.location.href = `design-${nextId}.html`;
+}
+
+function navigatePrev() {
+    const prevId = CURRENT_ID <= 1 ? TOTAL_DESIGNS : CURRENT_ID - 1;
+    window.location.href = `design-${prevId}.html`;
+}
+
+// Navigation removed
+
+// Reply form toggle
+function toggleReply(formId) {
+    const form = document.getElementById(formId);
+    if (form) {
+        form.classList.toggle('active');
+        if (form.classList.contains('active')) {
+            const textarea = form.querySelector('textarea');
+            if (textarea) textarea.focus();
+        }
+    }
+}
+
+// Vote button interactions
+document.querySelectorAll('.vote-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const controls = this.closest('.vote-controls');
+        const isUpvote = this.classList.contains('upvote');
+        const counterSpan = controls.querySelector('.vote-count');
+        let count = parseInt(counterSpan.textContent);
+
+        // Toggle active state
+        if (this.classList.contains('active')) {
+            this.classList.remove('active');
+            count += isUpvote ? -1 : 1;
+        } else {
+            // Remove active from opposite button
+            const otherButton = controls.querySelector(isUpvote ? '.downvote' : '.upvote');
+            if (otherButton.classList.contains('active')) {
+                otherButton.classList.remove('active');
+                count += isUpvote ? 2 : -2;
+            } else {
+                count += isUpvote ? 1 : -1;
+            }
+            this.classList.add('active');
+        }
+
+        counterSpan.textContent = count;
+    });
+});
+
+// Control button interactions
+document.querySelectorAll('.control-button').forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove active from siblings in same group
+        const group = this.closest('.control-group');
+        group.querySelectorAll('.control-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        this.classList.add('active');
+    });
+});
+</script>
+
+</body>
+</html>

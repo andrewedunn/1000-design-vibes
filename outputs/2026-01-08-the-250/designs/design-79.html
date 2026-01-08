@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Global - Exam Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!--
+    DESIGN: Cipher Global - Crafted for users with international roots
+    ABOUTME: This design system implements exam_interface with Swiss International aesthetics in dark mode.
+    ABOUTME: Key characteristics: Precise grid alignment, minimal ornamentation, cryptographic visual language
+
+    QUICK START - Copy these variables to apply this design:
+    --color-primary: #00D9FF;
+    --color-background: #0A0E14;
+    --color-surface: #151921;
+    --color-surface-elevated: #1C2128;
+    --color-text: #E8EAED;
+    --color-text-muted: #8B92A0;
+    --color-border: #2A2F3A;
+    --color-accent: #FF6B9D;
+    --color-warning: #FFB800;
+    --color-success: #00FF88;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --radius-default: 2px;
+    --space-unit: 8px;
+
+    AESTHETIC PRINCIPLES:
+    1. Absolute grid precision - All elements align to 8px baseline grid with mathematical exactness
+    2. Cryptographic mystery through hex codes, hash patterns, and encoded visual elements
+    3. Swiss objectivity meets dark finance aesthetics - Information hierarchy without decoration
+    4. Asymmetric balance creates tension while maintaining functional clarity
+
+    BEST FOR:
+    - High-stakes certification exams in finance, security, or international contexts
+    - Professional assessment platforms requiring focus and precision
+    - Multilingual testing environments with global user bases
+    - Cryptography, blockchain, or security certification interfaces
+
+    AVOID IF:
+    - You need warm, approachable educational experiences
+    - Target audience is young children or casual learners
+    - Accessibility requires higher contrast ratios (this is WCAG AA minimum)
+    - Brand guidelines require color or ornamentation
+
+    FUNCTIONAL DIRECTION: exam_interface
+    This design must clearly function as an exam_interface. Required elements:
+    - Question navigation with clear progress indication
+    - Answer area with multiple choice and text input options
+    - Flag for review functionality with visual states
+    - Submit button with confirmation states
+    - Timer display with warning states
+    - Question counter showing current/total
+
+    DIMENSION DETAILS:
+    - design_era: swiss_international - Helvetica-inspired precision, objective grid systems, minimal decoration
+    - color_mode: dark_only - Deep backgrounds with careful contrast management
+    - industry: finance - Professional, trustworthy, precise
+    - emotional_tone: mysterious - Cryptographic elements, encoded visuals, tension through asymmetry
+    - functional_direction: exam_interface - Complete testing environment with all required components
+
+    DESIGN DECISIONS:
+    1. Grid System: Strict 8px baseline grid creates Swiss precision
+    2. Typography: Space Grotesk provides geometric neutrality with subtle warmth
+    3. Color: Cyan primary (#00D9FF) evokes digital trust; pink accent (#FF6B9D) adds mysterious energy
+    4. Cryptographic Elements: Hex patterns, hash displays, encoded question IDs create mystery
+    5. Asymmetric Layout: Off-center alignment creates tension while maintaining Swiss order
+    6. Monospace Details: IBM Plex Mono for codes, timers, and technical information
+    7. Minimal Borders: 1-2px hairlines define structure without visual weight
+    8. Dark Surfaces: Layered elevation (0A0E14 → 151921 → 1C2128) provides depth
+
+    INTERACTION PATTERNS:
+    - Hover states use subtle border highlights rather than background changes
+    - Focus states employ high-contrast cyan outlines
+    - Disabled states reduce opacity while maintaining structure
+    - Active selections use cyan accent with increased surface brightness
+    - Flag toggles shift from muted to accent color
+    - Timer warnings transition yellow → orange → red as time decreases
+
+    ACCESSIBILITY NOTES:
+    - All text meets WCAG AA contrast requirements (4.5:1 minimum)
+    - Interactive elements are minimum 44x44px touch targets
+    - Focus indicators are 2px solid outlines with sufficient contrast
+    - Reduced motion respected for all transitions and animations
+    - Semantic HTML structure supports screen readers
+    - Color is never the only indicator of state
+    -->
+</head>
+
+<style>
+    /* === RESET & BASE === */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        /* Colors */
+        --color-primary: #00D9FF;
+        --color-background: #0A0E14;
+        --color-surface: #151921;
+        --color-surface-elevated: #1C2128;
+        --color-text: #E8EAED;
+        --color-text-muted: #8B92A0;
+        --color-border: #2A2F3A;
+        --color-accent: #FF6B9D;
+        --color-warning: #FFB800;
+        --color-success: #00FF88;
+        --color-error: #FF4757;
+
+        /* Typography */
+        --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+        /* Spacing - 8px baseline grid */
+        --space-unit: 8px;
+        --space-xs: calc(var(--space-unit) * 1);
+        --space-sm: calc(var(--space-unit) * 2);
+        --space-md: calc(var(--space-unit) * 3);
+        --space-lg: calc(var(--space-unit) * 4);
+        --space-xl: calc(var(--space-unit) * 6);
+        --space-2xl: calc(var(--space-unit) * 8);
+
+        /* Shapes */
+        --radius-default: 2px;
+        --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.4);
+        --border-width: 1px;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* === LAYOUT === */
+    .exam-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: 64px 1fr;
+        grid-template-areas:
+            "sidebar header"
+            "sidebar main";
+        min-height: 100vh;
+        max-width: 1920px;
+        margin: 0 auto;
+    }
+
+    /* === HEADER === */
+    .exam-header {
+        grid-area: header;
+        background: var(--color-surface);
+        border-bottom: var(--border-width) solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--space-lg);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .exam-title {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+    }
+
+    .exam-id {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-primary);
+        margin-left: var(--space-sm);
+    }
+
+    .header-actions {
+        display: flex;
+        gap: var(--space-md);
+        align-items: center;
+    }
+
+    .timer {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--color-text);
+        padding: var(--space-sm) var(--space-md);
+        background: var(--color-surface-elevated);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+    }
+
+    .timer-icon {
+        width: 20px;
+        height: 20px;
+        color: var(--color-warning);
+    }
+
+    .timer.warning {
+        border-color: var(--color-warning);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    /* === SIDEBAR === */
+    .exam-sidebar {
+        grid-area: sidebar;
+        background: var(--color-surface);
+        border-right: var(--border-width) solid var(--color-border);
+        padding: var(--space-lg);
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    .progress-section {
+        margin-bottom: var(--space-xl);
+    }
+
+    .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-sm);
+    }
+
+    .progress-bar-container {
+        background: var(--color-background);
+        height: 8px;
+        border-radius: var(--radius-default);
+        overflow: hidden;
+        margin-bottom: var(--space-xs);
+        border: var(--border-width) solid var(--color-border);
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+        transition: width 0.3s ease;
+        width: 12%;
+    }
+
+    .progress-text {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--color-text-muted);
+        margin-top: var(--space-xs);
+    }
+
+    .question-nav {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-xs);
+        margin-top: var(--space-md);
+    }
+
+    .question-nav-item {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-surface-elevated);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .question-nav-item:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .question-nav-item.current {
+        background: var(--color-primary);
+        color: var(--color-background);
+        border-color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .question-nav-item.answered {
+        background: var(--color-surface-elevated);
+        border-color: var(--color-success);
+        color: var(--color-success);
+    }
+
+    .question-nav-item.flagged {
+        border-color: var(--color-accent);
+        background: rgba(255, 107, 157, 0.1);
+        color: var(--color-accent);
+    }
+
+    .question-nav-item.flagged::after {
+        content: '⚑';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-size: 8px;
+    }
+
+    .legend {
+        margin-top: var(--space-lg);
+        padding-top: var(--space-lg);
+        border-top: var(--border-width) solid var(--color-border);
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-sm);
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .legend-box {
+        width: 20px;
+        height: 20px;
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        flex-shrink: 0;
+    }
+
+    .legend-box.current { background: var(--color-primary); border-color: var(--color-primary); }
+    .legend-box.answered { border-color: var(--color-success); }
+    .legend-box.flagged { border-color: var(--color-accent); background: rgba(255, 107, 157, 0.1); }
+
+    /* === MAIN CONTENT === */
+    .exam-main {
+        grid-area: main;
+        padding: var(--space-2xl);
+        overflow-y: auto;
+        max-width: 900px;
+    }
+
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-xl);
+        padding-bottom: var(--space-lg);
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .question-counter {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-text-muted);
+        letter-spacing: 0.05em;
+    }
+
+    .question-counter span {
+        color: var(--color-primary);
+        font-family: var(--font-mono);
+    }
+
+    .question-hash {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+        letter-spacing: 0.02em;
+    }
+
+    .flag-button {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        padding: var(--space-sm) var(--space-md);
+        background: transparent;
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        color: var(--color-text-muted);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 44px;
+    }
+
+    .flag-button:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    .flag-button.flagged {
+        background: rgba(255, 107, 157, 0.15);
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    .flag-button:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .question-content {
+        margin-bottom: var(--space-xl);
+    }
+
+    .question-text {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+        color: var(--color-text);
+        margin-bottom: var(--space-lg);
+    }
+
+    .question-context {
+        background: var(--color-surface);
+        border-left: 3px solid var(--color-primary);
+        padding: var(--space-md) var(--space-lg);
+        margin: var(--space-lg) 0;
+        border-radius: var(--radius-default);
+    }
+
+    .question-context p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--color-text-muted);
+    }
+
+    .question-context code {
+        font-family: var(--font-mono);
+        background: var(--color-background);
+        padding: 2px 6px;
+        border-radius: var(--radius-default);
+        font-size: 13px;
+        color: var(--color-primary);
+    }
+
+    .answers {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+        margin-bottom: var(--space-2xl);
+    }
+
+    .answer-option {
+        position: relative;
+    }
+
+    .answer-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .answer-label {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-md);
+        padding: var(--space-md) var(--space-lg);
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 56px;
+    }
+
+    .answer-label:hover {
+        border-color: var(--color-primary);
+        background: var(--color-surface-elevated);
+    }
+
+    .answer-option input[type="radio"]:checked + .answer-label {
+        background: rgba(0, 217, 255, 0.1);
+        border-color: var(--color-primary);
+    }
+
+    .answer-option input[type="radio"]:focus + .answer-label {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .answer-marker {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--color-border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        margin-top: 2px;
+    }
+
+    .answer-option input[type="radio"]:checked + .answer-label .answer-marker {
+        border-color: var(--color-primary);
+        background: var(--color-primary);
+    }
+
+    .answer-option input[type="radio"]:checked + .answer-label .answer-marker::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--color-background);
+        border-radius: 50%;
+    }
+
+    .answer-text {
+        flex: 1;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--color-text);
+        padding-top: 2px;
+    }
+
+    .answer-id {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+        margin-right: var(--space-sm);
+    }
+
+    /* === NAVIGATION === */
+    .question-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: var(--space-xl);
+        border-top: var(--border-width) solid var(--color-border);
+        margin-top: var(--space-2xl);
+    }
+
+    .nav-button {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-md) var(--space-lg);
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--radius-default);
+        color: var(--color-text);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 48px;
+        min-width: 120px;
+    }
+
+    .nav-button:hover:not(:disabled) {
+        background: var(--color-surface-elevated);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .nav-button:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .nav-button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .nav-button.primary {
+        background: var(--color-primary);
+        color: var(--color-background);
+        border-color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .nav-button.primary:hover:not(:disabled) {
+        background: #00BBDD;
+        border-color: #00BBDD;
+        color: var(--color-background);
+    }
+
+    .nav-button.submit {
+        background: var(--color-success);
+        border-color: var(--color-success);
+        color: var(--color-background);
+    }
+
+    .nav-button.submit:hover:not(:disabled) {
+        background: #00DD77;
+        border-color: #00DD77;
+    }
+
+    /* === CRYPTOGRAPHIC PATTERNS === */
+    .crypto-pattern {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 400px;
+        height: 400px;
+        opacity: 0.03;
+        pointer-events: none;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        line-height: 1.2;
+        color: var(--color-primary);
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    /* === ACCESSIBILITY === */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+        .exam-container {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "header"
+                "main";
+        }
+
+        .exam-sidebar {
+            display: none;
+        }
+
+        .exam-main {
+            padding: var(--space-lg);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .exam-header {
+            padding: 0 var(--space-md);
+        }
+
+        .exam-title {
+            font-size: 12px;
+        }
+
+        .timer {
+            font-size: 16px;
+            padding: var(--space-xs) var(--space-sm);
+        }
+
+        .question-text {
+            font-size: 18px;
+        }
+
+        .answer-label {
+            padding: var(--space-sm) var(--space-md);
+        }
+
+        .question-navigation {
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .nav-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Focus visible polyfill */
+    .nav-button:focus-visible,
+    .flag-button:focus-visible,
+    .question-nav-item:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+</style>
+
+<body>
+    <div class="crypto-pattern" aria-hidden="true">
+        7a3f8e1b 9c4d2a6f 5e8b1c9d 3a7f2e4b 8d1c6a9f 2e5b7c3a 6f9d1e8b 4a2c7f5e
+        1b9c3d6a 8f2e4b7c 5a9d1e3f 7b6c8a2d 4e1f9b5c 3a7d2e6f 8b1c4a9d 5e7f2b3c
+        6a9d1e4b 2c7f5a8e 3d6b1c9a 7f4e2b5d 1a8c6e9f 5b3d7a2c 9e4f1b6a 8d2c5e7f
+        3a1b9c6d 7e4f2a5b 6c8d1e9f 2b5a7c3d 4e9f1b8a 7c3d6e2f 5a8b1c9d 3e7f4a2b
+    </div>
+
+    <div class="exam-container">
+        <!-- SIDEBAR -->
+        <aside class="exam-sidebar">
+            <div class="progress-section">
+                <div class="section-label">Progress</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-text">3 of 25 answered</div>
+            </div>
+
+            <div class="progress-section">
+                <div class="section-label">Question Navigator</div>
+                <div class="question-nav" role="navigation" aria-label="Question navigation">
+                    <button class="question-nav-item answered" aria-label="Question 1, answered">1</button>
+                    <button class="question-nav-item answered" aria-label="Question 2, answered">2</button>
+                    <button class="question-nav-item current" aria-label="Question 3, current" aria-current="true">3</button>
+                    <button class="question-nav-item" aria-label="Question 4">4</button>
+                    <button class="question-nav-item flagged" aria-label="Question 5, flagged">5</button>
+                    <button class="question-nav-item" aria-label="Question 6">6</button>
+                    <button class="question-nav-item" aria-label="Question 7">7</button>
+                    <button class="question-nav-item" aria-label="Question 8">8</button>
+                    <button class="question-nav-item" aria-label="Question 9">9</button>
+                    <button class="question-nav-item" aria-label="Question 10">10</button>
+                    <button class="question-nav-item" aria-label="Question 11">11</button>
+                    <button class="question-nav-item" aria-label="Question 12">12</button>
+                    <button class="question-nav-item" aria-label="Question 13">13</button>
+                    <button class="question-nav-item" aria-label="Question 14">14</button>
+                    <button class="question-nav-item" aria-label="Question 15">15</button>
+                    <button class="question-nav-item" aria-label="Question 16">16</button>
+                    <button class="question-nav-item" aria-label="Question 17">17</button>
+                    <button class="question-nav-item" aria-label="Question 18">18</button>
+                    <button class="question-nav-item" aria-label="Question 19">19</button>
+                    <button class="question-nav-item" aria-label="Question 20">20</button>
+                    <button class="question-nav-item" aria-label="Question 21">21</button>
+                    <button class="question-nav-item" aria-label="Question 22">22</button>
+                    <button class="question-nav-item" aria-label="Question 23">23</button>
+                    <button class="question-nav-item" aria-label="Question 24">24</button>
+                    <button class="question-nav-item" aria-label="Question 25">25</button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="section-label">Legend</div>
+                <div class="legend-item">
+                    <div class="legend-box current"></div>
+                    <span>Current</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box answered"></div>
+                    <span>Answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box flagged"></div>
+                    <span>Flagged</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box"></div>
+                    <span>Not answered</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- HEADER -->
+        <header class="exam-header">
+            <div>
+                <span class="exam-title">CFI Level III Certification</span>
+                <span class="exam-id">EXAM-7DE687011FEB</span>
+            </div>
+            <div class="header-actions">
+                <div class="timer warning" role="timer" aria-live="polite">
+                    <svg class="timer-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>47:23</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="exam-main">
+            <div class="question-header">
+                <div>
+                    <div class="question-counter">
+                        Question <span>03</span> of <span>25</span>
+                    </div>
+                    <div class="question-hash">hash:ca51b69d1abc15ade48c9758</div>
+                </div>
+                <button class="flag-button" id="flagButton" aria-pressed="false">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                    <span>Flag for review</span>
+                </button>
+            </div>
+
+            <div class="question-content">
+                <h1 class="question-text">
+                    In the context of international financial reporting standards (IFRS), which cryptographic hashing algorithm is mandated for blockchain-based audit trail verification in cross-border transactions exceeding €10 million?
+                </h1>
+
+                <div class="question-context">
+                    <p>
+                        According to Basel III regulations amended in 2024, all transactions subject to enhanced due diligence must implement immutable audit trails. Consider the computational efficiency requirements for real-time settlement across multiple jurisdictions with varying data sovereignty laws.
+                    </p>
+                </div>
+            </div>
+
+            <form class="answers" role="radiogroup" aria-labelledby="question-text">
+                <div class="answer-option">
+                    <input type="radio" name="answer" id="answer-a" value="a">
+                    <label for="answer-a" class="answer-label">
+                        <div class="answer-marker"></div>
+                        <div class="answer-text">
+                            <span class="answer-id">A.</span>
+                            SHA-256 with HMAC-based key derivation for enhanced collision resistance
+                        </div>
+                    </label>
+                </div>
+
+                <div class="answer-option">
+                    <input type="radio" name="answer" id="answer-b" value="b">
+                    <label for="answer-b" class="answer-label">
+                        <div class="answer-marker"></div>
+                        <div class="answer-text">
+                            <span class="answer-id">B.</span>
+                            SHA-3 (Keccak) with 512-bit output for regulatory compliance and quantum resistance
+                        </div>
+                    </label>
+                </div>
+
+                <div class="answer-option">
+                    <input type="radio" name="answer" id="answer-c" value="c" checked>
+                    <label for="answer-c" class="answer-label">
+                        <div class="answer-marker"></div>
+                        <div class="answer-text">
+                            <span class="answer-id">C.</span>
+                            BLAKE2b with custom domain separation parameters aligned with ISO 20022 messaging standards
+                        </div>
+                    </label>
+                </div>
+
+                <div class="answer-option">
+                    <input type="radio" name="answer" id="answer-d" value="d">
+                    <label for="answer-d" class="answer-label">
+                        <div class="answer-marker"></div>
+                        <div class="answer-text">
+                            <span class="answer-id">D.</span>
+                            MD5 with salting mechanisms sufficient for legacy system integration requirements
+                        </div>
+                    </label>
+                </div>
+            </form>
+
+            <nav class="question-navigation">
+                <button class="nav-button" id="prevButton">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Previous
+                </button>
+
+                <button class="nav-button primary" id="nextButton">
+                    Next
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </nav>
+        </main>
+    </div>
+
+    
+</body>
+</html>

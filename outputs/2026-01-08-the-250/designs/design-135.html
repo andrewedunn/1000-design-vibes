@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Marble - Natural vibes for creative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+DESIGN: Metro Marble - Natural vibes for creative
+ABOUTME: This design system implements a unit_converter with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: Raw HTML borders, dark natural palette, stark contrast with marble textures
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #a8e6cf;
+--color-accent: #7ec4a6;
+--color-background: #1a1a1a;
+--color-surface: #2a2a2a;
+--color-border: #4a4a4a;
+--color-text: #e8e8e8;
+--color-text-muted: #a0a0a0;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Space Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Thick borders (4-6px) define all functional boundaries - raw and honest structure
+2. Natural green accents on dark background create organic trustworthy feel
+3. Monospace typography with geometric sans headings emphasizes precision and conversion accuracy
+4. Zero border radius maintains brutalist aesthetic while marble-like texture patterns soften the harshness
+5. High contrast between background layers creates clear information hierarchy
+
+COLOR PALETTE:
+Background: #1a1a1a (Deep charcoal)
+Surface: #2a2a2a (Elevated charcoal)
+Surface-alt: #353535 (Input fields)
+Primary: #a8e6cf (Mint green - natural, trustworthy)
+Accent: #7ec4a6 (Sage green)
+Border: #4a4a4a (Strong separation)
+Text: #e8e8e8 (High contrast white)
+Text-muted: #a0a0a0 (Secondary info)
+Error: #ff6b6b
+Success: #a8e6cf
+
+TYPOGRAPHY:
+Heading: Space Grotesk (Geometric sans with character)
+Body/Mono: Space Mono (Precision for numbers and conversions)
+Scale: 14px, 16px, 20px, 28px, 42px
+
+SPATIAL SYSTEM:
+Base unit: 8px
+Spacing scale: 8, 16, 24, 32, 48, 64px
+Container max-width: 1200px
+Input height: 56px (generous touch target)
+Button height: 48px
+
+BEST FOR:
+- Creative professionals needing reliable conversion tools
+- Design systems requiring bold, honest aesthetic
+- Applications where trust and accuracy are paramount
+- Dark-mode-first interfaces with natural undertones
+- Tools used by developers, designers, and technical creatives
+
+AVOID IF:
+- You need light mode support
+- Target audience prefers soft, rounded interfaces
+- Brand requires colorful, playful aesthetic
+- Need to convey luxury or premium positioning
+
+FUNCTIONAL DIRECTION: unit_converter
+This design must clearly function as a unit_converter. Required elements:
+- Multiple conversion categories (length, weight, temperature, area, volume, time, speed, data)
+- Input field for source value with unit selector
+- Output field for converted value with unit selector
+- Clear category switching mechanism
+- Instant conversion calculation display
+- Swap button to reverse conversion direction
+- Common conversion presets for quick access
+- Precise decimal handling and scientific notation support
+- History or recent conversions list
+- Clear visual feedback for active conversion category
+
+DESIGN ERA: neo_brutalist
+Raw HTML aesthetic with bold borders, stark contrasts, honest structure, minimal decoration.
+Typography-forward design with strong geometric shapes and uncompromising use of space.
+
+INDUSTRY: creative
+Designed for creative professionals - designers, developers, content creators who appreciate
+bold aesthetic choices and need reliable functional tools in their workflow.
+
+EMOTIONAL TONE: trustworthy
+Natural green palette on dark background conveys reliability, accuracy, and stability.
+Clear structure and honest presentation builds confidence in conversion accuracy.
+
+COLOR MODE: dark_only
+Optimized exclusively for dark environments with high contrast and reduced eye strain.
+Natural green accents pop against deep charcoal backgrounds.
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #a8e6cf;
+    --color-accent: #7ec4a6;
+    --color-background: #1a1a1a;
+    --color-surface: #2a2a2a;
+    --color-surface-alt: #353535;
+    --color-border: #4a4a4a;
+    --color-text: #e8e8e8;
+    --color-text-muted: #a0a0a0;
+    --color-error: #ff6b6b;
+    --color-success: #a8e6cf;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Mono', monospace;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+    --space-xxl: 64px;
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-width: 4px;
+    --border-width-thick: 6px;
+    --shadow-default: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    font-size: 16px;
+}
+
+/* Marble texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(168, 230, 207, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(126, 196, 166, 0.02) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(168, 230, 207, 0.01) 2px, rgba(168, 230, 207, 0.01) 4px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+    z-index: 1;
+}
+
+/* Header */
+header {
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    background: var(--color-surface);
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 8px;
+    right: -8px;
+    height: 8px;
+    background: var(--color-border);
+    z-index: -1;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+    color: var(--color-primary);
+    letter-spacing: -1px;
+}
+
+.tagline {
+    font-size: 16px;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+}
+
+/* Category Navigation */
+.category-nav {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.category-btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: var(--space-sm) var(--space-md);
+    border: 3px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+}
+
+.category-btn:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-accent);
+}
+
+.category-btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.category-btn.active {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Main Converter Area */
+.converter-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.converter-panel {
+    border: var(--border-width-thick) solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    position: relative;
+}
+
+.converter-panel::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: 10px;
+    bottom: 10px;
+    border: var(--border-width) solid var(--color-border);
+    z-index: -1;
+}
+
+.panel-label {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.value-input {
+    font-family: var(--font-body);
+    font-size: 28px;
+    font-weight: 700;
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    height: 56px;
+}
+
+.value-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-background);
+}
+
+.value-input:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.unit-select {
+    font-family: var(--font-body);
+    font-size: 16px;
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.unit-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.swap-container {
+    text-align: center;
+    margin: var(--space-lg) 0;
+}
+
+.swap-btn {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    padding: var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-accent);
+    color: var(--color-background);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swap-btn:hover {
+    background: var(--color-primary);
+    transform: scale(1.05);
+}
+
+.swap-btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+.swap-btn:active {
+    transform: scale(0.95);
+}
+
+/* Quick Presets */
+.presets-section {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.presets-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.presets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-sm);
+}
+
+.preset-btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: var(--space-md);
+    border: 3px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.preset-btn:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-accent);
+}
+
+.preset-btn:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.preset-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.preset-value {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+/* Conversion History */
+.history-section {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.history-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-list {
+    list-style: none;
+}
+
+.history-item {
+    padding: var(--space-md);
+    border: 3px solid var(--color-border);
+    background: var(--color-background);
+    margin-bottom: var(--space-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item:last-child {
+    margin-bottom: 0;
+}
+
+.history-conversion {
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.history-time {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.clear-history-btn {
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: var(--space-xs) var(--space-sm);
+    border: 2px solid var(--color-error);
+    background: transparent;
+    color: var(--color-error);
+    cursor: pointer;
+    margin-top: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.clear-history-btn:hover {
+    background: var(--color-error);
+    color: var(--color-background);
+}
+
+.clear-history-btn:focus {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+}
+
+/* Formula Display */
+.formula-section {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.formula-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+}
+
+.formula-display {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-muted);
+    background: var(--color-background);
+    padding: var(--space-md);
+    border: 2px solid var(--color-border);
+}
+
+.formula-display code {
+    color: var(--color-primary);
+}
+
+/* Footer Navigation */
+footer {
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-lg) 0;
+    margin-top: var(--space-xxl);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.design-credit {
+    font-family: var(--font-heading);
+}
+
+.navigation-hint {
+    font-family: var(--font-body);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-md);
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .category-nav {
+        flex-direction: column;
+    }
+
+    .category-btn {
+        width: 100%;
+    }
+
+    .input-group {
+        grid-template-columns: 1fr;
+    }
+
+    .value-input {
+        font-size: 20px;
+    }
+
+    .presets-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: var(--space-sm);
+        text-align: center;
+    }
+}
+
+@media (min-width: 769px) {
+    .converter-main {
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+    }
+
+    .swap-container {
+        margin: 0;
+    }
+}
+</style>
+
+<div class="container">
+    <header>
+        <h1>Metro Marble</h1>
+        <p class="tagline">Natural vibes for creative</p>
+    </header>
+
+    <nav class="category-nav" role="navigation" aria-label="Conversion categories">
+        <button class="category-btn active" data-category="length">Length</button>
+        <button class="category-btn" data-category="weight">Weight</button>
+        <button class="category-btn" data-category="temperature">Temperature</button>
+        <button class="category-btn" data-category="area">Area</button>
+        <button class="category-btn" data-category="volume">Volume</button>
+        <button class="category-btn" data-category="time">Time</button>
+        <button class="category-btn" data-category="speed">Speed</button>
+        <button class="category-btn" data-category="data">Data</button>
+    </nav>
+
+    <section class="converter-main">
+        <div class="converter-panel">
+            <label class="panel-label" for="from-value">From</label>
+            <div class="input-group">
+                <input
+                    type="number"
+                    id="from-value"
+                    class="value-input"
+                    value="1"
+                    step="any"
+                    aria-label="Value to convert from"
+                />
+                <select id="from-unit" class="unit-select" aria-label="Unit to convert from">
+                    <option value="m">Meters (m)</option>
+                    <option value="km">Kilometers (km)</option>
+                    <option value="cm">Centimeters (cm)</option>
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="mi">Miles (mi)</option>
+                    <option value="yd">Yards (yd)</option>
+                    <option value="ft">Feet (ft)</option>
+                    <option value="in">Inches (in)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="swap-container">
+            <button class="swap-btn" aria-label="Swap units">⇄</button>
+        </div>
+
+        <div class="converter-panel">
+            <label class="panel-label" for="to-value">To</label>
+            <div class="input-group">
+                <input
+                    type="number"
+                    id="to-value"
+                    class="value-input"
+                    value="3.28084"
+                    disabled
+                    aria-label="Converted value"
+                />
+                <select id="to-unit" class="unit-select" aria-label="Unit to convert to">
+                    <option value="m">Meters (m)</option>
+                    <option value="km">Kilometers (km)</option>
+                    <option value="cm">Centimeters (cm)</option>
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="mi">Miles (mi)</option>
+                    <option value="yd">Yards (yd)</option>
+                    <option value="ft" selected>Feet (ft)</option>
+                    <option value="in">Inches (in)</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="presets-section">
+        <h2 class="presets-title">Quick Presets</h2>
+        <div class="presets-grid">
+            <button class="preset-btn">
+                <span class="preset-label">Marathon</span>
+                <span class="preset-value">42.195 km → miles</span>
+            </button>
+            <button class="preset-btn">
+                <span class="preset-label">Mount Everest</span>
+                <span class="preset-value">8,848 m → feet</span>
+            </button>
+            <button class="preset-btn">
+                <span class="preset-label">A4 Paper</span>
+                <span class="preset-value">210 mm → inches</span>
+            </button>
+            <button class="preset-btn">
+                <span class="preset-label">Golden Ratio</span>
+                <span class="preset-value">1.618 m → cm</span>
+            </button>
+        </div>
+    </section>
+
+    <section class="formula-section">
+        <h2 class="formula-title">Conversion Formula</h2>
+        <div class="formula-display">
+            <code>1 meter</code> = <code>3.28084 feet</code>
+            <br>
+            Formula: <code>meters × 3.28084 = feet</code>
+        </div>
+    </section>
+
+    <section class="history-section">
+        <h2 class="history-title">Recent Conversions</h2>
+        <ul class="history-list">
+            <li class="history-item">
+                <span class="history-conversion">1 m = 3.28084 ft</span>
+                <span class="history-time">Just now</span>
+            </li>
+            <li class="history-item">
+                <span class="history-conversion">100 cm = 1 m</span>
+                <span class="history-time">2 min ago</span>
+            </li>
+            <li class="history-item">
+                <span class="history-conversion">5280 ft = 1 mi</span>
+                <span class="history-time">5 min ago</span>
+            </li>
+            <li class="history-item">
+                <span class="history-conversion">1.5 km = 4921.26 ft</span>
+                <span class="history-time">8 min ago</span>
+            </li>
+        </ul>
+        <button class="clear-history-btn">Clear History</button>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <span class="design-credit">Design #135 of 250 - Metro Marble</span>
+            <span class="navigation-hint">Use ← → arrow keys to navigate</span>
+        </div>
+    </footer>
+</div>
+
+
+
+</body>
+</html>

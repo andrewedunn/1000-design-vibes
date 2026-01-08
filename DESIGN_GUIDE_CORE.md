@@ -135,33 +135,15 @@ When deciding typography, colors, shapes, etc., ask yourself:
 - Focus indicators on all interactive elements
 - Include `@media (prefers-reduced-motion: reduce)` block
 
-### Navigation Script (Required)
-Include this exact script at the end of your `<body>`:
+### CRITICAL: Do NOT Include
 
-```javascript
-<script>
-(function() {
-    const TOTAL = 10;
-    const CURRENT = 1; // UPDATE THIS to match design ID
+**NO NAVIGATION SCRIPTS** - The viewer handles navigation between designs. Do NOT add:
+- Keyboard event listeners for ArrowLeft/ArrowRight
+- Previous/Next buttons that navigate between designs
+- Touch swipe handlers for navigation
+- Any `window.location.href` redirects to other design files
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') window.location.href = `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`;
-        if (e.key === 'ArrowLeft') window.location.href = `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
-    });
-
-    let startX;
-    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-    document.addEventListener('touchend', e => {
-        const diff = startX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 50) {
-            window.location.href = diff > 0
-                ? `design-${CURRENT === TOTAL ? 1 : CURRENT + 1}.html`
-                : `design-${CURRENT === 1 ? TOTAL : CURRENT - 1}.html`;
-        }
-    });
-})();
-</script>
-```
+**CSS COMMENTS ONLY** - Inside `<style>` blocks, use CSS comments `/* */`, never HTML comments `<!-- -->`.
 
 ---
 

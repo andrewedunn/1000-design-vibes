@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisp Prime - Where flat meets international aesthetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Crisp Prime - Where flat meets international aesthetics
+        ABOUTME: This design system implements recipe_card with flat 2010s aesthetics.
+        ABOUTME: Key characteristics: stark geometric layouts, bold sans-serif typography, primary color blocks with no gradients
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #2962FF;
+        --color-secondary: #FF6D00;
+        --color-background: #FFFFFF;
+        --color-surface: #F5F5F5;
+        --color-text: #212121;
+        --color-text-muted: #757575;
+        --color-success: #00C853;
+        --color-border: #E0E0E0;
+        --font-heading: 'Work Sans', sans-serif;
+        --font-body: 'Work Sans', sans-serif;
+        --font-mono: 'IBM Plex Mono', monospace;
+        --radius-default: 0px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Pure flat design - no shadows, no gradients, just solid geometric forms
+        2. Swiss International Grid System - precise alignment and whitespace
+        3. Bold color blocking with primary colors creates visual hierarchy
+        4. Typography at multiple scales with tight leading for modern edge
+        5. Sharp corners and clean lines emphasize the flat 2010s era
+
+        BEST FOR:
+        - Modern recipe applications emphasizing clarity
+        - SaaS products requiring professional, clean interfaces
+        - Content-heavy layouts needing strong information hierarchy
+        - International audiences expecting neutral, objective design
+
+        AVOID IF:
+        - You need warm, inviting, homey aesthetics
+        - Organic or playful food presentation is required
+        - Brand requires depth, shadows, or dimensional effects
+        - Target audience expects traditional cookbook styling
+
+        FUNCTIONAL DIRECTION: recipe_card
+        This design must clearly function as a recipe_card. Required elements:
+        - Recipe title and description
+        - Ingredient list with measurements
+        - Step-by-step cooking instructions
+        - Prep time, cook time, servings information
+        - Difficulty level indicator
+        - Cuisine type or category tags
+        - Large hero image of finished dish
+        - Nutritional information (optional but included)
+        - Rating/review system
+        - Print and save functionality
+
+        DESIGN RATIONALE:
+        Crisp Prime combines the geometric precision of Swiss International design
+        with the flat, skeuomorphism-free aesthetic that dominated web design from
+        2010-2015. The lack of shadows and gradients creates a stark, honest interface
+        that lets content breathe. Bold primary colors (Material Blue and Deep Orange)
+        provide visual punctuation without decoration. The grid system ensures every
+        element aligns to a baseline, creating the "international" feeling - neutral,
+        objective, universally readable. Work Sans provides the geometric sans-serif
+        foundation while IBM Plex Mono handles technical data like measurements.
+
+        COLOR PSYCHOLOGY:
+        - Primary Blue: Trust, professionalism, clarity
+        - Orange Accent: Energy, appetite stimulation, action
+        - Neutral Grays: Swiss objectivity, content focus
+        - High Contrast: Accessibility and flat design principle
+
+        LAYOUT STRATEGY:
+        The recipe card uses a split-screen approach with the hero image occupying
+        exactly 50% of the viewport on desktop, then collapsing to full-width on
+        mobile. All content follows an 8px grid with generous whitespace. Ingredient
+        lists and instructions use clean typographic hierarchy without ornament.
+        The flat design era's preference for "content is king" is honored through
+        minimal chrome and maximum information density without clutter.
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #2962FF;
+            --color-secondary: #FF6D00;
+            --color-background: #FFFFFF;
+            --color-surface: #F5F5F5;
+            --color-text: #212121;
+            --color-text-muted: #757575;
+            --color-success: #00C853;
+            --color-warning: #FDD835;
+            --color-border: #E0E0E0;
+
+            /* Typography */
+            --font-heading: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+            /* Spacing - 8px grid */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1); /* 8px */
+            --space-sm: calc(var(--space-unit) * 2); /* 16px */
+            --space-md: calc(var(--space-unit) * 3); /* 24px */
+            --space-lg: calc(var(--space-unit) * 4); /* 32px */
+            --space-xl: calc(var(--space-unit) * 6); /* 48px */
+            --space-xxl: calc(var(--space-unit) * 8); /* 64px */
+
+            /* Shapes */
+            --radius-default: 0px;
+            --shadow-default: none;
+
+            /* Typography Scale - Perfect Fourth (1.333) */
+            --font-size-xs: 0.75rem;    /* 12px */
+            --font-size-sm: 0.875rem;   /* 14px */
+            --font-size-base: 1rem;     /* 16px */
+            --font-size-md: 1.125rem;   /* 18px */
+            --font-size-lg: 1.333rem;   /* 21.33px */
+            --font-size-xl: 1.777rem;   /* 28.43px */
+            --font-size-xxl: 2.369rem;  /* 37.9px */
+            --font-size-xxxl: 3.157rem; /* 50.51px */
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navigation - Top Fixed Flat Bar */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-lg);
+            z-index: 1000;
+            border-bottom: 4px solid #1E40AF;
+        }
+
+        .nav-title {
+            font-size: var(--font-size-lg);
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .nav-btn {
+            background: white;
+            color: var(--color-primary);
+            border: none;
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-secondary);
+            color: white;
+        }
+
+        .nav-btn:focus {
+            outline: 3px solid white;
+            outline-offset: 2px;
+        }
+
+        /* Split Screen Layout */
+        .container {
+            margin-top: 64px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Hero Image - Left Panel */
+        .hero-panel {
+            position: relative;
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-lg);
+        }
+
+        .hero-overlay h1 {
+            font-size: var(--font-size-xxl);
+            font-weight: 800;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .hero-overlay p {
+            font-size: var(--font-size-md);
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        /* Content Panel - Right Side */
+        .content-panel {
+            padding: var(--space-xxl);
+            overflow-y: auto;
+            background: white;
+        }
+
+        /* Meta Info Bar */
+        .meta-bar {
+            display: flex;
+            gap: var(--space-lg);
+            padding-bottom: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            border-bottom: 3px solid var(--color-border);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .meta-label {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+
+        .tag {
+            background: var(--color-surface);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .tag.difficulty-easy {
+            border-left-color: var(--color-success);
+        }
+
+        .tag.difficulty-medium {
+            border-left-color: var(--color-warning);
+        }
+
+        /* Rating */
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            padding: var(--space-md);
+            background: var(--color-surface);
+        }
+
+        .stars {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .star {
+            width: 24px;
+            height: 24px;
+            background: var(--color-secondary);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .star.empty {
+            background: var(--color-border);
+        }
+
+        .rating-text {
+            font-weight: 700;
+            font-size: var(--font-size-md);
+        }
+
+        .rating-count {
+            color: var(--color-text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-header {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-md);
+            padding-left: var(--space-sm);
+            border-left: 6px solid var(--color-secondary);
+            line-height: 1.2;
+        }
+
+        /* Ingredients List */
+        .ingredients-grid {
+            display: grid;
+            gap: var(--space-sm);
+        }
+
+        .ingredient-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--color-surface);
+            align-items: center;
+            border-left: 3px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .ingredient-item:hover {
+            border-left-color: var(--color-primary);
+        }
+
+        .ingredient-amount {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .ingredient-name {
+            font-size: var(--font-size-base);
+            font-weight: 400;
+            color: var(--color-text);
+        }
+
+        /* Instructions */
+        .instructions-list {
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        .instruction-step {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: var(--space-md);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .step-text {
+            padding-top: var(--space-xs);
+            font-size: var(--font-size-md);
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        /* Nutrition Facts */
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            background: var(--color-surface);
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: var(--space-md);
+            background: white;
+        }
+
+        .nutrition-value {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--color-primary);
+            font-family: var(--font-mono);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .nutrition-label {
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        /* Notes Section */
+        .notes {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-left: 6px solid var(--color-secondary);
+            margin-top: var(--space-xl);
+        }
+
+        .notes-title {
+            font-size: var(--font-size-md);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+        }
+
+        .notes-text {
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-panel {
+                min-height: 400px;
+            }
+
+            .content-panel {
+                padding: var(--space-lg);
+            }
+
+            .meta-bar {
+                flex-wrap: wrap;
+                gap: var(--space-md);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                padding: 0 var(--space-md);
+            }
+
+            .nav-title {
+                font-size: var(--font-size-base);
+            }
+
+            .nav-actions {
+                gap: var(--space-xs);
+            }
+
+            .nav-btn {
+                padding: var(--space-xs) var(--space-sm);
+                font-size: var(--font-size-xs);
+            }
+
+            .content-panel {
+                padding: var(--space-md);
+            }
+
+            .hero-overlay h1 {
+                font-size: var(--font-size-xl);
+            }
+
+            .section-header {
+                font-size: var(--font-size-lg);
+            }
+
+            .instruction-step {
+                grid-template-columns: 48px 1fr;
+            }
+
+            .step-number {
+                width: 48px;
+                height: 48px;
+                font-size: var(--font-size-lg);
+            }
+
+            .nutrition-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus styles */
+        *:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav,
+            .nav-actions,
+            .rating {
+                display: none;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-panel {
+                min-height: 300px;
+            }
+
+            .content-panel {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-title">Crisp Prime</div>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="window.print()">Print</button>
+            <button class="nav-btn" onclick="alert('Recipe saved!')">Save</button>
+            <button class="nav-btn" id="prevBtn">← Prev</button>
+            <button class="nav-btn" id="nextBtn">Next →</button>
+        </div>
+    </nav>
+
+    <!-- Split Screen Container -->
+    <div class="container">
+        <!-- Hero Panel - Left -->
+        <div class="hero-panel">
+            <svg class="hero-image" viewBox="0 0 800 1200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Simulated food photography with flat design aesthetic -->
+                <defs>
+                    <linearGradient id="plateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FAFAFA;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#E0E0E0;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Background -->
+                <rect width="800" height="1200" fill="#F5F5F5"/>
+
+                <!-- Wooden table texture simulation -->
+                <rect width="800" height="1200" fill="#8D6E63" opacity="0.1"/>
+                <rect x="0" y="0" width="800" height="40" fill="#6D4C41" opacity="0.05"/>
+                <rect x="0" y="80" width="800" height="30" fill="#6D4C41" opacity="0.05"/>
+                <rect x="0" y="150" width="800" height="50" fill="#6D4C41" opacity="0.05"/>
+
+                <!-- Plate -->
+                <circle cx="400" cy="600" r="320" fill="url(#plateGrad)"/>
+                <circle cx="400" cy="600" r="320" fill="none" stroke="#BDBDBD" stroke-width="2"/>
+
+                <!-- Pasta base -->
+                <ellipse cx="400" cy="600" rx="240" ry="200" fill="#FDD835"/>
+
+                <!-- Pasta strands - flat design style -->
+                <path d="M 300 550 Q 350 530 400 550 Q 450 570 500 550" fill="none" stroke="#F9A825" stroke-width="12"/>
+                <path d="M 280 580 Q 340 560 400 580 Q 460 600 520 580" fill="none" stroke="#F9A825" stroke-width="12"/>
+                <path d="M 290 610 Q 350 590 400 610 Q 450 630 510 610" fill="none" stroke="#F9A825" stroke-width="12"/>
+                <path d="M 310 640 Q 360 620 400 640 Q 440 660 490 640" fill="none" stroke="#F9A825" stroke-width="12"/>
+                <path d="M 320 670 Q 360 650 400 670 Q 440 690 480 670" fill="none" stroke="#F57C00" stroke-width="10"/>
+
+                <!-- Tomato sauce patches -->
+                <circle cx="350" cy="570" r="35" fill="#D32F2F" opacity="0.8"/>
+                <circle cx="450" cy="590" r="42" fill="#D32F2F" opacity="0.8"/>
+                <circle cx="380" cy="630" r="38" fill="#C62828" opacity="0.8"/>
+                <circle cx="420" cy="610" r="30" fill="#D32F2F" opacity="0.8"/>
+
+                <!-- Basil leaves - flat geometric -->
+                <ellipse cx="370" cy="555" rx="25" ry="35" fill="#2E7D32" transform="rotate(-25 370 555)"/>
+                <ellipse cx="430" cy="640" rx="28" ry="38" fill="#388E3C" transform="rotate(15 430 640)"/>
+                <ellipse cx="390" cy="600" rx="22" ry="32" fill="#2E7D32" transform="rotate(45 390 600)"/>
+
+                <!-- Parmesan shavings -->
+                <rect x="360" y="560" width="15" height="3" fill="#FFF9C4" opacity="0.9" transform="rotate(30 367 561)"/>
+                <rect x="440" y="600" width="20" height="3" fill="#FFF9C4" opacity="0.9" transform="rotate(-15 450 601)"/>
+                <rect x="410" y="630" width="18" height="3" fill="#FFF9C4" opacity="0.9" transform="rotate(60 419 631)"/>
+                <rect x="380" y="590" width="16" height="3" fill="#FFF9C4" opacity="0.9" transform="rotate(-40 388 591)"/>
+
+                <!-- Fork - left side -->
+                <rect x="120" y="500" width="12" height="180" fill="#90A4AE"/>
+                <rect x="115" y="490" width="22" height="30" fill="#90A4AE" rx="2"/>
+                <rect x="116" y="480" width="5" height="50" fill="#78909C"/>
+                <rect x="124" y="480" width="5" height="50" fill="#78909C"/>
+                <rect x="132" y="480" width="5" height="50" fill="#78909C"/>
+
+                <!-- Napkin - bottom right -->
+                <rect x="550" y="850" width="200" height="200" fill="#FFFFFF" opacity="0.9"/>
+                <path d="M 550 850 L 750 1050" stroke="#E0E0E0" stroke-width="2"/>
+                <path d="M 600 850 L 750 1000" stroke="#E0E0E0" stroke-width="1"/>
+                <path d="M 650 850 L 750 950" stroke="#E0E0E0" stroke-width="1"/>
+            </svg>
+
+            <div class="hero-overlay">
+                <h1>Classic Spaghetti Carbonara</h1>
+                <p>Authentic Roman pasta with eggs, guanciale, and Pecorino Romano</p>
+            </div>
+        </div>
+
+        <!-- Content Panel - Right -->
+        <div class="content-panel">
+            <!-- Meta Information -->
+            <div class="meta-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Prep Time</span>
+                    <span class="meta-value">15 min</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Cook Time</span>
+                    <span class="meta-value">20 min</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Servings</span>
+                    <span class="meta-value">4</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty</span>
+                    <span class="meta-value">Medium</span>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="tags">
+                <span class="tag">Italian</span>
+                <span class="tag">Pasta</span>
+                <span class="tag">Main Course</span>
+                <span class="tag difficulty-medium">Medium</span>
+            </div>
+
+            <!-- Rating -->
+            <div class="rating">
+                <div class="stars">
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                </div>
+                <span class="rating-text">5.0</span>
+                <span class="rating-count">(324 reviews)</span>
+            </div>
+
+            <!-- Ingredients Section -->
+            <section class="section">
+                <h2 class="section-header">Ingredients</h2>
+                <div class="ingredients-grid">
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">400g</span>
+                        <span class="ingredient-name">Spaghetti</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">200g</span>
+                        <span class="ingredient-name">Guanciale, diced</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">4 large</span>
+                        <span class="ingredient-name">Egg yolks</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">1 whole</span>
+                        <span class="ingredient-name">Egg</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">100g</span>
+                        <span class="ingredient-name">Pecorino Romano, finely grated</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">to taste</span>
+                        <span class="ingredient-name">Black pepper, freshly ground</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span class="ingredient-amount">to taste</span>
+                        <span class="ingredient-name">Salt, for pasta water</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instructions Section -->
+            <section class="section">
+                <h2 class="section-header">Instructions</h2>
+                <div class="instructions-list">
+                    <div class="instruction-step">
+                        <div class="step-number">01</div>
+                        <div class="step-text">
+                            Bring a large pot of salted water to boil. The water should taste like the sea. Add spaghetti and cook until al dente according to package directions, typically 8-10 minutes.
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">02</div>
+                        <div class="step-text">
+                            While pasta cooks, add diced guanciale to a cold large skillet. Turn heat to medium and cook until fat renders and guanciale is crispy, about 8-10 minutes. Remove from heat.
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">03</div>
+                        <div class="step-text">
+                            In a bowl, whisk together egg yolks, whole egg, grated Pecorino Romano, and a generous amount of black pepper. Mix until smooth and creamy.
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">04</div>
+                        <div class="step-text">
+                            Reserve 1 cup of pasta cooking water. Drain spaghetti and immediately add to the skillet with guanciale. Toss to combine while still hot.
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">05</div>
+                        <div class="step-text">
+                            Remove skillet from heat. Add egg mixture and toss vigorously, adding pasta water gradually until sauce is creamy and coats pasta. The residual heat will cook the eggs without scrambling.
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">06</div>
+                        <div class="step-text">
+                            Serve immediately with extra Pecorino Romano and black pepper on top. Carbonara waits for no one—enjoy while hot and creamy.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Nutrition Section -->
+            <section class="section">
+                <h2 class="section-header">Nutrition Facts</h2>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">650</span>
+                        <span class="nutrition-label">Calories</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">32g</span>
+                        <span class="nutrition-label">Fat</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">58g</span>
+                        <span class="nutrition-label">Carbs</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">28g</span>
+                        <span class="nutrition-label">Protein</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">890mg</span>
+                        <span class="nutrition-label">Sodium</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">2g</span>
+                        <span class="nutrition-label">Fiber</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chef's Notes -->
+            <div class="notes">
+                <div class="notes-title">Chef's Notes</div>
+                <div class="notes-text">
+                    <strong>Key to success:</strong> The secret to perfect carbonara is temperature control. The egg mixture must be added off-heat to prevent scrambling, using only the residual heat from the pasta and guanciale. Traditional Roman carbonara never uses cream—the creaminess comes entirely from the emulsified eggs and cheese. If you can't find guanciale, pancetta is an acceptable substitute, though purists may disagree. Never use bacon as it's too smoky.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>

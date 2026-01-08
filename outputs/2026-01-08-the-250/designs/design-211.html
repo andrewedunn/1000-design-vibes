@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Metro - Dating Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+/*
+DESIGN: Stark Metro - Natural meets neutral: a pop art perspective
+ABOUTME: This design system implements a dating_profile with pop_art aesthetics.
+ABOUTME: Key characteristics: bold typographic hierarchy, Roy Lichtenstein-inspired halftone dots,
+ABOUTME: Ben-Day dot patterns, flat bold colors with high contrast, comic book speech bubble elements.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF3366;
+--color-secondary: #FFD700;
+--color-background: #F5F5F0;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #666666;
+--color-accent-blue: #0066FF;
+--color-accent-red: #FF0033;
+--font-heading: 'Archivo Black', sans-serif;
+--font-body: 'Work Sans', sans-serif;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-width: 4px;
+
+AESTHETIC PRINCIPLES:
+1. "Bold graphic shapes and flat colors create instant visual hierarchy"
+2. "Thick black borders and Ben-Day dot patterns reference comic book printing"
+3. "High contrast typography with oversized headings evoke pop art posters"
+4. "Speech bubble and starburst elements add playful energy and nostalgia"
+5. "Grid-based layout with asymmetric accent blocks mimics Warhol repetition"
+
+BEST FOR:
+- Personality-forward dating profiles
+- Creative and art-focused communities
+- Youthful, energetic brand personalities
+- Education platforms with retro/nostalgic themes
+- Profile showcases needing bold differentiation
+
+AVOID IF:
+- Professional corporate contexts
+- Luxury or premium positioning required
+- Minimal or understated aesthetics needed
+- Accessibility concerns with bold patterns
+- Conservative or traditional audiences
+
+FUNCTIONAL DIRECTION: dating_profile
+This design must clearly function as a dating_profile. Required elements:
+- Photos carousel with multiple images
+- Bio section with personality description
+- Interests tags showing hobbies and preferences
+- Match percentage indicator
+- Message/connect button for communication
+- Profile stats (age, location, etc.)
+- Interactive elements for user engagement
+
+COLOR MODE: both
+Supports both light and dark mode with appropriate contrast ratios.
+
+DESIGN ERA: pop_art
+Bold, graphic, commercial art aesthetic inspired by Warhol, Lichtenstein, and 1960s
+advertising. Features flat colors, halftone dots, thick outlines, and ironic appropriation
+of commercial imagery.
+
+INDUSTRY: education
+References educational themes subtly through iconography and content structure.
+
+EMOTIONAL TONE: nostalgic
+Evokes memories of vintage comic books, old advertisements, and 60s counterculture.
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Pop Art Palette */
+            --color-primary: #FF3366;
+            --color-secondary: #FFD700;
+            --color-background: #F5F5F0;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #666666;
+            --color-accent-blue: #0066FF;
+            --color-accent-red: #FF0033;
+            --color-accent-green: #00CC66;
+            --color-border: #1A1A1A;
+
+            /* Typography */
+            --font-heading: 'Archivo Black', sans-serif;
+            --font-body: 'Work Sans', sans-serif;
+            --type-scale: 1.25;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 0px;
+            --border-width: 4px;
+            --shadow-default: 8px 8px 0 rgba(0, 0, 0, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #1A1A1A;
+                --color-surface: #2A2A2A;
+                --color-text: #F5F5F0;
+                --color-text-muted: #AAAAAA;
+                --color-border: #F5F5F0;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: var(--space-lg);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Ben-Day Dot Pattern Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle, var(--color-primary) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            box-shadow: var(--shadow-default);
+        }
+
+        /* Speech Bubble Decoration */
+        .profile-header::after {
+            content: 'WOW!';
+            position: absolute;
+            top: -30px;
+            right: var(--space-lg);
+            background: var(--color-secondary);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            transform: rotate(-5deg);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+        }
+
+        .profile-name {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            color: var(--color-primary);
+            text-shadow: 3px 3px 0 var(--color-secondary);
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+        }
+
+        /* Match Percentage - Starburst Style */
+        .match-badge {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            width: 120px;
+            height: 120px;
+            background: var(--color-accent-red);
+            border: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-family: var(--font-heading);
+            color: white;
+            position: relative;
+            clip-path: polygon(
+                50% 0%, 61% 35%, 98% 35%, 68% 57%,
+                79% 91%, 50% 70%, 21% 91%, 32% 57%,
+                2% 35%, 39% 35%
+            );
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .match-number {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .match-label {
+            font-size: 0.8rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Photo Carousel */
+        .photo-carousel {
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        .carousel-container {
+            display: flex;
+            gap: var(--space-sm);
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: var(--space-md);
+        }
+
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .photo-item {
+            flex: 0 0 calc(50% - var(--space-sm) / 2);
+            scroll-snap-align: start;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+        }
+
+        .photo-item:first-child {
+            flex: 0 0 100%;
+        }
+
+        /* Halftone Effect */
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-accent-blue) 0%, var(--color-primary) 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: white;
+        }
+
+        .photo-placeholder::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.3) 1.5px, transparent 1.5px);
+            background-size: 8px 8px;
+            mix-blend-mode: multiply;
+        }
+
+        .photo-item:nth-child(2) .photo-placeholder {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+        }
+
+        .photo-item:nth-child(3) .photo-placeholder {
+            background: linear-gradient(135deg, var(--color-accent-green) 0%, var(--color-accent-blue) 100%);
+        }
+
+        .photo-item:nth-child(4) .photo-placeholder {
+            background: linear-gradient(135deg, var(--color-accent-red) 0%, var(--color-secondary) 100%);
+        }
+
+        /* Bio Section */
+        .bio-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-default);
+            position: relative;
+        }
+
+        .bio-section::before {
+            content: '';
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            width: 60px;
+            height: 60px;
+            background: var(--color-secondary);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            z-index: 0;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .bio-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Interests Tags */
+        .interests-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-default);
+        }
+
+        .interests-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .interest-tag {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .interest-tag:nth-child(even) {
+            background: var(--color-accent-blue);
+        }
+
+        .interest-tag:nth-child(3n) {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .interest-tag:nth-child(5n) {
+            background: var(--color-accent-green);
+        }
+
+        .interest-tag:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 1);
+        }
+
+        .interest-tag:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        .interest-tag:focus {
+            outline: 3px solid var(--color-border);
+            outline-offset: 2px;
+        }
+
+        /* Looking For Section */
+        .looking-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .info-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-default);
+        }
+
+        .info-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+            color: var(--color-accent-blue);
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: var(--space-sm) 0;
+            border-bottom: 2px solid var(--color-background);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Message Button */
+        .action-section {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--color-primary);
+            color: white;
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '→';
+            position: absolute;
+            right: var(--space-lg);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-primary:hover::before {
+            transform: translateX(8px);
+        }
+
+        .btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-primary:focus {
+            outline: 4px solid var(--color-secondary);
+            outline-offset: 4px;
+        }
+
+        .btn-secondary {
+            flex: 0 0 auto;
+            background: var(--color-surface);
+            color: var(--color-text);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-default);
+            transition: all 0.2s ease;
+            min-width: 60px;
+        }
+
+        .btn-secondary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+            background: var(--color-secondary);
+        }
+
+        .btn-secondary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+        }
+
+        .btn-secondary:focus {
+            outline: 3px solid var(--color-border);
+            outline-offset: 2px;
+        }
+
+        /* Education Badge */
+        .edu-badge {
+            display: inline-block;
+            background: var(--color-accent-green);
+            color: white;
+            padding: var(--space-xs) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            margin-bottom: var(--space-md);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--color-text);
+            color: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-default);
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 1);
+        }
+
+        .nav-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+        }
+
+        .nav-btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-name {
+                font-size: 2.5rem;
+            }
+
+            .looking-section {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-item {
+                flex: 0 0 100%;
+            }
+
+            .match-badge {
+                width: 80px;
+                height: 80px;
+                top: auto;
+                bottom: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .match-number {
+                font-size: 1.8rem;
+            }
+
+            .profile-header::after {
+                top: -25px;
+                right: var(--space-md);
+                font-size: 0.8rem;
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Comic Book Panel Accents */
+        .accent-panel {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: var(--color-accent-blue);
+            border: var(--border-width) solid var(--color-border);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .accent-panel-1 {
+            top: 100px;
+            left: -50px;
+            transform: rotate(45deg);
+        }
+
+        .accent-panel-2 {
+            bottom: 200px;
+            right: -30px;
+            background: var(--color-secondary);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="accent-panel accent-panel-1"></div>
+        <div class="accent-panel accent-panel-2"></div>
+
+        <header class="profile-header">
+            <div class="match-badge">
+                <div class="match-number">94%</div>
+                <div class="match-label">MATCH</div>
+            </div>
+
+            <h1 class="profile-name">Alex Rivers</h1>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Age:</span>
+                    <span>28</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Location:</span>
+                    <span>Brooklyn, NY</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Online:</span>
+                    <span style="color: var(--color-accent-green);">● Active now</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="photo-carousel">
+            <div class="carousel-container">
+                <div class="photo-item">
+                    <div class="photo-placeholder">📸</div>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-placeholder">🎨</div>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-placeholder">🌆</div>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-placeholder">☕</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bio-section">
+            <div class="edu-badge">🎓 Art History Major</div>
+            <h2 class="section-title">About Me</h2>
+            <p class="bio-text">
+                Museum educator by day, vintage vinyl collector by night. I believe the best conversations
+                happen over obscure indie films and homemade pasta. Looking for someone who appreciates
+                both Rothko and ridiculous puns. I can teach you about Abstract Expressionism, and you
+                can teach me literally anything about plants (I've killed three succulents this year).
+                My ideal Sunday: morning farmers market, afternoon gallery hopping, evening record store browsing.
+            </p>
+        </section>
+
+        <section class="interests-section">
+            <h2 class="section-title">Interests & Hobbies</h2>
+            <div class="interests-grid">
+                <button class="interest-tag" tabindex="0">🎨 Modern Art</button>
+                <button class="interest-tag" tabindex="0">🎵 Vinyl Records</button>
+                <button class="interest-tag" tabindex="0">📚 Reading</button>
+                <button class="interest-tag" tabindex="0">🎬 Film Photography</button>
+                <button class="interest-tag" tabindex="0">☕ Coffee Culture</button>
+                <button class="interest-tag" tabindex="0">🚴‍♀️ Cycling</button>
+                <button class="interest-tag" tabindex="0">🍝 Cooking</button>
+                <button class="interest-tag" tabindex="0">🎭 Theater</button>
+                <button class="interest-tag" tabindex="0">✈️ Travel</button>
+                <button class="interest-tag" tabindex="0">🎸 Live Music</button>
+                <button class="interest-tag" tabindex="0">🧘 Yoga</button>
+                <button class="interest-tag" tabindex="0">📖 Art History</button>
+            </div>
+        </section>
+
+        <section class="looking-section">
+            <div class="info-card">
+                <h3>Looking For</h3>
+                <ul class="info-list">
+                    <li>
+                        <span>Relationship:</span>
+                        <strong>Long-term</strong>
+                    </li>
+                    <li>
+                        <span>Age Range:</span>
+                        <strong>26-35</strong>
+                    </li>
+                    <li>
+                        <span>Distance:</span>
+                        <strong>Within 10 miles</strong>
+                    </li>
+                    <li>
+                        <span>Kids:</span>
+                        <strong>Open to</strong>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>My Basics</h3>
+                <ul class="info-list">
+                    <li>
+                        <span>Education:</span>
+                        <strong>Masters Degree</strong>
+                    </li>
+                    <li>
+                        <span>Height:</span>
+                        <strong>5'6"</strong>
+                    </li>
+                    <li>
+                        <span>Exercise:</span>
+                        <strong>3-4 times/week</strong>
+                    </li>
+                    <li>
+                        <span>Pets:</span>
+                        <strong>Cat person 🐱</strong>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="action-section">
+            <button class="btn-primary" tabindex="0">Send Message</button>
+            <button class="btn-secondary" tabindex="0" title="Like">❤️</button>
+            <button class="btn-secondary" tabindex="0" title="Save">⭐</button>
+        </section>
+    </div>
+
+    <nav class="navigation">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous design" tabindex="0">←</button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next design" tabindex="0">→</button>
+    </nav>
+
+    <script>
+        // Navigation
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 211;
+
+        function navigate(direction) {
+            let nextDesign = CURRENT_DESIGN + direction;
+
+            if (nextDesign < 1) nextDesign = TOTAL_DESIGNS;
+            if (nextDesign > TOTAL_DESIGNS) nextDesign = 1;
+
+            window.location.href = `design-${nextDesign}.html`;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+        document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+
+        
+
+        // Interactive elements
+        document.querySelectorAll('.interest-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.style.opacity = this.style.opacity === '0.5' ? '1' : '0.5';
+            });
+        });
+
+        // Smooth scroll for carousel
+        const carousel = document.querySelector('.carousel-container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            carousel.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body>
+</html>

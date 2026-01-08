@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revival Prime - Tournament Bracket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Revival Prime - Natural meets neutral: a flat 2010s perspective
+ABOUTME: This design system implements tournament_bracket with flat_2010s aesthetics.
+ABOUTME: Key characteristics: Ultra-flat surfaces, subtle gradients, generous negative space
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #4A90E2;
+--color-secondary: #7ED321;
+--color-background: #1C1C1E;
+--color-surface: #2C2C2E;
+--color-surface-raised: #3A3A3C;
+--color-text: #FFFFFF;
+--color-text-muted: #98989D;
+--color-accent-gold: #FFD700;
+--color-accent-silver: #C0C0C0;
+--color-accent-bronze: #CD7F32;
+--font-heading: 'Lato', sans-serif;
+--font-body: 'Roboto', sans-serif;
+--radius-default: 3px;
+--space-unit: 8px;
+--shadow-subtle: 0 1px 3px rgba(0,0,0,0.12);
+
+AESTHETIC PRINCIPLES:
+1. Flat surfaces with minimal depth - echoing 2010s iOS and Material Design origins
+2. Restrained color palette with strategic accent colors for hierarchy
+3. Ultra-clean typography with generous whitespace
+4. Subtle gradients provide just enough dimension without breaking flatness
+5. Nostalgic callbacks to Dribbble-era design sensibilities
+
+DESIGN ERA CONTEXT:
+Flat 2010s was a reaction against skeuomorphism - removing textures, gradients, and shadows
+in favor of clean, honest interfaces. This was the era of iOS 7, early Material Design,
+and the rise of "content-first" design. Long shadows were briefly trendy. Solid colors
+dominated. Everything felt optimistic and modern.
+
+FINANCE INDUSTRY INFLUENCE:
+Professional color choices, data-forward presentation, emphasis on clarity and trust.
+The bracket structure mirrors financial tournament structures (trading competitions,
+investment challenges, portfolio battles). Clean presentation builds confidence.
+
+BEST FOR:
+- Tournament and competition tracking
+- Esports and gaming competitions
+- Corporate challenge tracking
+- March Madness style brackets
+- Fantasy league playoffs
+- Investment competitions
+
+AVOID IF:
+- Need rich data visualization beyond bracket structure
+- Require real-time updating displays
+- Want maximalist or decorative aesthetic
+- Need deep interaction beyond viewing bracket
+
+FUNCTIONAL DIRECTION: tournament_bracket
+This design must clearly function as a tournament bracket. Required elements:
+- Bracket tree structure showing progression through rounds
+- Match cards displaying competitors and results
+- Seed numbers indicating initial rankings
+- Visual winners path showing advancement
+- Champion highlight at the finals
+- Round labels (Quarterfinals, Semifinals, Finals)
+- Score displays
+- Connector lines between matches
+
+ACCESSIBILITY NOTES:
+- 4.5:1 contrast maintained throughout
+- Focus indicators on all interactive match cards
+- Reduced motion preferences respected
+- Large touch targets (44px minimum)
+- Clear visual hierarchy guides the eye through bracket progression
+
+COLOR THEORY:
+Dark background provides professional finance feel while maintaining 2010s flat aesthetic.
+Primary blue (#4A90E2) was THE color of mid-2010s design (Dribbble favorites).
+Accent colors provide hierarchy without breaking flat principles.
+-->
+
+<style>
+:root {
+    /* Core Colors */
+    --color-primary: #4A90E2;
+    --color-secondary: #7ED321;
+    --color-background: #1C1C1E;
+    --color-surface: #2C2C2E;
+    --color-surface-raised: #3A3A3C;
+    --color-border: #3A3A3C;
+    --color-text: #FFFFFF;
+    --color-text-muted: #98989D;
+    --color-accent-gold: #FFD700;
+    --color-accent-silver: #C0C0C0;
+    --color-accent-bronze: #CD7F32;
+
+    /* Typography */
+    --font-heading: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    --font-weight-black: 900;
+
+    /* Spacing System */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-2xl: calc(var(--space-unit) * 6);
+
+    /* Shape */
+    --radius-default: 3px;
+    --radius-sm: 2px;
+    --radius-lg: 6px;
+
+    /* Shadows - minimal for flat aesthetic */
+    --shadow-subtle: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-card: 0 2px 4px rgba(0,0,0,0.18);
+
+    /* Animation */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-normal);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Header */
+.header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-lg) var(--space-xl);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tournament-title {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-black);
+    font-size: 28px;
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+}
+
+.tournament-subtitle {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-light);
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.header-stats {
+    display: flex;
+    gap: var(--space-xl);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: 32px;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+/* Main Container */
+.container {
+    padding: var(--space-2xl) var(--space-xl);
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Bracket Container */
+.bracket-wrapper {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    overflow-x: auto;
+    box-shadow: var(--shadow-card);
+}
+
+.bracket {
+    display: flex;
+    gap: var(--space-2xl);
+    min-width: fit-content;
+    position: relative;
+}
+
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 280px;
+}
+
+.round-header {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.matches {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    flex: 1;
+    justify-content: space-around;
+}
+
+/* Match Cards */
+.match {
+    background: var(--color-surface-raised);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    position: relative;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    cursor: pointer;
+}
+
+.match:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+}
+
+.match:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.match-header {
+    background: linear-gradient(135deg, #2C2C2E 0%, #3A3A3C 100%);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.match-time {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+}
+
+.match-status {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.match-status.final {
+    background: var(--color-primary);
+    color: white;
+}
+
+.match-status.live {
+    background: var(--color-secondary);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.match-status.upcoming {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.competitors {
+    display: flex;
+    flex-direction: column;
+}
+
+.competitor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color var(--transition-fast);
+}
+
+.competitor:last-child {
+    border-bottom: none;
+}
+
+.competitor.winner {
+    background: linear-gradient(90deg, rgba(74, 144, 226, 0.1) 0%, transparent 100%);
+}
+
+.competitor:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.competitor-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex: 1;
+}
+
+.seed {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: 14px;
+    color: var(--color-text-muted);
+    min-width: 24px;
+}
+
+.competitor-name {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-medium);
+    font-size: 15px;
+    color: var(--color-text);
+}
+
+.competitor.winner .competitor-name {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.score {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: 20px;
+    color: var(--color-text);
+    min-width: 36px;
+    text-align: center;
+}
+
+.competitor.winner .score {
+    color: var(--color-primary);
+}
+
+/* Finals Match - Special Styling */
+.match.finals {
+    background: linear-gradient(135deg, #2C2C2E 0%, #3A3A3C 100%);
+    border: 2px solid var(--color-accent-gold);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.15);
+}
+
+.match.finals .match-header {
+    background: linear-gradient(135deg, #3A3A3C 0%, #4A4A4C 100%);
+}
+
+.match.finals .round-header {
+    color: var(--color-accent-gold);
+    border-bottom-color: var(--color-accent-gold);
+}
+
+/* Champion Badge */
+.champion-badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 48px;
+    height: 48px;
+    background: var(--color-accent-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    z-index: 10;
+}
+
+/* Connector Lines */
+.bracket-round:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -48px;
+    top: 50%;
+    width: 96px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-border) 0%, transparent 100%);
+    transform: translateY(-50%);
+}
+
+/* Legend */
+.legend {
+    margin-top: var(--space-2xl);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    display: flex;
+    gap: var(--space-xl);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.legend-color {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+}
+
+.legend-color.gold {
+    background: var(--color-accent-gold);
+}
+
+.legend-color.silver {
+    background: var(--color-accent-silver);
+}
+
+.legend-color.bronze {
+    background: var(--color-accent-bronze);
+}
+
+.legend-color.primary {
+    background: var(--color-primary);
+}
+
+.legend-label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Navigation */
+.navigation {
+    position: fixed;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 200;
+}
+
+.nav-button {
+    width: 48px;
+    height: 48px;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all var(--transition-fast);
+}
+
+.nav-button:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.nav-button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.nav-button:active {
+    transform: translateY(0);
+}
+
+.design-counter {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-medium);
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+
+    .bracket-wrapper {
+        padding: var(--space-md);
+    }
+
+    .bracket {
+        gap: var(--space-lg);
+    }
+
+    .bracket-round {
+        min-width: 240px;
+    }
+
+    .navigation {
+        bottom: var(--space-md);
+        right: var(--space-md);
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-content">
+        <div>
+            <h1 class="tournament-title">2024 Finance Innovation Tournament</h1>
+            <p class="tournament-subtitle">Global FinTech Competition • Revival Prime Design System</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-item">
+                <div class="stat-value">16</div>
+                <div class="stat-label">Teams</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Rounds</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$2.5M</div>
+                <div class="stat-label">Prize Pool</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="bracket-wrapper">
+        <div class="bracket">
+            <!-- Round 1: Quarterfinals -->
+            <div class="bracket-round">
+                <h2 class="round-header">Quarterfinals</h2>
+                <div class="matches">
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 15, 2:00 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">1</span>
+                                    <span class="competitor-name">NexusPay Global</span>
+                                </div>
+                                <span class="score">94</span>
+                            </div>
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">16</span>
+                                    <span class="competitor-name">CoinVault Ltd</span>
+                                </div>
+                                <span class="score">72</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 15, 4:30 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">8</span>
+                                    <span class="competitor-name">SwiftLedger</span>
+                                </div>
+                                <span class="score">88</span>
+                            </div>
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">9</span>
+                                    <span class="competitor-name">TrustChain Pro</span>
+                                </div>
+                                <span class="score">81</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 16, 1:00 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">4</span>
+                                    <span class="competitor-name">Quantum Capital</span>
+                                </div>
+                                <span class="score">76</span>
+                            </div>
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">5</span>
+                                    <span class="competitor-name">AlphaBank Systems</span>
+                                </div>
+                                <span class="score">82</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 16, 3:30 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">2</span>
+                                    <span class="competitor-name">Meridian Ventures</span>
+                                </div>
+                                <span class="score">91</span>
+                            </div>
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">7</span>
+                                    <span class="competitor-name">BlockFlow Finance</span>
+                                </div>
+                                <span class="score">78</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Round 2: Semifinals -->
+            <div class="bracket-round">
+                <h2 class="round-header">Semifinals</h2>
+                <div class="matches">
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 22, 2:00 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">1</span>
+                                    <span class="competitor-name">NexusPay Global</span>
+                                </div>
+                                <span class="score">87</span>
+                            </div>
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">8</span>
+                                    <span class="competitor-name">SwiftLedger</span>
+                                </div>
+                                <span class="score">79</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="match" tabindex="0">
+                        <div class="match-header">
+                            <span class="match-time">Mar 22, 5:00 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">5</span>
+                                    <span class="competitor-name">AlphaBank Systems</span>
+                                </div>
+                                <span class="score">83</span>
+                            </div>
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">2</span>
+                                    <span class="competitor-name">Meridian Ventures</span>
+                                </div>
+                                <span class="score">89</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Round 3: Finals -->
+            <div class="bracket-round">
+                <h2 class="round-header">Finals</h2>
+                <div class="matches">
+                    <div class="match finals" tabindex="0">
+                        <div class="champion-badge">🏆</div>
+                        <div class="match-header">
+                            <span class="match-time">Mar 29, 7:00 PM</span>
+                            <span class="match-status final">Final</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor winner">
+                                <div class="competitor-info">
+                                    <span class="seed">1</span>
+                                    <span class="competitor-name">NexusPay Global</span>
+                                </div>
+                                <span class="score">96</span>
+                            </div>
+                            <div class="competitor">
+                                <div class="competitor-info">
+                                    <span class="seed">2</span>
+                                    <span class="competitor-name">Meridian Ventures</span>
+                                </div>
+                                <span class="score">92</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Champion -->
+            <div class="bracket-round">
+                <h2 class="round-header" style="color: var(--color-accent-gold); border-bottom-color: var(--color-accent-gold);">Champion</h2>
+                <div class="matches">
+                    <div class="match" tabindex="0" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(74, 144, 226, 0.1) 100%); border: 2px solid var(--color-accent-gold);">
+                        <div class="match-header">
+                            <span class="match-time">Winner Declared</span>
+                            <span class="match-status final" style="background: var(--color-accent-gold); color: #000;">CHAMPION</span>
+                        </div>
+                        <div class="competitors">
+                            <div class="competitor" style="border-bottom: none; padding: var(--space-xl);">
+                                <div class="competitor-info" style="flex-direction: column; align-items: center; text-align: center; gap: var(--space-md);">
+                                    <span class="seed" style="font-size: 72px; color: var(--color-accent-gold); line-height: 1;">🥇</span>
+                                    <span class="competitor-name" style="font-size: 24px; font-weight: var(--font-weight-black); color: var(--color-accent-gold);">NexusPay Global</span>
+                                    <span style="font-size: 13px; color: var(--color-text-muted);">2024 Tournament Champion</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color gold"></div>
+            <span class="legend-label">Champion</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color silver"></div>
+            <span class="legend-label">Runner-Up</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color bronze"></div>
+            <span class="legend-label">Third Place</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color primary"></div>
+            <span class="legend-label">Winner</span>
+        </div>
+    </div>
+</main>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button class="nav-button" id="prevBtn" aria-label="Previous design">←</button>
+    <div class="design-counter">128 / 250</div>
+    <button class="nav-button" id="nextBtn" aria-label="Next design">→</button>
+</div>
+
+<script>
+// Navigation
+const TOTAL = 250;
+const CURRENT = 128;
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+    const prev = CURRENT - 1;
+    if (prev >= 1) {
+        window.location.href = `design-${prev}.html`;
+    }
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+    const next = CURRENT + 1;
+    if (next <= TOTAL) {
+        window.location.href = `design-${next}.html`;
+    }
+});
+
+// Keyboard navigation
+/* Navigation removed */
+
+// Match card interactions
+const matches = document.querySelectorAll('.match');
+matches.forEach(match => {
+    match.addEventListener('click', () => {
+        // In a real app, this would show match details
+        console.log('Match clicked');
+    });
+
+    match.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            match.click();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

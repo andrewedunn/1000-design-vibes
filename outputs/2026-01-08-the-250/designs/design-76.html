@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Chalk - LMS Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!--
+DESIGN: Core Chalk - Crafted for users with international roots
+ABOUTME: This design system implements an lms_dashboard with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: Heavy black borders, stark typography, maximum contrast for trustworthiness
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FFD700;
+--color-background: #FAFAFA;
+--color-surface: #FFFFFF;
+--color-text: #000000;
+--color-text-muted: #444444;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 16px;
+
+AESTHETIC PRINCIPLES:
+1. Heavy black borders (4px) define all components, creating a blueprint-like structure
+2. Limited color palette: black, white, yellow accent for maximum clarity
+3. Monospace typography for data-heavy interface, geometric sans for headings
+4. No shadows, gradients, or subtle effects - only stark contrasts
+5. Grid-based layout reflects government form precision
+
+BEST FOR:
+- Educational platforms requiring high trust and clarity
+- Government or institutional learning systems
+- International audiences needing maximum readability
+- Data-dense dashboards where information hierarchy is critical
+- Accessibility-first applications
+
+AVOID IF:
+- Brand requires soft, friendly aesthetics
+- Targeting luxury or premium market positioning
+- Need for photographic hero imagery
+- Playful or experimental content tone
+
+FUNCTIONAL DIRECTION: lms_dashboard
+This design must clearly function as an LMS dashboard. Required elements:
+- Course listing with progress indicators
+- Upcoming assignments/deadlines section
+- Activity feed or recent updates
+- Progress statistics and metrics
+- Navigation to courses, grades, calendar
+- Quick actions for common tasks
+- Instructor/student information display
+- Achievement or completion tracking
+
+COLOR SYSTEM:
+Background: #FAFAFA (off-white, reduces eye strain)
+Surface: #FFFFFF (pure white cards)
+Primary: #FFD700 (golden yellow - attention, achievement)
+Text: #000000 (maximum contrast)
+Borders: #000000 (4px everywhere)
+Success: #00CC66 (progress indicators)
+Warning: #FF6B35 (deadlines)
+Neutral: #444444 (secondary text)
+
+TYPOGRAPHY RATIONALE:
+Space Grotesk provides geometric clarity for headings while maintaining warmth.
+IBM Plex Mono ensures data legibility and creates technical credibility.
+No italic or script fonts - directness over decoration.
+
+SPATIAL SYSTEM:
+Base unit: 16px
+Scale: 16, 24, 32, 48, 64px
+Dense information layout but generous padding within components
+Grid-aligned everything
+
+INTERACTION PATTERNS:
+Hover: Yellow background, maintaining black border
+Active/Focus: Double border (8px total) with yellow
+Disabled: 50% opacity, maintaining structure
+Progress bars: Thick (12px) with hard edges
+
+CULTURAL CONSIDERATIONS:
+"International roots" addressed through:
+- High contrast works across lighting conditions
+- Monospace supports multiple character sets
+- Clear iconography without text dependencies
+- Explicit labeling over implicit meanings
+- Strong grid prevents layout issues with text expansion
+
+LIGHT/DARK MODE:
+Both modes implemented with same structural principles:
+Light: Black on white with yellow accent
+Dark: White on black with yellow accent
+Borders remain high contrast in both modes
+-->
+<style>
+    :root {
+        /* Color palette */
+        --color-primary: #FFD700;
+        --color-background: #FAFAFA;
+        --color-surface: #FFFFFF;
+        --color-text: #000000;
+        --color-text-muted: #444444;
+        --color-border: #000000;
+        --color-success: #00CC66;
+        --color-warning: #FF6B35;
+        --color-info: #0099FF;
+
+        /* Typography */
+        --font-heading: 'Space Grotesk', sans-serif;
+        --font-body: 'IBM Plex Mono', monospace;
+
+        /* Spacing */
+        --space-unit: 16px;
+        --space-xs: 8px;
+        --space-sm: 16px;
+        --space-md: 24px;
+        --space-lg: 32px;
+        --space-xl: 48px;
+
+        /* Shapes */
+        --radius-default: 0px;
+        --border-width: 4px;
+        --shadow-default: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --color-background: #000000;
+            --color-surface: #1A1A1A;
+            --color-text: #FFFFFF;
+            --color-text-muted: #AAAAAA;
+            --color-border: #FFFFFF;
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    .header {
+        background: var(--color-surface);
+        border-bottom: var(--border-width) solid var(--color-border);
+        padding: var(--space-md);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-md);
+    }
+
+    .logo {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+    }
+
+    .logo-accent {
+        background: var(--color-primary);
+        padding: 2px 8px;
+        color: var(--color-text);
+    }
+
+    .search-bar {
+        flex: 1;
+        max-width: 600px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: var(--space-sm);
+        border: var(--border-width) solid var(--color-border);
+        background: var(--color-background);
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--color-text);
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-width: calc(var(--border-width) * 2);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        border: var(--border-width) solid var(--color-border);
+        background: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    /* Main layout */
+    .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 96px);
+    }
+
+    /* Sidebar navigation */
+    .sidebar {
+        background: var(--color-surface);
+        border-right: var(--border-width) solid var(--color-border);
+        padding: var(--space-md);
+    }
+
+    .nav-section {
+        margin-bottom: var(--space-lg);
+    }
+
+    .nav-heading {
+        font-family: var(--font-heading);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: var(--space-sm);
+        color: var(--color-text-muted);
+    }
+
+    .nav-link {
+        display: block;
+        padding: var(--space-sm);
+        border: var(--border-width) solid transparent;
+        margin-bottom: var(--space-xs);
+        text-decoration: none;
+        color: var(--color-text);
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+        background: var(--color-primary);
+        border-color: var(--color-border);
+    }
+
+    .nav-link.active {
+        background: var(--color-primary);
+        border-color: var(--color-border);
+        font-weight: 600;
+    }
+
+    /* Main content area */
+    .content {
+        padding: var(--space-lg);
+    }
+
+    .page-header {
+        margin-bottom: var(--space-lg);
+    }
+
+    .page-title {
+        font-family: var(--font-heading);
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: var(--space-sm);
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    /* Stats grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-md);
+        margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        padding: var(--space-md);
+    }
+
+    .stat-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+    }
+
+    .stat-value {
+        font-family: var(--font-heading);
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: var(--space-xs);
+    }
+
+    .stat-change {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .stat-change.positive {
+        color: var(--color-success);
+    }
+
+    /* Course grid */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-md);
+    }
+
+    .section-title {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .view-all {
+        border: var(--border-width) solid var(--color-border);
+        background: transparent;
+        padding: var(--space-sm) var(--space-md);
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--color-text);
+        display: inline-block;
+    }
+
+    .view-all:hover {
+        background: var(--color-primary);
+    }
+
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
+        margin-bottom: var(--space-xl);
+    }
+
+    .course-card {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s;
+    }
+
+    .course-card:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 4px 4px 0 var(--color-border);
+    }
+
+    .course-header {
+        padding: var(--space-md);
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .course-code {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+    }
+
+    .course-title {
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: var(--space-sm);
+    }
+
+    .course-instructor {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    .course-body {
+        padding: var(--space-md);
+        flex: 1;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: var(--space-xs);
+        font-weight: 600;
+    }
+
+    .progress-bar {
+        height: 12px;
+        background: var(--color-background);
+        border: var(--border-width) solid var(--color-border);
+        margin-bottom: var(--space-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--color-success);
+        transition: width 0.3s;
+    }
+
+    .course-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
+        font-size: 12px;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-label {
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    .meta-value {
+        font-weight: 600;
+    }
+
+    .course-footer {
+        padding: var(--space-md);
+        border-top: var(--border-width) solid var(--color-border);
+    }
+
+    .btn {
+        width: 100%;
+        padding: var(--space-sm);
+        border: var(--border-width) solid var(--color-border);
+        background: transparent;
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-text);
+    }
+
+    .btn:hover {
+        background: var(--color-primary);
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+    }
+
+    /* Upcoming section */
+    .upcoming-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-md);
+        margin-bottom: var(--space-xl);
+    }
+
+    .assignments-list {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+    }
+
+    .list-header {
+        padding: var(--space-md);
+        border-bottom: var(--border-width) solid var(--color-border);
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .assignment-item {
+        padding: var(--space-md);
+        border-bottom: var(--border-width) solid var(--color-border);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--space-md);
+        align-items: start;
+    }
+
+    .assignment-item:last-child {
+        border-bottom: none;
+    }
+
+    .assignment-item:hover {
+        background: var(--color-background);
+    }
+
+    .assignment-date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        border: var(--border-width) solid var(--color-border);
+        background: var(--color-background);
+    }
+
+    .assignment-day {
+        font-family: var(--font-heading);
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .assignment-month {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-text-muted);
+    }
+
+    .assignment-details h4 {
+        font-family: var(--font-heading);
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .assignment-course {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+    }
+
+    .assignment-type {
+        display: inline-block;
+        padding: 4px 8px;
+        border: 2px solid var(--color-border);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .due-status {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border: var(--border-width) solid var(--color-border);
+        white-space: nowrap;
+    }
+
+    .due-urgent {
+        background: var(--color-warning);
+        color: var(--color-text);
+    }
+
+    .due-soon {
+        background: var(--color-primary);
+        color: var(--color-text);
+    }
+
+    /* Activity feed */
+    .activity-feed {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+    }
+
+    .activity-item {
+        padding: var(--space-md);
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-time {
+        font-size: 11px;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: var(--space-xs);
+    }
+
+    .activity-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .activity-badge {
+        display: inline-block;
+        padding: 2px 6px;
+        background: var(--color-primary);
+        border: 2px solid var(--color-border);
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: var(--space-xs);
+    }
+
+    /* Achievements */
+    .achievements-section {
+        background: var(--color-surface);
+        border: var(--border-width) solid var(--color-border);
+        padding: var(--space-md);
+        margin-bottom: var(--space-xl);
+    }
+
+    .achievements-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-md);
+    }
+
+    .achievements-title {
+        font-family: var(--font-heading);
+        font-size: 18px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: var(--space-sm);
+    }
+
+    .achievement {
+        aspect-ratio: 1;
+        border: var(--border-width) solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        background: var(--color-background);
+        transition: all 0.2s;
+    }
+
+    .achievement.unlocked {
+        background: var(--color-primary);
+    }
+
+    .achievement:hover {
+        transform: scale(1.05);
+    }
+
+    /* Footer navigation */
+    .footer-nav {
+        position: fixed;
+        bottom: var(--space-md);
+        right: var(--space-md);
+        display: flex;
+        gap: var(--space-sm);
+        z-index: 1000;
+    }
+
+    .nav-btn {
+        width: 48px;
+        height: 48px;
+        border: var(--border-width) solid var(--color-border);
+        background: var(--color-surface);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--color-text);
+        transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+        background: var(--color-primary);
+        transform: translate(-2px, -2px);
+        box-shadow: 2px 2px 0 var(--color-border);
+    }
+
+    .nav-btn:active {
+        transform: translate(0, 0);
+        box-shadow: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .course-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-container {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            border-right: none;
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .course-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .upcoming-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .achievements-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .header-content {
+            flex-wrap: wrap;
+        }
+
+        .search-bar {
+            order: 3;
+            width: 100%;
+        }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+
+    :focus-visible {
+        outline: var(--border-width) solid var(--color-primary);
+        outline-offset: 2px;
+    }
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-accent">CORE</span> CHALK
+            </div>
+            <div class="search-bar">
+                <input type="search" class="search-input" placeholder="SEARCH COURSES, ASSIGNMENTS, RESOURCES..." aria-label="Search">
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" aria-label="User profile">AS</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav>
+                <div class="nav-section">
+                    <h3 class="nav-heading">Main</h3>
+                    <a href="#" class="nav-link active">Dashboard</a>
+                    <a href="#" class="nav-link">My Courses</a>
+                    <a href="#" class="nav-link">Calendar</a>
+                    <a href="#" class="nav-link">Grades</a>
+                </div>
+                <div class="nav-section">
+                    <h3 class="nav-heading">Learning</h3>
+                    <a href="#" class="nav-link">Assignments</a>
+                    <a href="#" class="nav-link">Discussions</a>
+                    <a href="#" class="nav-link">Resources</a>
+                    <a href="#" class="nav-link">Library</a>
+                </div>
+                <div class="nav-section">
+                    <h3 class="nav-heading">Community</h3>
+                    <a href="#" class="nav-link">Messages</a>
+                    <a href="#" class="nav-link">Groups</a>
+                    <a href="#" class="nav-link">Help Center</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">DASHBOARD</h1>
+                <p class="page-subtitle">Welcome back, Anna Schmidt · Last login: 2026-01-08 09:15 UTC</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Active Courses</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-change positive">+1 THIS TERM</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Overall Progress</div>
+                    <div class="stat-value">68%</div>
+                    <div class="stat-change positive">+12% THIS MONTH</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Assignments Due</div>
+                    <div class="stat-value">7</div>
+                    <div class="stat-change">3 THIS WEEK</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Grade</div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-change positive">+3% FROM LAST TERM</div>
+                </div>
+            </div>
+
+            <!-- Course Grid -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">My Courses</h2>
+                    <a href="#" class="view-all">VIEW ALL</a>
+                </div>
+                <div class="course-grid">
+                    <article class="course-card">
+                        <div class="course-header">
+                            <div class="course-code">CS-401</div>
+                            <h3 class="course-title">Advanced Algorithms & Data Structures</h3>
+                            <div class="course-instructor">Prof. Chen Wei</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Next Class</span>
+                                    <span class="meta-value">MON 14:00</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Assignments</span>
+                                    <span class="meta-value">2 DUE</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn btn-primary">CONTINUE</button>
+                        </div>
+                    </article>
+
+                    <article class="course-card">
+                        <div class="course-header">
+                            <div class="course-code">LING-305</div>
+                            <h3 class="course-title">Multilingual Communication Systems</h3>
+                            <div class="course-instructor">Dr. Maria Rodriguez</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Next Class</span>
+                                    <span class="meta-value">TUE 10:00</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Assignments</span>
+                                    <span class="meta-value">1 DUE</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn btn-primary">CONTINUE</button>
+                        </div>
+                    </article>
+
+                    <article class="course-card">
+                        <div class="course-header">
+                            <div class="course-code">GOVT-210</div>
+                            <h3 class="course-title">International Policy & Governance</h3>
+                            <div class="course-instructor">Prof. James Mitchell</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>58%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 58%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Next Class</span>
+                                    <span class="meta-value">WED 16:00</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Assignments</span>
+                                    <span class="meta-value">3 DUE</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn btn-primary">CONTINUE</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Upcoming Section -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">Upcoming</h2>
+                </div>
+                <div class="upcoming-grid">
+                    <div class="assignments-list">
+                        <div class="list-header">Assignments & Deadlines</div>
+                        <article class="assignment-item">
+                            <div class="assignment-date">
+                                <div class="assignment-day">09</div>
+                                <div class="assignment-month">JAN</div>
+                            </div>
+                            <div class="assignment-details">
+                                <h4>Binary Search Tree Implementation</h4>
+                                <div class="assignment-course">CS-401: Advanced Algorithms</div>
+                                <span class="assignment-type">CODING</span>
+                            </div>
+                            <div class="due-status due-urgent">DUE TOMORROW</div>
+                        </article>
+                        <article class="assignment-item">
+                            <div class="assignment-date">
+                                <div class="assignment-day">10</div>
+                                <div class="assignment-month">JAN</div>
+                            </div>
+                            <div class="assignment-details">
+                                <h4>Language Barrier Analysis Essay</h4>
+                                <div class="assignment-course">LING-305: Multilingual Systems</div>
+                                <span class="assignment-type">ESSAY</span>
+                            </div>
+                            <div class="due-status due-soon">2 DAYS</div>
+                        </article>
+                        <article class="assignment-item">
+                            <div class="assignment-date">
+                                <div class="assignment-day">12</div>
+                                <div class="assignment-month">JAN</div>
+                            </div>
+                            <div class="assignment-details">
+                                <h4>Policy Brief: Climate Governance</h4>
+                                <div class="assignment-course">GOVT-210: International Policy</div>
+                                <span class="assignment-type">REPORT</span>
+                            </div>
+                            <div class="due-status">4 DAYS</div>
+                        </article>
+                        <article class="assignment-item">
+                            <div class="assignment-date">
+                                <div class="assignment-day">14</div>
+                                <div class="assignment-month">JAN</div>
+                            </div>
+                            <div class="assignment-details">
+                                <h4>Midterm Exam Preparation</h4>
+                                <div class="assignment-course">CS-401: Advanced Algorithms</div>
+                                <span class="assignment-type">EXAM</span>
+                            </div>
+                            <div class="due-status">6 DAYS</div>
+                        </article>
+                    </div>
+
+                    <div class="activity-feed">
+                        <div class="list-header">Recent Activity</div>
+                        <article class="activity-item">
+                            <div class="activity-time">2 HOURS AGO</div>
+                            <div class="activity-content">
+                                <strong>New grade posted:</strong> Received 94% on "Database Normalization Quiz"
+                                <span class="activity-badge">A</span>
+                            </div>
+                        </article>
+                        <article class="activity-item">
+                            <div class="activity-time">5 HOURS AGO</div>
+                            <div class="activity-content">
+                                <strong>Discussion reply:</strong> Prof. Chen Wei responded to your question about heap sort complexity
+                            </div>
+                        </article>
+                        <article class="activity-item">
+                            <div class="activity-time">YESTERDAY</div>
+                            <div class="activity-content">
+                                <strong>Achievement unlocked:</strong> Completed 50 assignments this term
+                                <span class="activity-badge">50</span>
+                            </div>
+                        </article>
+                        <article class="activity-item">
+                            <div class="activity-time">2 DAYS AGO</div>
+                            <div class="activity-content">
+                                <strong>New resource:</strong> Study guide for International Policy midterm available
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements -->
+            <section class="achievements-section">
+                <div class="achievements-header">
+                    <h2 class="achievements-title">Learning Achievements</h2>
+                    <span style="font-size: 14px; color: var(--color-text-muted);">15 / 24 UNLOCKED</span>
+                </div>
+                <div class="achievements-grid">
+                    <div class="achievement unlocked" title="First Assignment">📝</div>
+                    <div class="achievement unlocked" title="Perfect Score">💯</div>
+                    <div class="achievement unlocked" title="Early Bird">🌅</div>
+                    <div class="achievement unlocked" title="Discussion Leader">💬</div>
+                    <div class="achievement unlocked" title="50 Assignments">📚</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Perfect Attendance">✓</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Collaboration Pro">🤝</div>
+                    <div class="achievement unlocked" title="Research Expert">🔬</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Critical Thinker">💭</div>
+                    <div class="achievement unlocked" title="Fast Learner">⚡</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Peer Mentor">👥</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="100% Course">🎯</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Multilingual">🌍</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Night Owl">🦉</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                    <div class="achievement unlocked" title="Tech Savvy">💻</div>
+                    <div class="achievement" title="Locked">🔒</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Navigation -->
+    <div class="footer-nav">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous design">←</button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next design">→</button>
+    </div>
+
+    <script>
+        // Navigation
+        const TOTAL = 250;
+        const CURRENT = 76;
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            const prev = CURRENT === 1 ? TOTAL : CURRENT - 1;
+            window.location.href = `design-${prev}.html`;
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const next = CURRENT === TOTAL ? 1 : CURRENT + 1;
+            window.location.href = `design-${next}.html`;
+        });
+
+        // Arrow key navigation
+    </script>
+</body>
+</html>

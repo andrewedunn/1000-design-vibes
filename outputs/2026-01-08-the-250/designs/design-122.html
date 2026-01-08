@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Core - Y2k-inspired design for users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Clean Core - Y2k-inspired design for users
+ABOUTME: This design system implements a kanban_board with Y2K aesthetics for the media industry.
+ABOUTME: Key characteristics: Chrome gradients, glossy surfaces, vibrant electric colors with energetic vibe.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00d4ff;
+--color-secondary: #ff0099;
+--color-accent: #00ff88;
+--color-background: #0a0e27;
+--color-surface: linear-gradient(145deg, #1a1f3a 0%, #0f1429 100%);
+--color-card: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+--color-text: #ffffff;
+--color-text-muted: #a0b0d0;
+--font-heading: 'Orbitron', sans-serif;
+--font-body: 'Roboto', sans-serif;
+--radius-default: 16px;
+--space-unit: 8px;
+--chrome-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+--glow-primary: 0 0 20px rgba(0, 212, 255, 0.5), 0 0 40px rgba(0, 212, 255, 0.3);
+--glow-secondary: 0 0 20px rgba(255, 0, 153, 0.5), 0 0 40px rgba(255, 0, 153, 0.3);
+
+AESTHETIC PRINCIPLES:
+1. Chrome gradients and metallic surfaces create Y2K tech optimism
+2. Neon glows and electric colors provide energetic, vibrant atmosphere
+3. Glossy cards with depth simulate early 2000s UI skeuomorphism
+4. High contrast with dark background emphasizes glowing interactive elements
+5. Rounded corners and smooth transitions reflect friendly, accessible design
+
+BEST FOR:
+- Media production teams tracking content workflows
+- Creative agencies managing multiple content projects
+- Broadcast teams coordinating show segments
+- Digital media companies organizing editorial calendars
+- Video production pipelines with multiple stages
+- Social media teams planning content releases
+
+AVOID IF:
+- You need a minimal, distraction-free interface
+- Your brand emphasizes traditional or conservative values
+- You require printed materials (gradients don't translate well)
+- Accessibility concerns around bright, high-contrast colors
+- Your users prefer subtle, understated design
+
+FUNCTIONAL DIRECTION: kanban_board
+This design must clearly function as a kanban_board. Required elements:
+- Multiple vertical columns representing workflow stages (To Do, In Progress, Review, Done)
+- Draggable task cards with clear visual affordance
+- Card details including title, description, assignee, tags/labels
+- Visual indicators for card priority or status
+- Column headers with task counts
+- Add card buttons in each column
+- Ability to see workflow progress at a glance
+- Clear visual hierarchy between columns and cards
+- Smooth drag-and-drop interactions with hover states
+
+COLOR MODE: both
+Includes light and dark mode toggle with appropriate color scheme switching.
+
+TECHNICAL NOTES:
+- Chrome effects use multi-stop gradients with vibrant hue shifts
+- Box shadows simulate depth and glow effects
+- Transform3d creates subtle perspective on cards
+- Backdrop-filter provides frosted glass effect on modals
+- CSS animations for entrance effects and interactions
+-->
+
+<style>
+:root {
+    /* Core Colors */
+    --color-primary: #00d4ff;
+    --color-secondary: #ff0099;
+    --color-accent: #00ff88;
+    --color-warning: #ffaa00;
+    --color-background: #0a0e27;
+    --color-surface: #1a1f3a;
+    --color-card: #252b4a;
+    --color-text: #ffffff;
+    --color-text-muted: #a0b0d0;
+    --color-border: rgba(255, 255, 255, 0.1);
+
+    /* Chrome & Gradients */
+    --chrome-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    --primary-gradient: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+    --secondary-gradient: linear-gradient(135deg, #ff0099 0%, #cc0077 100%);
+    --accent-gradient: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
+    --card-gradient: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+
+    /* Glows */
+    --glow-primary: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 212, 255, 0.2);
+    --glow-secondary: 0 0 20px rgba(255, 0, 153, 0.4), 0 0 40px rgba(255, 0, 153, 0.2);
+    --glow-accent: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.2);
+
+    /* Typography */
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    --font-size-3xl: 2.5rem;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-2xl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-sm: 8px;
+    --radius-default: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-default: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-inset: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Mode */
+:root[data-theme="light"] {
+    --color-background: #f0f2ff;
+    --color-surface: #ffffff;
+    --color-card: #f8f9ff;
+    --color-text: #1a1f3a;
+    --color-text-muted: #5a6b8a;
+    --color-border: rgba(0, 0, 0, 0.1);
+    --card-gradient: linear-gradient(145deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-default: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    overflow-x: hidden;
+}
+
+/* Header */
+.header {
+    background: var(--color-surface);
+    border-bottom: 2px solid var(--color-border);
+    padding: var(--space-md) var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-default);
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--chrome-gradient);
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: var(--font-size-xl);
+    color: white;
+    box-shadow: var(--glow-primary);
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: var(--glow-primary); }
+    50% { box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(0, 212, 255, 0.4); }
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    background: var(--chrome-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 1px;
+}
+
+.logo-text p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-base);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: var(--shadow-default), var(--glow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 212, 255, 0.6);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--secondary-gradient);
+    color: white;
+    box-shadow: var(--shadow-default), var(--glow-secondary);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(255, 0, 153, 0.6);
+}
+
+.btn-icon {
+    background: var(--color-card);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    padding: var(--space-sm);
+    aspect-ratio: 1;
+}
+
+.btn-icon:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--glow-primary);
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    width: 56px;
+    height: 32px;
+    background: var(--color-card);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    position: relative;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: var(--chrome-gradient);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform var(--transition-base);
+    box-shadow: var(--shadow-default);
+}
+
+:root[data-theme="light"] .theme-toggle::before {
+    transform: translateX(24px);
+}
+
+/* Board Container */
+.board-container {
+    padding: var(--space-xl);
+    min-height: calc(100vh - 84px);
+}
+
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-default);
+    border: 2px solid var(--color-border);
+}
+
+.board-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.board-stats {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    background: var(--chrome-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* Kanban Board */
+.kanban-board {
+    display: flex;
+    gap: var(--space-lg);
+    overflow-x: auto;
+    padding-bottom: var(--space-lg);
+}
+
+.kanban-column {
+    flex: 0 0 320px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-default);
+    border: 2px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 250px);
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    background: var(--card-gradient);
+    border-radius: var(--radius-default);
+    border: 2px solid var(--color-border);
+}
+
+.column-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.column-title h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.column-count {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    color: white;
+}
+
+.kanban-column[data-column="todo"] .column-count {
+    background: var(--color-text-muted);
+}
+
+.kanban-column[data-column="in-progress"] .column-count {
+    background: var(--primary-gradient);
+    box-shadow: var(--glow-primary);
+}
+
+.kanban-column[data-column="review"] .column-count {
+    background: var(--secondary-gradient);
+    box-shadow: var(--glow-secondary);
+}
+
+.kanban-column[data-column="done"] .column-count {
+    background: var(--accent-gradient);
+    box-shadow: var(--glow-accent);
+}
+
+.cards-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-xs);
+}
+
+/* Scrollbar Styling */
+.cards-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cards-container::-webkit-scrollbar-track {
+    background: var(--color-card);
+    border-radius: var(--radius-default);
+}
+
+.cards-container::-webkit-scrollbar-thumb {
+    background: var(--chrome-gradient);
+    border-radius: var(--radius-default);
+}
+
+/* Task Card */
+.task-card {
+    background: var(--card-gradient);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    cursor: grab;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.task-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+}
+
+.task-card:active {
+    cursor: grabbing;
+}
+
+.task-card:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-sm);
+}
+
+.task-priority {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-priority 2s ease-in-out infinite;
+}
+
+.priority-high {
+    background: var(--secondary-gradient);
+    box-shadow: var(--glow-secondary);
+}
+
+.priority-medium {
+    background: var(--primary-gradient);
+    box-shadow: var(--glow-primary);
+}
+
+.priority-low {
+    background: var(--color-text-muted);
+}
+
+@keyframes pulse-priority {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.task-title {
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xs);
+    line-height: 1.4;
+}
+
+.task-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.task-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.tag {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid;
+}
+
+.tag-video {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.tag-article {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    background: rgba(255, 0, 153, 0.1);
+}
+
+.tag-podcast {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.tag-social {
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-assignee {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--chrome-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-border);
+}
+
+.assignee-name {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.task-due {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Add Card Button */
+.add-card-btn {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--card-gradient);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-default);
+    color: var(--color-text-muted);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    min-height: 44px;
+}
+
+.add-card-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: var(--glow-primary);
+}
+
+.add-card-btn:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .kanban-column {
+        flex: 0 0 280px;
+    }
+
+    .board-stats {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: var(--space-md);
+    }
+
+    .logo-text h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .board-container {
+        padding: var(--space-md);
+    }
+
+    .kanban-column {
+        flex: 0 0 260px;
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-logo">
+        <div class="logo-icon">CC</div>
+        <div class="logo-text">
+            <h1>Clean Core</h1>
+            <p>Media Production Board</p>
+        </div>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-primary" aria-label="Add New Task">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New Task
+        </button>
+        <button class="btn btn-icon" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+        </button>
+        <button class="btn btn-icon" aria-label="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+        </button>
+        <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle"></button>
+    </div>
+</header>
+
+<main class="board-container">
+    <div class="board-header">
+        <h2 class="board-title">Q1 Content Pipeline</h2>
+        <div class="board-stats">
+            <div class="stat">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">8</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kanban-board">
+        <!-- To Do Column -->
+        <div class="kanban-column" data-column="todo">
+            <div class="column-header">
+                <div class="column-title">
+                    <h3>To Do</h3>
+                    <span class="column-count">4</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-high"></div>
+                    </div>
+                    <h4 class="task-title">Launch Video Series: Tech Trends 2026</h4>
+                    <p class="task-description">Create 5-episode video series covering emerging technologies and their impact on media production.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-video">Video</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">SM</div>
+                            <span class="assignee-name">Sarah M.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 15
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Feature Article: AI in Content Creation</h4>
+                    <p class="task-description">Long-form piece exploring how AI tools are reshaping creative workflows in 2026.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">JD</div>
+                            <span class="assignee-name">Jordan D.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 18
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Podcast Episode 42: Industry Roundtable</h4>
+                    <p class="task-description">Host roundtable discussion with three media executives about streaming wars.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-podcast">Podcast</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">AK</div>
+                            <span class="assignee-name">Alex K.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 20
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-low"></div>
+                    </div>
+                    <h4 class="task-title">Social Campaign: Behind the Scenes</h4>
+                    <p class="task-description">Weekly social media series showing our production process and team culture.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-social">Social</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">MR</div>
+                            <span class="assignee-name">Maya R.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 22
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-card-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Card
+            </button>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="kanban-column" data-column="in-progress">
+            <div class="column-header">
+                <div class="column-title">
+                    <h3>In Progress</h3>
+                    <span class="column-count">5</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-high"></div>
+                    </div>
+                    <h4 class="task-title">Documentary: The Future of Broadcasting</h4>
+                    <p class="task-description">30-minute documentary exploring how traditional broadcasting is evolving.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-video">Video</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">TC</div>
+                            <span class="assignee-name">Taylor C.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 12
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-high"></div>
+                    </div>
+                    <h4 class="task-title">Interview Series: Creative Directors</h4>
+                    <p class="task-description">10-part interview series with leading creative directors from top agencies.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-video">Video</span>
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">LP</div>
+                            <span class="assignee-name">Lee P.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 14
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Weekly Podcast: Media Pulse</h4>
+                    <p class="task-description">Weekly news roundup covering biggest media industry developments.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-podcast">Podcast</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">RN</div>
+                            <span class="assignee-name">Riley N.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 16
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Content Strategy Guide 2026</h4>
+                    <p class="task-description">Comprehensive guide for content creators navigating the modern media landscape.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">DW</div>
+                            <span class="assignee-name">Devon W.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 19
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-low"></div>
+                    </div>
+                    <h4 class="task-title">TikTok Channel Launch</h4>
+                    <p class="task-description">Launch dedicated TikTok channel with daily short-form media insights.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-social">Social</span>
+                        <span class="tag tag-video">Video</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">CM</div>
+                            <span class="assignee-name">Casey M.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 25
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-card-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Card
+            </button>
+        </div>
+
+        <!-- Review Column -->
+        <div class="kanban-column" data-column="review">
+            <div class="column-header">
+                <div class="column-title">
+                    <h3>Review</h3>
+                    <span class="column-count">3</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-high"></div>
+                    </div>
+                    <h4 class="task-title">Streaming Wars Deep Dive</h4>
+                    <p class="task-description">Analytical piece examining competitive dynamics between major streaming platforms.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">BS</div>
+                            <span class="assignee-name">Blake S.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 10
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Virtual Production Tutorial Series</h4>
+                    <p class="task-description">6-part tutorial showing how to set up and use virtual production workflows.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-video">Video</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">NH</div>
+                            <span class="assignee-name">Nico H.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 11
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-low"></div>
+                    </div>
+                    <h4 class="task-title">Monthly Newsletter: Media Insights</h4>
+                    <p class="task-description">Curated collection of best media industry news and analysis from January.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">QT</div>
+                            <span class="assignee-name">Quinn T.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 31
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-card-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Card
+            </button>
+        </div>
+
+        <!-- Done Column -->
+        <div class="kanban-column" data-column="done">
+            <div class="column-header">
+                <div class="column-title">
+                    <h3>Done</h3>
+                    <span class="column-count">12</span>
+                </div>
+            </div>
+            <div class="cards-container">
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-high"></div>
+                    </div>
+                    <h4 class="task-title">2025 Year in Review Video</h4>
+                    <p class="task-description">Comprehensive video highlighting biggest media moments from 2025.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-video">Video</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">VJ</div>
+                            <span class="assignee-name">Val J.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 5
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">Holiday Special Podcast</h4>
+                    <p class="task-description">Year-end special featuring conversations with our favorite guests from 2025.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-podcast">Podcast</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">GF</div>
+                            <span class="assignee-name">Gray F.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 2
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-medium"></div>
+                    </div>
+                    <h4 class="task-title">New Year Social Media Campaign</h4>
+                    <p class="task-description">Week-long campaign featuring resolutions and predictions for 2026 media.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-social">Social</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">PL</div>
+                            <span class="assignee-name">Pat L.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 7
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-card" tabindex="0">
+                    <div class="task-header">
+                        <div class="task-priority priority-low"></div>
+                    </div>
+                    <h4 class="task-title">Content Calendar Planning</h4>
+                    <p class="task-description">Finalized Q1 content calendar with all planned pieces and deadlines.</p>
+                    <div class="task-tags">
+                        <span class="tag tag-article">Article</span>
+                    </div>
+                    <div class="task-footer">
+                        <div class="task-assignee">
+                            <div class="avatar">XY</div>
+                            <span class="assignee-name">Xavi Y.</span>
+                        </div>
+                        <div class="task-due">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Jan 3
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-card-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Card
+            </button>
+        </div>
+    </div>
+</main>
+
+<script>
+// Navigation
+const TOTAL = 250;
+const CURRENT = 122;
+
+/* Navigation removed */
+
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+// Check for saved theme preference or default to dark
+const savedTheme = localStorage.getItem('theme') || 'dark';
+root.setAttribute('data-theme', savedTheme);
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = root.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// Drag and Drop Functionality (visual only for demo)
+const cards = document.querySelectorAll('.task-card');
+const columns = document.querySelectorAll('.kanban-column');
+
+let draggedCard = null;
+
+cards.forEach(card => {
+    card.addEventListener('dragstart', function(e) {
+        draggedCard = this;
+        this.style.opacity = '0.5';
+        e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', function() {
+        this.style.opacity = '1';
+        draggedCard = null;
+    });
+
+    card.setAttribute('draggable', 'true');
+});
+
+columns.forEach(column => {
+    const container = column.querySelector('.cards-container');
+
+    container.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    });
+
+    container.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+        this.style.background = 'rgba(0, 212, 255, 0.1)';
+    });
+
+    container.addEventListener('dragleave', function() {
+        this.style.background = '';
+    });
+
+    container.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.background = '';
+        if (draggedCard && draggedCard !== this) {
+            this.appendChild(draggedCard);
+            // Update column count
+            updateColumnCounts();
+        }
+        return false;
+    });
+});
+
+function updateColumnCounts() {
+    columns.forEach(column => {
+        const count = column.querySelectorAll('.task-card').length;
+        const countElement = column.querySelector('.column-count');
+        countElement.textContent = count;
+    });
+}
+
+// Add Card Button Handlers
+const addCardButtons = document.querySelectorAll('.add-card-btn');
+addCardButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        alert('Add new card functionality would open a modal form here');
+    });
+});
+
+// Card Click Handlers
+cards.forEach(card => {
+    card.addEventListener('click', function(e) {
+        // Prevent click during drag
+        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+            console.log('Card clicked - would open detail modal');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

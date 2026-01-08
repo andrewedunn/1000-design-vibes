@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Carbon - Invoice #RC-2048</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Riot Carbon - Crafted for users with international roots
+ABOUTME: This design system implements invoice with flat 2010s aesthetics optimized for dark-only viewing.
+ABOUTME: Key characteristics: Bold geometric blocks, high-contrast neon accents on deep charcoal, sharp angular separators.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00ff88;
+--color-secondary: #ff0055;
+--color-tertiary: #00ddff;
+--color-background: #0a0a0a;
+--color-surface: #1a1a1a;
+--color-surface-elevated: #242424;
+--color-text: #ffffff;
+--color-text-muted: #888888;
+--color-border: #333333;
+--font-heading: 'Work Sans', sans-serif;
+--font-body: 'Work Sans', sans-serif;
+--font-mono: 'Space Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Zero-radius flat surfaces create hard-edged geometric clarity
+2. Neon accent colors (#00ff88, #ff0055, #00ddff) pop against pure black backgrounds
+3. Strict 8px grid system enforces visual rhythm and alignment
+4. Heavy sans-serif typography at extreme weights (800) creates bold hierarchies
+5. Single-pixel borders in dark gray (#333) subtly define sections without softness
+
+COLOR PALETTE:
+- Primary (Neon Green): #00ff88 - Used for positive amounts, CTAs, status indicators
+- Secondary (Hot Pink): #ff0055 - Used for urgent items, warnings, highlights
+- Tertiary (Cyan): #00ddff - Used for links, metadata, secondary actions
+- Background: #0a0a0a - Near-black for maximum contrast
+- Surface: #1a1a1a - Slightly elevated surface
+- Surface Elevated: #242424 - Cards and prominent sections
+- Text: #ffffff - Pure white for maximum readability
+- Text Muted: #888888 - De-emphasized content
+- Border: #333333 - Subtle separators
+
+TYPOGRAPHY:
+- Heading: Work Sans (400/600/700/800) - Modern geometric sans-serif
+- Body: Work Sans (400/600) - Same family for consistency
+- Mono: Space Mono (400/700) - For amounts, IDs, technical data
+- Base size: 16px
+- Scale: 1.250 (Major Third)
+- Line height: 1.5 for body, 1.2 for headings
+
+SPACING SYSTEM:
+- Base unit: 8px
+- Scale: 8, 16, 24, 32, 40, 48, 64, 80, 96
+- Consistent padding/margin using multiples
+
+BEST FOR:
+- Real estate transactions requiring professional invoicing
+- International/multi-currency billing systems
+- Modern fintech or proptech applications
+- Brands targeting young, urban, tech-savvy clients
+- High-contrast environments or accessibility needs
+
+AVOID IF:
+- Client prefers traditional/conservative invoice styling
+- Brand requires warm, friendly, approachable aesthetic
+- Print-first workflows (designed for screen)
+- Need to match legacy corporate identity systems
+- Working with older demographics uncomfortable with dark interfaces
+
+FUNCTIONAL DIRECTION: invoice
+This design must clearly function as an invoice. Required elements:
+- Invoice number and date prominently displayed
+- Sender (business) information with logo/branding
+- Recipient (client) information clearly separated
+- Itemized list of charges with descriptions
+- Quantity, unit price, and line totals
+- Subtotal, tax breakdown, and grand total
+- Payment terms and due date
+- Payment methods accepted
+- Unique reference numbers for tracking
+- Status indicator (paid/unpaid/overdue)
+- Footer with legal info, contact details, bank information
+
+DESIGN ERA: flat_2010s
+Reflects the flat design movement of 2010-2015:
+- No gradients, shadows, or textures
+- Pure solid colors in bold combinations
+- Simple geometric shapes
+- Focus on typography and whitespace
+- Minimalist iconography (if used)
+- Strong contrast and clean edges
+
+EMOTIONAL TONE: edgy
+Creates urgency and boldness through:
+- Neon color palette against black
+- Sharp angles and hard edges
+- Heavy typographic weights
+- Unconventional color choices for finance (pink, cyan)
+- Modern, rebellious aesthetic that breaks traditional invoice conventions
+
+INDUSTRY: real_estate
+Adapted for property transactions:
+- Clean professional layout suitable for high-value deals
+- Space for property addresses and descriptions
+- Multi-line item support for various fees (commission, inspection, legal)
+- International address formatting
+- Currency flexibility for cross-border transactions
+
+COLOR MODE: dark_only
+Optimized exclusively for dark viewing:
+- Pure black (#0a0a0a) background prevents eye strain
+- High-contrast text (#ffffff) ensures readability
+- Neon accents designed specifically for dark backgrounds
+- No light mode alternative provided
+- Assumes OLED/dark environment usage
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #00ff88;
+    --color-secondary: #ff0055;
+    --color-tertiary: #00ddff;
+    --color-background: #0a0a0a;
+    --color-surface: #1a1a1a;
+    --color-surface-elevated: #242424;
+    --color-text: #ffffff;
+    --color-text-muted: #888888;
+    --color-border: #333333;
+
+    /* Typography */
+    --font-heading: 'Work Sans', sans-serif;
+    --font-body: 'Work Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-5: 40px;
+    --space-6: 48px;
+    --space-8: 64px;
+    --space-10: 80px;
+    --space-12: 96px;
+
+    /* Shapes */
+    --radius-default: 0px;
+    --shadow-default: none;
+    --border-width: 1px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    padding: var(--space-6);
+    min-height: 100vh;
+}
+
+.invoice-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+/* Header */
+.invoice-header {
+    background-color: var(--color-surface-elevated);
+    padding: var(--space-6);
+    border-bottom: var(--border-width) solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-4);
+    align-items: start;
+}
+
+.company-info h1 {
+    font-size: 2.441rem;
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+.company-tagline {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-3);
+}
+
+.company-details {
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.company-details p {
+    margin-bottom: var(--space-unit);
+}
+
+.invoice-meta {
+    text-align: right;
+}
+
+.invoice-number {
+    font-family: var(--font-mono);
+    font-size: 1.953rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+}
+
+.invoice-status {
+    display: inline-block;
+    padding: var(--space-unit) var(--space-2);
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+}
+
+.invoice-status.paid {
+    background-color: var(--color-primary);
+    color: #000;
+}
+
+.invoice-dates {
+    font-size: 0.875rem;
+}
+
+.invoice-dates p {
+    margin-bottom: var(--space-unit);
+}
+
+.date-label {
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.date-value {
+    font-family: var(--font-mono);
+    color: var(--color-text);
+}
+
+/* Parties Section */
+.parties-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.party-block {
+    padding: var(--space-4);
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.party-block:last-child {
+    border-right: none;
+}
+
+.party-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-tertiary);
+    margin-bottom: var(--space-2);
+}
+
+.party-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+}
+
+.party-details {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+}
+
+.party-details p {
+    margin-bottom: var(--space-unit);
+}
+
+/* Line Items Table */
+.line-items {
+    padding: var(--space-4);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.line-items-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-tertiary);
+    margin-bottom: var(--space-3);
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.items-table thead {
+    border-bottom: 2px solid var(--color-border);
+}
+
+.items-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-2) var(--space-unit);
+    color: var(--color-text-muted);
+}
+
+.items-table th:last-child {
+    text-align: right;
+}
+
+.items-table tbody tr {
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.items-table tbody tr:hover {
+    background-color: rgba(0, 255, 136, 0.05);
+}
+
+.items-table td {
+    padding: var(--space-3) var(--space-unit);
+    vertical-align: top;
+}
+
+.item-description {
+    font-weight: 600;
+    margin-bottom: var(--space-unit);
+}
+
+.item-details {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.item-property {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-tertiary);
+}
+
+.item-qty {
+    font-family: var(--font-mono);
+    text-align: center;
+}
+
+.item-price, .item-total {
+    font-family: var(--font-mono);
+    text-align: right;
+}
+
+.item-total {
+    font-weight: 700;
+}
+
+/* Totals Section */
+.totals-section {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.payment-terms {
+    padding: var(--space-4);
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.terms-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-tertiary);
+    margin-bottom: var(--space-2);
+}
+
+.terms-content {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+}
+
+.terms-content p {
+    margin-bottom: var(--space-2);
+}
+
+.terms-content strong {
+    color: var(--color-text);
+}
+
+.totals-block {
+    padding: var(--space-4);
+    background-color: var(--color-surface-elevated);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-2) 0;
+    font-size: 0.875rem;
+}
+
+.total-row.subtotal {
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.total-row.grand-total {
+    border-top: 2px solid var(--color-primary);
+    padding-top: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+.total-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.total-row.grand-total .total-label {
+    font-size: 1rem;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.total-amount {
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+.total-row.grand-total .total-amount {
+    font-size: 1.953rem;
+    color: var(--color-primary);
+}
+
+/* Payment Methods */
+.payment-methods {
+    padding: var(--space-4);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.payment-methods-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-tertiary);
+    margin-bottom: var(--space-3);
+}
+
+.payment-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+}
+
+.payment-option {
+    padding: var(--space-3);
+    background-color: var(--color-surface-elevated);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.payment-option:hover {
+    border-color: var(--color-primary);
+}
+
+.payment-method-name {
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-unit);
+}
+
+.payment-method-details {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.payment-method-details p {
+    margin-bottom: 4px;
+}
+
+/* Footer */
+.invoice-footer {
+    padding: var(--space-4);
+    background-color: var(--color-surface-elevated);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.footer-section h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-tertiary);
+    margin-bottom: var(--space-2);
+}
+
+.footer-section p {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-unit);
+}
+
+.footer-section a {
+    color: var(--color-tertiary);
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Navigation */
+.nav-controls {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+}
+
+.nav-btn {
+    width: 56px;
+    height: 56px;
+    background-color: var(--color-primary);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: var(--color-tertiary);
+    transform: scale(1.05);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.nav-btn:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus states */
+a:focus,
+button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: var(--space-2);
+    }
+
+    .invoice-header {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-meta {
+        text-align: left;
+    }
+
+    .parties-section {
+        grid-template-columns: 1fr;
+    }
+
+    .party-block {
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .party-block:last-child {
+        border-bottom: none;
+    }
+
+    .totals-section {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-terms {
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .payment-options {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-footer {
+        grid-template-columns: 1fr;
+    }
+
+    .items-table {
+        font-size: 0.875rem;
+    }
+
+    .items-table th,
+    .items-table td {
+        padding: var(--space-2) 4px;
+    }
+}
+</style>
+
+<div class="invoice-container">
+    <!-- Header -->
+    <header class="invoice-header">
+        <div class="company-info">
+            <h1>Riot Carbon</h1>
+            <div class="company-tagline">Crafted for users with international roots</div>
+            <div class="company-details">
+                <p><strong>Riot Carbon Property Group</strong></p>
+                <p>1247 Insurgent Boulevard, Suite 800<br>
+                Berlin, Germany 10178</p>
+                <p>Tax ID: DE-RC-2048-9876<br>
+                VAT: DE123456789</p>
+            </div>
+        </div>
+        <div class="invoice-meta">
+            <div class="invoice-number">RC-2048</div>
+            <div class="invoice-status">UNPAID</div>
+            <div class="invoice-dates">
+                <p><span class="date-label">Issue Date:</span><br>
+                <span class="date-value">2026-01-08</span></p>
+                <p><span class="date-label">Due Date:</span><br>
+                <span class="date-value">2026-02-07</span></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Bill To / Bill From -->
+    <div class="parties-section">
+        <div class="party-block">
+            <div class="party-label">Bill To</div>
+            <div class="party-name">Nexus International Holdings</div>
+            <div class="party-details">
+                <p>Attn: Sarah Chen, CFO</p>
+                <p>456 Harbor Exchange<br>
+                Singapore 018956</p>
+                <p>Company Reg: 202401234K<br>
+                GST Reg: M2-0012345-6</p>
+                <p>Email: accounting@nexusholdings.sg<br>
+                Phone: +65 6234 5678</p>
+            </div>
+        </div>
+        <div class="party-block">
+            <div class="party-label">Property Reference</div>
+            <div class="party-name">Kreuzberg Loft Collection</div>
+            <div class="party-details">
+                <p><strong>Property Address:</strong><br>
+                Oranienstraße 42-44<br>
+                10969 Berlin-Kreuzberg<br>
+                Germany</p>
+                <p><strong>Property ID:</strong> KLC-042-044<br>
+                <strong>Transaction ID:</strong> TRX-2048-01-08</p>
+                <p><strong>Closing Date:</strong> 2026-01-15</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Line Items -->
+    <div class="line-items">
+        <div class="line-items-header">Line Items</div>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Description</th>
+                    <th style="width: 10%;">Qty</th>
+                    <th style="width: 20%;">Unit Price</th>
+                    <th style="width: 20%;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="item-description">Sales Commission - Primary Transaction</div>
+                        <div class="item-details">
+                            3.5% commission on sale of mixed-use property portfolio<br>
+                            <span class="item-property">Properties: 3 residential units, 2 commercial spaces</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">1</td>
+                    <td class="item-price">€87,500.00</td>
+                    <td class="item-total">€87,500.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-description">International Transaction Coordination</div>
+                        <div class="item-details">
+                            Cross-border paperwork, currency exchange coordination, dual jurisdiction legal support<br>
+                            <span class="item-property">Jurisdictions: Germany (DE), Singapore (SG)</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">1</td>
+                    <td class="item-price">€12,000.00</td>
+                    <td class="item-total">€12,000.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-description">Property Inspection & Due Diligence</div>
+                        <div class="item-details">
+                            Comprehensive building inspection, structural analysis, compliance verification<br>
+                            <span class="item-property">Report ID: INS-KLC-042-044-2026</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">3</td>
+                    <td class="item-price">€2,450.00</td>
+                    <td class="item-total">€7,350.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-description">Title Search & Insurance</div>
+                        <div class="item-details">
+                            Full title history search, lien verification, title insurance policy procurement<br>
+                            <span class="item-property">Policy: TI-2048-RC-KLC</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">1</td>
+                    <td class="item-price">€3,800.00</td>
+                    <td class="item-total">€3,800.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-description">Legal Documentation & Closing Services</div>
+                        <div class="item-details">
+                            Contract preparation, notary coordination, closing facilitation, document translation<br>
+                            <span class="item-property">Languages: English, German, Mandarin</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">1</td>
+                    <td class="item-price">€8,500.00</td>
+                    <td class="item-total">€8,500.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-description">Marketing & Photography (Pre-Sale)</div>
+                        <div class="item-details">
+                            Professional photography, 3D virtual tours, international marketing campaign<br>
+                            <span class="item-property">Campaign Duration: 45 days</span>
+                        </div>
+                    </td>
+                    <td class="item-qty">1</td>
+                    <td class="item-price">€4,200.00</td>
+                    <td class="item-total">€4,200.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals Section -->
+    <div class="totals-section">
+        <div class="payment-terms">
+            <div class="terms-label">Payment Terms</div>
+            <div class="terms-content">
+                <p><strong>Net 30 Days</strong> - Payment due within 30 days of invoice date.</p>
+                <p><strong>Early Payment Discount:</strong> 2% discount if paid within 10 days (by 2026-01-18).</p>
+                <p><strong>Late Payment:</strong> 1.5% monthly interest on overdue amounts after due date.</p>
+                <p><strong>Currency:</strong> All amounts in EUR (€). International wire transfer fees are the responsibility of the payer.</p>
+                <p><strong>Dispute Resolution:</strong> Any disputes must be raised within 7 days of invoice receipt.</p>
+            </div>
+        </div>
+        <div class="totals-block">
+            <div class="total-row subtotal">
+                <span class="total-label">Subtotal</span>
+                <span class="total-amount">€123,350.00</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">VAT (19%)</span>
+                <span class="total-amount">€23,436.50</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">International Processing Fee</span>
+                <span class="total-amount">€750.00</span>
+            </div>
+            <div class="total-row grand-total">
+                <span class="total-label">Total Due</span>
+                <span class="total-amount">€147,536.50</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="payment-methods">
+        <div class="payment-methods-label">Accepted Payment Methods</div>
+        <div class="payment-options">
+            <div class="payment-option">
+                <div class="payment-method-name">Bank Transfer (SEPA)</div>
+                <div class="payment-method-details">
+                    <p>Bank: Deutsche Bank AG</p>
+                    <p>IBAN: DE89370400440532013000</p>
+                    <p>BIC: COBADEFFXXX</p>
+                    <p>Reference: RC-2048</p>
+                </div>
+            </div>
+            <div class="payment-option">
+                <div class="payment-method-name">International Wire</div>
+                <div class="payment-method-details">
+                    <p>SWIFT: DEUTDEFFXXX</p>
+                    <p>Account: 0532013000</p>
+                    <p>Routing: 37040044</p>
+                    <p>Reference: RC-2048</p>
+                </div>
+            </div>
+            <div class="payment-option">
+                <div class="payment-method-name">Cryptocurrency</div>
+                <div class="payment-method-details">
+                    <p>BTC, ETH, USDC accepted</p>
+                    <p>Contact for wallet address</p>
+                    <p>Current EUR rate locked</p>
+                    <p>accounting@riotcarbon.de</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="invoice-footer">
+        <div class="footer-section">
+            <h3>Contact Information</h3>
+            <p>
+                <strong>Email:</strong> <a href="mailto:accounting@riotcarbon.de">accounting@riotcarbon.de</a><br>
+                <strong>Phone:</strong> +49 30 1234 5678<br>
+                <strong>Website:</strong> <a href="#">riotcarbon.de</a>
+            </p>
+            <p>
+                <strong>Business Hours:</strong><br>
+                Mon-Fri: 09:00 - 18:00 CET<br>
+                Closed weekends and German public holidays
+            </p>
+        </div>
+        <div class="footer-section">
+            <h3>Legal Information</h3>
+            <p>
+                <strong>Registered Office:</strong><br>
+                Riot Carbon Property Group GmbH<br>
+                Amtsgericht Berlin-Charlottenburg<br>
+                HRB 204813 B
+            </p>
+            <p>
+                <strong>Managing Directors:</strong> Alex Müller, Jordan Park<br>
+                <strong>Tax ID:</strong> DE-RC-2048-9876<br>
+                <strong>VAT ID:</strong> DE123456789
+            </p>
+        </div>
+    </footer>
+</div>
+
+<!-- Navigation Controls -->
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous design">&larr;</button>
+    <button class="nav-btn" id="nextBtn" aria-label="Next design">&rarr;</button>
+</div>
+
+
+
+</body>
+</html>

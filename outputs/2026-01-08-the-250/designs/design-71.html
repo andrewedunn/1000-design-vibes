@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Graphite - Mortgage Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Core Graphite - Natural meets neutral: a mid century modern perspective
+ABOUTME: This design system implements a mortgage_calculator with mid-century modern aesthetics.
+ABOUTME: Key characteristics: organic curves meet clean geometry, warm neutrals with natural accents, serious professionalism with approachable warmth.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #2D5F4C;
+--color-primary-light: #4A8B6F;
+--color-accent: #D4A574;
+--color-background: #F5F3EF;
+--color-surface: #FFFFFF;
+--color-surface-alt: #E8E5DF;
+--color-text: #2B2B2B;
+--color-text-muted: #6B6B6B;
+--color-border: #D1CEC6;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Space Grotesk', sans-serif;
+--font-mono: 'IBM Plex Mono', monospace;
+--radius-default: 12px;
+--radius-large: 24px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Organic curves balanced with clean geometric forms reflect mid-century modern's marriage of nature and function
+2. Warm neutral palette with forest green accents creates serious professionalism without coldness
+3. Generous whitespace and clear hierarchy prioritize clarity in financial decision-making
+4. Subtle rounded corners and soft shadows create approachable warmth
+
+BEST FOR:
+- Financial tools requiring trust and clarity
+- Professional applications in wellness/fitness industries
+- Calculators and data-driven interfaces needing warmth
+- Apps targeting health-conscious professionals
+
+AVOID IF:
+- You need high-energy, vibrant aesthetics
+- Dark mode is required
+- Playful or casual tone is desired
+- Maximum information density is needed
+
+FUNCTIONAL DIRECTION: mortgage_calculator
+This design must clearly function as a mortgage calculator. Required elements:
+- Loan amount input field
+- Interest rate input
+- Loan term selector (years)
+- Down payment calculator
+- Monthly payment display (prominent)
+- Amortization breakdown
+- Principal vs interest visualization
+- Total cost over loan lifetime
+- Affordability assessment
+- Payment schedule preview
+- Tax and insurance fields
+- Interactive calculation triggers
+
+DESIGN CONTEXT:
+- Industry: Fitness (designing for fitness professionals/gym owners purchasing property)
+- Era: Mid-century modern (1945-1969 aesthetic - organic forms, optimism, functionality)
+- Tone: Serious (trustworthy, professional, credible)
+- Color mode: Light only
+
+MID-CENTURY MODERN INTERPRETATION:
+The design embraces mid-century modern principles:
+- Organic kidney-bean shapes for primary containers
+- Tapered legs visual metaphor in dividers
+- Warm wood-tone accents (expressed through color)
+- Clean sans-serif typography with geometric qualities
+- Asymmetric balance with clear focal points
+- Integration of form and function
+- Optimistic color palette (muted to maintain serious tone)
+-->
+
+<style>
+:root {
+    /* Core Colors */
+    --color-primary: #2D5F4C;
+    --color-primary-light: #4A8B6F;
+    --color-primary-pale: #E8F1ED;
+    --color-accent: #D4A574;
+    --color-accent-light: #E9D3B8;
+    --color-background: #F5F3EF;
+    --color-surface: #FFFFFF;
+    --color-surface-alt: #E8E5DF;
+    --color-text: #2B2B2B;
+    --color-text-muted: #6B6B6B;
+    --color-border: #D1CEC6;
+    --color-success: #5A8F73;
+    --color-warning: #C88F4E;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+    --font-body: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+    /* Type Scale (1.25 - Major Third) */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+    --text-4xl: 3.052rem;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+    --space-3xl: calc(var(--space-unit) * 12);
+
+    /* Shapes */
+    --radius-default: 12px;
+    --radius-large: 24px;
+    --radius-organic: 24px 12px 20px 16px;
+    --shadow-soft: 0 2px 12px rgba(43, 43, 43, 0.06);
+    --shadow-medium: 0 4px 24px rgba(43, 43, 43, 0.08);
+    --shadow-focus: 0 0 0 3px rgba(45, 95, 76, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-lg);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+}
+
+.header h1 {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+.header .tagline {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    font-weight: 400;
+}
+
+.header .subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Two Column Layout */
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+/* Input Panel - Organic Shape */
+.input-panel {
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+}
+
+.panel-header {
+    margin-bottom: var(--space-lg);
+}
+
+.panel-header h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.panel-header p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-group label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-prefix {
+    position: absolute;
+    left: var(--space-md);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+.input-suffix {
+    position: absolute;
+    right: var(--space-md);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: var(--space-md) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    background: var(--color-surface-alt);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    transition: all 0.2s ease;
+}
+
+input[type="number"].has-prefix {
+    padding-left: calc(var(--space-md) + 24px);
+}
+
+input[type="number"].has-suffix {
+    padding-right: calc(var(--space-md) + 32px);
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-focus);
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%236B6B6B' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-md) center;
+    cursor: pointer;
+}
+
+/* Range Slider */
+.range-group {
+    margin-bottom: var(--space-lg);
+}
+
+.range-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-xs);
+}
+
+.range-label span:first-child {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.range-label span:last-child {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    background: var(--color-surface-alt);
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--color-primary);
+    border: 3px solid var(--color-surface);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(45, 95, 76, 0.3);
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(45, 95, 76, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--color-primary);
+    border: 3px solid var(--color-surface);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(45, 95, 76, 0.3);
+    transition: all 0.2s ease;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: var(--shadow-focus), 0 4px 12px rgba(45, 95, 76, 0.4);
+}
+
+/* Results Panel */
+.results-panel {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    padding: var(--space-xl);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+    color: white;
+}
+
+.results-header {
+    margin-bottom: var(--space-lg);
+}
+
+.results-header h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.results-header p {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+}
+
+.monthly-payment-display {
+    background: rgba(255, 255, 255, 0.15);
+    padding: var(--space-lg);
+    border-radius: var(--radius-default);
+    margin-bottom: var(--space-lg);
+    backdrop-filter: blur(10px);
+}
+
+.monthly-payment-label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+    margin-bottom: var(--space-xs);
+}
+
+.monthly-payment-amount {
+    font-family: var(--font-mono);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.payment-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.breakdown-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--space-md);
+    border-radius: var(--radius-default);
+}
+
+.breakdown-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    margin-bottom: var(--space-xs);
+}
+
+.breakdown-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 600;
+}
+
+/* Affordability Assessment */
+.affordability {
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--space-md);
+    border-radius: var(--radius-default);
+    margin-bottom: var(--space-lg);
+}
+
+.affordability-label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+}
+
+.affordability-bar {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: var(--space-xs);
+}
+
+.affordability-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.affordability-status {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+}
+
+/* Calculate Button */
+.calculate-button {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: white;
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.calculate-button:hover {
+    background: var(--color-warning);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+}
+
+.calculate-button:active {
+    transform: translateY(0);
+}
+
+.calculate-button:focus {
+    outline: none;
+    box-shadow: var(--shadow-focus), 0 6px 20px rgba(212, 165, 116, 0.4);
+}
+
+/* Full Width Sections */
+.amortization-section,
+.schedule-section {
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+    margin-bottom: var(--space-xl);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.section-header h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.section-header p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* Visualization */
+.visualization {
+    margin-bottom: var(--space-lg);
+}
+
+.chart-container {
+    background: var(--color-primary-pale);
+    padding: var(--space-lg);
+    border-radius: var(--radius-default);
+    margin-bottom: var(--space-md);
+}
+
+.chart-bars {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.chart-bar {
+    flex: 1;
+    background: var(--color-primary);
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 20px;
+}
+
+.chart-bar.interest {
+    background: var(--color-accent);
+}
+
+.chart-bar:hover {
+    opacity: 0.8;
+    transform: translateY(-4px);
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.legend-color.principal {
+    background: var(--color-primary);
+}
+
+.legend-color.interest {
+    background: var(--color-accent);
+}
+
+/* Summary Grid */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.summary-card {
+    background: var(--color-surface-alt);
+    padding: var(--space-md);
+    border-radius: var(--radius-default);
+    border-left: 4px solid var(--color-primary);
+}
+
+.summary-card.accent {
+    border-left-color: var(--color-accent);
+}
+
+.summary-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.summary-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Payment Schedule Table */
+.schedule-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-default);
+    border: 1px solid var(--color-border);
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table thead {
+    background: var(--color-primary-pale);
+}
+
+.schedule-table th {
+    padding: var(--space-md);
+    text-align: left;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+}
+
+.schedule-table td {
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    border-top: 1px solid var(--color-border);
+}
+
+.schedule-table tbody tr:hover {
+    background: var(--color-surface-alt);
+}
+
+.schedule-table .year-label {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.schedule-table .principal-cell {
+    color: var(--color-primary);
+}
+
+.schedule-table .interest-cell {
+    color: var(--color-warning);
+}
+
+/* Navigation */
+.nav-hint {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    background: var(--color-surface);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.nav-hint kbd {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    padding: 4px 8px;
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-breakdown {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .header h1 {
+        font-size: var(--text-3xl);
+    }
+
+    .input-panel,
+    .results-panel,
+    .amortization-section,
+    .schedule-section {
+        padding: var(--space-lg);
+    }
+
+    .nav-hint {
+        bottom: var(--space-md);
+        right: var(--space-md);
+        padding: var(--space-sm) var(--space-md);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+</style>
+
+<div class="app-container">
+    <header class="header">
+        <div class="subtitle">Fitness Property Investment</div>
+        <h1>Core Graphite</h1>
+        <p class="tagline">Natural meets neutral: a mid century modern perspective</p>
+    </header>
+
+    <div class="calculator-grid">
+        <!-- Input Panel -->
+        <div class="input-panel">
+            <div class="panel-header">
+                <h2>Loan Details</h2>
+                <p>Enter your property purchase information</p>
+            </div>
+
+            <div class="form-group">
+                <label for="propertyPrice">Property Price</label>
+                <div class="input-wrapper">
+                    <span class="input-prefix">$</span>
+                    <input type="number" id="propertyPrice" class="has-prefix" value="500000" min="10000" step="1000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="downPayment">Down Payment</label>
+                <div class="input-wrapper">
+                    <span class="input-prefix">$</span>
+                    <input type="number" id="downPayment" class="has-prefix" value="100000" min="0" step="1000">
+                </div>
+            </div>
+
+            <div class="range-group">
+                <div class="range-label">
+                    <span>Down Payment %</span>
+                    <span id="downPaymentPercent">20%</span>
+                </div>
+                <input type="range" id="downPaymentRange" min="0" max="50" value="20" step="1">
+            </div>
+
+            <div class="form-group">
+                <label for="interestRate">Annual Interest Rate</label>
+                <div class="input-wrapper">
+                    <input type="number" id="interestRate" class="has-suffix" value="6.5" min="0" max="20" step="0.1">
+                    <span class="input-suffix">%</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="loanTerm">Loan Term</label>
+                <select id="loanTerm">
+                    <option value="15">15 Years</option>
+                    <option value="20">20 Years</option>
+                    <option value="25">25 Years</option>
+                    <option value="30" selected>30 Years</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="propertyTax">Annual Property Tax</label>
+                <div class="input-wrapper">
+                    <span class="input-prefix">$</span>
+                    <input type="number" id="propertyTax" class="has-prefix" value="6000" min="0" step="100">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="homeInsurance">Annual Home Insurance</label>
+                <div class="input-wrapper">
+                    <span class="input-prefix">$</span>
+                    <input type="number" id="homeInsurance" class="has-prefix" value="1200" min="0" step="100">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="monthlyIncome">Monthly Income</label>
+                <div class="input-wrapper">
+                    <span class="input-prefix">$</span>
+                    <input type="number" id="monthlyIncome" class="has-prefix" value="12000" min="0" step="100">
+                </div>
+            </div>
+
+            <button class="calculate-button" onclick="calculateMortgage()">Calculate Payment</button>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel">
+            <div class="results-header">
+                <h2>Monthly Payment</h2>
+                <p>Your estimated payment breakdown</p>
+            </div>
+
+            <div class="monthly-payment-display">
+                <div class="monthly-payment-label">Total Monthly Payment</div>
+                <div class="monthly-payment-amount" id="totalPayment">$3,133</div>
+            </div>
+
+            <div class="payment-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Principal & Interest</div>
+                    <div class="breakdown-value" id="principalInterest">$2,533</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Property Tax</div>
+                    <div class="breakdown-value" id="taxDisplay">$500</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Home Insurance</div>
+                    <div class="breakdown-value" id="insuranceDisplay">$100</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Loan Amount</div>
+                    <div class="breakdown-value" id="loanAmount">$400,000</div>
+                </div>
+            </div>
+
+            <div class="affordability">
+                <div class="affordability-label">Affordability: <span id="affordabilityPercent">26%</span> of Income</div>
+                <div class="affordability-bar">
+                    <div class="affordability-fill" id="affordabilityFill" style="width: 26%"></div>
+                </div>
+                <div class="affordability-status" id="affordabilityStatus">Comfortable - Well within recommended 28% limit</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amortization Visualization -->
+    <section class="amortization-section">
+        <div class="section-header">
+            <h2>Amortization Overview</h2>
+            <p>Principal vs Interest over loan lifetime</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-label">Total Paid</div>
+                <div class="summary-value" id="totalPaid">$911,880</div>
+            </div>
+            <div class="summary-card accent">
+                <div class="summary-label">Total Interest</div>
+                <div class="summary-value" id="totalInterest">$511,880</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Total Principal</div>
+                <div class="summary-value" id="totalPrincipal">$400,000</div>
+            </div>
+        </div>
+
+        <div class="visualization">
+            <div class="chart-container">
+                <div class="chart-bars" id="chartBars">
+                    <!-- Generated by JavaScript -->
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color principal"></div>
+                        <span>Principal Payment</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color interest"></div>
+                        <span>Interest Payment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Schedule -->
+    <section class="schedule-section">
+        <div class="section-header">
+            <h2>Payment Schedule</h2>
+            <p>First 12 months breakdown</p>
+        </div>
+
+        <div class="schedule-table-wrapper">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                    <!-- Generated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="nav-hint">
+        <kbd>←</kbd>
+        <kbd>→</kbd>
+        Navigate designs
+    </div>
+</div>
+
+<script>
+// Navigation
+/* Navigation removed */
+
+// Mortgage Calculator Logic
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+}
+
+function calculateMortgage() {
+    // Get input values
+    const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
+    const downPayment = parseFloat(document.getElementById('downPayment').value);
+    const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+    const loanTerm = parseInt(document.getElementById('loanTerm').value);
+    const propertyTax = parseFloat(document.getElementById('propertyTax').value);
+    const homeInsurance = parseFloat(document.getElementById('homeInsurance').value);
+    const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+
+    // Calculate loan amount
+    const loanAmount = propertyPrice - downPayment;
+
+    // Calculate monthly mortgage payment (P&I only)
+    const monthlyRate = interestRate / 12;
+    const numberOfPayments = loanTerm * 12;
+    const monthlyPI = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+                      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+
+    // Calculate monthly tax and insurance
+    const monthlyTax = propertyTax / 12;
+    const monthlyInsurance = homeInsurance / 12;
+
+    // Total monthly payment
+    const totalMonthly = monthlyPI + monthlyTax + monthlyInsurance;
+
+    // Update displays
+    document.getElementById('totalPayment').textContent = formatCurrency(totalMonthly);
+    document.getElementById('principalInterest').textContent = formatCurrency(monthlyPI);
+    document.getElementById('taxDisplay').textContent = formatCurrency(monthlyTax);
+    document.getElementById('insuranceDisplay').textContent = formatCurrency(monthlyInsurance);
+    document.getElementById('loanAmount').textContent = formatCurrency(loanAmount);
+
+    // Affordability calculation
+    const affordabilityPercent = (totalMonthly / monthlyIncome) * 100;
+    document.getElementById('affordabilityPercent').textContent = affordabilityPercent.toFixed(1) + '%';
+    document.getElementById('affordabilityFill').style.width = Math.min(affordabilityPercent, 100) + '%';
+
+    let affordabilityStatus;
+    if (affordabilityPercent <= 28) {
+        affordabilityStatus = 'Comfortable - Well within recommended 28% limit';
+    } else if (affordabilityPercent <= 36) {
+        affordabilityStatus = 'Manageable - Approaching upper limit of affordability';
+    } else {
+        affordabilityStatus = 'Stretched - Exceeds recommended affordability guidelines';
+    }
+    document.getElementById('affordabilityStatus').textContent = affordabilityStatus;
+
+    // Calculate total amounts
+    const totalPaid = monthlyPI * numberOfPayments;
+    const totalInterest = totalPaid - loanAmount;
+
+    document.getElementById('totalPaid').textContent = formatCurrency(totalPaid);
+    document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+    document.getElementById('totalPrincipal').textContent = formatCurrency(loanAmount);
+
+    // Generate amortization chart
+    generateAmortizationChart(loanAmount, monthlyRate, numberOfPayments, monthlyPI);
+
+    // Generate payment schedule
+    generatePaymentSchedule(loanAmount, monthlyRate, monthlyPI, numberOfPayments);
+}
+
+function generateAmortizationChart(loanAmount, monthlyRate, numberOfPayments, monthlyPayment) {
+    const chartBars = document.getElementById('chartBars');
+    chartBars.innerHTML = '';
+
+    // Show 8 points across the loan lifetime
+    const intervals = 8;
+    const step = Math.floor(numberOfPayments / intervals);
+
+    let balance = loanAmount;
+
+    for (let i = 0; i < intervals; i++) {
+        const month = i * step;
+
+        // Calculate balance at this point
+        balance = loanAmount;
+        for (let j = 0; j < month; j++) {
+            const interest = balance * monthlyRate;
+            const principal = monthlyPayment - interest;
+            balance -= principal;
+        }
+
+        // Calculate next payment breakdown
+        const interestPayment = balance * monthlyRate;
+        const principalPayment = monthlyPayment - interestPayment;
+
+        // Create stacked bar
+        const totalHeight = monthlyPayment;
+        const principalHeight = (principalPayment / totalHeight) * 100;
+        const interestHeight = (interestPayment / totalHeight) * 100;
+
+        const barContainer = document.createElement('div');
+        barContainer.style.flex = '1';
+        barContainer.style.display = 'flex';
+        barContainer.style.flexDirection = 'column-reverse';
+        barContainer.style.height = '100%';
+        barContainer.style.gap = '2px';
+
+        const principalBar = document.createElement('div');
+        principalBar.className = 'chart-bar';
+        principalBar.style.height = principalHeight + '%';
+
+        const interestBar = document.createElement('div');
+        interestBar.className = 'chart-bar interest';
+        interestBar.style.height = interestHeight + '%';
+
+        barContainer.appendChild(principalBar);
+        barContainer.appendChild(interestBar);
+        chartBars.appendChild(barContainer);
+    }
+}
+
+function generatePaymentSchedule(loanAmount, monthlyRate, monthlyPayment, numberOfPayments) {
+    const tbody = document.getElementById('scheduleTableBody');
+    tbody.innerHTML = '';
+
+    let balance = loanAmount;
+
+    // Show first 12 months
+    for (let month = 1; month <= Math.min(12, numberOfPayments); month++) {
+        const interestPayment = balance * monthlyRate;
+        const principalPayment = monthlyPayment - interestPayment;
+        balance -= principalPayment;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="year-label">Month ${month}</td>
+            <td>${formatCurrency(monthlyPayment)}</td>
+            <td class="principal-cell">${formatCurrency(principalPayment)}</td>
+            <td class="interest-cell">${formatCurrency(interestPayment)}</td>
+            <td>${formatCurrency(balance)}</td>
+        `;
+        tbody.appendChild(row);
+    }
+}
+
+// Down payment synchronization
+document.getElementById('propertyPrice').addEventListener('input', updateDownPayment);
+document.getElementById('downPayment').addEventListener('input', updateDownPaymentPercent);
+document.getElementById('downPaymentRange').addEventListener('input', updateDownPaymentFromRange);
+
+function updateDownPayment() {
+    const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
+    const percent = parseFloat(document.getElementById('downPaymentRange').value);
+    const downPayment = (propertyPrice * percent) / 100;
+    document.getElementById('downPayment').value = Math.round(downPayment);
+}
+
+function updateDownPaymentPercent() {
+    const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
+    const downPayment = parseFloat(document.getElementById('downPayment').value);
+    const percent = (downPayment / propertyPrice) * 100;
+    document.getElementById('downPaymentRange').value = Math.min(50, Math.max(0, percent));
+    document.getElementById('downPaymentPercent').textContent = Math.round(percent) + '%';
+}
+
+function updateDownPaymentFromRange() {
+    const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
+    const percent = parseFloat(document.getElementById('downPaymentRange').value);
+    const downPayment = (propertyPrice * percent) / 100;
+    document.getElementById('downPayment').value = Math.round(downPayment);
+    document.getElementById('downPaymentPercent').textContent = percent + '%';
+}
+
+// Auto-calculate on input change
+const inputs = document.querySelectorAll('input, select');
+inputs.forEach(input => {
+    input.addEventListener('change', calculateMortgage);
+});
+
+// Initial calculation
+calculateMortgage();
+</script>
+
+</body>
+</html>

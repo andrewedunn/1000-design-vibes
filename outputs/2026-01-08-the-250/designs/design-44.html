@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<!--
+DESIGN: Modern Anchor - Where flat meets international aesthetics
+ABOUTME: This design system implements animation_timeline with neo_brutalist aesthetics for fitness industry.
+ABOUTME: Key characteristics: Bold black borders, flat dark surfaces, high-contrast typography with international grid precision.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #00ff88;
+--color-background: #0a0a0a;
+--color-surface: #1a1a1a;
+--color-text: #ffffff;
+--color-text-muted: #888888;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-width: 3px;
+
+AESTHETIC PRINCIPLES:
+1. Neo-brutalist honesty - Thick black borders reveal structure and hierarchy without pretense
+2. Swiss grid precision - Elements snap to rigid 8px baseline grid for international clarity
+3. Flat dark surfaces - No gradients, no shadows, pure geometric planes in monochromatic palette
+4. High-contrast anchors - Electric green (#00ff88) provides trustworthy wayfinding against deep blacks
+5. Typographic brutalism - Space Grotesk headlines assert authority while Inter body text ensures legibility
+
+BEST FOR:
+- Professional fitness training applications requiring precise timeline editing
+- Motion design tools for exercise animation and form analysis
+- Performance tracking dashboards with temporal data visualization
+- Workout video editing interfaces with keyframe precision
+- Rehabilitation progress tracking with frame-by-frame movement review
+
+AVOID IF:
+- Brand requires soft, friendly, or playful aesthetic
+- Users expect colorful, gradient-heavy modern interfaces
+- Application needs subtle depth cues or layered information architecture
+- Target audience prefers organic curves over geometric rigidity
+
+FUNCTIONAL DIRECTION: animation_timeline
+This design must clearly function as an animation_timeline. Required elements:
+- Timeline tracks with multiple layers for different exercise parameters
+- Keyframe markers indicating critical movement points
+- Playhead with time scrubbing functionality
+- Properties panel for adjusting animation parameters
+- Preview area showing current frame of fitness animation
+
+DESIGN ERA INTERPRETATION: neo_brutalist
+Raw HTML aesthetic with bold 3px borders, no border-radius, stark black/white/green palette.
+Embraces the honesty of structure - every boundary is visible, every container is explicit.
+
+COLOR MODE: dark_only
+Deep blacks (#0a0a0a background, #1a1a1a surfaces) provide eye comfort for extended timeline editing.
+Electric green accent (#00ff88) offers high visibility without blue light strain.
+
+INDUSTRY: fitness
+Timeline tracks represent movement phases, keyframes mark form checkpoints, preview shows exercise execution.
+Properties control rep speed, rest intervals, intensity curves.
+
+EMOTIONAL TONE: trustworthy
+Precision grid, consistent spacing, high-contrast UI elements, and professional typography
+establish reliability for coaches and athletes depending on accurate movement analysis.
+
+GRID SYSTEM:
+8px base unit creates Swiss International-style precision:
+- All spacing: multiples of 8px (8, 16, 24, 32, 40...)
+- Component heights: 40px (buttons), 48px (inputs), 64px (headers)
+- Margins/padding: 16px (tight), 24px (standard), 32px (generous)
+
+TYPOGRAPHY SCALE (1.25 - Major Third):
+Base: 16px body text
+Scale: 13px → 16px → 20px → 25px → 31px → 39px → 49px
+Headings use Space Grotesk (geometric, authoritative)
+Body/UI uses Inter (neutral, highly legible)
+
+INTERACTION STATES:
+All interactive elements use border-width changes and background shifts:
+- Default: 2px border, surface background
+- Hover: 3px border, slightly lighter background
+- Active: 3px border, primary color background
+- Focus: 3px border with 2px offset outline in primary color
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Anchor - Animation Timeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* === DESIGN SYSTEM VARIABLES === */
+        :root {
+            /* Colors - Neo-brutalist dark palette */
+            --color-primary: #00ff88;
+            --color-primary-dark: #00cc6e;
+            --color-background: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-surface-elevated: #252525;
+            --color-text: #ffffff;
+            --color-text-muted: #888888;
+            --color-border: #000000;
+            --color-divider: #333333;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', -apple-system, sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'SF Mono', 'Monaco', 'Courier New', monospace;
+
+            /* Scale - Major Third (1.25) */
+            --text-xs: 13px;
+            --text-sm: 14px;
+            --text-base: 16px;
+            --text-lg: 20px;
+            --text-xl: 25px;
+            --text-2xl: 31px;
+            --text-3xl: 39px;
+
+            /* Spacing - 8px grid */
+            --space-unit: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+            --space-8: 64px;
+
+            /* Shapes - Neo-brutalist sharp edges */
+            --radius-default: 0px;
+            --border-width: 3px;
+            --border-width-thin: 2px;
+            --shadow-default: none;
+
+            /* Layout */
+            --timeline-height: 280px;
+            --properties-width: 280px;
+            --toolbar-height: 56px;
+        }
+
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === LAYOUT STRUCTURE === */
+        .app-shell {
+            display: grid;
+            grid-template-rows: var(--toolbar-height) 1fr var(--timeline-height);
+            grid-template-columns: 1fr var(--properties-width);
+            height: 100vh;
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        /* === TOOLBAR === */
+        .toolbar {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: 0 var(--space-3);
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-unit);
+        }
+
+        .toolbar-section:not(:last-child) {
+            padding-right: var(--space-2);
+            border-right: var(--border-width-thin) solid var(--color-divider);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-right: var(--space-2);
+            letter-spacing: -0.02em;
+        }
+
+        .btn {
+            height: 40px;
+            padding: 0 var(--space-2);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--color-text);
+            background: var(--color-surface-elevated);
+            border: var(--border-width-thin) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn:hover {
+            border-width: var(--border-width);
+            background: var(--color-surface);
+        }
+
+        .btn:active {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-background);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .btn-icon {
+            width: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .time-display {
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            color: var(--color-primary);
+            padding: 0 var(--space-2);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* === PREVIEW AREA === */
+        .preview-area {
+            grid-row: 2;
+            grid-column: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-background);
+            border-right: var(--border-width) solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-canvas {
+            width: 480px;
+            height: 640px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .exercise-figure {
+            width: 200px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .figure-head {
+            width: 48px;
+            height: 48px;
+            border: var(--border-width) solid var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .figure-torso {
+            width: 80px;
+            height: 120px;
+            border: var(--border-width) solid var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .figure-limbs {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .limb {
+            width: 32px;
+            height: 100px;
+            border: var(--border-width) solid var(--color-primary);
+            background: var(--color-surface-elevated);
+        }
+
+        .frame-info {
+            position: absolute;
+            top: var(--space-3);
+            left: var(--space-3);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            background: var(--color-background);
+            padding: var(--space-unit) var(--space-2);
+            border: var(--border-width-thin) solid var(--color-divider);
+        }
+
+        /* === PROPERTIES PANEL === */
+        .properties {
+            grid-row: 2;
+            grid-column: 2;
+            background: var(--color-surface);
+            overflow-y: auto;
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .properties-header {
+            padding: var(--space-3);
+            border-bottom: var(--border-width-thin) solid var(--color-divider);
+        }
+
+        .properties-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-unit);
+        }
+
+        .property-group {
+            padding: var(--space-3);
+            border-bottom: var(--border-width-thin) solid var(--color-divider);
+        }
+
+        .property-group-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-2);
+            color: var(--color-text-muted);
+        }
+
+        .property-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+
+        .property-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .property-label {
+            font-size: var(--text-sm);
+            color: var(--color-text);
+        }
+
+        .property-value {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-primary);
+        }
+
+        .slider {
+            width: 100%;
+            height: 32px;
+            background: var(--color-surface-elevated);
+            border: var(--border-width-thin) solid var(--color-border);
+            position: relative;
+            cursor: pointer;
+            margin-top: var(--space-unit);
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 60%;
+            border-right: var(--border-width) solid var(--color-border);
+        }
+
+        .input-field {
+            width: 100%;
+            height: 40px;
+            padding: 0 var(--space-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            background: var(--color-surface-elevated);
+            border: var(--border-width-thin) solid var(--color-border);
+            margin-top: var(--space-unit);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-width: var(--border-width);
+            border-color: var(--color-primary);
+        }
+
+        /* === TIMELINE === */
+        .timeline-container {
+            grid-row: 3;
+            grid-column: 1 / -1;
+            background: var(--color-surface);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2);
+            border-bottom: var(--border-width-thin) solid var(--color-divider);
+        }
+
+        .timeline-ruler {
+            height: 32px;
+            background: var(--color-surface-elevated);
+            border-bottom: var(--border-width-thin) solid var(--color-divider);
+            position: relative;
+            display: flex;
+        }
+
+        .ruler-tick {
+            flex: 1;
+            border-right: var(--border-width-thin) solid var(--color-divider);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            padding: var(--space-unit);
+            font-family: var(--font-mono);
+        }
+
+        .timeline-tracks {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .track {
+            height: 64px;
+            display: flex;
+            border-bottom: var(--border-width-thin) solid var(--color-divider);
+            position: relative;
+        }
+
+        .track-label {
+            width: 160px;
+            padding: var(--space-2);
+            background: var(--color-surface-elevated);
+            border-right: var(--border-width) solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .track-name {
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+
+        .track-type {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .track-content {
+            flex: 1;
+            position: relative;
+            background: var(--color-background);
+        }
+
+        .keyframe {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--color-primary);
+            border: var(--border-width-thin) solid var(--color-border);
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .keyframe:hover {
+            border-width: var(--border-width);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .keyframe.selected {
+            background: var(--color-text);
+            border-color: var(--color-primary);
+            border-width: var(--border-width);
+        }
+
+        .playhead {
+            position: absolute;
+            width: 3px;
+            height: 100%;
+            background: var(--color-primary);
+            top: 0;
+            left: 30%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -6px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--color-primary);
+        }
+
+        /* === REDUCED MOTION === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* === NAVIGATION === */
+        .nav-overlay {
+            position: fixed;
+            bottom: var(--space-3);
+            right: var(--space-3);
+            display: flex;
+            gap: var(--space-2);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 56px;
+            height: 56px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            color: var(--color-text);
+            font-size: var(--text-xl);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+            transform: scale(1.05);
+        }
+
+        .nav-btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-info {
+            position: fixed;
+            bottom: var(--space-3);
+            left: var(--space-3);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            background: var(--color-surface);
+            padding: var(--space-2);
+            border: var(--border-width-thin) solid var(--color-divider);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="logo">MODERN ANCHOR</div>
+
+            <div class="toolbar-section">
+                <button class="btn btn-icon" aria-label="New project">+</button>
+                <button class="btn btn-icon" aria-label="Open">⊙</button>
+                <button class="btn btn-icon" aria-label="Save">⊡</button>
+            </div>
+
+            <div class="toolbar-section">
+                <button class="btn btn-icon" aria-label="Undo">↶</button>
+                <button class="btn btn-icon" aria-label="Redo">↷</button>
+            </div>
+
+            <div class="toolbar-section">
+                <button class="btn btn-icon" aria-label="Play/Pause">▶</button>
+                <button class="btn btn-icon" aria-label="Stop">■</button>
+                <div class="time-display">00:02:45 / 00:08:00</div>
+            </div>
+
+            <div class="toolbar-section" style="margin-left: auto;">
+                <button class="btn btn-primary">EXPORT</button>
+            </div>
+        </div>
+
+        <!-- Preview Area -->
+        <div class="preview-area">
+            <div class="preview-canvas">
+                <div class="frame-info">
+                    Frame: 165 / 480<br>
+                    Position: Squat Hold
+                </div>
+                <div class="exercise-figure">
+                    <div class="figure-head"></div>
+                    <div class="figure-torso"></div>
+                    <div class="figure-limbs">
+                        <div class="limb"></div>
+                        <div class="limb"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Properties Panel -->
+        <div class="properties">
+            <div class="properties-header">
+                <div class="properties-title">Keyframe Properties</div>
+                <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Selected: Rep Speed @ 2.45s</div>
+            </div>
+
+            <div class="property-group">
+                <div class="property-group-title">Transform</div>
+                <div class="property-row">
+                    <span class="property-label">Position X</span>
+                    <span class="property-value">0.0</span>
+                </div>
+                <div class="slider">
+                    <div class="slider-fill" style="width: 50%;"></div>
+                </div>
+                <div class="property-row" style="margin-top: var(--space-2);">
+                    <span class="property-label">Position Y</span>
+                    <span class="property-value">-120.5</span>
+                </div>
+                <div class="slider">
+                    <div class="slider-fill" style="width: 35%;"></div>
+                </div>
+                <div class="property-row" style="margin-top: var(--space-2);">
+                    <span class="property-label">Rotation</span>
+                    <span class="property-value">45°</span>
+                </div>
+                <div class="slider">
+                    <div class="slider-fill" style="width: 25%;"></div>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <div class="property-group-title">Timing</div>
+                <div class="property-row">
+                    <span class="property-label">Duration</span>
+                    <span class="property-value">1.5s</span>
+                </div>
+                <input type="text" class="input-field" value="1.5" />
+                <div class="property-row" style="margin-top: var(--space-2);">
+                    <span class="property-label">Easing</span>
+                    <span class="property-value">ease-in-out</span>
+                </div>
+                <input type="text" class="input-field" value="ease-in-out" />
+            </div>
+
+            <div class="property-group">
+                <div class="property-group-title">Exercise Parameters</div>
+                <div class="property-row">
+                    <span class="property-label">Intensity</span>
+                    <span class="property-value">75%</span>
+                </div>
+                <div class="slider">
+                    <div class="slider-fill" style="width: 75%;"></div>
+                </div>
+                <div class="property-row" style="margin-top: var(--space-2);">
+                    <span class="property-label">Rep Speed</span>
+                    <span class="property-value">2.0x</span>
+                </div>
+                <div class="slider">
+                    <div class="slider-fill" style="width: 60%;"></div>
+                </div>
+                <div class="property-row" style="margin-top: var(--space-2);">
+                    <span class="property-label">Rest Interval</span>
+                    <span class="property-value">30s</span>
+                </div>
+                <input type="text" class="input-field" value="30" />
+            </div>
+
+            <div class="property-group">
+                <div class="property-group-title">Form Check</div>
+                <div class="property-row">
+                    <span class="property-label">Depth</span>
+                    <span class="property-value">✓ Valid</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-label">Alignment</span>
+                    <span class="property-value">✓ Valid</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-label">Tempo</span>
+                    <span class="property-value">⚠ Review</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-container">
+            <div class="timeline-controls">
+                <button class="btn btn-icon" aria-label="Add track">+</button>
+                <button class="btn">ADD KEYFRAME</button>
+                <button class="btn">DELETE KEYFRAME</button>
+                <div style="margin-left: auto; font-size: var(--text-sm); color: var(--color-text-muted);">
+                    Zoom: 100% | Grid: 30fps
+                </div>
+            </div>
+
+            <div class="timeline-ruler">
+                <div class="ruler-tick">0:00</div>
+                <div class="ruler-tick">0:01</div>
+                <div class="ruler-tick">0:02</div>
+                <div class="ruler-tick">0:03</div>
+                <div class="ruler-tick">0:04</div>
+                <div class="ruler-tick">0:05</div>
+                <div class="ruler-tick">0:06</div>
+                <div class="ruler-tick">0:07</div>
+                <div class="ruler-tick">0:08</div>
+            </div>
+
+            <div class="timeline-tracks">
+                <div class="playhead"></div>
+
+                <div class="track">
+                    <div class="track-label">
+                        <div class="track-name">Rep Speed</div>
+                        <div class="track-type">Value</div>
+                    </div>
+                    <div class="track-content">
+                        <div class="keyframe" style="left: 10%;"></div>
+                        <div class="keyframe selected" style="left: 30%;"></div>
+                        <div class="keyframe" style="left: 55%;"></div>
+                        <div class="keyframe" style="left: 80%;"></div>
+                    </div>
+                </div>
+
+                <div class="track">
+                    <div class="track-label">
+                        <div class="track-name">Intensity</div>
+                        <div class="track-type">Percentage</div>
+                    </div>
+                    <div class="track-content">
+                        <div class="keyframe" style="left: 15%;"></div>
+                        <div class="keyframe" style="left: 40%;"></div>
+                        <div class="keyframe" style="left: 70%;"></div>
+                    </div>
+                </div>
+
+                <div class="track">
+                    <div class="track-label">
+                        <div class="track-name">Form Depth</div>
+                        <div class="track-type">Position</div>
+                    </div>
+                    <div class="track-content">
+                        <div class="keyframe" style="left: 8%;"></div>
+                        <div class="keyframe" style="left: 30%;"></div>
+                        <div class="keyframe" style="left: 52%;"></div>
+                        <div class="keyframe" style="left: 75%;"></div>
+                        <div class="keyframe" style="left: 90%;"></div>
+                    </div>
+                </div>
+
+                <div class="track">
+                    <div class="track-label">
+                        <div class="track-name">Rest Interval</div>
+                        <div class="track-type">Time</div>
+                    </div>
+                    <div class="track-content">
+                        <div class="keyframe" style="left: 35%;"></div>
+                        <div class="keyframe" style="left: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-info">Design 44 / 250</div>
+    <div class="nav-overlay">
+        <button class="nav-btn" onclick="navigateDesign(-1)" aria-label="Previous design">←</button>
+        <button class="nav-btn" onclick="navigateDesign(1)" aria-label="Next design">→</button>
+    </div>
+
+    
+</body>
+</html>

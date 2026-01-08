@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Urban - Code Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Pure Urban - Crafted for users with international roots
+ABOUTME: This design system implements a code_editor with art_deco aesthetics for the gaming industry.
+ABOUTME: Key characteristics: Sharp geometric patterns, luxurious gold accents, bold symmetrical layouts with an edgy attitude.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4AF37;
+--color-secondary: #1A1A1A;
+--color-background: #FAFAF8;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #666666;
+--color-accent: #8B0000;
+--color-border: #2A2A2A;
+--font-heading: 'Playfair Display', serif;
+--font-body: 'DM Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Sharp geometric forms with Art Deco symmetry - no rounded corners, everything is precise angles
+2. Luxurious gold accents (#D4AF37) against dark surfaces create premium, gaming-focused atmosphere
+3. Monospace typography ensures code readability while Playfair Display headings add editorial sophistication
+4. High contrast borders and stepped geometric patterns reference Art Deco architecture
+5. Edgy dark UI with strategic use of deep red accents for warnings and active states
+
+DIMENSIONAL PROPERTIES:
+- Design Era: Art Deco (1920s-1930s glamour, geometric patterns, luxe materials)
+- Color Mode: Light only (bright background with dark text and UI)
+- Industry: Gaming (performance-focused, competitive edge, immersive experience)
+- Emotional Tone: Edgy (bold, assertive, cutting-edge, slightly dangerous)
+- Functional Direction: Code Editor
+
+BEST FOR:
+- Game development IDEs and scripting environments
+- High-performance code editing with competitive esports aesthetics
+- Premium development tools targeting professional game programmers
+- International gaming studios seeking distinctive, luxurious tooling
+- Projects requiring bold visual hierarchy and instant readability
+
+AVOID IF:
+- You need soft, friendly, approachable aesthetics
+- Your audience prefers minimalist or Scandinavian design
+- You're building beginner-friendly educational tools
+- Dark mode is a requirement (this is light-only)
+- You need organic, rounded, playful interfaces
+
+FUNCTIONAL DIRECTION: code_editor
+This design must clearly function as a code_editor. Required elements:
+- Editor pane with syntax highlighting
+- File tree for project navigation
+- Tab system for open files
+- Integrated terminal
+- Minimap for code overview
+- Line numbers and gutter
+- Status bar with file info
+- Toolbar with common actions
+
+DESIGN RATIONALE:
+The "Pure Urban" system combines Art Deco's geometric precision with gaming industry's edgy aesthetic.
+Gold accents suggest premium tooling while sharp angles and high contrast ensure functionality.
+The international appeal comes from Art Deco's global influence in the 1920s-30s, reimagined for modern dev tools.
+Monospace ensures code remains perfectly readable while decorative headers establish visual hierarchy.
+-->
+
+<style>
+    :root {
+        /* Colors - Art Deco palette with gaming edge */
+        --color-primary: #D4AF37;
+        --color-secondary: #1A1A1A;
+        --color-background: #FAFAF8;
+        --color-surface: #FFFFFF;
+        --color-text: #1A1A1A;
+        --color-text-muted: #666666;
+        --color-accent: #8B0000;
+        --color-border: #2A2A2A;
+        --color-syntax-keyword: #8B0000;
+        --color-syntax-string: #2F5D4E;
+        --color-syntax-function: #1A4D7C;
+        --color-syntax-comment: #666666;
+        --color-syntax-number: #D4AF37;
+
+        /* Typography */
+        --font-heading: 'Playfair Display', serif;
+        --font-body: 'DM Mono', monospace;
+        --font-size-xs: 11px;
+        --font-size-sm: 13px;
+        --font-size-base: 14px;
+        --font-size-lg: 16px;
+        --font-size-xl: 24px;
+        --font-size-2xl: 32px;
+
+        /* Spacing */
+        --space-unit: 8px;
+        --space-xs: 4px;
+        --space-sm: 8px;
+        --space-md: 16px;
+        --space-lg: 24px;
+        --space-xl: 32px;
+
+        /* Shapes - strict Art Deco geometry */
+        --radius-default: 0px;
+        --border-width: 2px;
+        --shadow-default: 0 4px 0 rgba(0,0,0,0.15);
+        --shadow-inset: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        color: var(--color-text);
+        background: var(--color-background);
+        line-height: 1.6;
+        overflow: hidden;
+    }
+
+    /* Main Editor Layout */
+    .editor-container {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        grid-template-rows: 60px 1fr 32px;
+        height: 100vh;
+        gap: 0;
+    }
+
+    /* Top Toolbar */
+    .toolbar {
+        grid-column: 1 / -1;
+        background: var(--color-secondary);
+        border-bottom: var(--border-width) solid var(--color-primary);
+        display: flex;
+        align-items: center;
+        padding: 0 var(--space-md);
+        gap: var(--space-md);
+        position: relative;
+    }
+
+    .toolbar::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            var(--color-primary) 50%,
+            transparent 100%);
+    }
+
+    .logo {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-xl);
+        font-weight: 900;
+        color: var(--color-primary);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .toolbar-actions {
+        display: flex;
+        gap: var(--space-xs);
+        margin-left: auto;
+    }
+
+    .toolbar-btn {
+        background: transparent;
+        border: var(--border-width) solid var(--color-primary);
+        color: var(--color-primary);
+        padding: var(--space-xs) var(--space-md);
+        font-family: var(--font-body);
+        font-size: var(--font-size-sm);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+        position: relative;
+    }
+
+    .toolbar-btn:hover {
+        background: var(--color-primary);
+        color: var(--color-secondary);
+        box-shadow: var(--shadow-default);
+        transform: translateY(-2px);
+    }
+
+    .toolbar-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* Sidebar - File Tree */
+    .sidebar {
+        background: var(--color-surface);
+        border-right: var(--border-width) solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .sidebar-header {
+        background: var(--color-secondary);
+        color: var(--color-primary);
+        padding: var(--space-md);
+        border-bottom: var(--border-width) solid var(--color-primary);
+        font-family: var(--font-heading);
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+    }
+
+    .sidebar-header::before,
+    .sidebar-header::after {
+        content: '';
+        position: absolute;
+        width: 40px;
+        height: 2px;
+        background: var(--color-primary);
+    }
+
+    .sidebar-header::before {
+        top: 8px;
+        left: var(--space-md);
+    }
+
+    .sidebar-header::after {
+        bottom: 8px;
+        left: var(--space-md);
+    }
+
+    .file-tree {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--space-md);
+    }
+
+    .tree-folder {
+        margin-bottom: var(--space-sm);
+    }
+
+    .folder-name {
+        font-weight: 500;
+        color: var(--color-text);
+        padding: var(--space-xs) var(--space-sm);
+        cursor: pointer;
+        border-left: 4px solid var(--color-primary);
+        background: linear-gradient(90deg, rgba(212,175,55,0.1) 0%, transparent 100%);
+        margin-bottom: var(--space-xs);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+
+    .folder-name:hover {
+        background: linear-gradient(90deg, rgba(212,175,55,0.2) 0%, transparent 100%);
+    }
+
+    .tree-file {
+        padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-lg);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        border-left: 2px solid transparent;
+        transition: all 0.15s;
+    }
+
+    .tree-file:hover {
+        background: rgba(212,175,55,0.1);
+        border-left-color: var(--color-text-muted);
+    }
+
+    .tree-file.active {
+        background: var(--color-secondary);
+        color: var(--color-primary);
+        border-left-color: var(--color-accent);
+        font-weight: 500;
+    }
+
+    .file-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        font-size: var(--font-size-xs);
+        font-weight: 700;
+    }
+
+    /* Main Editor Area */
+    .editor-main {
+        display: flex;
+        flex-direction: column;
+        background: var(--color-surface);
+        overflow: hidden;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+        display: flex;
+        background: var(--color-background);
+        border-bottom: var(--border-width) solid var(--color-border);
+        overflow-x: auto;
+    }
+
+    .tab {
+        padding: var(--space-sm) var(--space-lg);
+        border-right: var(--border-width) solid var(--color-border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        position: relative;
+        background: var(--color-background);
+        transition: background 0.15s;
+    }
+
+    .tab:hover {
+        background: var(--color-surface);
+    }
+
+    .tab.active {
+        background: var(--color-surface);
+        border-bottom: 4px solid var(--color-primary);
+        font-weight: 500;
+    }
+
+    .tab.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--color-accent);
+    }
+
+    .tab-close {
+        margin-left: var(--space-sm);
+        color: var(--color-text-muted);
+        font-weight: 700;
+        transition: color 0.15s;
+    }
+
+    .tab-close:hover {
+        color: var(--color-accent);
+    }
+
+    /* Editor Pane with Minimap */
+    .editor-content {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .code-area {
+        display: grid;
+        grid-template-columns: 60px 1fr;
+        overflow: auto;
+        background: var(--color-surface);
+    }
+
+    /* Line Numbers */
+    .line-numbers {
+        background: var(--color-background);
+        border-right: var(--border-width) solid var(--color-border);
+        text-align: right;
+        padding: var(--space-md) var(--space-sm);
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+        user-select: none;
+        position: sticky;
+        left: 0;
+    }
+
+    .line-number {
+        line-height: 1.6;
+        height: 22.4px;
+    }
+
+    .line-number.active {
+        color: var(--color-primary);
+        font-weight: 700;
+        position: relative;
+    }
+
+    .line-number.active::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        background: var(--color-accent);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    /* Code Editor */
+    .code-editor {
+        padding: var(--space-md);
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        line-height: 1.6;
+        white-space: pre;
+        overflow-x: auto;
+        tab-size: 4;
+    }
+
+    .code-line {
+        min-height: 22.4px;
+    }
+
+    .code-line.highlight {
+        background: rgba(212,175,55,0.15);
+        border-left: 4px solid var(--color-primary);
+        margin-left: -4px;
+        padding-left: 4px;
+    }
+
+    /* Syntax Highlighting */
+    .keyword { color: var(--color-syntax-keyword); font-weight: 500; }
+    .string { color: var(--color-syntax-string); }
+    .function { color: var(--color-syntax-function); font-weight: 500; }
+    .comment { color: var(--color-syntax-comment); font-style: italic; }
+    .number { color: var(--color-syntax-number); }
+    .operator { color: var(--color-text); font-weight: 700; }
+
+    /* Minimap */
+    .minimap {
+        background: var(--color-background);
+        border-left: var(--border-width) solid var(--color-border);
+        padding: var(--space-sm);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .minimap-title {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: var(--space-sm);
+        font-weight: 700;
+    }
+
+    .minimap-content {
+        font-size: 2px;
+        line-height: 3px;
+        color: var(--color-text-muted);
+        opacity: 0.4;
+    }
+
+    .minimap-viewport {
+        position: absolute;
+        left: var(--space-sm);
+        right: var(--space-sm);
+        height: 60px;
+        background: rgba(212,175,55,0.2);
+        border: 1px solid var(--color-primary);
+        pointer-events: none;
+        top: 30px;
+    }
+
+    /* Terminal Panel */
+    .terminal-panel {
+        grid-column: 2;
+        background: var(--color-secondary);
+        color: var(--color-primary);
+        border-top: var(--border-width) solid var(--color-primary);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s;
+    }
+
+    .terminal-panel.open {
+        max-height: 300px;
+    }
+
+    .terminal-header {
+        background: var(--color-border);
+        padding: var(--space-xs) var(--space-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--color-primary);
+    }
+
+    .terminal-title {
+        font-size: var(--font-size-sm);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+
+    .terminal-content {
+        padding: var(--space-md);
+        font-family: var(--font-body);
+        font-size: var(--font-size-sm);
+        overflow-y: auto;
+        height: 240px;
+    }
+
+    .terminal-line {
+        margin-bottom: var(--space-xs);
+    }
+
+    .terminal-prompt {
+        color: var(--color-accent);
+    }
+
+    .terminal-output {
+        color: var(--color-primary);
+    }
+
+    .terminal-cursor {
+        display: inline-block;
+        width: 8px;
+        height: 14px;
+        background: var(--color-primary);
+        animation: blink 1s infinite;
+        margin-left: 2px;
+    }
+
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    /* Status Bar */
+    .status-bar {
+        grid-column: 1 / -1;
+        background: var(--color-secondary);
+        border-top: var(--border-width) solid var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--space-md);
+        color: var(--color-primary);
+        font-size: var(--font-size-xs);
+    }
+
+    .status-left,
+    .status-right {
+        display: flex;
+        gap: var(--space-lg);
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-item::before {
+        content: '◆';
+        color: var(--color-accent);
+        font-size: 6px;
+    }
+
+    /* Decorative Art Deco Elements */
+    .deco-corner {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+        opacity: 0.3;
+    }
+
+    .deco-corner.top-left {
+        top: 0;
+        left: 0;
+        border-top: 4px solid var(--color-primary);
+        border-left: 4px solid var(--color-primary);
+    }
+
+    .deco-corner.top-left::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 20px;
+        height: 20px;
+        border-top: 2px solid var(--color-primary);
+        border-left: 2px solid var(--color-primary);
+    }
+
+    .deco-corner.bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom: 4px solid var(--color-primary);
+        border-right: 4px solid var(--color-primary);
+    }
+
+    .deco-corner.bottom-right::before {
+        content: '';
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        border-right: 2px solid var(--color-primary);
+    }
+
+    /* Focus States */
+    button:focus-visible,
+    .tree-file:focus-visible,
+    .tab:focus-visible {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--color-background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+        border: 2px solid var(--color-background);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+
+<div class="editor-container">
+    <!-- Decorative Art Deco corners -->
+    <div class="deco-corner top-left"></div>
+    <div class="deco-corner bottom-right"></div>
+
+    <!-- Top Toolbar -->
+    <div class="toolbar">
+        <div class="logo">Pure Urban</div>
+        <div class="toolbar-actions">
+            <button class="toolbar-btn" title="New File">New</button>
+            <button class="toolbar-btn" title="Save">Save</button>
+            <button class="toolbar-btn" title="Run">Run</button>
+            <button class="toolbar-btn" title="Debug" onclick="toggleTerminal()">Terminal</button>
+            <button class="toolbar-btn" title="Settings">Config</button>
+        </div>
+    </div>
+
+    <!-- Sidebar - File Tree -->
+    <aside class="sidebar">
+        <div class="sidebar-header">Explorer</div>
+        <div class="file-tree">
+            <div class="tree-folder">
+                <div class="folder-name">
+                    <span class="file-icon">▼</span>
+                    <span>src</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>game-engine.js</span>
+                </div>
+                <div class="tree-file active">
+                    <span class="file-icon">JS</span>
+                    <span>player-controller.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>physics-system.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>render-pipeline.js</span>
+                </div>
+            </div>
+
+            <div class="tree-folder">
+                <div class="folder-name">
+                    <span class="file-icon">▼</span>
+                    <span>assets</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">🎨</span>
+                    <span>textures.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">🔊</span>
+                    <span>audio-manager.js</span>
+                </div>
+            </div>
+
+            <div class="tree-folder">
+                <div class="folder-name">
+                    <span class="file-icon">▼</span>
+                    <span>components</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>enemy-ai.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>inventory-system.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>quest-manager.js</span>
+                </div>
+            </div>
+
+            <div class="tree-folder">
+                <div class="folder-name">
+                    <span class="file-icon">▼</span>
+                    <span>shaders</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">SH</span>
+                    <span>vertex.glsl</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">SH</span>
+                    <span>fragment.glsl</span>
+                </div>
+            </div>
+
+            <div class="tree-folder">
+                <div class="folder-name">
+                    <span class="file-icon">▼</span>
+                    <span>config</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">JS</span>
+                    <span>game-config.js</span>
+                </div>
+                <div class="tree-file">
+                    <span class="file-icon">📄</span>
+                    <span>package.json</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Editor Area -->
+    <main class="editor-main">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <div class="tab">
+                <span>game-engine.js</span>
+                <span class="tab-close">×</span>
+            </div>
+            <div class="tab active">
+                <span>player-controller.js</span>
+                <span class="tab-close">×</span>
+            </div>
+            <div class="tab">
+                <span>physics-system.js</span>
+                <span class="tab-close">×</span>
+            </div>
+        </div>
+
+        <!-- Editor Content with Minimap -->
+        <div class="editor-content">
+            <div class="code-area">
+                <!-- Line Numbers -->
+                <div class="line-numbers">
+                    <div class="line-number">1</div>
+                    <div class="line-number">2</div>
+                    <div class="line-number">3</div>
+                    <div class="line-number">4</div>
+                    <div class="line-number">5</div>
+                    <div class="line-number">6</div>
+                    <div class="line-number">7</div>
+                    <div class="line-number">8</div>
+                    <div class="line-number">9</div>
+                    <div class="line-number">10</div>
+                    <div class="line-number">11</div>
+                    <div class="line-number">12</div>
+                    <div class="line-number active">13</div>
+                    <div class="line-number">14</div>
+                    <div class="line-number">15</div>
+                    <div class="line-number">16</div>
+                    <div class="line-number">17</div>
+                    <div class="line-number">18</div>
+                    <div class="line-number">19</div>
+                    <div class="line-number">20</div>
+                    <div class="line-number">21</div>
+                    <div class="line-number">22</div>
+                    <div class="line-number">23</div>
+                    <div class="line-number">24</div>
+                    <div class="line-number">25</div>
+                    <div class="line-number">26</div>
+                    <div class="line-number">27</div>
+                    <div class="line-number">28</div>
+                    <div class="line-number">29</div>
+                    <div class="line-number">30</div>
+                    <div class="line-number">31</div>
+                    <div class="line-number">32</div>
+                    <div class="line-number">33</div>
+                    <div class="line-number">34</div>
+                    <div class="line-number">35</div>
+                </div>
+
+                <!-- Code Editor -->
+                <div class="code-editor">
+<div class="code-line"><span class="comment">// PlayerController - Handles character movement and combat for Urban Assault</span></div>
+<div class="code-line"><span class="keyword">import</span> { Vector3, Quaternion } from <span class="string">'./math-lib.js'</span>;</div>
+<div class="code-line"><span class="keyword">import</span> { PhysicsBody } from <span class="string">'./physics-system.js'</span>;</div>
+<div class="code-line"></div>
+<div class="code-line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="function">PlayerController</span> {</div>
+<div class="code-line">    <span class="function">constructor</span>(entity, config) {</div>
+<div class="code-line">        <span class="keyword">this</span>.entity = entity;</div>
+<div class="code-line">        <span class="keyword">this</span>.moveSpeed = config.moveSpeed <span class="operator">||</span> <span class="number">5.0</span>;</div>
+<div class="code-line">        <span class="keyword">this</span>.sprintMultiplier = config.sprintMultiplier <span class="operator">||</span> <span class="number">1.8</span>;</div>
+<div class="code-line">        <span class="keyword">this</span>.jumpForce = config.jumpForce <span class="operator">||</span> <span class="number">8.5</span>;</div>
+<div class="code-line">        <span class="keyword">this</span>.airControl = config.airControl <span class="operator">||</span> <span class="number">0.3</span>;</div>
+<div class="code-line">        <span class="keyword">this</span>.health = config.maxHealth <span class="operator">||</span> <span class="number">100</span>;</div>
+<div class="code-line highlight">        <span class="keyword">this</span>.stamina = <span class="number">100</span>; <span class="comment">// Current editing line</span></div>
+<div class="code-line">        <span class="keyword">this</span>.isGrounded = <span class="keyword">false</span>;</div>
+<div class="code-line">        <span class="keyword">this</span>.velocity = <span class="keyword">new</span> <span class="function">Vector3</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</div>
+<div class="code-line">    }</div>
+<div class="code-line"></div>
+<div class="code-line">    <span class="function">update</span>(deltaTime, input) {</div>
+<div class="code-line">        <span class="keyword">const</span> movement = <span class="keyword">this</span>.<span class="function">calculateMovement</span>(input);</div>
+<div class="code-line">        <span class="keyword">const</span> isSprinting = input.sprint <span class="operator">&amp;&amp;</span> <span class="keyword">this</span>.stamina <span class="operator">&gt;</span> <span class="number">0</span>;</div>
+<div class="code-line">        </div>
+<div class="code-line">        <span class="keyword">if</span> (isSprinting) {</div>
+<div class="code-line">            movement.<span class="function">multiplyScalar</span>(<span class="keyword">this</span>.sprintMultiplier);</div>
+<div class="code-line">            <span class="keyword">this</span>.stamina <span class="operator">-=</span> deltaTime <span class="operator">*</span> <span class="number">15</span>;</div>
+<div class="code-line">        } <span class="keyword">else</span> {</div>
+<div class="code-line">            <span class="keyword">this</span>.stamina = Math.<span class="function">min</span>(<span class="number">100</span>, <span class="keyword">this</span>.stamina <span class="operator">+</span> deltaTime <span class="operator">*</span> <span class="number">20</span>);</div>
+<div class="code-line">        }</div>
+<div class="code-line">        </div>
+<div class="code-line">        <span class="keyword">if</span> (input.jump <span class="operator">&amp;&amp;</span> <span class="keyword">this</span>.isGrounded) {</div>
+<div class="code-line">            <span class="keyword">this</span>.velocity.y = <span class="keyword">this</span>.jumpForce;</div>
+<div class="code-line">        }</div>
+<div class="code-line">        </div>
+<div class="code-line">        <span class="keyword">this</span>.<span class="function">applyPhysics</span>(movement, deltaTime);</div>
+<div class="code-line">        <span class="keyword">this</span>.<span class="function">handleCombat</span>(input);</div>
+<div class="code-line">    }</div>
+<div class="code-line">}</div>
+                </div>
+            </div>
+
+            <!-- Minimap -->
+            <aside class="minimap">
+                <div class="minimap-title">Map</div>
+                <div class="minimap-content">
+// PlayerController - Handles character movement and combat<br>
+import { Vector3, Quaternion } from './math-lib.js';<br>
+import { PhysicsBody } from './physics-system.js';<br>
+<br>
+export class PlayerController {<br>
+    constructor(entity, config) {<br>
+        this.entity = entity;<br>
+        this.moveSpeed = config.moveSpeed || 5.0;<br>
+        this.sprintMultiplier = config.sprintMultiplier || 1.8;<br>
+        this.jumpForce = config.jumpForce || 8.5;<br>
+        this.airControl = config.airControl || 0.3;<br>
+        this.health = config.maxHealth || 100;<br>
+        this.stamina = 100;<br>
+        this.isGrounded = false;<br>
+        this.velocity = new Vector3(0, 0, 0);<br>
+    }<br>
+<br>
+    update(deltaTime, input) {<br>
+        const movement = this.calculateMovement(input);<br>
+        const isSprinting = input.sprint && this.stamina > 0;<br>
+        <br>
+        if (isSprinting) {<br>
+            movement.multiplyScalar(this.sprintMultiplier);<br>
+            this.stamina -= deltaTime * 15;<br>
+        } else {<br>
+            this.stamina = Math.min(100, this.stamina + deltaTime * 20);<br>
+        }<br>
+        <br>
+        if (input.jump && this.isGrounded) {<br>
+            this.velocity.y = this.jumpForce;<br>
+        }<br>
+        <br>
+        this.applyPhysics(movement, deltaTime);<br>
+        this.handleCombat(input);<br>
+    }<br>
+}
+                </div>
+                <div class="minimap-viewport"></div>
+            </aside>
+        </div>
+
+        <!-- Terminal Panel (collapsible) -->
+        <div class="terminal-panel" id="terminal">
+            <div class="terminal-header">
+                <span class="terminal-title">Integrated Terminal</span>
+                <button class="toolbar-btn" onclick="toggleTerminal()" style="padding: 2px 8px; font-size: 10px;">Close</button>
+            </div>
+            <div class="terminal-content">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span> npm run build
+                </div>
+                <div class="terminal-line terminal-output">
+                    Building game assets...
+                </div>
+                <div class="terminal-line terminal-output">
+                    ✓ Compiled physics-system.js in 234ms
+                </div>
+                <div class="terminal-line terminal-output">
+                    ✓ Compiled player-controller.js in 189ms
+                </div>
+                <div class="terminal-line terminal-output">
+                    ✓ Bundled game-engine.js (2.4 MB)
+                </div>
+                <div class="terminal-line terminal-output">
+                    Build completed successfully.
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span> npm test
+                </div>
+                <div class="terminal-line terminal-output">
+                    Running test suite...
+                </div>
+                <div class="terminal-line terminal-output">
+                    ✓ PlayerController movement tests (12/12 passed)
+                </div>
+                <div class="terminal-line terminal-output">
+                    ✓ Physics collision tests (8/8 passed)
+                </div>
+                <div class="terminal-line terminal-output">
+                    All tests passed.
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span><span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <div class="status-item">Ln 13, Col 24</div>
+            <div class="status-item">UTF-8</div>
+            <div class="status-item">JavaScript</div>
+            <div class="status-item">Spaces: 4</div>
+        </div>
+        <div class="status-right">
+            <div class="status-item">Git: main</div>
+            <div class="status-item">No Issues</div>
+            <div class="status-item">ESLint</div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

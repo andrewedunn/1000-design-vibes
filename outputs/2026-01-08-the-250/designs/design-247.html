@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Prime - Flight Booking Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Clear Prime - A flat approach meets international sensibility
+        ABOUTME: This design system implements flight_booking with neo_brutalist aesthetics.
+        ABOUTME: Key characteristics: Ultra-bold borders, raw HTML aesthetic, high-contrast flat colors, gaming-inspired edginess
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #00FF88;
+        --color-background: #FFFFFF;
+        --color-surface: #F5F5F5;
+        --color-text: #000000;
+        --color-accent: #FF0066;
+        --font-heading: 'Space Grotesk', sans-serif;
+        --font-body: 'Space Grotesk', sans-serif;
+        --font-mono: 'IBM Plex Mono', monospace;
+        --radius-default: 0px;
+        --space-unit: 8px;
+        --border-width: 4px;
+
+        AESTHETIC PRINCIPLES:
+        1. Thick borders (4px) define every single element - nothing is subtle
+        2. Pure flat colors with zero gradients or shadows create brutal honesty
+        3. Gaming-inspired neon accent colors (cyan/magenta) provide edgy energy
+        4. Geometric grid system with strict alignment - no organic curves
+        5. Monospace elements mixed with grotesque sans for technical feel
+
+        BEST FOR:
+        - Technical products that want to show confidence and directness
+        - Gaming or esports brands targeting competitive users
+        - Developer tools or platforms that embrace raw functionality
+        - Products that want to stand apart from soft, rounded competitors
+
+        AVOID IF:
+        - You need a warm, friendly, approachable tone
+        - Your audience expects luxury or sophistication
+        - Accessibility needs require subtle visual hierarchy
+        - Brand guidelines mandate soft, organic shapes
+
+        FUNCTIONAL DIRECTION: flight_booking
+        This design must clearly function as a flight booking interface. Required elements:
+        - Search form with origin/destination, dates, passenger count
+        - Flight results list with multiple options
+        - Filters for price, stops, airlines, departure times
+        - Seat map visualization for selection
+        - Multi-step booking flow with clear progress
+        - Price breakdown and total cost display
+        - Call-to-action buttons for booking confirmation
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Light Mode */
+            --color-primary: #00FF88;
+            --color-secondary: #0099FF;
+            --color-accent: #FF0066;
+            --color-warning: #FFCC00;
+            --color-background: #FFFFFF;
+            --color-surface: #F5F5F5;
+            --color-surface-alt: #E8E8E8;
+            --color-text: #000000;
+            --color-text-muted: #666666;
+            --color-border: #000000;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 20px;
+            --font-size-xl: 28px;
+            --font-size-2xl: 40px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Shapes */
+            --radius-default: 0px;
+            --border-width: 4px;
+            --shadow-default: none;
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #00FF88;
+            --color-secondary: #0099FF;
+            --color-accent: #FF0066;
+            --color-warning: #FFCC00;
+            --color-background: #0A0A0A;
+            --color-surface: #1A1A1A;
+            --color-surface-alt: #2A2A2A;
+            --color-text: #FFFFFF;
+            --color-text-muted: #999999;
+            --color-border: #FFFFFF;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-accent {
+            color: var(--color-primary);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .theme-toggle:focus {
+            outline: var(--border-width) solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .search-header {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .form-label {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+        }
+
+        .form-input,
+        .form-select {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-md);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text);
+            transition: all 0.15s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: inset 0 0 0 2px var(--color-primary);
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .btn-search {
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            grid-column: 1 / -1;
+            margin-top: var(--space-md);
+            min-height: 60px;
+        }
+
+        .btn-search:hover {
+            background: var(--color-accent);
+            transform: translate(2px, 2px);
+        }
+
+        .btn-search:active {
+            transform: translate(4px, 4px);
+        }
+
+        .btn-search:focus {
+            outline: var(--border-width) solid var(--color-secondary);
+            outline-offset: 4px;
+        }
+
+        /* Results Layout */
+        .results-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        /* Filters Sidebar */
+        .filters {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filters-header {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .filter-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .filter-label {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            padding: var(--space-sm);
+            border: 2px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .checkbox-wrapper:hover {
+            background: var(--color-surface-alt);
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox:checked {
+            background: var(--color-primary);
+        }
+
+        .checkbox:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .price-range {
+            width: 100%;
+            height: 40px;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            cursor: pointer;
+        }
+
+        /* Flight Results */
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .results-header {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .sort-select {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            min-width: 200px;
+        }
+
+        .flight-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: var(--space-lg);
+            transition: all 0.15s ease;
+        }
+
+        .flight-card:hover {
+            border-color: var(--color-primary);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--color-border);
+        }
+
+        .flight-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .flight-segment {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .flight-time {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+        }
+
+        .flight-location {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .flight-duration {
+            text-align: center;
+            position: relative;
+        }
+
+        .duration-line {
+            width: 100%;
+            height: var(--border-width);
+            background: var(--color-border);
+            position: relative;
+            margin: var(--space-sm) 0;
+        }
+
+        .duration-line::before,
+        .duration-line::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-border);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .duration-line::before {
+            left: 0;
+        }
+
+        .duration-line::after {
+            right: 0;
+        }
+
+        .duration-text {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .stops-indicator {
+            background: var(--color-warning);
+            border: 2px solid var(--color-border);
+            padding: 2px 8px;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            display: inline-block;
+            margin-top: var(--space-xs);
+        }
+
+        .flight-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+        }
+
+        .airline-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--color-surface-alt);
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .flight-price-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            align-items: flex-end;
+            justify-content: space-between;
+            min-width: 200px;
+        }
+
+        .flight-price {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+        }
+
+        .price-label {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .btn-select {
+            background: var(--color-secondary);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            min-height: 50px;
+        }
+
+        .btn-select:hover {
+            background: var(--color-primary);
+            transform: translate(2px, 2px);
+        }
+
+        .btn-select:focus {
+            outline: var(--border-width) solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Booking Flow Modal */
+        .booking-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: var(--space-lg);
+        }
+
+        .booking-modal.active {
+            display: flex;
+        }
+
+        .booking-content {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .booking-header {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .btn-close {
+            background: var(--color-accent);
+            border: var(--border-width) solid var(--color-border);
+            width: 40px;
+            height: 40px;
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .booking-progress {
+            display: flex;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .progress-step {
+            flex: 1;
+            padding: var(--space-md);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            border-right: var(--border-width) solid var(--color-border);
+            background: var(--color-surface-alt);
+        }
+
+        .progress-step:last-child {
+            border-right: none;
+        }
+
+        .progress-step.active {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .progress-step.completed {
+            background: var(--color-secondary);
+            color: var(--color-background);
+        }
+
+        .booking-body {
+            padding: var(--space-xl);
+        }
+
+        /* Seat Map */
+        .seat-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-sm);
+            max-width: 500px;
+            margin: var(--space-lg) auto;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .seat:hover:not(.occupied) {
+            background: var(--color-surface);
+        }
+
+        .seat.occupied {
+            background: var(--color-surface-alt);
+            cursor: not-allowed;
+            color: var(--color-text-muted);
+        }
+
+        .seat.selected {
+            background: var(--color-primary);
+            border-color: var(--color-border);
+        }
+
+        .seat.aisle {
+            background: transparent;
+            border: none;
+            pointer-events: none;
+        }
+
+        .seat-legend {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+        }
+
+        .legend-box {
+            width: 24px;
+            height: 24px;
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        /* Price Breakdown */
+        .price-breakdown {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-md) 0;
+            border-bottom: 2px solid var(--color-border);
+            font-family: var(--font-mono);
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+            border-top: var(--border-width) solid var(--color-border);
+            margin-top: var(--space-sm);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+        }
+
+        .btn-confirm {
+            background: var(--color-primary);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--space-lg);
+            min-height: 60px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-confirm:hover {
+            background: var(--color-accent);
+            transform: translate(2px, 2px);
+        }
+
+        /* Navigation Footer */
+        .nav-footer {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 1500;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            transform: translate(2px, 2px);
+        }
+
+        .nav-btn:focus {
+            outline: var(--border-width) solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                position: static;
+            }
+
+            .flight-info {
+                grid-template-columns: 1fr;
+            }
+
+            .seat-map {
+                grid-template-columns: repeat(7, 1fr);
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .flight-card {
+                grid-template-columns: 1fr;
+            }
+
+            .flight-price-section {
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: var(--space-lg) var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            CLEAR<span class="logo-accent">PRIME</span>
+        </div>
+        <div class="header-controls">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                [TOGGLE]
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Search Section -->
+        <section class="search-section">
+            <h1 class="search-header">Flight Search</h1>
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <label class="form-label" for="origin">From</label>
+                    <input type="text" id="origin" class="form-input" placeholder="LAX" value="LAX">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="destination">To</label>
+                    <input type="text" id="destination" class="form-input" placeholder="NRT" value="NRT">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="departure">Departure</label>
+                    <input type="date" id="departure" class="form-input" value="2026-03-15">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="return">Return</label>
+                    <input type="date" id="return" class="form-input" value="2026-03-22">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="passengers">Passengers</label>
+                    <select id="passengers" class="form-select">
+                        <option value="1">1 Passenger</option>
+                        <option value="2">2 Passengers</option>
+                        <option value="3">3 Passengers</option>
+                        <option value="4">4 Passengers</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="class">Class</label>
+                    <select id="class" class="form-select">
+                        <option value="economy">Economy</option>
+                        <option value="premium">Premium Economy</option>
+                        <option value="business">Business</option>
+                        <option value="first">First Class</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-search">
+                    SEARCH FLIGHTS
+                </button>
+            </form>
+        </section>
+
+        <!-- Results Container -->
+        <div class="results-container">
+            <!-- Filters Sidebar -->
+            <aside class="filters">
+                <h2 class="filters-header">Filters</h2>
+
+                <div class="filter-group">
+                    <label class="filter-label">Stops</label>
+                    <div class="filter-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>Direct</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>1 Stop</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox">
+                            <span>2+ Stops</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Airlines</label>
+                    <div class="filter-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>United</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>ANA</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>JAL</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox">
+                            <span>Delta</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Departure Time</label>
+                    <div class="filter-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>Morning (6-12)</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>Afternoon (12-18)</span>
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="checkbox">
+                            <span>Evening (18-24)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Max Price</label>
+                    <input type="range" class="price-range" min="400" max="2000" value="1500" step="50">
+                </div>
+            </aside>
+
+            <!-- Flight Results -->
+            <div class="results">
+                <div class="results-header">
+                    <div class="results-count">24 Flights Found</div>
+                    <select class="sort-select">
+                        <option>Best Match</option>
+                        <option>Lowest Price</option>
+                        <option>Shortest Duration</option>
+                        <option>Earliest Departure</option>
+                    </select>
+                </div>
+
+                <!-- Flight Card 1 -->
+                <article class="flight-card">
+                    <div class="flight-info">
+                        <div class="flight-segment">
+                            <div class="flight-time">08:15</div>
+                            <div class="flight-location">LAX - Los Angeles</div>
+                            <div class="airline-info">
+                                <div class="airline-logo">UA</div>
+                                <span>United 79</span>
+                            </div>
+                        </div>
+                        <div class="flight-duration">
+                            <div class="duration-text">11h 45m</div>
+                            <div class="duration-line"></div>
+                            <div class="stops-indicator">DIRECT</div>
+                        </div>
+                        <div class="flight-segment">
+                            <div class="flight-time">13:00<sup>+1</sup></div>
+                            <div class="flight-location">NRT - Tokyo Narita</div>
+                        </div>
+                    </div>
+                    <div class="flight-price-section">
+                        <div>
+                            <div class="price-label">From</div>
+                            <div class="flight-price">$847</div>
+                        </div>
+                        <button class="btn-select" onclick="openBooking(847, 'UA79')">SELECT</button>
+                    </div>
+                </article>
+
+                <!-- Flight Card 2 -->
+                <article class="flight-card">
+                    <div class="flight-info">
+                        <div class="flight-segment">
+                            <div class="flight-time">10:30</div>
+                            <div class="flight-location">LAX - Los Angeles</div>
+                            <div class="airline-info">
+                                <div class="airline-logo">NH</div>
+                                <span>ANA 106</span>
+                            </div>
+                        </div>
+                        <div class="flight-duration">
+                            <div class="duration-text">11h 20m</div>
+                            <div class="duration-line"></div>
+                            <div class="stops-indicator">DIRECT</div>
+                        </div>
+                        <div class="flight-segment">
+                            <div class="flight-time">14:50<sup>+1</sup></div>
+                            <div class="flight-location">NRT - Tokyo Narita</div>
+                        </div>
+                    </div>
+                    <div class="flight-price-section">
+                        <div>
+                            <div class="price-label">From</div>
+                            <div class="flight-price">$923</div>
+                        </div>
+                        <button class="btn-select" onclick="openBooking(923, 'NH106')">SELECT</button>
+                    </div>
+                </article>
+
+                <!-- Flight Card 3 -->
+                <article class="flight-card">
+                    <div class="flight-info">
+                        <div class="flight-segment">
+                            <div class="flight-time">14:45</div>
+                            <div class="flight-location">LAX - Los Angeles</div>
+                            <div class="airline-info">
+                                <div class="airline-logo">JL</div>
+                                <span>JAL 062</span>
+                            </div>
+                        </div>
+                        <div class="flight-duration">
+                            <div class="duration-text">11h 35m</div>
+                            <div class="duration-line"></div>
+                            <div class="stops-indicator">DIRECT</div>
+                        </div>
+                        <div class="flight-segment">
+                            <div class="flight-time">18:20<sup>+1</sup></div>
+                            <div class="flight-location">NRT - Tokyo Narita</div>
+                        </div>
+                    </div>
+                    <div class="flight-price-section">
+                        <div>
+                            <div class="price-label">From</div>
+                            <div class="flight-price">$892</div>
+                        </div>
+                        <button class="btn-select" onclick="openBooking(892, 'JL062')">SELECT</button>
+                    </div>
+                </article>
+
+                <!-- Flight Card 4 - With Stop -->
+                <article class="flight-card">
+                    <div class="flight-info">
+                        <div class="flight-segment">
+                            <div class="flight-time">06:00</div>
+                            <div class="flight-location">LAX - Los Angeles</div>
+                            <div class="airline-info">
+                                <div class="airline-logo">DL</div>
+                                <span>Delta 295</span>
+                            </div>
+                        </div>
+                        <div class="flight-duration">
+                            <div class="duration-text">15h 20m</div>
+                            <div class="duration-line"></div>
+                            <div class="stops-indicator" style="background: var(--color-accent);">1 STOP</div>
+                            <div class="duration-text" style="margin-top: var(--space-xs);">via SEA</div>
+                        </div>
+                        <div class="flight-segment">
+                            <div class="flight-time">05:20<sup>+2</sup></div>
+                            <div class="flight-location">NRT - Tokyo Narita</div>
+                        </div>
+                    </div>
+                    <div class="flight-price-section">
+                        <div>
+                            <div class="price-label">From</div>
+                            <div class="flight-price">$674</div>
+                        </div>
+                        <button class="btn-select" onclick="openBooking(674, 'DL295')">SELECT</button>
+                    </div>
+                </article>
+
+                <!-- Flight Card 5 -->
+                <article class="flight-card">
+                    <div class="flight-info">
+                        <div class="flight-segment">
+                            <div class="flight-time">17:00</div>
+                            <div class="flight-location">LAX - Los Angeles</div>
+                            <div class="airline-info">
+                                <div class="airline-logo">UA</div>
+                                <span>United 33</span>
+                            </div>
+                        </div>
+                        <div class="flight-duration">
+                            <div class="duration-text">11h 50m</div>
+                            <div class="duration-line"></div>
+                            <div class="stops-indicator">DIRECT</div>
+                        </div>
+                        <div class="flight-segment">
+                            <div class="flight-time">20:50<sup>+1</sup></div>
+                            <div class="flight-location">NRT - Tokyo Narita</div>
+                        </div>
+                    </div>
+                    <div class="flight-price-section">
+                        <div>
+                            <div class="price-label">From</div>
+                            <div class="flight-price">$865</div>
+                        </div>
+                        <button class="btn-select" onclick="openBooking(865, 'UA33')">SELECT</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="booking-content">
+            <div class="booking-header">
+                <h2 class="booking-title">Complete Booking</h2>
+                <button class="btn-close" onclick="closeBooking()" aria-label="Close">×</button>
+            </div>
+
+            <div class="booking-progress">
+                <div class="progress-step completed">1. Select</div>
+                <div class="progress-step active">2. Seats</div>
+                <div class="progress-step">3. Details</div>
+                <div class="progress-step">4. Payment</div>
+            </div>
+
+            <div class="booking-body">
+                <h3 style="font-family: var(--font-heading); font-size: var(--font-size-xl); font-weight: 700; text-transform: uppercase; margin-bottom: var(--space-lg);">
+                    Choose Your Seat
+                </h3>
+
+                <!-- Seat Map -->
+                <div class="seat-map" id="seatMap">
+                    <!-- Row 1 -->
+                    <div class="seat">1A</div>
+                    <div class="seat">1B</div>
+                    <div class="seat">1C</div>
+                    <div class="seat aisle"></div>
+                    <div class="seat">1D</div>
+                    <div class="seat">1E</div>
+                    <div class="seat occupied">1F</div>
+
+                    <!-- Row 2 -->
+                    <div class="seat">2A</div>
+                    <div class="seat occupied">2B</div>
+                    <div class="seat">2C</div>
+                    <div class="seat aisle"></div>
+                    <div class="seat">2D</div>
+                    <div class="seat">2E</div>
+                    <div class="seat">2F</div>
+
+                    <!-- Row 3 -->
+                    <div class="seat">3A</div>
+                    <div class="seat">3B</div>
+                    <div class="seat occupied">3C</div>
+                    <div class="seat aisle"></div>
+                    <div class="seat occupied">3D</div>
+                    <div class="seat">3E</div>
+                    <div class="seat">3F</div>
+
+                    <!-- Row 4 -->
+                    <div class="seat">4A</div>
+                    <div class="seat">4B</div>
+                    <div class="seat">4C</div>
+                    <div class="seat aisle"></div>
+                    <div class="seat">4D</div>
+                    <div class="seat occupied">4E</div>
+                    <div class="seat">4F</div>
+
+                    <!-- Row 5 -->
+                    <div class="seat occupied">5A</div>
+                    <div class="seat">5B</div>
+                    <div class="seat">5C</div>
+                    <div class="seat aisle"></div>
+                    <div class="seat">5D</div>
+                    <div class="seat">5E</div>
+                    <div class="seat occupied">5F</div>
+                </div>
+
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: var(--color-background);"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: var(--color-surface-alt);"></div>
+                        <span>Occupied</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: var(--color-primary);"></div>
+                        <span>Selected</span>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown -->
+                <div class="price-breakdown">
+                    <div class="breakdown-row">
+                        <span>Base Fare</span>
+                        <span id="baseFare">$847.00</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Taxes & Fees</span>
+                        <span>$78.50</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Seat Selection</span>
+                        <span id="seatFee">$0.00</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>TOTAL</span>
+                        <span id="totalPrice">$925.50</span>
+                    </div>
+                </div>
+
+                <button class="btn-confirm" onclick="confirmBooking()">
+                    CONFIRM & CONTINUE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous design">←</button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next design">→</button>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+        });
+
+        // Seat Selection
+        const seats = document.querySelectorAll('.seat:not(.aisle):not(.occupied)');
+        let selectedSeat = null;
+
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                if (selectedSeat) {
+                    selectedSeat.classList.remove('selected');
+                }
+                seat.classList.add('selected');
+                selectedSeat = seat;
+
+                // Update seat fee
+                document.getElementById('seatFee').textContent = '$25.00';
+                updateTotal();
+            });
+        });
+
+        function updateTotal() {
+            const baseFare = parseFloat(document.getElementById('baseFare').textContent.replace('$', ''));
+            const seatFee = parseFloat(document.getElementById('seatFee').textContent.replace('$', ''));
+            const taxes = 78.50;
+            const total = baseFare + seatFee + taxes;
+            document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Booking Modal
+        function openBooking(price, flight) {
+            document.getElementById('bookingModal').classList.add('active');
+            document.getElementById('baseFare').textContent = `$${price}.00`;
+            document.getElementById('seatFee').textContent = '$0.00';
+            updateTotal();
+
+            // Reset seat selection
+            if (selectedSeat) {
+                selectedSeat.classList.remove('selected');
+                selectedSeat = null;
+            }
+        }
+
+        function closeBooking() {
+            document.getElementById('bookingModal').classList.remove('active');
+        }
+
+        function confirmBooking() {
+            if (!selectedSeat) {
+                alert('Please select a seat to continue.');
+                return;
+            }
+            alert('Booking confirmed! Proceeding to passenger details...');
+            closeBooking();
+        }
+
+        // Close modal on outside click
+        document.getElementById('bookingModal').addEventListener('click', (e) => {
+            if (e.target.id === 'bookingModal') {
+                closeBooking();
+            }
+        });
+
+        // Navigation
+        const TOTAL = 250;
+        const CURRENT = 247;
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            const prev = CURRENT === 1 ? TOTAL : CURRENT - 1;
+            window.location.href = `design-${prev}.html`;
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const next = CURRENT === TOTAL ? 1 : CURRENT + 1;
+            window.location.href = `design-${next}.html`;
+        });
+
+        
+
+        // Search Form
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Searching flights...');
+        });
+    </script>
+</body>
+</html>

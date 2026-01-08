@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Bastion - LMS Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Bastion - Crafted for users with international roots
+ABOUTME: This design system implements an LMS dashboard with psychedelic 1960s-70s aesthetics merged with trustworthy, accessible education technology.
+ABOUTME: Key characteristics: Vibrant gradients and swirling patterns balanced by structured layouts; High contrast for accessibility; Organic shapes with precise functionality.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF6B9D;
+--color-secondary: #8B5CF6;
+--color-accent: #FFA500;
+--color-background: #FAFAFA;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #6B7280;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 16px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Psychedelic patterns and gradients add visual interest while maintaining WCAG AA contrast ratios
+2. Organic, flowing shapes (circles, curves) soften the technical nature of learning management
+3. Color-coded course categories create intuitive navigation through vibrant hues
+4. Generous whitespace and clear hierarchy ensure information density doesn't overwhelm
+5. Trustworthy design through consistent patterns, clear CTAs, and predictable interactions
+
+BEST FOR:
+- Educational institutions serving diverse, international student populations
+- Nonprofit learning platforms with creative, progressive missions
+- Organizations wanting to make learning feel joyful and accessible
+- Platforms emphasizing community and cultural connection
+
+AVOID IF:
+- Corporate training requires strictly professional aesthetics
+- Target audience prefers minimal, ultra-modern interfaces
+- Brand identity conflicts with vibrant, expressive color palettes
+- Platform needs to convey extreme formality or tradition
+
+FUNCTIONAL DIRECTION: lms_dashboard
+This design must clearly function as an LMS Dashboard. Required elements:
+- Course overview cards with progress indicators
+- Current assignments list with due dates
+- Upcoming live sessions/events calendar
+- Grade summary or performance metrics
+- Navigation to courses, assignments, resources, and profile
+- Quick access to recent activity and notifications
+- Search functionality for courses and content
+- Learning streak or engagement metrics
+
+DIMENSIONS:
+- design_era: psychedelic (groovy patterns, vibrant gradients, organic shapes, retro typography)
+- emotional_tone: trustworthy (reliable, secure, dependable visual language)
+- industry: nonprofit (accessible, mission-driven, community-focused)
+- color_mode: both (supports light and dark themes)
+- functional_direction: lms_dashboard (comprehensive learning management interface)
+
+ACCESSIBILITY NOTES:
+- All interactive elements have 44px minimum touch targets
+- Color contrast exceeds WCAG AA standards (4.5:1 for body text, 3:1 for large text)
+- Focus indicators are clearly visible in both light and dark modes
+- Animations respect prefers-reduced-motion
+- Semantic HTML ensures screen reader compatibility
+-->
+
+<style>
+:root {
+    /* Brand Colors - Psychedelic Palette */
+    --color-primary: #FF6B9D;
+    --color-secondary: #8B5CF6;
+    --color-accent: #FFA500;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-info: #3B82F6;
+
+    /* Light Mode */
+    --color-background: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-surface-elevated: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6B7280;
+    --color-border: #E5E7EB;
+    --color-hover: #F3F4F6;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-xs: 12px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-size-2xl: 32px;
+    --font-size-3xl: 40px;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Shapes */
+    --radius-sm: 8px;
+    --radius-default: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+[data-theme="dark"] {
+    --color-background: #0F0F0F;
+    --color-surface: #1A1A1A;
+    --color-surface-elevated: #262626;
+    --color-text: #F9FAFB;
+    --color-text-muted: #9CA3AF;
+    --color-border: #374151;
+    --color-hover: #262626;
+    --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    transition: background var(--transition-base), color var(--transition-base);
+}
+
+/* Psychedelic Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 50%,
+        var(--color-accent) 100%);
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* App Shell Layout */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 280px;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-heading);
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.logo-text p {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* Navigation */
+.nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.nav-section-title {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-default);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    min-height: 44px;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: transparent;
+    transition: background var(--transition-fast);
+}
+
+.nav-item:hover {
+    background: var(--color-hover);
+}
+
+.nav-item:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg,
+        rgba(255, 107, 157, 0.1),
+        rgba(139, 92, 246, 0.1));
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.nav-item.active::before {
+    background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.nav-badge {
+    margin-left: auto;
+    background: var(--color-primary);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    margin-top: auto;
+    padding: var(--space-md);
+    background: var(--color-hover);
+    border-radius: var(--radius-default);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    min-height: 44px;
+}
+
+.theme-toggle:hover {
+    background: var(--color-border);
+}
+
+.theme-toggle:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: var(--space-xl);
+    max-width: 1600px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2xl);
+    gap: var(--space-lg);
+}
+
+.header-left h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lg);
+}
+
+.header-right {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+/* Search Bar */
+.search-bar {
+    position: relative;
+    width: 320px;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-md) var(--space-md) var(--space-md) 48px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-base);
+    font-family: var(--font-body);
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+    min-height: 44px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+}
+
+/* Notification Button */
+.notification-btn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.notification-btn:hover {
+    background: var(--color-hover);
+    border-color: var(--color-primary);
+}
+
+.notification-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    border: 2px solid var(--color-surface);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+/* Streak Card */
+.streak-card {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.streak-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.streak-content {
+    position: relative;
+    z-index: 1;
+}
+
+.streak-label {
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.streak-number {
+    font-size: 64px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    line-height: 1;
+    margin-bottom: var(--space-md);
+}
+
+.streak-text {
+    font-size: var(--font-size-lg);
+    opacity: 0.95;
+}
+
+/* Progress Summary */
+.progress-summary {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+}
+
+.progress-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    margin-bottom: var(--space-lg);
+}
+
+.progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+}
+
+.stat-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    font-family: var(--font-heading);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.progress-bar-container {
+    height: 12px;
+    background: var(--color-hover);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-top: var(--space-sm);
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+/* Section Title */
+.section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.section-title::before {
+    content: '';
+    width: 6px;
+    height: 32px;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-full);
+}
+
+/* Course Cards */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+}
+
+.course-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+}
+
+.course-card:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.course-header {
+    height: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient);
+    opacity: 0.9;
+}
+
+.course-category {
+    position: absolute;
+    top: var(--space-md);
+    left: var(--space-md);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-text);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 1;
+}
+
+.course-body {
+    padding: var(--space-lg);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.course-instructor {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-md);
+}
+
+.course-progress {
+    margin-top: auto;
+    padding-top: var(--space-md);
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.progress-percentage {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Assignments Section */
+.assignments-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.assignments-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.assignment-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    display: flex;
+    gap: var(--space-lg);
+    align-items: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    min-height: 88px;
+}
+
+.assignment-card:hover {
+    border-color: var(--color-primary);
+    background: var(--color-hover);
+}
+
+.assignment-card:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.assignment-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-default);
+    background: linear-gradient(135deg, var(--gradient-color-1), var(--gradient-color-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    color: white;
+    flex-shrink: 0;
+}
+
+.assignment-content {
+    flex: 1;
+}
+
+.assignment-title {
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xs);
+}
+
+.assignment-course {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.assignment-due {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--due-bg);
+    color: var(--due-color);
+    border-radius: var(--radius-default);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Upcoming Sessions */
+.sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.session-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    min-height: 88px;
+}
+
+.session-card:hover {
+    border-color: var(--color-secondary);
+    box-shadow: var(--shadow-default);
+}
+
+.session-card:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+.session-time {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.session-title {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.session-instructor {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-md);
+}
+
+.session-btn {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-default);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 44px;
+}
+
+.session-btn:hover {
+    background: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.session-btn:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+
+    .main-content {
+        margin-left: 240px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: var(--space-lg);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Utility: Gradients */
+.gradient-design { --gradient: linear-gradient(135deg, #FF6B9D, #8B5CF6); }
+.gradient-development { --gradient: linear-gradient(135deg, #3B82F6, #8B5CF6); }
+.gradient-business { --gradient: linear-gradient(135deg, #10B981, #059669); }
+.gradient-arts { --gradient: linear-gradient(135deg, #FFA500, #FF6B9D); }
+
+.gradient-design { --gradient-color-1: #FF6B9D; --gradient-color-2: #8B5CF6; }
+.gradient-development { --gradient-color-1: #3B82F6; --gradient-color-2: #8B5CF6; }
+.gradient-business { --gradient-color-1: #10B981; --gradient-color-2: #059669; }
+.gradient-arts { --gradient-color-1: #FFA500; --gradient-color-2: #FF6B9D; }
+
+/* Due Date Colors */
+.due-urgent { --due-bg: rgba(239, 68, 68, 0.1); --due-color: #DC2626; }
+.due-soon { --due-bg: rgba(245, 158, 11, 0.1); --due-color: #D97706; }
+.due-normal { --due-bg: rgba(59, 130, 246, 0.1); --due-color: #2563EB; }
+
+/* SVG Icons */
+.icon {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+</style>
+
+<div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">MB</div>
+            <div class="logo-text">
+                <h1>Modern Bastion</h1>
+                <p>Learning Platform</p>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="#dashboard" class="nav-item active" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#courses" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                    My Courses
+                </a>
+                <a href="#assignments" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Assignments
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#calendar" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Calendar
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Resources</div>
+                <a href="#library" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Library
+                </a>
+                <a href="#discussions" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Discussions
+                </a>
+                <a href="#grades" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    My Grades
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="#profile" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Profile
+                </a>
+                <a href="#settings" class="nav-item" tabindex="0">
+                    <svg class="nav-icon icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"/>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+        </nav>
+
+        <button class="theme-toggle" id="themeToggle" tabindex="0">
+            <svg class="nav-icon icon" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            Toggle Theme
+        </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h2>Welcome back, Maria!</h2>
+                <p class="header-subtitle">You have 3 assignments due this week</p>
+            </div>
+            <div class="header-right">
+                <div class="search-bar">
+                    <svg class="search-icon icon" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input
+                        type="search"
+                        class="search-input"
+                        placeholder="Search courses, assignments..."
+                        aria-label="Search"
+                    />
+                </div>
+                <button class="notification-btn" aria-label="Notifications" tabindex="0">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <div class="streak-card">
+                <div class="streak-content">
+                    <div class="streak-label">Learning Streak</div>
+                    <div class="streak-number">12</div>
+                    <div class="streak-text">days in a row! Keep it going!</div>
+                </div>
+            </div>
+
+            <div class="progress-summary">
+                <h3 class="progress-title">This Week</h3>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Courses Active</span>
+                        <span class="stat-value">4</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Hours Learned</span>
+                        <span class="stat-value">8.5</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Average Grade</span>
+                        <span class="stat-value">92%</span>
+                    </div>
+                    <div>
+                        <div class="stat-item">
+                            <span class="stat-label">Weekly Goal</span>
+                            <span class="progress-percentage">85%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Courses -->
+        <section>
+            <h3 class="section-title">Active Courses</h3>
+            <div class="courses-grid">
+                <a href="#" class="course-card gradient-design" tabindex="0">
+                    <div class="course-header">
+                        <span class="course-category">Design</span>
+                    </div>
+                    <div class="course-body">
+                        <h4 class="course-title">User Experience Fundamentals</h4>
+                        <p class="course-instructor">Instructor: Dr. Sarah Chen</p>
+                        <div class="course-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span class="progress-percentage">68%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 68%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="course-card gradient-development" tabindex="0">
+                    <div class="course-header">
+                        <span class="course-category">Development</span>
+                    </div>
+                    <div class="course-body">
+                        <h4 class="course-title">Modern Web Development</h4>
+                        <p class="course-instructor">Instructor: Prof. James Rodriguez</p>
+                        <div class="course-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span class="progress-percentage">45%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="course-card gradient-business" tabindex="0">
+                    <div class="course-header">
+                        <span class="course-category">Business</span>
+                    </div>
+                    <div class="course-body">
+                        <h4 class="course-title">Social Impact Entrepreneurship</h4>
+                        <p class="course-instructor">Instructor: Maria Gonzalez</p>
+                        <div class="course-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span class="progress-percentage">82%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 82%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="course-card gradient-arts" tabindex="0">
+                    <div class="course-header">
+                        <span class="course-category">Arts</span>
+                    </div>
+                    <div class="course-body">
+                        <h4 class="course-title">Digital Storytelling</h4>
+                        <p class="course-instructor">Instructor: Alex Kim</p>
+                        <div class="course-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span class="progress-percentage">34%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 34%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Assignments Due -->
+        <section class="assignments-section">
+            <h3 class="section-title">Upcoming Assignments</h3>
+            <div class="assignments-list">
+                <a href="#" class="assignment-card gradient-design" tabindex="0">
+                    <div class="assignment-icon">📝</div>
+                    <div class="assignment-content">
+                        <div class="assignment-title">Wireframe Prototype Submission</div>
+                        <div class="assignment-course">User Experience Fundamentals</div>
+                    </div>
+                    <div class="assignment-due due-urgent">
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Due Tomorrow
+                    </div>
+                </a>
+
+                <a href="#" class="assignment-card gradient-development" tabindex="0">
+                    <div class="assignment-icon">💻</div>
+                    <div class="assignment-content">
+                        <div class="assignment-title">React Component Library</div>
+                        <div class="assignment-course">Modern Web Development</div>
+                    </div>
+                    <div class="assignment-due due-soon">
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Due in 3 days
+                    </div>
+                </a>
+
+                <a href="#" class="assignment-card gradient-business" tabindex="0">
+                    <div class="assignment-icon">📊</div>
+                    <div class="assignment-content">
+                        <div class="assignment-title">Impact Measurement Framework</div>
+                        <div class="assignment-course">Social Impact Entrepreneurship</div>
+                    </div>
+                    <div class="assignment-due due-normal">
+                        <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Due in 1 week
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Upcoming Live Sessions -->
+        <section>
+            <h3 class="section-title">Live Sessions This Week</h3>
+            <div class="sessions-grid">
+                <div class="session-card" tabindex="0">
+                    <div class="session-time">Today, 2:00 PM</div>
+                    <div class="session-title">Office Hours: UX Design</div>
+                    <div class="session-instructor">with Dr. Sarah Chen</div>
+                    <button class="session-btn" tabindex="0">Join Session</button>
+                </div>
+
+                <div class="session-card" tabindex="0">
+                    <div class="session-time">Thu, 10:00 AM</div>
+                    <div class="session-title">Live Coding Workshop</div>
+                    <div class="session-instructor">with Prof. James Rodriguez</div>
+                    <button class="session-btn" tabindex="0">Set Reminder</button>
+                </div>
+
+                <div class="session-card" tabindex="0">
+                    <div class="session-time">Fri, 3:00 PM</div>
+                    <div class="session-title">Pitch Practice Session</div>
+                    <div class="session-instructor">with Maria Gonzalez</div>
+                    <button class="session-btn" tabindex="0">Set Reminder</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+// Check for saved theme preference or default to light
+const currentTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', currentTheme);
+
+themeToggle.addEventListener('click', () => {
+    const theme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+});
+
+// Keyboard Navigation for Arrow Keys
+const TOTAL = 250;
+const CURRENT = 69;
+
+/* Navigation removed */
+
+// Animate progress bars on load
+window.addEventListener('load', () => {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 100);
+    });
+});
+
+// Add focus visible for keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+        document.body.classList.add('keyboard-nav');
+    }
+});
+
+document.addEventListener('mousedown', () => {
+    document.body.classList.remove('keyboard-nav');
+});
+</script>
+
+</body>
+</html>

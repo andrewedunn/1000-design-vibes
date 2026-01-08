@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Slate - Habit Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Protocol Slate - A flat approach meets international sensibility
+        ABOUTME: This design system implements a habit_tracker with flat aesthetics in Swiss International style.
+        ABOUTME: Key characteristics: Grid-based precision, objectivity through minimal color, systematic hierarchy through typography alone.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #2d2d2d;
+        --color-secondary: #666666;
+        --color-accent: #4a4a4a;
+        --color-background: #1a1a1a;
+        --color-surface: #262626;
+        --color-text: #e8e8e8;
+        --color-text-muted: #999999;
+        --color-border: #404040;
+        --color-success: #88cc88;
+        --color-warning: #ccaa66;
+        --color-neutral: #666666;
+        --font-heading: 'IBM Plex Sans', sans-serif;
+        --font-body: 'IBM Plex Sans', sans-serif;
+        --font-mono: 'IBM Plex Mono', monospace;
+        --radius-default: 2px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Rigorous grid alignment - all elements snap to 8px base unit
+        2. Typography hierarchy through weight and size, not color
+        3. Flat surfaces with hairline borders define spatial relationships
+        4. Information density balanced with systematic whitespace
+        5. Objective presentation - data speaks for itself
+
+        BEST FOR:
+        - Data-driven applications requiring clarity
+        - Professional productivity tools
+        - Systems where hierarchy must be immediately clear
+        - Interfaces prioritizing function over decoration
+
+        AVOID IF:
+        - Brand requires emotional warmth
+        - Playful or casual tone needed
+        - Heavy emphasis on imagery or illustration
+        - Target audience expects high ornamentation
+
+        FUNCTIONAL DIRECTION: habit_tracker
+        This design must clearly function as a habit tracker. Required elements:
+        - Calendar grid showing completion status across days
+        - List of trackable habits with progress indicators
+        - Streak counters showing consecutive days
+        - Quick check-in/check-off interactions
+        - Monthly and weekly views
+        - Statistics showing completion rates
+        - Goal setting and progress visualization
+
+        DESIGN DIMENSIONS APPLIED:
+        - ui_paradigm: flat - clean surfaces, no shadows, solid colors
+        - design_era: swiss_international - grid precision, helvetica-inspired typography, objectivity
+        - emotional_tone: serious - professional, focused, no-nonsense
+        - industry: saas - clean, scalable, data-focused
+        - color_mode: dark_only - dark background with high contrast text
+        - page_structure: sidebar_main - persistent sidebar navigation with main content area
+        - navigation_pattern: side_persistent - always-visible sidebar
+        - color_theory: monochromatic - variations of gray with minimal accent
+        - color_temperature: neutral - balanced, professional
+        - color_saturation: desaturated - muted, understated
+        - heading_font: neo_grotesque - clean, systematic sans-serif
+        - body_font: neo_grotesque - matching heading for consistency
+        - type_scale: major_third (1.25) - clear hierarchy without drama
+        - density: balanced - neither cramped nor excessive whitespace
+        - corners: sharp - 2px subtle rounding maximum
+        - shadows: none - flat aesthetic
+        - borders: hairline - minimal 1px borders
+        - content_flow: card_grid - systematic organization
+
+        COLOR SYSTEM RATIONALE:
+        Dark mode palette built on monochromatic grayscale with precise contrast ratios.
+        Primary: #2d2d2d - main interactive elements
+        Background: #1a1a1a - deepest surface
+        Surface: #262626 - elevated cards and panels
+        Text: #e8e8e8 - high contrast for readability (WCAG AAA)
+        Border: #404040 - subtle definition without heaviness
+        Success green: #88cc88 - muted to maintain seriousness
+
+        TYPOGRAPHY SYSTEM:
+        IBM Plex Sans chosen for geometric precision and international neutrality.
+        Scale: 1.25 (major third) creates clear hierarchy.
+        Weights: 400 (body), 500 (emphasis), 600 (headings)
+        Line height: 1.5 for body, 1.2 for headings - optimal readability
+
+        SPATIAL SYSTEM:
+        Base unit: 8px - all spacing derives from this
+        Component padding: 16px (2 units), 24px (3 units)
+        Section gaps: 24px, 32px, 48px
+        Grid gaps: 16px consistent throughout
+
+        INTERACTION PATTERNS:
+        Hover: subtle border color shift
+        Active: slight opacity change
+        Focus: 2px outline for keyboard navigation
+        Disabled: 50% opacity, no pointer
+        All interactions feel immediate and precise
+
+        GRID SYSTEM:
+        Sidebar: 280px fixed width
+        Main: flexible with max-width constraints
+        Calendar grid: 7 columns (days of week)
+        Habit cards: flexible grid with min 320px
+        All elements align to 8px baseline
+
+        ACCESSIBILITY:
+        - All text meets WCAG AAA contrast (7:1+)
+        - Focus indicators on all interactive elements
+        - 44px minimum touch targets
+        - Reduced motion support
+        - Semantic HTML structure
+        - ARIA labels for complex interactions
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color System */
+            --color-primary: #2d2d2d;
+            --color-secondary: #666666;
+            --color-accent: #4a4a4a;
+            --color-background: #1a1a1a;
+            --color-surface: #262626;
+            --color-text: #e8e8e8;
+            --color-text-muted: #999999;
+            --color-border: #404040;
+            --color-success: #88cc88;
+            --color-warning: #ccaa66;
+            --color-neutral: #666666;
+
+            /* Typography */
+            --font-heading: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+            --font-body: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+            /* Type Scale (1.25 - Major Third) */
+            --text-xs: 0.64rem;   /* 10.24px */
+            --text-sm: 0.8rem;    /* 12.8px */
+            --text-base: 1rem;    /* 16px */
+            --text-lg: 1.25rem;   /* 20px */
+            --text-xl: 1.563rem;  /* 25px */
+            --text-2xl: 1.953rem; /* 31.25px */
+            --text-3xl: 2.441rem; /* 39px */
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1); /* 8px */
+            --space-sm: calc(var(--space-unit) * 2); /* 16px */
+            --space-md: calc(var(--space-unit) * 3); /* 24px */
+            --space-lg: calc(var(--space-unit) * 4); /* 32px */
+            --space-xl: calc(var(--space-unit) * 6); /* 48px */
+
+            /* Shapes */
+            --radius-default: 2px;
+            --border-width: 1px;
+            --shadow-default: none;
+
+            /* Layout */
+            --sidebar-width: 280px;
+            --header-height: 64px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout Structure */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .sidebar-header h1 {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--space-xs);
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-header .tagline {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .sidebar-nav {
+            padding: var(--space-md);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-lg);
+        }
+
+        .nav-section-title {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm);
+            margin-bottom: var(--space-xs);
+            border: var(--border-width) solid transparent;
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+            min-height: 44px;
+        }
+
+        .nav-item:hover {
+            border-color: var(--color-border);
+        }
+
+        .nav-item.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .nav-item-label {
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+
+        .nav-item-count {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+        }
+
+        .sidebar-footer {
+            padding: var(--space-md);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: var(--space-lg);
+            max-width: 1400px;
+        }
+
+        /* Header */
+        .content-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .content-header h2 {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--space-xs);
+            letter-spacing: -0.02em;
+        }
+
+        .content-header-meta {
+            display: flex;
+            gap: var(--space-md);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .meta-value {
+            font-family: var(--font-mono);
+            color: var(--color-text);
+        }
+
+        /* Calendar Grid */
+        .calendar-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .calendar-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .calendar-grid {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+            margin-bottom: var(--space-sm);
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            padding: var(--space-xs);
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+            position: relative;
+            min-height: 44px;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--color-text-muted);
+        }
+
+        .calendar-day.inactive {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .calendar-day.inactive:hover {
+            border-color: var(--color-border);
+        }
+
+        .calendar-day-number {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+        }
+
+        .calendar-day-status {
+            display: flex;
+            gap: 2px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 1px;
+            background: var(--color-border);
+        }
+
+        .status-dot.complete {
+            background: var(--color-success);
+        }
+
+        .status-dot.partial {
+            background: var(--color-warning);
+        }
+
+        .calendar-day.today {
+            border-color: var(--color-text);
+            border-width: 2px;
+        }
+
+        /* Habits Grid */
+        .habits-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-sm);
+        }
+
+        .habit-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+        }
+
+        .habit-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-sm);
+        }
+
+        .habit-info {
+            flex: 1;
+        }
+
+        .habit-name {
+            font-size: var(--text-base);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .habit-target {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .habit-streak {
+            text-align: right;
+        }
+
+        .habit-streak-number {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            font-family: var(--font-mono);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .habit-streak-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .habit-progress {
+            margin-bottom: var(--space-sm);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--color-border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: var(--space-xs);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-success);
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .habit-actions {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .habit-action-btn {
+            flex: 1;
+            min-height: 44px;
+        }
+
+        /* Statistics */
+        .statistics-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-sm);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+        }
+
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: 600;
+            font-family: var(--font-mono);
+            line-height: 1;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .stat-change {
+            font-size: var(--text-xs);
+            font-family: var(--font-mono);
+            margin-top: var(--space-xs);
+        }
+
+        .stat-change.positive {
+            color: var(--color-success);
+        }
+
+        .stat-change.negative {
+            color: var(--color-warning);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            line-height: 1;
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            background: transparent;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            border-color: var(--color-text-muted);
+        }
+
+        .btn:active {
+            opacity: 0.7;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--color-text);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: var(--color-background);
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        .btn-small {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--text-xs);
+            min-height: 36px;
+        }
+
+        .btn-icon {
+            padding: var(--space-sm);
+            min-width: 44px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-sm);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            transition: border-color 0.15s ease;
+            min-height: 44px;
+        }
+
+        .form-input:hover {
+            border-color: var(--color-text-muted);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-text);
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .checkbox-group:hover .checkbox {
+            border-color: var(--color-text-muted);
+        }
+
+        .checkbox.checked {
+            background: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: var(--color-background);
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: fixed;
+            bottom: var(--space-md);
+            right: var(--space-md);
+            display: flex;
+            gap: var(--space-xs);
+            z-index: 1000;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--color-text);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .calendar-days {
+                gap: 4px;
+            }
+
+            .calendar-day {
+                min-height: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Protocol Slate</h1>
+                <p class="tagline">A flat approach meets international sensibility</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Views</div>
+                    <div class="nav-item active">
+                        <span class="nav-item-label">Today</span>
+                        <span class="nav-item-count">6/8</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Week</span>
+                        <span class="nav-item-count">32/56</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Month</span>
+                        <span class="nav-item-count">187/240</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Calendar</span>
+                        <span class="nav-item-count">—</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Categories</div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Health</span>
+                        <span class="nav-item-count">3</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Productivity</span>
+                        <span class="nav-item-count">2</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Mindfulness</span>
+                        <span class="nav-item-count">2</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-item-label">Learning</span>
+                        <span class="nav-item-count">1</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-primary" style="width: 100%;">+ New Habit</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <h2>Today's Progress</h2>
+                <div class="content-header-meta">
+                    <div class="meta-item">
+                        <span>Date:</span>
+                        <span class="meta-value">2026-01-08</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Completion:</span>
+                        <span class="meta-value">75%</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Active Streak:</span>
+                        <span class="meta-value">12 days</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Calendar Section -->
+            <section class="calendar-section">
+                <div class="calendar-header">
+                    <h3 class="calendar-title">January 2026</h3>
+                    <div class="calendar-controls">
+                        <button class="btn btn-small btn-icon">←</button>
+                        <button class="btn btn-small">Today</button>
+                        <button class="btn btn-small btn-icon">→</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">Mon</div>
+                        <div class="calendar-weekday">Tue</div>
+                        <div class="calendar-weekday">Wed</div>
+                        <div class="calendar-weekday">Thu</div>
+                        <div class="calendar-weekday">Fri</div>
+                        <div class="calendar-weekday">Sat</div>
+                        <div class="calendar-weekday">Sun</div>
+                    </div>
+
+                    <div class="calendar-days">
+                        <div class="calendar-day inactive">
+                            <div class="calendar-day-number">30</div>
+                        </div>
+                        <div class="calendar-day inactive">
+                            <div class="calendar-day-number">31</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">1</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">2</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot partial"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">3</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">4</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">5</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">6</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">7</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot partial"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day today">
+                            <div class="calendar-day-number">8</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot complete"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">9</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">10</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">11</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">12</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">13</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">14</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">15</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">16</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">17</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">18</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">19</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">20</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">21</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">22</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">23</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">24</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">25</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">26</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">27</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">28</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">29</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">30</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">31</div>
+                            <div class="calendar-day-status">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="statistics-section">
+                <div class="section-header">
+                    <h3 class="section-title">Monthly Statistics</h3>
+                    <button class="btn btn-small">View Details</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Completion Rate</div>
+                        <div class="stat-change positive">+5% from last month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Current Streak</div>
+                        <div class="stat-change positive">Best: 18 days</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">187</div>
+                        <div class="stat-label">Total Completions</div>
+                        <div class="stat-change positive">+23 this week</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Active Habits</div>
+                        <div class="stat-change neutral">No change</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Habits Section -->
+            <section class="habits-section">
+                <div class="section-header">
+                    <h3 class="section-title">Active Habits</h3>
+                    <button class="btn btn-small">Sort by Streak</button>
+                </div>
+
+                <div class="habits-grid">
+                    <!-- Habit Card 1 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Morning Exercise</div>
+                                <div class="habit-target">Target: Daily • Health</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">23</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="progress-label">8/8 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn btn-success habit-action-btn">✓ Complete Today</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 2 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Read 30 Minutes</div>
+                                <div class="habit-target">Target: Daily • Learning</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">12</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <div class="progress-label">6/7 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn habit-action-btn">Mark Complete</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 3 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Meditation</div>
+                                <div class="habit-target">Target: Daily • Mindfulness</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">8</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="progress-label">6/8 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn habit-action-btn">Mark Complete</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 4 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Drink 8 Glasses Water</div>
+                                <div class="habit-target">Target: Daily • Health</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">15</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                            <div class="progress-label">7/8 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn btn-success habit-action-btn">✓ Complete Today</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 5 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Write Journal Entry</div>
+                                <div class="habit-target">Target: Daily • Mindfulness</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">6</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="progress-label">5/8 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn habit-action-btn">Mark Complete</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 6 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Code Practice</div>
+                                <div class="habit-target">Target: 5x/week • Productivity</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">19</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="progress-label">5/5 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn btn-success habit-action-btn">✓ Complete Today</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 7 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">No Social Media</div>
+                                <div class="habit-target">Target: Daily • Productivity</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">4</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <div class="progress-label">4/8 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn habit-action-btn">Mark Complete</button>
+                        </div>
+                    </div>
+
+                    <!-- Habit Card 8 -->
+                    <div class="habit-card">
+                        <div class="habit-card-header">
+                            <div class="habit-info">
+                                <div class="habit-name">Stretch Routine</div>
+                                <div class="habit-target">Target: 3x/week • Health</div>
+                            </div>
+                            <div class="habit-streak">
+                                <div class="habit-streak-number">11</div>
+                                <div class="habit-streak-label">Days</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 66%"></div>
+                            </div>
+                            <div class="progress-label">2/3 this week</div>
+                        </div>
+
+                        <div class="habit-actions">
+                            <button class="btn habit-action-btn">Mark Complete</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="btn btn-icon" id="prevBtn" aria-label="Previous design">←</button>
+        <button class="btn btn-icon" id="nextBtn" aria-label="Next design">→</button>
+    </div>
+
+    <script>
+        // Navigation
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 38;
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            const prevId = CURRENT_DESIGN === 1 ? TOTAL_DESIGNS : CURRENT_DESIGN - 1;
+            window.location.href = `design-${prevId}.html`;
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const nextId = CURRENT_DESIGN === TOTAL_DESIGNS ? 1 : CURRENT_DESIGN + 1;
+            window.location.href = `design-${nextId}.html`;
+        });
+
+        
+
+        // Habit completion interactions
+        document.querySelectorAll('.habit-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('btn-success')) {
+                    this.classList.remove('btn-success');
+                    this.textContent = 'Mark Complete';
+                } else {
+                    this.classList.add('btn-success');
+                    this.textContent = '✓ Complete Today';
+                }
+            });
+        });
+
+        // Calendar day interactions
+        document.querySelectorAll('.calendar-day:not(.inactive)').forEach(day => {
+            day.addEventListener('click', function() {
+                const dots = this.querySelectorAll('.status-dot');
+                dots.forEach(dot => {
+                    if (!dot.classList.contains('complete')) {
+                        dot.classList.add('complete');
+                    } else {
+                        dot.classList.remove('complete');
+                    }
+                });
+            });
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Mobile sidebar toggle (for responsive)
+        const sidebar = document.querySelector('.sidebar');
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX < 50 && touchEndX > touchStartX + 50) {
+                sidebar.classList.add('open');
+            } else if (touchStartX > touchEndX + 50 && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Core - International minimalism with natural undertones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+/*
+DESIGN: Zen Core - International minimalism with natural undertones
+ABOUTME: This design system implements a time_tracker with Art Nouveau aesthetics combining organic curves with functional clarity.
+ABOUTME: Key characteristics: flowing ornamental borders, nature-inspired typography, serene dual-mode palette with organic transitions.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #6B8E23;
+--color-primary-light: #8FBC3D;
+--color-background: #FDFDF8;
+--color-surface: #FFFFFF;
+--color-surface-raised: #F5F5F0;
+--color-text: #2C3E1F;
+--color-text-muted: #6B7D5E;
+--color-accent: #D4A574;
+--font-heading: 'Cormorant Garamond', serif;
+--font-body: 'Quicksand', sans-serif;
+--radius-default: 16px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Organic curves and flowing lines inspired by Art Nouveau create calm, natural borders around all functional elements
+2. Dual-mode design with nature-inspired palettes - olive greens and warm neutrals in light mode, deep forest tones in dark
+3. Generous whitespace with rhythmic spacing creates breathing room that enhances focus and reduces cognitive load
+4. Typography hierarchy uses elegant serifs for headers contrasted with clean geometric sans for data legibility
+
+COLOR PHILOSOPHY:
+Light mode: Warm cream backgrounds (#FDFDF8) with olive green (#6B8E23) primary, gold accents (#D4A574)
+Dark mode: Deep charcoal (#1A1F16) with sage green (#8FBC3D), amber highlights (#E8B87D)
+Both modes maintain earthy, botanical color relationships that evoke natural calm
+
+BEST FOR:
+- Time tracking applications requiring extended focus sessions
+- Productivity tools for creative professionals who value aesthetics
+- Media industry workflows where visual calm reduces decision fatigue
+- Applications requiring both light and dark modes with seamless transitions
+
+AVOID IF:
+- Need aggressive urgency signals or high-stress notifications
+- Require dense data tables with minimal spacing
+- Target audience prefers stark minimalism without ornamental elements
+- Brand identity conflicts with organic, nature-inspired visual language
+
+FUNCTIONAL DIRECTION: time_tracker
+This design must clearly function as a time_tracker. Required elements:
+- Timer display: Large, prominent countdown/count-up timer with controls
+- Task list: List of tracked activities with time allocations
+- Weekly summary: Visual breakdown of time across the week
+- Project breakdown: Categorized view showing time per project/category
+
+ART NOUVEAU INTERPRETATION:
+Art Nouveau (1890-1910) emphasized organic, flowing lines inspired by plants and flowers. This design translates that to:
+- Curved corner treatments that flow rather than simply round
+- Ornamental borders using SVG patterns suggesting vines and stems
+- Asymmetric balance that feels natural rather than rigidly geometric
+- Typography with organic characteristics - Cormorant's flowing serifs for headers
+- Color palette drawn from botanical observation - greens, golds, earth tones
+
+INTERACTION PATTERNS:
+- Smooth transitions (300-400ms) for all state changes, mimicking natural movement
+- Hover states that slightly lift elements with subtle shadows
+- Focus indicators using ornamental border highlights
+- Button states that feel organic - gentle color shifts rather than harsh transforms
+
+ACCESSIBILITY FEATURES:
+- WCAG AA compliant contrast ratios in both modes (4.5:1 minimum for text)
+- Focus indicators with 3px outlines using primary color
+- Reduced motion support removes transitions and animations
+- Touch targets minimum 44x44px for all interactive elements
+- Semantic HTML with proper ARIA labels for screen readers
+
+TECHNICAL NOTES:
+- CSS custom properties enable instant theme switching
+- Prefers-color-scheme media query for automatic mode detection
+- SVG decorative elements for scalable ornamental details
+- Flexbox and Grid for responsive layout without media queries where possible
+- No external dependencies except Google Fonts (Cormorant Garamond, Quicksand)
+-->
+
+        /* Base System */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Mode Colors */
+            --color-primary: #6B8E23;
+            --color-primary-light: #8FBC3D;
+            --color-primary-dark: #556F1C;
+            --color-background: #FDFDF8;
+            --color-surface: #FFFFFF;
+            --color-surface-raised: #F5F5F0;
+            --color-text: #2C3E1F;
+            --color-text-muted: #6B7D5E;
+            --color-accent: #D4A574;
+            --color-accent-light: #E8C89F;
+            --color-border: #D9E5CB;
+            --color-timer: #556F1C;
+            --color-active: #8FBC3D;
+            --color-shadow: rgba(107, 142, 35, 0.15);
+
+            /* Typography */
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Quicksand', sans-serif;
+            --scale: 1.333; /* Perfect Fourth */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.333rem;
+            --text-xl: 1.777rem;
+            --text-2xl: 2.369rem;
+            --text-3xl: 3.157rem;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-sm: 8px;
+            --radius-default: 16px;
+            --radius-lg: 24px;
+            --radius-full: 999px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px var(--color-shadow);
+            --shadow-default: 0 4px 16px var(--color-shadow);
+            --shadow-lg: 0 8px 32px var(--color-shadow);
+
+            /* Transitions */
+            --transition-fast: 200ms ease-in-out;
+            --transition-default: 300ms ease-in-out;
+            --transition-slow: 400ms ease-in-out;
+        }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #8FBC3D;
+                --color-primary-light: #A8D055;
+                --color-primary-dark: #7AA432;
+                --color-background: #1A1F16;
+                --color-surface: #242B1F;
+                --color-surface-raised: #2F3628;
+                --color-text: #E8EDE3;
+                --color-text-muted: #A8B59D;
+                --color-accent: #E8B87D;
+                --color-accent-light: #F2CFA0;
+                --color-border: #3D4835;
+                --color-timer: #A8D055;
+                --color-active: #8FBC3D;
+                --color-shadow: rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #8FBC3D;
+            --color-primary-light: #A8D055;
+            --color-primary-dark: #7AA432;
+            --color-background: #1A1F16;
+            --color-surface: #242B1F;
+            --color-surface-raised: #2F3628;
+            --color-text: #E8EDE3;
+            --color-text-muted: #A8B59D;
+            --color-accent: #E8B87D;
+            --color-accent-light: #F2CFA0;
+            --color-border: #3D4835;
+            --color-timer: #A8D055;
+            --color-active: #8FBC3D;
+            --color-shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-weight: 400;
+            transition: background var(--transition-default), color var(--transition-default);
+        }
+
+        /* Art Nouveau Ornamental Border */
+        .ornamental-border {
+            position: relative;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: border-color var(--transition-default);
+        }
+
+        .ornamental-border::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: var(--color-background);
+            border-radius: 50%;
+            border: 2px solid var(--color-border);
+            opacity: 0.8;
+            transition: all var(--transition-default);
+        }
+
+        .ornamental-border::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+            border-radius: 50% 50% 50% 0;
+            transform-origin: center;
+            transform: translateX(-50%) rotate(-45deg);
+            transition: all var(--transition-default);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: 2px solid var(--color-border);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background: var(--color-background);
+            border-left: 2px solid var(--color-border);
+            border-right: 2px solid var(--color-border);
+            border-bottom: 2px solid var(--color-border);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: 600;
+            color: var(--color-primary);
+            letter-spacing: 0.02em;
+            margin-bottom: var(--space-xs);
+        }
+
+        .tagline {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-full);
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            transition: all var(--transition-default);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-surface-raised);
+            box-shadow: var(--shadow-default);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Timer Display - Primary Feature */
+        .timer-section {
+            background: var(--color-surface);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-default);
+            transition: all var(--transition-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-primary));
+            background-size: 200% 100%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .timer-display {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .current-task {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+            font-weight: 300;
+        }
+
+        .timer {
+            font-family: var(--font-heading);
+            font-size: 5rem;
+            font-weight: 600;
+            color: var(--color-timer);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-lg);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-full);
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-default);
+            min-width: 120px;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+        }
+
+        /* Task List */
+        .task-section {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-default);
+            transition: all var(--transition-default);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            font-weight: 600;
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            background: var(--color-surface-raised);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            transition: all var(--transition-default);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--color-accent);
+            transition: width var(--transition-default);
+        }
+
+        .task-item:hover {
+            border-color: var(--color-primary);
+            background: var(--color-background);
+            transform: translateX(4px);
+        }
+
+        .task-item:hover::before {
+            width: 8px;
+        }
+
+        .task-item.active {
+            border-color: var(--color-active);
+            background: var(--color-background);
+        }
+
+        .task-item.active::before {
+            background: var(--color-active);
+            width: 8px;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+
+        .task-name {
+            font-weight: 500;
+            color: var(--color-text);
+            font-size: var(--text-base);
+        }
+
+        .task-time {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .task-project {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .project-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Weekly Summary */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-card {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-default);
+            transition: all var(--transition-default);
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .day-bar {
+            text-align: center;
+        }
+
+        .day-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .bar-container {
+            height: 120px;
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            position: relative;
+            transition: all var(--transition-default);
+        }
+
+        .bar-container:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .bar-fill {
+            background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: height var(--transition-slow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+            color: var(--color-surface);
+            font-weight: 600;
+        }
+
+        .day-hours {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+            font-weight: 500;
+        }
+
+        /* Project Breakdown */
+        .project-list {
+            list-style: none;
+            margin-top: var(--space-md);
+        }
+
+        .project-item {
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            border: 2px solid var(--color-border);
+            transition: all var(--transition-default);
+        }
+
+        .project-item:hover {
+            border-color: var(--color-primary);
+            transform: translateX(4px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .project-name {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .project-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--color-border);
+        }
+
+        .project-hours {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .project-bar-bg {
+            height: 8px;
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-full);
+            border: 2px solid var(--color-border);
+            overflow: hidden;
+        }
+
+        .project-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-full);
+            transition: width var(--transition-slow);
+        }
+
+        /* Stats Overview */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--color-surface-raised);
+            border-radius: var(--radius-default);
+            border: 2px solid var(--color-border);
+            transition: all var(--transition-default);
+        }
+
+        .stat-item:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--space-sm);
+            background: var(--color-surface);
+            padding: var(--space-sm);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--color-border);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border: 2px solid var(--color-border);
+            border-radius: 50%;
+            background: var(--color-surface-raised);
+            color: var(--color-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-default);
+            font-size: 20px;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-info {
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-md);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Visible */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Additional Responsive */
+        @media (max-width: 568px) {
+            .container {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .timer {
+                font-size: 3.5rem;
+            }
+
+            h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .theme-toggle {
+                top: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .week-days {
+                grid-template-columns: repeat(7, 1fr);
+                gap: var(--space-xs);
+            }
+
+            .bar-container {
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span id="theme-icon">🌙 Dark</span>
+    </button>
+
+    <div class="container">
+        <header>
+            <h1>Zen Core</h1>
+            <p class="tagline">International minimalism with natural undertones</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Timer Display Section -->
+            <div class="timer-section">
+                <div class="timer-display">
+                    <div class="current-task">Working on: Design System Documentation</div>
+                    <div class="timer">02:34:18</div>
+                    <div class="timer-label">Hours : Minutes : Seconds</div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-primary">Start</button>
+                    <button class="btn">Pause</button>
+                    <button class="btn">Stop</button>
+                    <button class="btn">Reset</button>
+                </div>
+            </div>
+
+            <!-- Today's Tasks -->
+            <div class="task-section">
+                <h2 class="section-title">Today's Tasks</h2>
+                <ul class="task-list">
+                    <li class="task-item active">
+                        <div class="task-header">
+                            <span class="task-name">Design System Documentation</span>
+                            <span class="task-time">2:34</span>
+                        </div>
+                        <div class="task-project">
+                            <span class="project-dot" style="background: #6B8E23;"></span>
+                            <span>Brand Redesign</span>
+                        </div>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-header">
+                            <span class="task-name">Client Meeting Prep</span>
+                            <span class="task-time">1:15</span>
+                        </div>
+                        <div class="task-project">
+                            <span class="project-dot" style="background: #D4A574;"></span>
+                            <span>Media Campaign</span>
+                        </div>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-header">
+                            <span class="task-name">Video Editing</span>
+                            <span class="task-time">3:42</span>
+                        </div>
+                        <div class="task-project">
+                            <span class="project-dot" style="background: #8FBC3D;"></span>
+                            <span>Content Production</span>
+                        </div>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-header">
+                            <span class="task-name">Social Media Strategy</span>
+                            <span class="task-time">0:48</span>
+                        </div>
+                        <div class="task-project">
+                            <span class="project-dot" style="background: #E8B87D;"></span>
+                            <span>Marketing</span>
+                        </div>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-header">
+                            <span class="task-name">Email Responses</span>
+                            <span class="task-time">0:32</span>
+                        </div>
+                        <div class="task-project">
+                            <span class="project-dot" style="background: #A8B59D;"></span>
+                            <span>Administrative</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Weekly Summary -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h2 class="section-title">This Week</h2>
+                <div class="week-days">
+                    <div class="day-bar">
+                        <div class="day-label">Mon</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 85%;">6.8h</div>
+                        </div>
+                        <div class="day-hours">6h 48m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Tue</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 95%;">7.6h</div>
+                        </div>
+                        <div class="day-hours">7h 36m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Wed</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 70%;">5.6h</div>
+                        </div>
+                        <div class="day-hours">5h 36m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Thu</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 100%;">8.0h</div>
+                        </div>
+                        <div class="day-hours">8h 0m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Fri</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 60%;">4.8h</div>
+                        </div>
+                        <div class="day-hours">4h 48m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Sat</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 25%;">2.0h</div>
+                        </div>
+                        <div class="day-hours">2h 0m</div>
+                    </div>
+                    <div class="day-bar">
+                        <div class="day-label">Sun</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 15%;">1.2h</div>
+                        </div>
+                        <div class="day-hours">1h 12m</div>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">36.0h</div>
+                        <div class="stat-label">Total Hours</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5.1h</div>
+                        <div class="stat-label">Daily Average</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Breakdown -->
+            <div class="summary-card">
+                <h2 class="section-title">Project Breakdown</h2>
+                <ul class="project-list">
+                    <li class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <span class="project-color" style="background: #6B8E23;"></span>
+                                <span>Brand Redesign</span>
+                            </div>
+                            <span class="project-hours">14.5h</span>
+                        </div>
+                        <div class="project-bar-bg">
+                            <div class="project-bar-fill" style="width: 40%;"></div>
+                        </div>
+                    </li>
+                    <li class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <span class="project-color" style="background: #8FBC3D;"></span>
+                                <span>Content Production</span>
+                            </div>
+                            <span class="project-hours">11.2h</span>
+                        </div>
+                        <div class="project-bar-bg">
+                            <div class="project-bar-fill" style="width: 31%;"></div>
+                        </div>
+                    </li>
+                    <li class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <span class="project-color" style="background: #D4A574;"></span>
+                                <span>Media Campaign</span>
+                            </div>
+                            <span class="project-hours">6.8h</span>
+                        </div>
+                        <div class="project-bar-bg">
+                            <div class="project-bar-fill" style="width: 19%;"></div>
+                        </div>
+                    </li>
+                    <li class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <span class="project-color" style="background: #E8B87D;"></span>
+                                <span>Marketing</span>
+                            </div>
+                            <span class="project-hours">2.3h</span>
+                        </div>
+                        <div class="project-bar-bg">
+                            <div class="project-bar-fill" style="width: 6%;"></div>
+                        </div>
+                    </li>
+                    <li class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <span class="project-color" style="background: #A8B59D;"></span>
+                                <span>Administrative</span>
+                            </div>
+                            <span class="project-hours">1.2h</span>
+                        </div>
+                        <div class="project-bar-bg">
+                            <div class="project-bar-fill" style="width: 3%;"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <button class="nav-btn" onclick="navigateDesign(-1)" aria-label="Previous design">←</button>
+        <span class="nav-info">140 / 250</span>
+        <button class="nav-btn" onclick="navigateDesign(1)" aria-label="Next design">→</button>
+    </nav>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-theme');
+
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.textContent = '🌙 Dark';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀️ Light';
+            }
+        }
+
+        // Navigation
+        function navigateDesign(direction) {
+            const current = 140;
+            const total = 250;
+            let next = current + direction;
+
+            if (next < 1) next = total;
+            if (next > total) next = 1;
+
+            window.location.href = `design-${next}.html`;
+        }
+
+        
+
+        // Interactive timer demo
+        let timerRunning = false;
+        let timerSeconds = 9258; // 2:34:18 in seconds
+        let timerInterval;
+
+        const timerDisplay = document.querySelector('.timer');
+        const buttons = document.querySelectorAll('.timer-controls .btn');
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timerSeconds);
+        }
+
+        buttons[0].addEventListener('click', () => {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                }, 1000);
+                buttons[0].textContent = 'Running...';
+                buttons[0].style.opacity = '0.7';
+            }
+        });
+
+        buttons[1].addEventListener('click', () => {
+            if (timerRunning) {
+                timerRunning = false;
+                clearInterval(timerInterval);
+                buttons[0].textContent = 'Start';
+                buttons[0].style.opacity = '1';
+            }
+        });
+
+        buttons[2].addEventListener('click', () => {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            buttons[0].textContent = 'Start';
+            buttons[0].style.opacity = '1';
+        });
+
+        buttons[3].addEventListener('click', () => {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            timerSeconds = 0;
+            updateTimerDisplay();
+            buttons[0].textContent = 'Start';
+            buttons[0].style.opacity = '1';
+        });
+
+        // Task interaction
+        const taskItems = document.querySelectorAll('.task-item');
+        const currentTaskLabel = document.querySelector('.current-task');
+
+        taskItems.forEach(item => {
+            item.addEventListener('click', () => {
+                taskItems.forEach(t => t.classList.remove('active'));
+                item.classList.add('active');
+                const taskName = item.querySelector('.task-name').textContent;
+                currentTaskLabel.textContent = `Working on: ${taskName}`;
+            });
+        });
+
+        // Set initial theme based on system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('theme-icon').textContent = '☀️ Light';
+        }
+    </script>
+</body>
+</html>

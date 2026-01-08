@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dusk Nexus - Event Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+/*
+DESIGN: Dusk Nexus - Natural meets neutral: a grunge perspective
+ABOUTME: This design system implements event_discovery with grunge aesthetics from the 90s underground scene.
+ABOUTME: Key characteristics: Textured surfaces, worn edges, high-contrast overlays, raw authenticity
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #a8d5ba;
+--color-primary-dark: #7aa88d;
+--color-background: #1a1a1a;
+--color-surface: #2a2a2a;
+--color-surface-elevated: #3a3a3a;
+--color-text: #e8e8e8;
+--color-text-muted: #9a9a9a;
+--color-accent: #f4a261;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'JetBrains Mono', monospace;
+--radius-default: 3px;
+--space-unit: 8px;
+--border-width: 2px;
+
+AESTHETIC PRINCIPLES:
+1. Grunge texture overlays create authentic, worn surfaces reminiscent of 90s zine culture
+2. High-contrast borders and torn-paper edges establish visual hierarchy through imperfection
+3. Neutral earth tones with muted green accents evoke mysterious, late-night discovery
+4. Monospace typography for body text reflects developer industry with raw, unpolished charm
+5. Layered noise and film grain add depth and tactile quality to digital surfaces
+
+BEST FOR:
+- Developer-focused event platforms with underground/indie culture
+- Tech meetups, hackathons, and community gatherings
+- Platforms prioritizing authenticity over polish
+- Users who appreciate nostalgic, anti-corporate aesthetics
+
+AVOID IF:
+- Brand requires corporate professionalism or luxury feel
+- Target audience expects modern, clean, minimalist design
+- Accessibility concerns with textured backgrounds (though we maintain WCAG AA contrast)
+- Fast-loading pages are critical (textures add visual weight)
+
+FUNCTIONAL DIRECTION: event_discovery
+This design must clearly function as an event_discovery platform. Required elements:
+- Event cards with comprehensive details (title, date, location, description)
+- Date filters for browsing by timeframe
+- Interactive map showing event locations
+- Category filters for different event types
+- RSVP buttons for user engagement
+- Social sharing options for viral distribution
+- Search functionality for finding specific events
+- Location-based discovery features
+
+DESIGN ERA: grunge
+Grunge aesthetic principles applied:
+- Textured, noise-filled surfaces simulating photocopied flyers
+- Rough, hand-made borders and torn edges
+- High contrast between light and dark elements
+- Layered transparency creating depth
+- Imperfect alignment and organic shapes
+- Color palette inspired by coffee stains, newsprint, and urban decay
+
+EMOTIONAL TONE: mysterious
+Mystery conveyed through:
+- Deep shadows and dramatic lighting contrasts
+- Partially obscured details requiring interaction
+- Atmospheric gradients suggesting depth
+- Cryptic iconography and minimalist labels
+- Hover states that reveal hidden information
+
+INDUSTRY: developer
+Developer focus shown through:
+- Monospace fonts for authenticity
+- Terminal-inspired UI elements
+- Code-like structure in layouts
+- Technical event categories (conferences, workshops, hackathons)
+- Git-style visual language in icons and buttons
+
+COLOR MODE: both
+Supports light/dark mode toggle with grunge aesthetic maintained in both:
+- Dark mode: deep blacks with muted green accents
+- Light mode: off-white with textured paper feel
+- Smooth transitions preserve texture overlays
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Dark Mode */
+            --color-primary: #a8d5ba;
+            --color-primary-dark: #7aa88d;
+            --color-background: #1a1a1a;
+            --color-surface: #2a2a2a;
+            --color-surface-elevated: #3a3a3a;
+            --color-text: #e8e8e8;
+            --color-text-muted: #9a9a9a;
+            --color-accent: #f4a261;
+            --color-border: #4a4a4a;
+            --color-danger: #e07a5f;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'JetBrains Mono', monospace;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+
+            /* Shapes */
+            --radius-default: 3px;
+            --border-width: 2px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-mode {
+            --color-primary: #5a8a6a;
+            --color-primary-dark: #3d5d4a;
+            --color-background: #e8e4d9;
+            --color-surface: #f5f3ed;
+            --color-surface-elevated: #ffffff;
+            --color-text: #2a2a2a;
+            --color-text-muted: #6a6a6a;
+            --color-accent: #d67e42;
+            --color-border: #b8b4a9;
+            --color-danger: #c45a3f;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Grunge texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Noise texture for grunge effect */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 2;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-md);
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
+            border-bottom: var(--border-width) solid var(--color-border);
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--color-primary) 20%,
+                var(--color-primary) 80%,
+                transparent 100%
+            );
+            opacity: 0.3;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '▼';
+            font-size: 12px;
+            margin-left: var(--space-xs);
+            opacity: 0.6;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--color-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .theme-toggle:hover::before {
+            left: 0;
+        }
+
+        .theme-toggle:hover {
+            color: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.2);
+        }
+
+        .search-bar::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            position: relative;
+        }
+
+        .filter-bar::before {
+            content: 'FILTERS //';
+            position: absolute;
+            top: -12px;
+            left: var(--space-sm);
+            background: var(--color-background);
+            padding: 0 var(--space-xs);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: var(--space-xs);
+            align-self: center;
+        }
+
+        .filter-btn {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            color: var(--color-text);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+            transform: translateY(-1px);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary-dark);
+            color: var(--color-background);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-lg);
+            align-items: start;
+        }
+
+        /* Event Cards Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .event-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Torn paper edge effect */
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--color-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
+        }
+
+        .event-date {
+            display: inline-block;
+            background: var(--color-accent);
+            color: var(--color-background);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .event-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+            line-height: 1.3;
+        }
+
+        .event-meta {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .event-meta-item::before {
+            content: '▸';
+            color: var(--color-primary);
+        }
+
+        .event-description {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+        }
+
+        .tag {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            padding: 4px var(--space-xs);
+            border-radius: var(--radius-default);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: var(--border-width) solid;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary-dark);
+            color: var(--color-background);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: var(--space-md);
+        }
+
+        .sidebar-section {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-section-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding-bottom: var(--space-xs);
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 300px;
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--color-text-muted);
+            font-size: 12px;
+            text-align: center;
+            padding: var(--space-md);
+        }
+
+        .map-icon {
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        /* Date filters - calendar style */
+        .date-filters {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+        }
+
+        .date-filter {
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+        }
+
+        .date-filter:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+        }
+
+        .date-filter.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary-dark);
+            color: var(--color-background);
+        }
+
+        .date-day {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: 2px;
+        }
+
+        .date-filter.active .date-day {
+            color: var(--color-background);
+            opacity: 0.7;
+        }
+
+        .date-number {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Category badges */
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-default);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+        }
+
+        .category-item:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            transform: translateX(2px);
+        }
+
+        .category-item.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary-dark);
+            color: var(--color-background);
+        }
+
+        .category-count {
+            font-size: 10px;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+        }
+
+        .stat-item {
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Focus states */
+        *:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            position: fixed;
+            bottom: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 11px;
+            color: var(--color-text-muted);
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-hint kbd {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 2px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="texture-overlay"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">Dusk Nexus</div>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-label">Light Mode</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="search-container">
+            <input type="search" class="search-bar" placeholder="Search events by name, location, or keyword...">
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <span class="filter-label">Date:</span>
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Today</button>
+                <button class="filter-btn">This Week</button>
+                <button class="filter-btn">This Month</button>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Type:</span>
+                <button class="filter-btn">Conference</button>
+                <button class="filter-btn">Workshop</button>
+                <button class="filter-btn">Hackathon</button>
+                <button class="filter-btn">Meetup</button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="events-grid">
+                <!-- Event Card 1 -->
+                <div class="event-card">
+                    <span class="event-date">Jan 15, 2026</span>
+                    <h3 class="event-title">Underground Code Jam</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">20:00</span>
+                        <span class="event-meta-item">Brooklyn, NY</span>
+                    </div>
+                    <p class="event-description">
+                        48-hour coding marathon in a converted warehouse. Build something raw, authentic, and functional. No corporate sponsors, just pure creation.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Hackathon</span>
+                        <span class="tag">Open Source</span>
+                        <span class="tag">In-Person</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card">
+                    <span class="event-date">Jan 18, 2026</span>
+                    <h3 class="event-title">Rust for Systems Programming</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">19:30</span>
+                        <span class="event-meta-item">Virtual</span>
+                    </div>
+                    <p class="event-description">
+                        Deep dive into low-level systems programming with Rust. Memory safety without garbage collection. Led by kernel developers.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Workshop</span>
+                        <span class="tag">Advanced</span>
+                        <span class="tag">Online</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card">
+                    <span class="event-date">Jan 22, 2026</span>
+                    <h3 class="event-title">Algorithmic Art & Generative Design</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">18:00</span>
+                        <span class="event-meta-item">Portland, OR</span>
+                    </div>
+                    <p class="event-description">
+                        Where code meets canvas. Explore creative coding with Processing, p5.js, and shader programming. Bring your laptop and curiosity.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Meetup</span>
+                        <span class="tag">Creative</span>
+                        <span class="tag">Beginner-Friendly</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 4 -->
+                <div class="event-card">
+                    <span class="event-date">Jan 25, 2026</span>
+                    <h3 class="event-title">Distributed Systems Conference</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">09:00</span>
+                        <span class="event-meta-item">San Francisco, CA</span>
+                    </div>
+                    <p class="event-description">
+                        3-day deep dive into consensus algorithms, CAP theorem, and building resilient distributed architectures. Industry veterans sharing battle scars.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Conference</span>
+                        <span class="tag">Multi-Day</span>
+                        <span class="tag">Expert</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 5 -->
+                <div class="event-card">
+                    <span class="event-date">Jan 28, 2026</span>
+                    <h3 class="event-title">WebAssembly Workshop</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">19:00</span>
+                        <span class="event-meta-item">Seattle, WA</span>
+                    </div>
+                    <p class="event-description">
+                        Compile C/C++/Rust to run in the browser. Build high-performance web apps that weren't possible before. Hands-on coding session.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Workshop</span>
+                        <span class="tag">Web</span>
+                        <span class="tag">Intermediate</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 6 -->
+                <div class="event-card">
+                    <span class="event-date">Feb 01, 2026</span>
+                    <h3 class="event-title">Cybersecurity CTF Challenge</h3>
+                    <div class="event-meta">
+                        <span class="event-meta-item">15:00</span>
+                        <span class="event-meta-item">Austin, TX</span>
+                    </div>
+                    <p class="event-description">
+                        Capture the flag competition focused on real-world security vulnerabilities. Teams of 2-4. Prizes for top performers. No black hats allowed.
+                    </p>
+                    <div class="event-tags">
+                        <span class="tag">Competition</span>
+                        <span class="tag">Security</span>
+                        <span class="tag">Team Event</span>
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary">RSVP</button>
+                        <button class="btn btn-secondary">Share</button>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <!-- Map Section -->
+                <div class="sidebar-section">
+                    <h2 class="sidebar-section-title">Map View</h2>
+                    <div class="map-container">
+                        <div class="map-placeholder">
+                            <div class="map-icon">📍</div>
+                            <div>Interactive map showing event locations across the region</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Navigation -->
+                <div class="sidebar-section">
+                    <h2 class="sidebar-section-title">January 2026</h2>
+                    <div class="date-filters">
+                        <div class="date-filter">
+                            <span class="date-day">Mon</span>
+                            <span class="date-number">13</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Tue</span>
+                            <span class="date-number">14</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Wed</span>
+                            <span class="date-number">15</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Thu</span>
+                            <span class="date-number">16</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Fri</span>
+                            <span class="date-number">17</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Sat</span>
+                            <span class="date-number">18</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Sun</span>
+                            <span class="date-number">19</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Mon</span>
+                            <span class="date-number">20</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Tue</span>
+                            <span class="date-number">21</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Wed</span>
+                            <span class="date-number">22</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Thu</span>
+                            <span class="date-number">23</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Fri</span>
+                            <span class="date-number">24</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Sat</span>
+                            <span class="date-number">25</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Sun</span>
+                            <span class="date-number">26</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Mon</span>
+                            <span class="date-number">27</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Tue</span>
+                            <span class="date-number">28</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Wed</span>
+                            <span class="date-number">29</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Thu</span>
+                            <span class="date-number">30</span>
+                        </div>
+                        <div class="date-filter">
+                            <span class="date-day">Fri</span>
+                            <span class="date-number">31</span>
+                        </div>
+                        <div class="date-filter active">
+                            <span class="date-day">Sat</span>
+                            <span class="date-number">01</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="sidebar-section">
+                    <h2 class="sidebar-section-title">Categories</h2>
+                    <div class="category-list">
+                        <div class="category-item active">
+                            <span>All Events</span>
+                            <span class="category-count">247</span>
+                        </div>
+                        <div class="category-item">
+                            <span>Conferences</span>
+                            <span class="category-count">42</span>
+                        </div>
+                        <div class="category-item">
+                            <span>Workshops</span>
+                            <span class="category-count">89</span>
+                        </div>
+                        <div class="category-item">
+                            <span>Hackathons</span>
+                            <span class="category-count">31</span>
+                        </div>
+                        <div class="category-item">
+                            <span>Meetups</span>
+                            <span class="category-count">85</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="sidebar-section">
+                    <h2 class="sidebar-section-title">Activity</h2>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1,247</div>
+                            <div class="stat-label">Total Events</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">342</div>
+                            <div class="stat-label">This Month</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8,932</div>
+                            <div class="stat-label">Attendees</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">124</div>
+                            <div class="stat-label">Cities</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div class="nav-hint">
+        Navigate: <kbd>←</kbd> <kbd>→</kbd> | Design 90/250
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const label = document.getElementById('theme-label');
+            if (document.body.classList.contains('light-mode')) {
+                label.textContent = 'Dark Mode';
+            } else {
+                label.textContent = 'Light Mode';
+            }
+        }
+
+        // Arrow key navigation
+        {
+                const next = current === total ? 1 : current + 1;
+                window.location.href = `design-${next}.html`;
+            }
+        });
+
+        // Interactive filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Interactive date filters
+        document.querySelectorAll('.date-filter').forEach(date => {
+            date.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // Interactive categories
+        document.querySelectorAll('.category-item').forEach(cat => {
+            cat.addEventListener('click', function() {
+                document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Search functionality (placeholder)
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            console.log('Searching for:', e.target.value);
+        });
+
+        // RSVP button interaction
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent === 'RSVP') {
+                    this.textContent = 'RSVP\'d ✓';
+                    this.style.opacity = '0.7';
+                } else {
+                    this.textContent = 'RSVP';
+                    this.style.opacity = '1';
+                }
+            });
+        });
+
+        // Share button interaction
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            if (btn.textContent.includes('Share')) {
+                btn.addEventListener('click', function() {
+                    console.log('Sharing event...');
+                    this.textContent = 'Shared!';
+                    setTimeout(() => {
+                        this.textContent = 'Share';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

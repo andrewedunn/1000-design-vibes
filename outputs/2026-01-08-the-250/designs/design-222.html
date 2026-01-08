@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Marble - Symptom Checker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Prime Marble - The flat way to creative
+        ABOUTME: This design system implements a symptom_checker with flat aesthetics and Swiss International design principles.
+        ABOUTME: Key characteristics: Rigorous grid system, pristine typography, marble-inspired luxury through minimal palettes.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #1a1a1a;
+        --color-secondary: #8b7355;
+        --color-accent: #d4c5b9;
+        --color-background: #fafaf8;
+        --color-surface: #ffffff;
+        --color-text: #1a1a1a;
+        --color-text-muted: #6b6b6b;
+        --color-border: #e8e6e3;
+        --font-heading: 'Helvetica Neue', 'Helvetica', sans-serif;
+        --font-body: 'Inter', -apple-system, sans-serif;
+        --radius-default: 0px;
+        --space-unit: 8px;
+        --grid-unit: 4px;
+
+        AESTHETIC PRINCIPLES:
+        1. Mathematical grid precision - All spacing follows strict 4px/8px increments
+        2. Typography hierarchy through weight and size ratios, never color or decoration
+        3. Flat surfaces with hairline borders create spatial relationships without shadows
+        4. Marble-inspired neutrals convey luxury through restraint and material quality
+        5. Asymmetric balance within a rigid grid structure creates visual tension
+
+        SWISS INTERNATIONAL INFLUENCE:
+        - Objective, universal design language
+        - Left-aligned text hierarchy
+        - Generous negative space as active design element
+        - Mathematical relationships in scale and spacing
+        - Photography and illustration treated as content blocks within the grid
+        - No ornamentation - beauty through proportion and structure
+
+        COLOR PSYCHOLOGY FOR HEALTH:
+        The warm marble tones (taupe, cream, soft browns) create:
+        - Professional medical credibility through neutrality
+        - Luxury positioning that appeals to creative professionals
+        - Reduced anxiety compared to clinical whites/blues
+        - Accessible contrast ratios while maintaining sophistication
+
+        BEST FOR:
+        - Healthcare applications targeting creative professionals
+        - Premium wellness services and boutique medical practices
+        - Digital health platforms emphasizing design quality
+        - Symptom assessment tools that reduce medical anxiety
+        - Health tech products for design-conscious users
+
+        AVOID IF:
+        - You need urgent/emergency medical UI (requires stronger visual hierarchy)
+        - Your audience expects traditional clinical aesthetics
+        - You need highly saturated colors for category coding
+        - Playful or approachable tone is required over sophistication
+
+        FUNCTIONAL DIRECTION: symptom_checker
+        This design must clearly function as a symptom_checker. Required elements:
+        - Body map for visual symptom location selection
+        - Symptom selection interface with multiple categories
+        - Severity scale (1-10 or mild/moderate/severe)
+        - Recommendations panel based on selected symptoms
+        - Clear visual feedback for selected areas
+        - Progressive disclosure of symptom details
+        - Assessment summary and next steps
+
+        TECHNICAL NOTES:
+        - No shadows or gradients (pure flat design)
+        - Borders define all spatial relationships
+        - Grid system: 4px base unit, 8px spacing increment
+        - Typography scale: 1.25 (major third)
+        - All interactive states use only border and background changes
+        - Reduced motion respected for all transitions
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Marble-inspired luxury palette */
+            --color-primary: #1a1a1a;
+            --color-secondary: #8b7355;
+            --color-accent: #d4c5b9;
+            --color-background: #fafaf8;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: #6b6b6b;
+            --color-border: #e8e6e3;
+            --color-border-strong: #1a1a1a;
+            --color-hover: #f5f4f2;
+            --color-active: #ebe9e6;
+            --color-error: #a84032;
+            --color-warning: #c98547;
+            --color-success: #5a7a5f;
+
+            /* Severity colors - muted but distinct */
+            --severity-mild: #9ebc9e;
+            --severity-moderate: #c98547;
+            --severity-severe: #a84032;
+
+            /* Typography */
+            --font-heading: 'Helvetica Neue', 'Helvetica', sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Type scale - 1.25 major third */
+            --text-xs: 0.64rem;      /* 10.24px */
+            --text-sm: 0.8rem;       /* 12.8px */
+            --text-base: 1rem;       /* 16px */
+            --text-lg: 1.25rem;      /* 20px */
+            --text-xl: 1.563rem;     /* 25px */
+            --text-2xl: 1.953rem;    /* 31.25px */
+            --text-3xl: 2.441rem;    /* 39px */
+            --text-4xl: 3.052rem;    /* 48.83px */
+
+            /* Spacing - Strict 4px/8px increments */
+            --space-unit: 8px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 96px;
+
+            /* Grid */
+            --grid-unit: 4px;
+            --grid-columns: 12;
+            --grid-gap: 24px;
+            --max-width: 1280px;
+
+            /* Shapes */
+            --radius-default: 0px;
+            --border-width: 1px;
+            --border-width-thick: 2px;
+            --shadow-default: none;
+
+            /* Transitions */
+            --transition-speed: 200ms;
+            --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: var(--text-4xl); font-weight: 300; }
+        h2 { font-size: var(--text-3xl); font-weight: 400; }
+        h3 { font-size: var(--text-2xl); font-weight: 500; }
+        h4 { font-size: var(--text-xl); font-weight: 500; }
+        h5 { font-size: var(--text-lg); font-weight: 500; }
+        h6 { font-size: var(--text-base); font-weight: 600; }
+
+        /* Layout */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        /* Header */
+        header {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: var(--color-primary);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color var(--transition-speed) var(--transition-ease);
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-link:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Main Grid Layout */
+        main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-2xl);
+            padding: var(--space-2xl) 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Symptom Assessment Section */
+        .assessment-panel {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-2xl);
+        }
+
+        .panel-header {
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .panel-title {
+            font-size: var(--text-2xl);
+            font-weight: 400;
+            margin-bottom: var(--space-sm);
+        }
+
+        .panel-subtitle {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Body Map */
+        .body-map-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .body-map-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            padding: var(--space-xl);
+            background: var(--color-background);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .body-figure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .body-view-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+        }
+
+        .body-svg {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+        }
+
+        .body-part {
+            fill: var(--color-surface);
+            stroke: var(--color-border);
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .body-part:hover {
+            fill: var(--color-hover);
+            stroke: var(--color-primary);
+        }
+
+        .body-part.selected {
+            fill: var(--color-accent);
+            stroke: var(--color-secondary);
+            stroke-width: 3;
+        }
+
+        .body-part:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Symptom Selection */
+        .symptom-categories {
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        .symptom-category {
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .category-header {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-background);
+            border-bottom: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background var(--transition-speed) var(--transition-ease);
+        }
+
+        .category-header:hover {
+            background: var(--color-hover);
+        }
+
+        .category-header:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .category-title {
+            font-size: var(--text-base);
+            font-weight: 500;
+        }
+
+        .category-count {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            background: var(--color-surface);
+            padding: var(--space-xs) var(--space-sm);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .symptom-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+        }
+
+        .symptom-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            cursor: pointer;
+            border: var(--border-width) solid transparent;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .symptom-option:hover {
+            background: var(--color-hover);
+            border-color: var(--color-border);
+        }
+
+        .symptom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: var(--border-width-thick) solid var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .symptom-checkbox::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: var(--color-primary);
+            opacity: 0;
+            transition: opacity var(--transition-speed) var(--transition-ease);
+        }
+
+        .symptom-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .symptom-option input[type="checkbox"]:checked + .symptom-checkbox::after {
+            opacity: 1;
+        }
+
+        .symptom-option input[type="checkbox"]:focus + .symptom-checkbox {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .symptom-label {
+            font-size: var(--text-sm);
+            cursor: pointer;
+        }
+
+        /* Severity Scale */
+        .severity-section {
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-2xl);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .severity-scale {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .severity-option {
+            border: var(--border-width-thick) solid var(--color-border);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--transition-ease);
+            background: var(--color-surface);
+        }
+
+        .severity-option:hover {
+            border-color: var(--color-primary);
+            background: var(--color-hover);
+        }
+
+        .severity-option.selected {
+            border-color: var(--color-primary);
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .severity-option:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .severity-number {
+            font-size: var(--text-3xl);
+            font-weight: 300;
+            font-family: var(--font-heading);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .severity-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Recommendations Panel */
+        .recommendations-panel {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-2xl);
+            position: sticky;
+            top: calc(80px + var(--space-2xl));
+            align-self: start;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .recommendations-empty {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            line-height: 1.8;
+            text-align: center;
+            padding: var(--space-2xl) 0;
+        }
+
+        .recommendation-card {
+            padding: var(--space-lg);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+            margin-bottom: var(--space-md);
+        }
+
+        .recommendation-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-priority {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-sm);
+            padding: var(--space-xs) var(--space-sm);
+            display: inline-block;
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .recommendation-priority.high {
+            background: var(--severity-severe);
+            color: var(--color-surface);
+            border-color: var(--severity-severe);
+        }
+
+        .recommendation-priority.medium {
+            background: var(--severity-moderate);
+            color: var(--color-surface);
+            border-color: var(--severity-moderate);
+        }
+
+        .recommendation-priority.low {
+            background: var(--severity-mild);
+            color: var(--color-primary);
+            border-color: var(--severity-mild);
+        }
+
+        .recommendation-title {
+            font-size: var(--text-base);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .recommendation-description {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            margin-bottom: var(--space-md);
+        }
+
+        .recommendation-action {
+            display: inline-block;
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-primary);
+            color: var(--color-surface);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: var(--border-width-thick) solid var(--color-primary);
+            transition: all var(--transition-speed) var(--transition-ease);
+            cursor: pointer;
+        }
+
+        .recommendation-action:hover {
+            background: var(--color-surface);
+            color: var(--color-primary);
+        }
+
+        .recommendation-action:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* Summary Stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-xl);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .stat {
+            text-align: center;
+            padding: var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        .stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 300;
+            font-family: var(--font-heading);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+            padding-top: var(--space-xl);
+            border-top: var(--border-width) solid var(--color-border);
+        }
+
+        .btn {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: var(--border-width-thick) solid var(--color-border);
+            background: var(--color-surface);
+            color: var(--color-primary);
+            transition: all var(--transition-speed) var(--transition-ease);
+            text-align: center;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            background: var(--color-hover);
+            border-color: var(--color-primary);
+        }
+
+        .btn:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-border);
+            padding: var(--space-2xl) 0;
+            margin-top: var(--space-4xl);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-2xl);
+        }
+
+        .footer-section h4 {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .footer-links a {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color var(--transition-speed) var(--transition-ease);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-links a:focus {
+            outline: var(--border-width-thick) solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .disclaimer {
+            grid-column: 1 / -1;
+            padding-top: var(--space-xl);
+            margin-top: var(--space-xl);
+            border-top: var(--border-width) solid var(--color-border);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            main {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .recommendations-panel {
+                position: static;
+                max-height: none;
+            }
+
+            .body-map-container {
+                grid-template-columns: 1fr;
+            }
+
+            .severity-scale {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-nav {
+                gap: var(--space-md);
+            }
+
+            .nav-link {
+                font-size: var(--text-xs);
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .symptom-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Prime Marble</div>
+                <nav class="header-nav">
+                    <a href="#" class="nav-link">Check Symptoms</a>
+                    <a href="#" class="nav-link">My Health</a>
+                    <a href="#" class="nav-link">Resources</a>
+                    <a href="#" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Assessment Panel -->
+            <section class="assessment-panel">
+                <div class="panel-header">
+                    <h1 class="panel-title">Symptom Assessment</h1>
+                    <p class="panel-subtitle">Select affected areas and describe your symptoms</p>
+                </div>
+
+                <!-- Body Map -->
+                <div class="body-map-section">
+                    <div class="section-label">Step 1: Select Affected Body Areas</div>
+                    <div class="body-map-container">
+                        <div class="body-figure">
+                            <span class="body-view-label">Front View</span>
+                            <svg class="body-svg" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Head -->
+                                <ellipse class="body-part" data-part="head" cx="100" cy="40" rx="30" ry="35" tabindex="0" role="button" aria-label="Select head"/>
+                                <!-- Neck -->
+                                <rect class="body-part" data-part="neck" x="85" y="70" width="30" height="20" tabindex="0" role="button" aria-label="Select neck"/>
+                                <!-- Chest -->
+                                <rect class="body-part" data-part="chest" x="60" y="90" width="80" height="60" rx="10" tabindex="0" role="button" aria-label="Select chest"/>
+                                <!-- Left Arm -->
+                                <rect class="body-part" data-part="left-arm" x="25" y="90" width="30" height="100" rx="15" tabindex="0" role="button" aria-label="Select left arm"/>
+                                <!-- Right Arm -->
+                                <rect class="body-part" data-part="right-arm" x="145" y="90" width="30" height="100" rx="15" tabindex="0" role="button" aria-label="Select right arm"/>
+                                <!-- Abdomen -->
+                                <rect class="body-part" data-part="abdomen" x="65" y="150" width="70" height="50" rx="8" tabindex="0" role="button" aria-label="Select abdomen"/>
+                                <!-- Left Leg -->
+                                <rect class="body-part" data-part="left-leg" x="65" y="200" width="30" height="120" rx="15" tabindex="0" role="button" aria-label="Select left leg"/>
+                                <!-- Right Leg -->
+                                <rect class="body-part" data-part="right-leg" x="105" y="200" width="30" height="120" rx="15" tabindex="0" role="button" aria-label="Select right leg"/>
+                                <!-- Left Hand -->
+                                <ellipse class="body-part" data-part="left-hand" cx="40" cy="200" rx="12" ry="15" tabindex="0" role="button" aria-label="Select left hand"/>
+                                <!-- Right Hand -->
+                                <ellipse class="body-part" data-part="right-hand" cx="160" cy="200" rx="12" ry="15" tabindex="0" role="button" aria-label="Select right hand"/>
+                                <!-- Left Foot -->
+                                <ellipse class="body-part" data-part="left-foot" cx="80" cy="330" rx="15" ry="12" tabindex="0" role="button" aria-label="Select left foot"/>
+                                <!-- Right Foot -->
+                                <ellipse class="body-part" data-part="right-foot" cx="120" cy="330" rx="15" ry="12" tabindex="0" role="button" aria-label="Select right foot"/>
+                            </svg>
+                        </div>
+                        <div class="body-figure">
+                            <span class="body-view-label">Back View</span>
+                            <svg class="body-svg" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Head -->
+                                <ellipse class="body-part" data-part="head-back" cx="100" cy="40" rx="30" ry="35" tabindex="0" role="button" aria-label="Select back of head"/>
+                                <!-- Neck -->
+                                <rect class="body-part" data-part="neck-back" x="85" y="70" width="30" height="20" tabindex="0" role="button" aria-label="Select back of neck"/>
+                                <!-- Upper Back -->
+                                <rect class="body-part" data-part="upper-back" x="60" y="90" width="80" height="40" rx="10" tabindex="0" role="button" aria-label="Select upper back"/>
+                                <!-- Lower Back -->
+                                <rect class="body-part" data-part="lower-back" x="65" y="130" width="70" height="70" rx="8" tabindex="0" role="button" aria-label="Select lower back"/>
+                                <!-- Left Arm Back -->
+                                <rect class="body-part" data-part="left-arm-back" x="25" y="90" width="30" height="100" rx="15" tabindex="0" role="button" aria-label="Select back of left arm"/>
+                                <!-- Right Arm Back -->
+                                <rect class="body-part" data-part="right-arm-back" x="145" y="90" width="30" height="100" rx="15" tabindex="0" role="button" aria-label="Select back of right arm"/>
+                                <!-- Left Leg Back -->
+                                <rect class="body-part" data-part="left-leg-back" x="65" y="200" width="30" height="120" rx="15" tabindex="0" role="button" aria-label="Select back of left leg"/>
+                                <!-- Right Leg Back -->
+                                <rect class="body-part" data-part="right-leg-back" x="105" y="200" width="30" height="120" rx="15" tabindex="0" role="button" aria-label="Select back of right leg"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Symptom Categories -->
+                <div class="symptom-categories">
+                    <div class="section-label">Step 2: Select Your Symptoms</div>
+
+                    <div class="symptom-category">
+                        <div class="category-header" tabindex="0" role="button">
+                            <span class="category-title">Pain & Discomfort</span>
+                            <span class="category-count">0 selected</span>
+                        </div>
+                        <div class="symptom-list">
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="sharp-pain">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Sharp Pain</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="dull-ache">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Dull Ache</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="burning">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Burning Sensation</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="throbbing">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Throbbing</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="cramping">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Cramping</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="stiffness">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Stiffness</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="symptom-category">
+                        <div class="category-header" tabindex="0" role="button">
+                            <span class="category-title">General Symptoms</span>
+                            <span class="category-count">0 selected</span>
+                        </div>
+                        <div class="symptom-list">
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="fatigue">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Fatigue</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="fever">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Fever</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="chills">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Chills</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="weakness">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Weakness</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="dizziness">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Dizziness</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="nausea">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Nausea</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="symptom-category">
+                        <div class="category-header" tabindex="0" role="button">
+                            <span class="category-title">Respiratory</span>
+                            <span class="category-count">0 selected</span>
+                        </div>
+                        <div class="symptom-list">
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="cough">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Cough</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="shortness-breath">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Shortness of Breath</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="congestion">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Nasal Congestion</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="sore-throat">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Sore Throat</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="wheezing">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Wheezing</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="symptom-category">
+                        <div class="category-header" tabindex="0" role="button">
+                            <span class="category-title">Skin & Surface</span>
+                            <span class="category-count">0 selected</span>
+                        </div>
+                        <div class="symptom-list">
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="rash">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Rash</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="itching">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Itching</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="swelling">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Swelling</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="redness">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Redness</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" name="symptom" value="bruising">
+                                <span class="symptom-checkbox"></span>
+                                <span class="symptom-label">Bruising</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Severity Scale -->
+                <div class="severity-section">
+                    <div class="section-label">Step 3: Rate Overall Severity</div>
+                    <div class="severity-scale">
+                        <div class="severity-option" tabindex="0" role="button" data-severity="mild">
+                            <span class="severity-number">1-3</span>
+                            <span class="severity-label">Mild</span>
+                        </div>
+                        <div class="severity-option" tabindex="0" role="button" data-severity="moderate">
+                            <span class="severity-number">4-7</span>
+                            <span class="severity-label">Moderate</span>
+                        </div>
+                        <div class="severity-option" tabindex="0" role="button" data-severity="severe">
+                            <span class="severity-number">8-10</span>
+                            <span class="severity-label">Severe</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn" type="button">Clear All</button>
+                    <button class="btn" type="button">Save Draft</button>
+                    <button class="btn btn-primary" type="button">Generate Assessment</button>
+                </div>
+            </section>
+
+            <!-- Recommendations Panel -->
+            <aside class="recommendations-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Recommendations</h2>
+                    <p class="panel-subtitle">Based on selected symptoms</p>
+                </div>
+
+                <div class="summary-stats">
+                    <div class="stat">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Symptoms</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Areas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">—</span>
+                        <span class="stat-label">Severity</span>
+                    </div>
+                </div>
+
+                <div class="recommendations-empty">
+                    Select symptoms and body areas to receive personalized health recommendations and next steps.
+                </div>
+
+                <!-- Example recommendations (would be generated dynamically) -->
+                <div class="recommendation-card" style="display: none;">
+                    <span class="recommendation-priority high">Urgent</span>
+                    <h3 class="recommendation-title">Seek Medical Attention</h3>
+                    <p class="recommendation-description">
+                        Based on your severe symptoms, we recommend consulting a healthcare provider within 24 hours.
+                    </p>
+                    <button class="recommendation-action">Find Providers</button>
+                </div>
+
+                <div class="recommendation-card" style="display: none;">
+                    <span class="recommendation-priority medium">Moderate</span>
+                    <h3 class="recommendation-title">Home Care & Monitoring</h3>
+                    <p class="recommendation-description">
+                        Your symptoms may improve with rest and hydration. Monitor for changes over the next 48 hours.
+                    </p>
+                    <button class="recommendation-action">View Care Guide</button>
+                </div>
+
+                <div class="recommendation-card" style="display: none;">
+                    <span class="recommendation-priority low">Information</span>
+                    <h3 class="recommendation-title">Preventive Measures</h3>
+                    <p class="recommendation-description">
+                        Learn about prevention strategies and lifestyle modifications that may help.
+                    </p>
+                    <button class="recommendation-action">Read Resources</button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Symptom Checker</a></li>
+                        <li><a href="#">Find a Doctor</a></li>
+                        <li><a href="#">Virtual Consultation</a></li>
+                        <li><a href="#">Health Records</a></li>
+                        <li><a href="#">Wellness Resources</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Approach</a></li>
+                        <li><a href="#">Medical Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+                <div class="disclaimer">
+                    <strong>Medical Disclaimer:</strong> This symptom checker is for informational purposes only and does not constitute medical advice, diagnosis, or treatment. Always seek the advice of your physician or qualified health provider with any questions regarding a medical condition. In case of emergency, call your local emergency services immediately.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Prime - International Minimalism with Natural Undertones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Stark Prime - International minimalism with natural undertones
+ABOUTME: This design system implements exam_interface with art_deco aesthetics.
+ABOUTME: Key characteristics: Dark elegance with geometric precision, playful gold accents, luxurious exam experience
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4AF37;
+--color-secondary: #8B7355;
+--color-background: #1a1a1a;
+--color-surface: #252525;
+--color-surface-elevated: #2d2d2d;
+--color-text: #f5f5f5;
+--color-text-muted: #b0b0b0;
+--color-success: #4a7c59;
+--color-warning: #c9a959;
+--color-border: #3a3a3a;
+--font-heading: 'Playfair Display', serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 2px;
+--space-unit: 8px;
+--shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+--border-accent: 2px solid #D4AF37;
+
+AESTHETIC PRINCIPLES:
+1. Art Deco meets digital exam - geometric patterns and luxurious gold accents create a premium testing experience
+2. Symmetrical layout with strong vertical divisions honors art deco's love of balance and monumentality
+3. Playful micro-interactions soften the formal aesthetic, making exam-taking less stressful
+4. Natural material hints (earth tones, subtle textures) ground the dark interface in organic warmth
+5. International minimalism ensures clarity - every element serves the exam-taking flow
+
+BEST FOR:
+- Professional certification exams that want to convey prestige
+- Product knowledge assessments for luxury ecommerce brands
+- High-stakes testing environments that benefit from calming elegance
+- Training programs where visual polish reflects program quality
+
+AVOID IF:
+- You need rapid, no-frills testing (this has personality)
+- Bright, energetic aesthetics are required
+- Accessibility needs demand light mode options
+- Testing population prefers utilitarian interfaces
+
+FUNCTIONAL DIRECTION: exam_interface
+This design must clearly function as an exam_interface. Required elements:
+- Question navigation (sidebar with all question numbers, progress tracking)
+- Answer area (multiple choice with clear selection states)
+- Flag for review (bookmark questions for later)
+- Submit button (prominent, final action)
+- Timer (countdown display, visual urgency cues)
+
+DIMENSION DETAILS:
+- UI Paradigm: Material design with elevated surfaces and shadow depth
+- Design Era: Art Deco - symmetry, geometric ornament, gold metallic accents
+- Emotional Tone: Playful - despite serious context, delightful interactions ease tension
+- Industry: Ecommerce - product knowledge context, brand certification vibes
+- Color Mode: Dark only - sophisticated, reduces eye strain during long exams
+- Page Structure: Sidebar main layout - persistent question nav + scrolling content
+- Navigation Pattern: Side persistent - always-visible question list
+- Content Flow: List detail - question list + detail panel for active question
+- Typography Scale: Major third (1.25) - clear hierarchy without drama
+- Density: Balanced - comfortable for extended reading and concentration
+- Corners: Subtle (2px) - refined, not playful or harsh
+- Shadows: Medium - clear elevation hierarchy for surfaces
+- Borders: Thin - geometric frames echo art deco sensibility
+-->
+
+<style>
+:root {
+    /* Color Palette - Dark Art Deco */
+    --color-primary: #D4AF37;
+    --color-secondary: #8B7355;
+    --color-background: #1a1a1a;
+    --color-surface: #252525;
+    --color-surface-elevated: #2d2d2d;
+    --color-text: #f5f5f5;
+    --color-text-muted: #b0b0b0;
+    --color-success: #4a7c59;
+    --color-warning: #c9a959;
+    --color-danger: #c94a4a;
+    --color-border: #3a3a3a;
+    --color-border-light: #2a2a2a;
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --scale: 1.25; /* Major third */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-default: 2px;
+    --radius-large: 4px;
+    --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --border-width: 1px;
+    --border-accent: 2px solid var(--color-primary);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    overflow-x: hidden;
+}
+
+/* Main Layout - Sidebar + Content */
+.exam-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar - Question Navigation */
+.sidebar {
+    width: 280px;
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+}
+
+.sidebar-header {
+    padding: var(--space-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-elevated);
+}
+
+.exam-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+    letter-spacing: 0.5px;
+}
+
+.exam-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-weight: 300;
+}
+
+/* Progress Section */
+.progress-section {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.progress-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: var(--color-border);
+    border-radius: var(--radius-default);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    width: 52%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+/* Question Grid */
+.question-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-xs);
+}
+
+.question-number {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-elevated);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.question-number:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
+}
+
+.question-number.current {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.question-number.answered {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: white;
+}
+
+.question-number.flagged::after {
+    content: '▲';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 10px;
+    color: var(--color-warning);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    padding: var(--space-md);
+    border-top: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-elevated);
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    font-size: var(--text-xs);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-text-muted);
+}
+
+.legend-box {
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-default);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.legend-box.answered {
+    background: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.legend-box.flagged {
+    position: relative;
+}
+
+.legend-box.flagged::after {
+    content: '▲';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 10px;
+    color: var(--color-warning);
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Timer Header */
+.timer-header {
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-md) var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: var(--shadow-soft);
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.timer-icon {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.timer-icon::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+}
+
+.timer-display {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 2px;
+}
+
+.timer.warning .timer-display {
+    color: var(--color-warning);
+    animation: pulse 1s infinite;
+}
+
+.timer.danger .timer-display {
+    color: var(--color-danger);
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.exam-info {
+    display: flex;
+    gap: var(--space-lg);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.info-label {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+/* Question Content */
+.question-content {
+    flex: 1;
+    padding: var(--space-2xl);
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.question-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.flag-button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: transparent;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-default);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.flag-button:hover {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+    transform: translateY(-1px);
+}
+
+.flag-button.active {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+    color: var(--color-background);
+    font-weight: 500;
+}
+
+.question-text {
+    font-size: var(--text-xl);
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+}
+
+/* Decorative element - Art Deco geometric pattern */
+.question-text::before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary), transparent);
+    margin-bottom: var(--space-md);
+}
+
+/* Answer Options */
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.answer-option {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    min-height: 60px;
+}
+
+.answer-option::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.answer-option:hover {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-soft);
+}
+
+.answer-option:hover::before {
+    opacity: 0.5;
+}
+
+.answer-option.selected {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+.answer-option.selected::before {
+    opacity: 1;
+}
+
+.answer-radio {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.answer-option:hover .answer-radio {
+    border-color: var(--color-primary);
+}
+
+.answer-option.selected .answer-radio {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+}
+
+.answer-option.selected .answer-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--color-background);
+    border-radius: 50%;
+}
+
+.answer-label {
+    flex: 1;
+    font-size: var(--text-base);
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+/* Navigation Buttons */
+.question-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: var(--border-width) solid var(--color-border);
+}
+
+.btn {
+    padding: var(--space-sm) var(--space-lg);
+    border: none;
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-submit {
+    background: var(--color-success);
+    color: white;
+    border: 2px solid var(--color-success);
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.btn-submit:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(74, 124, 89, 0.4);
+}
+
+/* Art Deco Decorative Elements */
+.deco-corner {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+.deco-corner.top-left {
+    top: 0;
+    left: 280px;
+    width: 100px;
+    height: 100px;
+    border-top: 3px solid var(--color-primary);
+    border-left: 3px solid var(--color-primary);
+}
+
+.deco-corner.bottom-right {
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    border-bottom: 3px solid var(--color-primary);
+    border-right: 3px solid var(--color-primary);
+}
+
+/* Accessibility - Focus States */
+button:focus-visible,
+.answer-option:focus-visible,
+.question-number:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .question-grid {
+        grid-template-columns: repeat(8, 1fr);
+    }
+
+    .question-content {
+        padding: var(--space-lg);
+    }
+
+    .timer-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        align-items: flex-start;
+    }
+}
+</style>
+
+<div class="exam-container">
+    <!-- Sidebar - Question Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="exam-title">Product Certification</h1>
+            <p class="exam-subtitle">Luxury Goods Specialist Level II</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">Exam Progress</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="progress-stats">
+                <span>13 of 25 answered</span>
+                <span>52%</span>
+            </div>
+        </div>
+
+        <nav class="question-nav" aria-label="Question navigation">
+            <div class="question-grid">
+                <button class="question-number answered">1</button>
+                <button class="question-number answered">2</button>
+                <button class="question-number answered flagged">3</button>
+                <button class="question-number answered">4</button>
+                <button class="question-number answered">5</button>
+                <button class="question-number answered">6</button>
+                <button class="question-number answered flagged">7</button>
+                <button class="question-number answered">8</button>
+                <button class="question-number answered">9</button>
+                <button class="question-number answered">10</button>
+                <button class="question-number answered">11</button>
+                <button class="question-number answered">12</button>
+                <button class="question-number current">13</button>
+                <button class="question-number">14</button>
+                <button class="question-number">15</button>
+                <button class="question-number">16</button>
+                <button class="question-number">17</button>
+                <button class="question-number">18</button>
+                <button class="question-number">19</button>
+                <button class="question-number">20</button>
+                <button class="question-number">21</button>
+                <button class="question-number">22</button>
+                <button class="question-number">23</button>
+                <button class="question-number">24</button>
+                <button class="question-number">25</button>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box answered"></div>
+                    <span>Answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box flagged"></div>
+                    <span>Flagged for review</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Timer Header -->
+        <header class="timer-header">
+            <div class="timer">
+                <div class="timer-icon" aria-hidden="true"></div>
+                <div>
+                    <div class="timer-display" aria-live="polite">45:32</div>
+                    <div style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: -4px;">Time remaining</div>
+                </div>
+            </div>
+
+            <div class="exam-info">
+                <div class="info-item">
+                    <span class="info-label">Question:</span>
+                    <span>13 of 25</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Section:</span>
+                    <span>Product Knowledge</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Question Content -->
+        <section class="question-content">
+            <div class="question-header">
+                <div class="question-label">Question 13</div>
+                <button class="flag-button" aria-pressed="false">
+                    <span>▲</span>
+                    <span>Flag for Review</span>
+                </button>
+            </div>
+
+            <h2 class="question-text">
+                Which authentication method is most reliable for verifying the provenance of a vintage Hermès Birkin bag manufactured before 1997?
+            </h2>
+
+            <div class="answers" role="radiogroup" aria-labelledby="question-13">
+                <div class="answer-option" role="radio" aria-checked="false" tabindex="0">
+                    <div class="answer-radio"></div>
+                    <div class="answer-label">
+                        Serial number embossed on the leather strap, cross-referenced with the brand's digital archive database
+                    </div>
+                </div>
+
+                <div class="answer-option selected" role="radio" aria-checked="true" tabindex="0">
+                    <div class="answer-radio"></div>
+                    <div class="answer-label">
+                        Blind stamp (date code) on the interior leather, combined with examination of hand-stitching patterns and hardware patina
+                    </div>
+                </div>
+
+                <div class="answer-option" role="radio" aria-checked="false" tabindex="0">
+                    <div class="answer-radio"></div>
+                    <div class="answer-label">
+                        RFID chip embedded in the hardware, activated through the brand's official authentication app
+                    </div>
+                </div>
+
+                <div class="answer-option" role="radio" aria-checked="false" tabindex="0">
+                    <div class="answer-radio"></div>
+                    <div class="answer-label">
+                        Certificate of authenticity with holographic seal, issued at time of purchase and registered with the maison
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-actions">
+                <button class="btn btn-secondary">
+                    ← Previous Question
+                </button>
+
+                <button class="btn btn-primary">
+                    Next Question →
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Decorative Art Deco corners -->
+    <div class="deco-corner top-left"></div>
+    <div class="deco-corner bottom-right"></div>
+</div>
+
+<!-- Submit Exam Modal (positioned at bottom right) -->
+<div style="position: fixed; bottom: var(--space-lg); right: var(--space-lg); z-index: 200;">
+    <button class="btn btn-submit">
+        Submit Exam
+    </button>
+</div>
+
+
+
+</body>
+</html>

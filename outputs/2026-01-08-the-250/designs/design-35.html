@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Metro - Audio Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Vertex Metro - Flat 2010s design with natural neutral tones
+ABOUTME: This design system implements an audio_visualizer with flat 2010s aesthetics.
+ABOUTME: Key characteristics: Clean flat surfaces, natural neutral palette, professional SaaS polish.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #5B7C6D;
+--color-primary-hover: #4A6B5C;
+--color-background: #F5F3F0;
+--color-surface: #FFFFFF;
+--color-surface-secondary: #E8E5E1;
+--color-text: #2D2D2D;
+--color-text-muted: #6B6B6B;
+--color-border: #D4D0CB;
+--color-accent: #8B9D93;
+--font-heading: 'Work Sans', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 3px;
+--space-unit: 8px;
+--shadow-subtle: 0 1px 3px rgba(0,0,0,0.08);
+
+AESTHETIC PRINCIPLES:
+1. Flat surfaces with minimal depth - subtle borders define structure, no gradients or heavy shadows
+2. Natural neutral color palette - earthy greens, warm grays, and organic tones create calm professionalism
+3. Generous spacing and clean typography - content breathes with systematic whitespace
+4. Precise alignment and grid discipline - every element snaps to 8px grid for visual harmony
+
+BEST FOR:
+- Professional audio tools and SaaS platforms
+- Data-driven dashboards requiring clarity
+- Products targeting creative professionals
+- Interfaces requiring sustained focus and minimal distraction
+
+AVOID IF:
+- You need dramatic visual impact or entertainment focus
+- Brand requires vibrant, energetic personality
+- Target audience expects playful or experimental design
+- Dark mode is a requirement
+
+FUNCTIONAL DIRECTION: audio_visualizer
+This design must clearly function as an audio_visualizer. Required elements:
+- Waveform/spectrum display showing audio frequency data
+- Track information (title, artist, album, duration)
+- Playback controls (play/pause, skip, timeline scrubbing)
+- Color theme switcher for different visualization modes
+- Volume control and additional audio settings
+
+DESIGN ERA: flat_2010s
+Embracing the 2010s flat design revolution - clean, honest, functional. No skeuomorphism,
+no unnecessary ornamentation. Every pixel serves a purpose.
+
+INDUSTRY CONTEXT: SaaS
+Designed for professional software-as-a-service applications. Polished, reliable,
+trustworthy. The kind of tool you'd use daily for work.
+
+EMOTIONAL TONE: Serious
+Not playful or whimsical. This is a professional tool for focused work. Clean, direct,
+efficient. Respects the user's time and attention.
+
+TYPOGRAPHY HIERARCHY:
+- Display: Work Sans 700, 32px - Primary headings and track titles
+- Heading: Work Sans 600, 20px - Section headers
+- Subheading: Work Sans 500, 16px - Labels and metadata
+- Body: Inter 400, 14px - General content
+- Small: Inter 400, 12px - Timestamps and secondary info
+
+SPACING SYSTEM (8px base unit):
+- xs: 4px - Tight spacing for related items
+- sm: 8px - Default inline spacing
+- md: 16px - Component padding
+- lg: 24px - Section spacing
+- xl: 32px - Major content blocks
+- 2xl: 48px - Page-level spacing
+
+COLOR USAGE GUIDE:
+Primary (#5B7C6D): Action buttons, active states, primary CTAs
+Accent (#8B9D93): Secondary actions, hover states, subtle emphasis
+Surface (#FFFFFF): Cards, panels, elevated content
+Background (#F5F3F0): Page background, low-priority areas
+Border (#D4D0CB): Dividers, input borders, structural lines
+
+INTERACTION PATTERNS:
+- Buttons: 3px border-radius, solid colors, 2px hover lift
+- Inputs: 1px borders, focus ring with primary color
+- Cards: White surface on warm background, 1px border
+- Navigation: Flat tabs with bottom border active state
+
+RESPONSIVE BEHAVIOR:
+- Desktop: Full visualization width, sidebar controls
+- Tablet: Stacked layout, controls below visualizer
+- Mobile: Single column, collapsible controls
+
+ACCESSIBILITY FEATURES:
+- WCAG AA contrast ratios throughout
+- Visible focus indicators on all interactive elements
+- Keyboard navigation support
+- Reduced motion support for animations
+- Clear visual hierarchy for screen readers
+-->
+
+<style>
+:root {
+    /* Brand Colors */
+    --color-primary: #5B7C6D;
+    --color-primary-hover: #4A6B5C;
+    --color-primary-active: #3D5A4D;
+    --color-accent: #8B9D93;
+    --color-accent-hover: #7A8C83;
+
+    /* Surface Colors */
+    --color-background: #F5F3F0;
+    --color-surface: #FFFFFF;
+    --color-surface-secondary: #E8E5E1;
+    --color-surface-hover: #F9F8F6;
+
+    /* Text Colors */
+    --color-text: #2D2D2D;
+    --color-text-muted: #6B6B6B;
+    --color-text-subtle: #9B9B9B;
+
+    /* UI Colors */
+    --color-border: #D4D0CB;
+    --color-border-light: #E8E5E1;
+    --color-divider: #EBEAE7;
+
+    /* Status Colors */
+    --color-success: #6B8E7D;
+    --color-warning: #A88B65;
+    --color-error: #9B6B6B;
+
+    /* Visualization Colors */
+    --color-viz-1: #5B7C6D;
+    --color-viz-2: #8B9D93;
+    --color-viz-3: #A8B8AF;
+    --color-viz-4: #D4D0CB;
+
+    /* Typography */
+    --font-heading: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Type Scale (1.25 ratio) */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 20px;
+    --text-xl: 24px;
+    --text-2xl: 32px;
+
+    /* Spacing (8px system) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Shapes */
+    --radius-default: 3px;
+    --radius-sm: 2px;
+    --radius-lg: 4px;
+
+    /* Shadows */
+    --shadow-subtle: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-default: 0 2px 6px rgba(0,0,0,0.1);
+    --shadow-focus: 0 0 0 3px rgba(91, 124, 109, 0.15);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-lg);
+}
+
+.header {
+    margin-bottom: var(--space-2xl);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+.logo-accent {
+    color: var(--color-primary);
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.visualizer-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+}
+
+.visualizer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+}
+
+.visualizer-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.theme-selector {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.theme-option {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.theme-option:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.theme-option.active {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
+}
+
+.theme-option.active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+.theme-sage { background: linear-gradient(135deg, #5B7C6D 0%, #8B9D93 100%); }
+.theme-earth { background: linear-gradient(135deg, #A88B65 0%, #8B9D93 100%); }
+.theme-stone { background: linear-gradient(135deg, #6B6B6B 0%, #9B9B9B 100%); }
+.theme-forest { background: linear-gradient(135deg, #4A6B5C 0%, #5B7C6D 100%); }
+
+/* Waveform Visualizer */
+.visualizer-canvas {
+    width: 100%;
+    height: 320px;
+    background: var(--color-surface-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 3px;
+    padding: var(--space-lg);
+}
+
+.waveform-bar {
+    flex: 1;
+    max-width: 8px;
+    background: var(--color-viz-1);
+    border-radius: 2px;
+    transition: height var(--transition-base);
+    opacity: 0.9;
+}
+
+.waveform-bar:nth-child(even) {
+    background: var(--color-viz-2);
+}
+
+.waveform-bar:nth-child(3n) {
+    background: var(--color-viz-3);
+}
+
+/* Generate 60 bars with varying heights */
+.waveform-bar:nth-child(1) { height: 45%; }
+.waveform-bar:nth-child(2) { height: 62%; }
+.waveform-bar:nth-child(3) { height: 38%; }
+.waveform-bar:nth-child(4) { height: 78%; }
+.waveform-bar:nth-child(5) { height: 52%; }
+.waveform-bar:nth-child(6) { height: 85%; }
+.waveform-bar:nth-child(7) { height: 42%; }
+.waveform-bar:nth-child(8) { height: 68%; }
+.waveform-bar:nth-child(9) { height: 55%; }
+.waveform-bar:nth-child(10) { height: 72%; }
+.waveform-bar:nth-child(11) { height: 48%; }
+.waveform-bar:nth-child(12) { height: 88%; }
+.waveform-bar:nth-child(13) { height: 35%; }
+.waveform-bar:nth-child(14) { height: 65%; }
+.waveform-bar:nth-child(15) { height: 58%; }
+.waveform-bar:nth-child(16) { height: 75%; }
+.waveform-bar:nth-child(17) { height: 42%; }
+.waveform-bar:nth-child(18) { height: 82%; }
+.waveform-bar:nth-child(19) { height: 50%; }
+.waveform-bar:nth-child(20) { height: 70%; }
+.waveform-bar:nth-child(21) { height: 45%; }
+.waveform-bar:nth-child(22) { height: 78%; }
+.waveform-bar:nth-child(23) { height: 38%; }
+.waveform-bar:nth-child(24) { height: 85%; }
+.waveform-bar:nth-child(25) { height: 52%; }
+.waveform-bar:nth-child(26) { height: 68%; }
+.waveform-bar:nth-child(27) { height: 40%; }
+.waveform-bar:nth-child(28) { height: 75%; }
+.waveform-bar:nth-child(29) { height: 55%; }
+.waveform-bar:nth-child(30) { height: 80%; }
+.waveform-bar:nth-child(31) { height: 48%; }
+.waveform-bar:nth-child(32) { height: 72%; }
+.waveform-bar:nth-child(33) { height: 42%; }
+.waveform-bar:nth-child(34) { height: 85%; }
+.waveform-bar:nth-child(35) { height: 38%; }
+.waveform-bar:nth-child(36) { height: 78%; }
+.waveform-bar:nth-child(37) { height: 52%; }
+.waveform-bar:nth-child(38) { height: 68%; }
+.waveform-bar:nth-child(39) { height: 45%; }
+.waveform-bar:nth-child(40) { height: 75%; }
+.waveform-bar:nth-child(41) { height: 50%; }
+.waveform-bar:nth-child(42) { height: 82%; }
+.waveform-bar:nth-child(43) { height: 42%; }
+.waveform-bar:nth-child(44) { height: 70%; }
+.waveform-bar:nth-child(45) { height: 55%; }
+.waveform-bar:nth-child(46) { height: 78%; }
+.waveform-bar:nth-child(47) { height: 48%; }
+.waveform-bar:nth-child(48) { height: 85%; }
+.waveform-bar:nth-child(49) { height: 40%; }
+.waveform-bar:nth-child(50) { height: 72%; }
+.waveform-bar:nth-child(51) { height: 52%; }
+.waveform-bar:nth-child(52) { height: 68%; }
+.waveform-bar:nth-child(53) { height: 45%; }
+.waveform-bar:nth-child(54) { height: 80%; }
+.waveform-bar:nth-child(55) { height: 38%; }
+.waveform-bar:nth-child(56) { height: 75%; }
+.waveform-bar:nth-child(57) { height: 50%; }
+.waveform-bar:nth-child(58) { height: 65%; }
+.waveform-bar:nth-child(59) { height: 42%; }
+.waveform-bar:nth-child(60) { height: 55%; }
+
+/* Timeline */
+.timeline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.time-display {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 45px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--color-surface-secondary);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 2px;
+    width: 42%;
+    position: relative;
+}
+
+.progress-handle {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary);
+    border: 2px solid var(--color-surface);
+    border-radius: 50%;
+    cursor: grab;
+    transition: transform var(--transition-fast);
+}
+
+.progress-handle:hover {
+    transform: translateY(-50%) scale(1.2);
+}
+
+/* Track Info */
+.track-info {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--space-lg);
+    align-items: center;
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-divider);
+    margin-bottom: var(--space-xl);
+}
+
+.album-art {
+    width: 80px;
+    height: 80px;
+    background: var(--color-surface-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.album-art-placeholder {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-viz-1) 0%, var(--color-viz-2) 100%);
+    border-radius: var(--radius-sm);
+}
+
+.track-details {
+    min-width: 0;
+}
+
+.track-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.track-metadata {
+    display: flex;
+    gap: var(--space-md);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+}
+
+.track-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.playback-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.volume-slider {
+    width: 120px;
+    height: 4px;
+    background: var(--color-surface-secondary);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+}
+
+.volume-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 2px;
+    width: 65%;
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    background: var(--color-primary-active);
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--color-surface-secondary);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-primary);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+}
+
+.btn-ghost:hover {
+    background: var(--color-surface-secondary);
+    color: var(--color-text);
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-default);
+}
+
+.btn-icon-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-icon-lg {
+    width: 56px;
+    height: 56px;
+}
+
+/* Playlist Section */
+.playlist-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-xl);
+}
+
+.playlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.playlist-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.playlist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--color-divider);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.playlist-item {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: var(--space-md);
+    align-items: center;
+    padding: var(--space-md);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.playlist-item:hover {
+    background: var(--color-surface-hover);
+}
+
+.playlist-item.active {
+    background: var(--color-surface-secondary);
+}
+
+.playlist-item.active .playlist-item-title {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.playlist-number {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.playlist-item.active .playlist-number {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.playlist-item-info {
+    min-width: 0;
+}
+
+.playlist-item-title {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item-artist {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item-duration {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Settings Panel */
+.settings-panel {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-divider);
+}
+
+.settings-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.setting-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.setting-control {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.setting-control .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Icons (Minimal SVG) */
+.icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.icon-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.icon-lg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Navigation */
+.nav-controls {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+    background: var(--color-surface);
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-default);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .visualizer-section {
+        padding: var(--space-lg);
+    }
+
+    .visualizer-canvas {
+        height: 240px;
+    }
+
+    .track-info {
+        grid-template-columns: 60px 1fr;
+        gap: var(--space-md);
+    }
+
+    .album-art {
+        width: 60px;
+        height: 60px;
+    }
+
+    .track-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        margin-top: var(--space-sm);
+    }
+
+    .controls {
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+
+    .volume-control {
+        width: 100%;
+    }
+
+    .volume-slider {
+        flex: 1;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --color-border: #999;
+        --color-text-muted: #555;
+    }
+}
+
+/* Focus Styles */
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+</style>
+
+<div class="app-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <h1 class="logo">Vertex<span class="logo-accent">Metro</span></h1>
+            <div class="header-actions">
+                <button class="btn btn-ghost btn-icon" aria-label="Settings">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary">Export Audio</button>
+                <button class="btn btn-primary">Save Session</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Visualizer -->
+    <section class="visualizer-section">
+        <div class="visualizer-header">
+            <h2 class="visualizer-title">Audio Spectrum</h2>
+            <div class="theme-selector">
+                <button class="theme-option theme-sage active" aria-label="Sage theme"></button>
+                <button class="theme-option theme-earth" aria-label="Earth theme"></button>
+                <button class="theme-option theme-stone" aria-label="Stone theme"></button>
+                <button class="theme-option theme-forest" aria-label="Forest theme"></button>
+            </div>
+        </div>
+
+        <!-- Waveform Visualization -->
+        <div class="visualizer-canvas">
+            <div class="waveform">
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <span class="time-display">1:24</span>
+            <div class="progress-bar">
+                <div class="progress-fill">
+                    <div class="progress-handle"></div>
+                </div>
+            </div>
+            <span class="time-display">3:32</span>
+        </div>
+
+        <!-- Track Info -->
+        <div class="track-info">
+            <div class="album-art">
+                <div class="album-art-placeholder"></div>
+            </div>
+            <div class="track-details">
+                <h3 class="track-title">Ambient Frequencies in D Minor</h3>
+                <p class="track-artist">Synthetic Collective</p>
+                <div class="track-metadata">
+                    <span>Electronic</span>
+                    <span>•</span>
+                    <span>2024</span>
+                    <span>•</span>
+                    <span>192kbps</span>
+                </div>
+            </div>
+            <div class="track-actions">
+                <button class="btn btn-ghost btn-icon-sm" aria-label="Add to favorites">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-ghost btn-icon-sm" aria-label="Add to playlist">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-ghost btn-icon-sm" aria-label="Share">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="playback-controls">
+                <button class="btn btn-ghost btn-icon" aria-label="Shuffle">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary btn-icon" aria-label="Previous track">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-primary btn-icon-lg" aria-label="Play">
+                    <svg class="icon icon-lg" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary btn-icon" aria-label="Next track">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-ghost btn-icon" aria-label="Repeat">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="volume-control">
+                <button class="btn btn-ghost btn-icon-sm" aria-label="Mute">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                </button>
+                <div class="volume-slider">
+                    <div class="volume-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="settings-panel">
+            <h3 class="settings-title">Visualization Settings</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label class="setting-label">Display Mode</label>
+                    <div class="setting-control">
+                        <button class="btn btn-secondary">Bars</button>
+                        <button class="btn btn-ghost">Wave</button>
+                        <button class="btn btn-ghost">Circle</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Sensitivity</label>
+                    <div class="setting-control">
+                        <button class="btn btn-ghost">Low</button>
+                        <button class="btn btn-secondary">Medium</button>
+                        <button class="btn btn-ghost">High</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Smoothing</label>
+                    <div class="setting-control">
+                        <button class="btn btn-ghost">Off</button>
+                        <button class="btn btn-secondary">Normal</button>
+                        <button class="btn btn-ghost">Heavy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Playlist -->
+    <section class="playlist-section">
+        <div class="playlist-header">
+            <h2 class="playlist-title">Up Next</h2>
+            <button class="btn btn-ghost btn-icon-sm" aria-label="More options">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="playlist-items">
+            <div class="playlist-item active">
+                <div class="playlist-number">01</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Ambient Frequencies in D Minor</div>
+                    <div class="playlist-item-artist">Synthetic Collective</div>
+                </div>
+                <div class="playlist-item-duration">3:32</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">02</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Digital Horizons</div>
+                    <div class="playlist-item-artist">Echo Chamber</div>
+                </div>
+                <div class="playlist-item-duration">4:18</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">03</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Systematic Patterns</div>
+                    <div class="playlist-item-artist">Grid Theory</div>
+                </div>
+                <div class="playlist-item-duration">2:56</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">04</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Neutral Territory</div>
+                    <div class="playlist-item-artist">Minimal Ensemble</div>
+                </div>
+                <div class="playlist-item-duration">5:42</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">05</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Clean Lines</div>
+                    <div class="playlist-item-artist">Form & Function</div>
+                </div>
+                <div class="playlist-item-duration">3:15</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">06</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Organized Chaos</div>
+                    <div class="playlist-item-artist">Synthetic Collective</div>
+                </div>
+                <div class="playlist-item-duration">4:03</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">07</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Flat Earth Theory</div>
+                    <div class="playlist-item-artist">Dimensional Shift</div>
+                </div>
+                <div class="playlist-item-duration">3:48</div>
+            </div>
+            <div class="playlist-item">
+                <div class="playlist-number">08</div>
+                <div class="playlist-item-info">
+                    <div class="playlist-item-title">Precision Instruments</div>
+                    <div class="playlist-item-artist">Grid Theory</div>
+                </div>
+                <div class="playlist-item-duration">6:21</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Navigation Controls -->
+<nav class="nav-controls" aria-label="Design navigation">
+    <button class="btn btn-secondary btn-icon" id="prevDesign" aria-label="Previous design">
+        <svg class="icon" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+    </button>
+    <button class="btn btn-secondary btn-icon" id="nextDesign" aria-label="Next design">
+        <svg class="icon" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+    </button>
+</nav>
+
+
+
+</body>
+</html>

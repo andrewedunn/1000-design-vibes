@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo Slate - Character Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Cosmo Slate - International minimalism with natural undertones
+ABOUTME: This design system implements a character_sheet with mid-century modern aesthetics.
+ABOUTME: Key characteristics: Organic curved shapes, warm natural palette with energetic pops, asymmetric grid layouts
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #2D5F3F;
+--color-secondary: #E67E22;
+--color-background: #FAF8F5;
+--color-surface: #FFFFFF;
+--color-text: #2C3E50;
+--color-text-muted: #7F8C8D;
+--color-accent: #E8B67C;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 24px;
+--space-unit: 8px;
+--shadow-soft: 0 8px 32px rgba(45, 95, 63, 0.08);
+
+AESTHETIC PRINCIPLES:
+1. Organic curves and asymmetric layouts create visual interest and flow
+2. Natural color palette with warm terracotta and sage green anchors the energetic design
+3. Mid-century modern spacing with generous breathing room between sections
+4. Geometric shapes (circles, rounded rectangles) as decorative and functional elements
+5. Typography hierarchy with geometric sans-serif for headings, humanist for body
+
+BEST FOR:
+- Gaming interfaces requiring clear stat display
+- Character management systems for RPGs
+- E-commerce product showcases with personality
+- Profile pages with rich attribute display
+- Dashboard-style interfaces with modular sections
+
+AVOID IF:
+- You need dense information display
+- Your brand is strictly corporate/traditional
+- You require perfect symmetry
+- Dark mode is the primary requirement
+
+FUNCTIONAL DIRECTION: character_sheet
+This design must clearly function as a character_sheet. Required elements:
+- Stats block with key attributes (Strength, Agility, Intelligence, etc.)
+- Inventory grid showing equipped items and available slots
+- Abilities/skills section with descriptions and cooldowns
+- Character portrait with visual prominence
+- Level/XP progression display with visual progress indicators
+- Equipment slots for armor, weapons, accessories
+- Health/mana/stamina resource bars
+- Character name, class, and basic info header
+
+COLOR THEORY: Split complementary (sage green primary, terracotta and golden accents)
+DESIGN ERA: Mid-century modern - optimistic curves, natural materials, asymmetric balance
+EMOTIONAL TONE: Energetic - vibrant accents, dynamic layouts, bold typography
+INDUSTRY: E-commerce - clear pricing metaphors, transaction-ready buttons, product-like presentation
+COLOR MODE: Both light and dark mode supported
+
+LAYOUT STRUCTURE:
+- Page structure: app_shell (persistent sidebar with character portrait, main scrolling content)
+- Navigation: side_persistent (character quick-switch and section navigation)
+- Content flow: card_grid (modular stat blocks in asymmetric grid)
+-->
+
+<style>
+:root {
+    /* Colors - Light Mode (Default) */
+    --color-primary: #2D5F3F;
+    --color-secondary: #E67E22;
+    --color-background: #FAF8F5;
+    --color-surface: #FFFFFF;
+    --color-text: #2C3E50;
+    --color-text-muted: #7F8C8D;
+    --color-accent: #E8B67C;
+    --color-border: #E8E4DF;
+    --color-health: #E74C3C;
+    --color-mana: #3498DB;
+    --color-stamina: #F39C12;
+    --color-xp: #9B59B6;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --scale: 1.25; /* Major Third */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-sm: 12px;
+    --radius-default: 24px;
+    --radius-lg: 32px;
+    --radius-full: 999px;
+
+    /* Shadows */
+    --shadow-soft: 0 8px 32px rgba(45, 95, 63, 0.08);
+    --shadow-medium: 0 12px 48px rgba(45, 95, 63, 0.12);
+    --shadow-hard: 0 4px 0 rgba(45, 95, 63, 0.2);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-medium: 300ms ease;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --color-primary: #4A9B6F;
+    --color-secondary: #E67E22;
+    --color-background: #1A1F1E;
+    --color-surface: #242B2A;
+    --color-text: #E8E4DF;
+    --color-text-muted: #95A5A6;
+    --color-accent: #D4A574;
+    --color-border: #3A4543;
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-medium: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* App Shell Layout */
+.sidebar {
+    width: 320px;
+    background: var(--color-surface);
+    border-right: 2px solid var(--color-border);
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--space-xl);
+    overflow-y: auto;
+}
+
+/* Character Portrait Section */
+.portrait-container {
+    position: relative;
+}
+
+.portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.portrait-initial {
+    font-size: 6rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: white;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.level-badge {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Character Info */
+.character-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.character-name {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.character-class {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* XP Progress Bar */
+.xp-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.xp-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.xp-bar {
+    height: 12px;
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-xp), var(--color-secondary));
+    border-radius: var(--radius-full);
+    width: 73%;
+    transition: width var(--transition-medium);
+}
+
+/* Resource Bars */
+.resources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.resource-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.resource-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.resource-track {
+    height: 8px;
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.resource-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width var(--transition-medium);
+}
+
+.resource-fill.health {
+    background: var(--color-health);
+    width: 85%;
+}
+
+.resource-fill.mana {
+    background: var(--color-mana);
+    width: 62%;
+}
+
+.resource-fill.stamina {
+    background: var(--color-stamina);
+    width: 90%;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    margin-top: auto;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-border);
+    border: none;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.theme-toggle:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.theme-toggle:focus {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Main Content Header */
+.content-header {
+    margin-bottom: var(--space-xl);
+}
+
+.content-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.content-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: transform var(--transition-fast);
+    border: 2px solid transparent;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: white;
+}
+
+.stat-icon.strength { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+.stat-icon.agility { background: linear-gradient(135deg, #F39C12, #E67E22); }
+.stat-icon.intelligence { background: linear-gradient(135deg, #3498DB, #2980B9); }
+.stat-icon.vitality { background: linear-gradient(135deg, #2ECC71, #27AE60); }
+.stat-icon.wisdom { background: linear-gradient(135deg, #9B59B6, #8E44AD); }
+.stat-icon.luck { background: linear-gradient(135deg, #1ABC9C, #16A085); }
+
+.stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Section Titles */
+.section-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: var(--color-secondary);
+    border-radius: var(--radius-full);
+}
+
+/* Abilities Grid */
+.abilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.ability-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-soft);
+    border: 2px solid var(--color-border);
+    transition: all var(--transition-fast);
+}
+
+.ability-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.ability-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-sm);
+}
+
+.ability-name {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.ability-cooldown {
+    background: var(--color-accent);
+    color: var(--color-text);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 4px var(--space-sm);
+    border-radius: var(--radius-full);
+}
+
+.ability-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    line-height: 1.5;
+}
+
+.ability-stats {
+    display: flex;
+    gap: var(--space-md);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.ability-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ability-stat-value {
+    color: var(--color-primary);
+}
+
+/* Inventory Grid */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.inventory-slot {
+    aspect-ratio: 1;
+    background: var(--color-surface);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-default);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+}
+
+.inventory-slot:hover {
+    border-color: var(--color-primary);
+    border-style: solid;
+    transform: scale(1.05);
+}
+
+.inventory-slot.filled {
+    border-style: solid;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+}
+
+.item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-xs);
+}
+
+.item-name {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+}
+
+.item-rarity {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.item-rarity.common { background: #95A5A6; }
+.item-rarity.rare { background: #3498DB; }
+.item-rarity.epic { background: #9B59B6; }
+.item-rarity.legendary { background: #F39C12; }
+
+.empty-slot-text {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+/* Equipment Section */
+.equipment-layout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.equipment-slot {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.equipment-slot:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+.equipment-slot.equipped {
+    border-color: var(--color-secondary);
+    background: linear-gradient(135deg, transparent, rgba(230, 126, 34, 0.05));
+}
+
+.equipment-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-default);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-2xl);
+}
+
+.equipment-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.equipment-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+}
+
+.equipment-bonus {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Navigation Controls */
+.nav-controls {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 1000;
+}
+
+.nav-button {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    box-shadow: var(--shadow-medium);
+    transition: all var(--transition-fast);
+}
+
+.nav-button:hover {
+    background: var(--color-secondary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hard);
+}
+
+.nav-button:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.nav-button:active {
+    transform: translateY(0);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus Styles */
+*:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 280px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    .main-content {
+        padding: var(--space-lg);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .abilities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .equipment-layout {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<div class="sidebar">
+    <div class="portrait-container">
+        <div class="portrait">
+            <div class="portrait-initial">A</div>
+            <div class="level-badge">Lv 47</div>
+        </div>
+    </div>
+
+    <div class="character-info">
+        <h1 class="character-name">Aria Nightshade</h1>
+        <div class="character-class">Shadow Merchant • Rogue</div>
+    </div>
+
+    <div class="xp-section">
+        <div class="xp-label">
+            <span>Experience</span>
+            <span>24,750 / 34,000</span>
+        </div>
+        <div class="xp-bar">
+            <div class="xp-fill"></div>
+        </div>
+    </div>
+
+    <div class="resources">
+        <div class="resource-bar">
+            <div class="resource-label">
+                <span style="color: var(--color-health);">Health</span>
+                <span>850 / 1000</span>
+            </div>
+            <div class="resource-track">
+                <div class="resource-fill health"></div>
+            </div>
+        </div>
+
+        <div class="resource-bar">
+            <div class="resource-label">
+                <span style="color: var(--color-mana);">Mana</span>
+                <span>310 / 500</span>
+            </div>
+            <div class="resource-track">
+                <div class="resource-fill mana"></div>
+            </div>
+        </div>
+
+        <div class="resource-bar">
+            <div class="resource-label">
+                <span style="color: var(--color-stamina);">Stamina</span>
+                <span>180 / 200</span>
+            </div>
+            <div class="resource-track">
+                <div class="resource-fill stamina"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Light Mode</span>
+    </button>
+</div>
+
+<main class="main-content">
+    <header class="content-header">
+        <h2 class="content-title">Character Overview</h2>
+        <p class="content-subtitle">Manage your stats, abilities, and inventory</p>
+    </header>
+
+    <section>
+        <h3 class="section-title">Core Statistics</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon strength">STR</div>
+                <div class="stat-label">Strength</div>
+                <div class="stat-value">24</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon agility">AGI</div>
+                <div class="stat-label">Agility</div>
+                <div class="stat-value">38</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon intelligence">INT</div>
+                <div class="stat-label">Intelligence</div>
+                <div class="stat-value">31</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon vitality">VIT</div>
+                <div class="stat-label">Vitality</div>
+                <div class="stat-value">28</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon wisdom">WIS</div>
+                <div class="stat-label">Wisdom</div>
+                <div class="stat-value">22</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon luck">LCK</div>
+                <div class="stat-label">Luck</div>
+                <div class="stat-value">45</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3 class="section-title">Active Abilities</h3>
+        <div class="abilities-grid">
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Shadow Strike</div>
+                    <div class="ability-cooldown">4s CD</div>
+                </div>
+                <p class="ability-description">
+                    Dash through shadows to strike an enemy from behind, dealing critical damage and applying a bleed effect.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>Damage:</span>
+                        <span class="ability-stat-value">180-220</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Range:</span>
+                        <span class="ability-stat-value">15m</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Smoke Bomb</div>
+                    <div class="ability-cooldown">12s CD</div>
+                </div>
+                <p class="ability-description">
+                    Deploy a smoke screen that obscures vision and grants stealth to allies within the area for 5 seconds.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>Duration:</span>
+                        <span class="ability-stat-value">5s</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Radius:</span>
+                        <span class="ability-stat-value">8m</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Poison Vial</div>
+                    <div class="ability-cooldown">8s CD</div>
+                </div>
+                <p class="ability-description">
+                    Throw a vial that creates a toxic cloud, dealing damage over time and reducing enemy attack speed by 30%.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>DoT:</span>
+                        <span class="ability-stat-value">45/s</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Duration:</span>
+                        <span class="ability-stat-value">6s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Merchant's Charm</div>
+                    <div class="ability-cooldown">30s CD</div>
+                </div>
+                <p class="ability-description">
+                    Channel your e-commerce expertise to charm nearby merchants, gaining 25% better prices and rare item access.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>Discount:</span>
+                        <span class="ability-stat-value">25%</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Duration:</span>
+                        <span class="ability-stat-value">60s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Acrobatic Dodge</div>
+                    <div class="ability-cooldown">6s CD</div>
+                </div>
+                <p class="ability-description">
+                    Perform an agile flip that dodges incoming attacks and repositions you 10m in any direction.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>I-frames:</span>
+                        <span class="ability-stat-value">0.8s</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Distance:</span>
+                        <span class="ability-stat-value">10m</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="ability-header">
+                    <div class="ability-name">Lucky Coin</div>
+                    <div class="ability-cooldown">45s CD</div>
+                </div>
+                <p class="ability-description">
+                    Flip a mystical coin that grants a random powerful buff: double damage, instant cooldown reset, or full resource restoration.
+                </p>
+                <div class="ability-stats">
+                    <div class="ability-stat">
+                        <span>Effects:</span>
+                        <span class="ability-stat-value">Random</span>
+                    </div>
+                    <div class="ability-stat">
+                        <span>Duration:</span>
+                        <span class="ability-stat-value">10s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3 class="section-title">Equipment</h3>
+        <div class="equipment-layout">
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">⚔️</div>
+                <div class="equipment-label">Main Hand</div>
+                <div class="equipment-name">Shadowfang Dagger</div>
+                <div class="equipment-bonus">+18 AGI</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">🛡️</div>
+                <div class="equipment-label">Off Hand</div>
+                <div class="equipment-name">Merchant's Ledger</div>
+                <div class="equipment-bonus">+12 INT</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">🎩</div>
+                <div class="equipment-label">Head</div>
+                <div class="equipment-name">Hood of Night</div>
+                <div class="equipment-bonus">+8 AGI</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">👕</div>
+                <div class="equipment-label">Chest</div>
+                <div class="equipment-name">Trader's Coat</div>
+                <div class="equipment-bonus">+15 VIT</div>
+            </div>
+
+            <div class="equipment-slot">
+                <div class="equipment-icon" style="opacity: 0.3;">👐</div>
+                <div class="equipment-label">Gloves</div>
+                <div class="equipment-name" style="color: var(--color-text-muted);">Empty Slot</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">👢</div>
+                <div class="equipment-label">Boots</div>
+                <div class="equipment-name">Swift Traveler's Boots</div>
+                <div class="equipment-bonus">+10 AGI</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">💍</div>
+                <div class="equipment-label">Ring 1</div>
+                <div class="equipment-name">Lucky Coin Ring</div>
+                <div class="equipment-bonus">+20 LCK</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">💍</div>
+                <div class="equipment-label">Ring 2</div>
+                <div class="equipment-name">Ring of Shadows</div>
+                <div class="equipment-bonus">+8 AGI</div>
+            </div>
+
+            <div class="equipment-slot equipped">
+                <div class="equipment-icon">📿</div>
+                <div class="equipment-label">Amulet</div>
+                <div class="equipment-name">Merchant's Pendant</div>
+                <div class="equipment-bonus">+5 All Stats</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3 class="section-title">Inventory</h3>
+        <div class="inventory-grid">
+            <div class="inventory-slot filled">
+                <div class="item-rarity legendary"></div>
+                <div class="item-icon">🗡️</div>
+                <div class="item-name">Rare Blade</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity epic"></div>
+                <div class="item-icon">⚗️</div>
+                <div class="item-name">Health Potion</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity rare"></div>
+                <div class="item-icon">📜</div>
+                <div class="item-name">Scroll</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity epic"></div>
+                <div class="item-icon">💎</div>
+                <div class="item-name">Gem</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity common"></div>
+                <div class="item-icon">🔑</div>
+                <div class="item-name">Iron Key</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity rare"></div>
+                <div class="item-icon">🧪</div>
+                <div class="item-name">Elixir</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity legendary"></div>
+                <div class="item-icon">👑</div>
+                <div class="item-name">Crown</div>
+            </div>
+
+            <div class="inventory-slot filled">
+                <div class="item-rarity common"></div>
+                <div class="item-icon">🍞</div>
+                <div class="item-name">Bread</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+
+            <div class="inventory-slot">
+                <div class="empty-slot-text">Empty</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="nav-controls">
+    <button class="nav-button" onclick="previousDesign()" aria-label="Previous design">
+        ←
+    </button>
+    <button class="nav-button" onclick="nextDesign()" aria-label="Next design">
+        →
+    </button>
+</div>
+
+
+
+</body>
+</html>

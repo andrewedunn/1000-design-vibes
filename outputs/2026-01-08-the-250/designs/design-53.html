@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Quartz - IoT Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Urban Quartz - A flat approach meets international sensibility
+ABOUTME: This design system implements an IoT dashboard with flat Y2K aesthetics for financial IoT devices.
+ABOUTME: Key characteristics: clean flat surfaces with Y2K gradients, friendly approachable data visualization, Swiss international typography precision.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #0066FF;
+--color-primary-gradient: linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
+--color-secondary: #00CCFF;
+--color-success: #00DD88;
+--color-warning: #FFAA00;
+--color-error: #FF3366;
+--color-background: #F5F7FA;
+--color-surface: #FFFFFF;
+--color-border: #E0E5EB;
+--color-text: #1A1F36;
+--color-text-muted: #6B7A99;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 12px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Flat surfaces with Y2K gradient accents - no shadows, pure color blocks with chrome-inspired gradients
+2. International Swiss precision meets friendly Y2K optimism - clean grids with approachable rounded corners
+3. Clear visual hierarchy through color and scale - status indicators and data values stand out immediately
+4. Tech-forward yet accessible - complex IoT data presented in friendly, digestible chunks
+
+COMPONENT PATTERNS:
+- Device cards use flat backgrounds with gradient status bars
+- Real-time data displays with large, friendly numerals
+- Status indicators use bright, optimistic Y2K colors
+- Grid-based layout follows Swiss international design principles
+- All interactive elements have clear hover states without shadows
+
+BEST FOR:
+- IoT dashboards monitoring financial devices (payment terminals, ATMs, crypto miners)
+- Real-time data monitoring interfaces with multiple device types
+- Applications requiring both precision and approachability
+- Systems where status awareness is critical but shouldn't feel alarming
+
+AVOID IF:
+- You need dark mode support (this is light-only by design)
+- Your data visualization requires complex charts (this focuses on clear metrics)
+- You want depth and shadows (this is intentionally flat)
+- You need dense information display (this prioritizes breathing room)
+
+FUNCTIONAL DIRECTION: iot_dashboard
+This design must clearly function as an IoT dashboard. Required elements:
+- Device status cards showing connection state, health, and key metrics
+- Real-time data displays with live updating values
+- Device categorization and grouping (by type, location, or status)
+- Alert/notification system for device issues
+- Quick action controls for device management
+- Network topology or connection visualization
+- Device health indicators (online/offline/warning states)
+- Timestamp displays showing last update times
+- Summary statistics across all connected devices
+- Filter and sort controls for device lists
+
+COLOR SYSTEM RATIONALE:
+The primary blue gradient (#0066FF to #00CCFF) captures Y2K tech optimism while maintaining flat design principles.
+Cyan secondary color adds brightness without complexity. Status colors (green, yellow, red) are vibrant
+and friendly rather than alarming. The light gray background provides subtle contrast without competing
+with the data. All colors meet WCAG AA contrast requirements for accessibility.
+
+TYPOGRAPHY SYSTEM:
+Space Grotesk for headings brings geometric precision with friendly rounded terminals - perfect for Y2K
+meets Swiss international style. Inter for body text provides exceptional legibility at all sizes with
+a clean, neutral character. The scale creates clear hierarchy without ornament.
+
+SPATIAL SYSTEM:
+8px base unit creates a consistent rhythm. Generous spacing (24px-32px gaps) between cards maintains
+the airy, confident feel of Swiss design while keeping the friendly Y2K approachability. 12px border
+radius adds softness without going fully rounded.
+
+INTERACTION PATTERNS:
+All interactions are immediate and clear. Hover states change gradient intensity or add subtle borders.
+No shadows or elevation changes - state changes are communicated through color and border only.
+Click targets are minimum 44px for accessibility. Focus indicators are bold and obvious.
+
+RESPONSIVE BEHAVIOR:
+Grid adapts from 4 columns on desktop to 2 on tablet to 1 on mobile. Card proportions remain consistent.
+Navigation collapses to hamburger on mobile. All touch targets remain accessible. Font sizes scale
+proportionally. The design maintains its character at all viewport sizes.
+
+DATA VISUALIZATION APPROACH:
+Large numerals for key metrics, small sparklines for trends, color-coded status bars for health.
+Everything is designed for at-a-glance comprehension. No complex charts - this is about immediate
+awareness of device status across your IoT network. Financial context means payment success rates,
+transaction volumes, uptime percentages are prominent.
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #0066FF;
+    --color-primary-gradient: linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
+    --color-secondary: #00CCFF;
+    --color-success: #00DD88;
+    --color-warning: #FFAA00;
+    --color-error: #FF3366;
+    --color-background: #F5F7FA;
+    --color-surface: #FFFFFF;
+    --color-border: #E0E5EB;
+    --color-text: #1A1F36;
+    --color-text-muted: #6B7A99;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-default: 12px;
+    --radius-small: 6px;
+    --radius-large: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+    background: var(--color-surface);
+    border-bottom: 2px solid var(--color-border);
+    padding: var(--space-md) var(--space-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary-gradient);
+    border-radius: var(--radius-small);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-size: 20px;
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.logo-text p {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.header-stats {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--color-text);
+}
+
+.stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* Buttons */
+.btn {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-small);
+    border: 2px solid transparent;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.btn-primary {
+    background: var(--color-primary-gradient);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-primary:hover {
+    background: var(--color-primary);
+}
+
+.btn-primary:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn-secondary:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Main Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+}
+
+/* Controls Bar */
+.controls-bar {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.filter-group {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: var(--space-xs) var(--space-md);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: var(--radius-small);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 44px;
+}
+
+.filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.filter-btn.active {
+    background: var(--color-primary-gradient);
+    color: white;
+    border-color: transparent;
+}
+
+.filter-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-small);
+    padding: var(--space-xs) var(--space-md);
+    min-width: 260px;
+    min-height: 44px;
+}
+
+.search-box input {
+    border: none;
+    background: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    flex: 1;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.search-box:focus-within {
+    border-color: var(--color-primary);
+}
+
+/* Summary Cards */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.summary-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient);
+}
+
+.summary-card.success::before {
+    background: var(--color-success);
+}
+
+.summary-card.warning::before {
+    background: var(--color-warning);
+}
+
+.summary-card.error::before {
+    background: var(--color-error);
+}
+
+.summary-card.primary::before {
+    background: var(--color-primary-gradient);
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+}
+
+.summary-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.summary-trend {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px var(--space-xs);
+    border-radius: var(--radius-small);
+}
+
+.trend-up {
+    color: var(--color-success);
+    background: #00DD8820;
+}
+
+.trend-down {
+    color: var(--color-error);
+    background: #FF336620;
+}
+
+.summary-value {
+    font-size: 40px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    line-height: 1;
+    margin-bottom: var(--space-xs);
+}
+
+.summary-sublabel {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Device Grid */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.view-toggle {
+    display: flex;
+    gap: 0;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-small);
+    overflow: hidden;
+}
+
+.view-btn {
+    padding: var(--space-xs) var(--space-sm);
+    border: none;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.view-btn:not(:last-child) {
+    border-right: 2px solid var(--color-border);
+}
+
+.view-btn.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.view-btn:hover:not(.active) {
+    background: var(--color-background);
+}
+
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+/* Device Cards */
+.device-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.device-card:hover {
+    border-color: var(--color-primary);
+}
+
+.device-card:focus-within {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+}
+
+.device-info {
+    flex: 1;
+}
+
+.device-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-text);
+    margin-bottom: 2px;
+}
+
+.device-type {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.device-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px var(--space-sm);
+    border-radius: var(--radius-small);
+}
+
+.device-status.online {
+    background: #00DD8820;
+    color: var(--color-success);
+}
+
+.device-status.offline {
+    background: #6B7A9920;
+    color: var(--color-text-muted);
+}
+
+.device-status.warning {
+    background: #FFAA0020;
+    color: var(--color-warning);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.device-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.metric {
+    text-align: left;
+}
+
+.metric-value {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.device-health {
+    margin-bottom: var(--space-md);
+}
+
+.health-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.health-bar {
+    height: 8px;
+    background: var(--color-background);
+    border-radius: var(--radius-small);
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    border-radius: var(--radius-small);
+    transition: width 0.3s;
+}
+
+.health-fill.excellent {
+    background: var(--color-success);
+}
+
+.health-fill.good {
+    background: var(--color-primary-gradient);
+}
+
+.health-fill.fair {
+    background: var(--color-warning);
+}
+
+.health-fill.poor {
+    background: var(--color-error);
+}
+
+.device-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-sm);
+    border-top: 2px solid var(--color-border);
+}
+
+.last-update {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.device-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 16px;
+}
+
+.action-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.action-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Alerts Section */
+.alerts-section {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-default);
+    padding: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.alert-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-small);
+    margin-bottom: var(--space-sm);
+    border: 2px solid transparent;
+}
+
+.alert-item:last-child {
+    margin-bottom: 0;
+}
+
+.alert-item.warning {
+    background: #FFAA0010;
+    border-color: var(--color-warning);
+}
+
+.alert-item.error {
+    background: #FF336610;
+    border-color: var(--color-error);
+}
+
+.alert-item.info {
+    background: #0066FF10;
+    border-color: var(--color-primary);
+}
+
+.alert-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-small);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.alert-item.warning .alert-icon {
+    background: var(--color-warning);
+    color: white;
+}
+
+.alert-item.error .alert-icon {
+    background: var(--color-error);
+    color: white;
+}
+
+.alert-item.info .alert-icon {
+    background: var(--color-primary);
+    color: white;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-text);
+    margin-bottom: 4px;
+}
+
+.alert-message {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+}
+
+.alert-time {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.alert-action {
+    align-self: center;
+}
+
+/* Navigation */
+.nav-container {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 100;
+}
+
+.nav-btn {
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: var(--radius-default);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.2s;
+    color: var(--color-text);
+}
+
+.nav-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.nav-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-wrap: wrap;
+    }
+
+    .header-stats {
+        order: 3;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        min-width: 100%;
+    }
+
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: var(--space-md);
+    }
+
+    .header {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .summary-value {
+        font-size: 32px;
+    }
+
+    .metric-value {
+        font-size: 20px;
+    }
+
+    .nav-container {
+        bottom: var(--space-md);
+        right: var(--space-md);
+    }
+}
+</style>
+
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">UQ</div>
+            <div class="logo-text">
+                <h1>Urban Quartz</h1>
+                <p>IoT Financial Network</p>
+            </div>
+        </div>
+
+        <div class="header-stats">
+            <div class="stat-item">
+                <div class="stat-value">248</div>
+                <div class="stat-label">Active Devices</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">99.7%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$2.4M</div>
+                <div class="stat-label">Daily Volume</div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-secondary">⚙️ Settings</button>
+            <button class="btn btn-primary">+ Add Device</button>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+        <div class="filter-group">
+            <button class="filter-btn active">All Devices</button>
+            <button class="filter-btn">Payment Terminals</button>
+            <button class="filter-btn">ATMs</button>
+            <button class="filter-btn">Crypto Miners</button>
+            <button class="filter-btn">POS Systems</button>
+        </div>
+
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search devices..." />
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+        <div class="summary-card success">
+            <div class="summary-header">
+                <span class="summary-label">Transactions Today</span>
+                <span class="summary-trend trend-up">↑ 12.5%</span>
+            </div>
+            <div class="summary-value">14,329</div>
+            <div class="summary-sublabel">+1,593 from yesterday</div>
+        </div>
+
+        <div class="summary-card primary">
+            <div class="summary-header">
+                <span class="summary-label">Network Health</span>
+                <span class="summary-trend trend-up">↑ 2.3%</span>
+            </div>
+            <div class="summary-value">98.2%</div>
+            <div class="summary-sublabel">All systems operational</div>
+        </div>
+
+        <div class="summary-card warning">
+            <div class="summary-header">
+                <span class="summary-label">Active Alerts</span>
+                <span class="summary-trend trend-down">↓ 5</span>
+            </div>
+            <div class="summary-value">7</div>
+            <div class="summary-sublabel">3 require attention</div>
+        </div>
+
+        <div class="summary-card success">
+            <div class="summary-header">
+                <span class="summary-label">Revenue Today</span>
+                <span class="summary-trend trend-up">↑ 18.2%</span>
+            </div>
+            <div class="summary-value">$2.4M</div>
+            <div class="summary-sublabel">+$375K from average</div>
+        </div>
+    </div>
+
+    <!-- Device Grid Section -->
+    <div class="section-header">
+        <h2 class="section-title">Connected Devices</h2>
+        <div class="view-toggle">
+            <button class="view-btn active">Grid</button>
+            <button class="view-btn">List</button>
+            <button class="view-btn">Map</button>
+        </div>
+    </div>
+
+    <div class="device-grid">
+        <!-- Device Card 1 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">Terminal NYC-001</div>
+                    <div class="device-type">Payment Terminal</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">1,247</div>
+                    <div class="metric-label">Transactions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$89.2K</div>
+                    <div class="metric-label">Volume</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>96%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill excellent" style="width: 96%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 2 min ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 2 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">ATM-LA-045</div>
+                    <div class="device-type">ATM Machine</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">428</div>
+                    <div class="metric-label">Withdrawals</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$142K</div>
+                    <div class="metric-label">Dispensed</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>89%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill good" style="width: 89%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 1 min ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 3 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">POS-SF-112</div>
+                    <div class="device-type">Point of Sale</div>
+                </div>
+                <div class="device-status warning">
+                    <span class="status-dot"></span>
+                    Warning
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">892</div>
+                    <div class="metric-label">Transactions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$52.8K</div>
+                    <div class="metric-label">Volume</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>72%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill fair" style="width: 72%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 5 min ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 4 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">Miner-TX-089</div>
+                    <div class="device-type">Crypto Miner</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">94.2</div>
+                    <div class="metric-label">Hash Rate TH/s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$387</div>
+                    <div class="metric-label">Daily Est.</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>98%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill excellent" style="width: 98%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 30 sec ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 5 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">Terminal CHI-023</div>
+                    <div class="device-type">Payment Terminal</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">2,156</div>
+                    <div class="metric-label">Transactions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$124K</div>
+                    <div class="metric-label">Volume</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>94%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill excellent" style="width: 94%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 1 min ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 6 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">ATM-BOS-078</div>
+                    <div class="device-type">ATM Machine</div>
+                </div>
+                <div class="device-status offline">
+                    <span class="status-dot"></span>
+                    Offline
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">Transactions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$0</div>
+                    <div class="metric-label">Volume</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>0%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill poor" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Offline 2 hours</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 7 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">POS-MIA-067</div>
+                    <div class="device-type">Point of Sale</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">1,673</div>
+                    <div class="metric-label">Transactions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$97.5K</div>
+                    <div class="metric-label">Volume</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>91%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill good" style="width: 91%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 3 min ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Card 8 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-info">
+                    <div class="device-name">Miner-NV-134</div>
+                    <div class="device-type">Crypto Miner</div>
+                </div>
+                <div class="device-status online">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="device-metrics">
+                <div class="metric">
+                    <div class="metric-value">102.8</div>
+                    <div class="metric-label">Hash Rate TH/s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$421</div>
+                    <div class="metric-label">Daily Est.</div>
+                </div>
+            </div>
+
+            <div class="device-health">
+                <div class="health-label">
+                    <span>Device Health</span>
+                    <span>97%</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill excellent" style="width: 97%"></div>
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-update">Updated 45 sec ago</span>
+                <div class="device-actions">
+                    <button class="action-btn" title="View details">👁️</button>
+                    <button class="action-btn" title="Configure">⚙️</button>
+                    <button class="action-btn" title="More options">⋯</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    <div class="section-header">
+        <h2 class="section-title">Active Alerts</h2>
+    </div>
+
+    <div class="alerts-section">
+        <div class="alert-item warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">High Temperature Detected</div>
+                <div class="alert-message">POS-SF-112 is running at 82°C, above recommended threshold</div>
+                <div class="alert-time">5 minutes ago</div>
+            </div>
+            <div class="alert-action">
+                <button class="btn btn-secondary">Review</button>
+            </div>
+        </div>
+
+        <div class="alert-item error">
+            <div class="alert-icon">🔴</div>
+            <div class="alert-content">
+                <div class="alert-title">Device Offline</div>
+                <div class="alert-message">ATM-BOS-078 has been offline for 2 hours 14 minutes</div>
+                <div class="alert-time">2 hours ago</div>
+            </div>
+            <div class="alert-action">
+                <button class="btn btn-primary">Investigate</button>
+            </div>
+        </div>
+
+        <div class="alert-item info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <div class="alert-title">Firmware Update Available</div>
+                <div class="alert-message">15 devices have pending firmware updates ready to install</div>
+                <div class="alert-time">6 hours ago</div>
+            </div>
+            <div class="alert-action">
+                <button class="btn btn-secondary">View</button>
+            </div>
+        </div>
+
+        <div class="alert-item warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Network Latency Spike</div>
+                <div class="alert-message">Chicago region experiencing 250ms average latency (normal: 45ms)</div>
+                <div class="alert-time">18 minutes ago</div>
+            </div>
+            <div class="alert-action">
+                <button class="btn btn-secondary">Monitor</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Navigation Controls -->
+<div class="nav-container">
+    <button class="nav-btn" id="prevBtn" title="Previous Design">←</button>
+    <button class="nav-btn" id="nextBtn" title="Next Design">→</button>
+</div>
+
+<script>
+// Navigation
+const TOTAL_DESIGNS = 250;
+const CURRENT_DESIGN = 53;
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+    const prev = CURRENT_DESIGN === 1 ? TOTAL_DESIGNS : CURRENT_DESIGN - 1;
+    window.location.href = `design-${prev}.html`;
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+    const next = CURRENT_DESIGN === TOTAL_DESIGNS ? 1 : CURRENT_DESIGN + 1;
+    window.location.href = `design-${next}.html`;
+});
+
+
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// View toggle
+document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// Simulate real-time updates
+function simulateRealTimeUpdates() {
+    const updateElements = document.querySelectorAll('.last-update');
+    setInterval(() => {
+        updateElements.forEach((el, index) => {
+            if (Math.random() > 0.7) {
+                const times = ['just now', '30 sec ago', '1 min ago', '2 min ago'];
+                el.textContent = `Updated ${times[Math.floor(Math.random() * times.length)]}`;
+            }
+        });
+    }, 5000);
+}
+
+simulateRealTimeUpdates();
+</script>
+
+</body>
+</html>

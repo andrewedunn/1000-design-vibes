@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Urban - International minimalism with natural undertones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Stark Urban - International minimalism with natural undertones
+        ABOUTME: This design system implements quiz_interface with punk aesthetics in a gaming context.
+        ABOUTME: Key characteristics: DIY brutalist structure, harsh monochrome palette with accent breaks, anti-corporate rawness
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #00ff41;
+        --color-background: #0a0a0a;
+        --color-surface: #1a1a1a;
+        --color-text: #e0e0e0;
+        --color-text-muted: #888;
+        --color-danger: #ff0055;
+        --color-warning: #ffdd00;
+        --font-heading: 'Space Grotesk', sans-serif;
+        --font-body: 'Courier Prime', monospace;
+        --radius-default: 0px;
+        --space-unit: 16px;
+        --border-weight: 3px;
+
+        AESTHETIC PRINCIPLES:
+        1. Stark geometric borders define all boundaries - no curves, no softness
+        2. Monospace typography creates systematic rhythm and authenticity
+        3. Strategic color breaks (neon green, hot pink) against dark palette for attention
+        4. Intentional asymmetry and off-kilter alignment reject corporate polish
+        5. Exposed structure - progress bars, counters, and states are always visible
+
+        BEST FOR:
+        - Gaming quizzes and knowledge tests
+        - Technical assessments with personality
+        - Anti-corporate educational tools
+        - Systems that embrace raw, unpolished aesthetics
+        - Interfaces where function precedes form
+
+        AVOID IF:
+        - You need approachable, friendly vibes
+        - Professional/corporate context required
+        - Accessibility to gentle curves matters
+        - Print or formal documentation
+
+        FUNCTIONAL DIRECTION: quiz_interface
+        This design must clearly function as a quiz_interface. Required elements:
+        - Question display with clear numbering
+        - Multiple choice answer options
+        - Progress indicator showing current position
+        - Score/results display
+        - Navigation between questions
+        - Submit/confirm actions
+        - Timer or time tracking
+        - Feedback for correct/incorrect answers
+        - Review mode for completed questions
+
+        DESIGN ERA: punk
+        DIY aesthetic, chaotic energy, anti-establishment, raw and unpolished, reject smoothness
+
+        COLOR MODE: dark_only
+        Deep blacks (#0a0a0a) with harsh whites and neon accents
+
+        INDUSTRY: gaming
+        Gaming culture, competitive spirit, achievement-focused
+
+        EMOTIONAL TONE: serious
+        No-nonsense, focused, direct communication
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #00ff41;
+            --color-secondary: #00ccff;
+            --color-background: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-surface-raised: #252525;
+            --color-text: #e0e0e0;
+            --color-text-muted: #888888;
+            --color-danger: #ff0055;
+            --color-warning: #ffdd00;
+            --color-border: #333333;
+            --color-border-bright: #666666;
+
+            /* Typography */
+            --font-heading: 'Space Grotesk', -apple-system, sans-serif;
+            --font-body: 'Courier Prime', 'Courier New', monospace;
+
+            /* Spacing */
+            --space-unit: 16px;
+            --space-xs: calc(var(--space-unit) * 0.5);
+            --space-sm: var(--space-unit);
+            --space-md: calc(var(--space-unit) * 1.5);
+            --space-lg: calc(var(--space-unit) * 2);
+            --space-xl: calc(var(--space-unit) * 3);
+            --space-xxl: calc(var(--space-unit) * 4);
+
+            /* Shapes */
+            --radius-default: 0px;
+            --shadow-default: none;
+            --border-weight: 3px;
+            --border-weight-heavy: 5px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Layout Structure */
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .quiz-header {
+            border: var(--border-weight) solid var(--color-border-bright);
+            border-left: var(--border-weight-heavy) solid var(--color-primary);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            background: var(--color-surface);
+            position: relative;
+        }
+
+        .quiz-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+            color: var(--color-primary);
+        }
+
+        .quiz-subtitle {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            border: var(--border-weight) solid var(--color-border);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            background: var(--color-surface);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background: var(--color-background);
+            border: var(--border-weight) solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--color-primary);
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.3) 2px,
+                rgba(0, 0, 0, 0.3) 4px
+            );
+        }
+
+        /* Question Card */
+        .question-card {
+            border: var(--border-weight) solid var(--color-border-bright);
+            background: var(--color-surface);
+            margin-bottom: var(--space-lg);
+            flex-grow: 1;
+        }
+
+        .question-header {
+            background: var(--color-surface-raised);
+            border-bottom: var(--border-weight) solid var(--color-border-bright);
+            padding: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-number {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-difficulty {
+            padding: var(--space-xs) var(--space-sm);
+            border: 2px solid var(--color-warning);
+            color: var(--color-warning);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-difficulty.hard {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .question-body {
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        .question-text {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: var(--space-xl);
+            color: var(--color-text);
+        }
+
+        /* Answer Options */
+        .answers-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .answer-option {
+            border: var(--border-weight) solid var(--color-border);
+            background: var(--color-background);
+            padding: var(--space-md);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+
+        .answer-option:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface);
+            transform: translateX(4px);
+        }
+
+        .answer-option:focus-within {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .answer-option.selected {
+            border-color: var(--color-primary);
+            border-left-width: var(--border-weight-heavy);
+            background: var(--color-surface);
+        }
+
+        .answer-option.correct {
+            border-color: var(--color-primary);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .answer-option.incorrect {
+            border-color: var(--color-danger);
+            background: rgba(255, 0, 85, 0.1);
+        }
+
+        .answer-letter {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            min-width: 32px;
+        }
+
+        .answer-option.selected .answer-letter {
+            color: var(--color-primary);
+        }
+
+        .answer-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .answer-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm) var(--space-lg);
+            border: var(--border-weight) solid;
+            background: transparent;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--color-primary);
+        }
+
+        .btn:active {
+            transform: translate(0, 0);
+            box-shadow: none;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 3px;
+        }
+
+        .btn-primary {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .btn-secondary {
+            border-color: var(--color-border-bright);
+            color: var(--color-text-muted);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-text);
+            color: var(--color-text);
+            box-shadow: 4px 4px 0 var(--color-border-bright);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Results Screen */
+        .results-card {
+            border: var(--border-weight-heavy) solid var(--color-primary);
+            background: var(--color-surface);
+            padding: var(--space-xl);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .results-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            letter-spacing: 2px;
+        }
+
+        .results-score {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            line-height: 1;
+        }
+
+        .results-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        .breakdown-item {
+            border: var(--border-weight) solid var(--color-border);
+            padding: var(--space-md);
+            background: var(--color-background);
+        }
+
+        .breakdown-label {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .breakdown-value {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .breakdown-item.correct .breakdown-value {
+            color: var(--color-primary);
+        }
+
+        .breakdown-item.incorrect .breakdown-value {
+            color: var(--color-danger);
+        }
+
+        /* Timer */
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            border: 2px solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        .timer.warning {
+            border-color: var(--color-warning);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .timer-icon {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--color-text-muted);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .timer-value {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Feedback Messages */
+        .feedback {
+            border-left: var(--border-weight-heavy) solid;
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            font-weight: 700;
+        }
+
+        .feedback.correct {
+            border-color: var(--color-primary);
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--color-primary);
+        }
+
+        .feedback.incorrect {
+            border-color: var(--color-danger);
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--color-danger);
+        }
+
+        /* Navigation Footer */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            border-top: var(--border-weight) solid var(--color-border);
+            margin-top: auto;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm);
+            font-size: 0.875rem;
+            transition: color 0.15s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .quiz-container {
+                padding: var(--space-sm);
+            }
+
+            .quiz-title {
+                font-size: 1.5rem;
+            }
+
+            .question-text {
+                font-size: 1.25rem;
+            }
+
+            .results-score {
+                font-size: 3rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Header -->
+        <header class="quiz-header">
+            <h1 class="quiz-title">Gaming Knowledge Assessment</h1>
+            <p class="quiz-subtitle">Test your expertise across eras and genres</p>
+        </header>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-stats">
+                <div class="stat">
+                    <span class="stat-label">Question</span>
+                    <span class="stat-value"><span id="current-question">1</span>/10</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value"><span id="current-score">0</span></span>
+                </div>
+                <div class="timer">
+                    <div class="timer-icon"></div>
+                    <span class="timer-value"><span id="timer-value">02:45</span></span>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 10%"></div>
+            </div>
+        </div>
+
+        <!-- Question View -->
+        <div id="question-view">
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number" id="question-label">Question 1 of 10</span>
+                    <span class="question-difficulty" id="difficulty">Medium</span>
+                </div>
+                <div class="question-body">
+                    <h2 class="question-text" id="question-text">
+                        Which game is credited with popularizing the battle royale genre in mainstream gaming?
+                    </h2>
+                    <div class="answers-container" id="answers-container">
+                        <label class="answer-option" data-answer="a">
+                            <input type="radio" name="answer" value="a">
+                            <span class="answer-letter">A</span>
+                            <span class="answer-text">H1Z1: King of the Kill</span>
+                        </label>
+                        <label class="answer-option" data-answer="b">
+                            <input type="radio" name="answer" value="b">
+                            <span class="answer-letter">B</span>
+                            <span class="answer-text">PlayerUnknown's Battlegrounds (PUBG)</span>
+                        </label>
+                        <label class="answer-option" data-answer="c">
+                            <input type="radio" name="answer" value="c">
+                            <span class="answer-letter">C</span>
+                            <span class="answer-text">Fortnite Battle Royale</span>
+                        </label>
+                        <label class="answer-option" data-answer="d">
+                            <input type="radio" name="answer" value="d">
+                            <span class="answer-letter">D</span>
+                            <span class="answer-text">Apex Legends</span>
+                        </label>
+                    </div>
+                    <div id="feedback-container"></div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="skip-btn">Skip Question</button>
+                <button class="btn btn-primary" id="submit-btn" disabled>Submit Answer</button>
+            </div>
+        </div>
+
+        <!-- Results View (Initially Hidden) -->
+        <div id="results-view" class="hidden">
+            <div class="results-card">
+                <h2 class="results-title">Quiz Complete</h2>
+                <div class="results-score" id="final-score">7/10</div>
+                <div class="results-breakdown">
+                    <div class="breakdown-item correct">
+                        <div class="breakdown-label">Correct</div>
+                        <div class="breakdown-value" id="correct-count">7</div>
+                    </div>
+                    <div class="breakdown-item incorrect">
+                        <div class="breakdown-label">Incorrect</div>
+                        <div class="breakdown-value" id="incorrect-count">2</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Skipped</div>
+                        <div class="breakdown-value" id="skipped-count">1</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Accuracy</div>
+                        <div class="breakdown-value" id="accuracy">70%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary" id="review-btn">Review Answers</button>
+                <button class="btn btn-primary" id="restart-btn">Restart Quiz</button>
+            </div>
+        </div>
+
+        <!-- Navigation Footer -->
+        <footer class="nav-footer">
+            <button class="nav-btn" id="prev-design" aria-label="Previous design">&larr; Previous Design</button>
+            <button class="nav-btn" id="next-design" aria-label="Next design">Next Design &rarr;</button>
+        </footer>
+    </div>
+
+    <script>
+        // Quiz data structure
+        const quizData = {
+            currentQuestion: 1,
+            totalQuestions: 10,
+            score: 0,
+            correct: 0,
+            incorrect: 0,
+            skipped: 0,
+            timeRemaining: 165, // seconds
+            answers: {},
+            questions: [
+                {
+                    id: 1,
+                    text: "Which game is credited with popularizing the battle royale genre in mainstream gaming?",
+                    difficulty: "medium",
+                    options: [
+                        { letter: "A", text: "H1Z1: King of the Kill" },
+                        { letter: "B", text: "PlayerUnknown's Battlegrounds (PUBG)" },
+                        { letter: "C", text: "Fortnite Battle Royale" },
+                        { letter: "D", text: "Apex Legends" }
+                    ],
+                    correctAnswer: "B"
+                },
+                {
+                    id: 2,
+                    text: "What year was the original Doom released?",
+                    difficulty: "hard",
+                    options: [
+                        { letter: "A", text: "1991" },
+                        { letter: "B", text: "1992" },
+                        { letter: "C", text: "1993" },
+                        { letter: "D", text: "1994" }
+                    ],
+                    correctAnswer: "C"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const currentQuestionEl = document.getElementById('current-question');
+        const currentScoreEl = document.getElementById('current-score');
+        const timerValueEl = document.getElementById('timer-value');
+        const progressBar = document.getElementById('progress-bar');
+        const questionLabelEl = document.getElementById('question-label');
+        const difficultyEl = document.getElementById('difficulty');
+        const questionTextEl = document.getElementById('question-text');
+        const answersContainer = document.getElementById('answers-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const questionView = document.getElementById('question-view');
+        const resultsView = document.getElementById('results-view');
+        const reviewBtn = document.getElementById('review-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Timer
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                quizData.timeRemaining--;
+                updateTimerDisplay();
+
+                if (quizData.timeRemaining <= 30) {
+                    document.querySelector('.timer').classList.add('warning');
+                }
+
+                if (quizData.timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(quizData.timeRemaining / 60);
+            const seconds = quizData.timeRemaining % 60;
+            timerValueEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Answer selection
+        answersContainer.addEventListener('click', (e) => {
+            const option = e.target.closest('.answer-option');
+            if (!option) return;
+
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            option.classList.add('selected');
+            option.querySelector('input').checked = true;
+            submitBtn.disabled = false;
+        });
+
+        // Submit answer
+        submitBtn.addEventListener('click', () => {
+            const selectedOption = document.querySelector('.answer-option.selected');
+            if (!selectedOption) return;
+
+            const selectedAnswer = selectedOption.querySelector('input').value.toUpperCase();
+            const correctAnswer = quizData.questions[quizData.currentQuestion - 1].correctAnswer;
+
+            // Store answer
+            quizData.answers[quizData.currentQuestion] = selectedAnswer;
+
+            // Check if correct
+            if (selectedAnswer === correctAnswer) {
+                quizData.correct++;
+                quizData.score += 10;
+                showFeedback(true, selectedOption);
+            } else {
+                quizData.incorrect++;
+                showFeedback(false, selectedOption, correctAnswer);
+            }
+
+            // Disable further selection
+            submitBtn.disabled = true;
+            skipBtn.disabled = true;
+
+            // Update score display
+            currentScoreEl.textContent = quizData.score;
+
+            // Auto-advance after 2 seconds
+            setTimeout(() => {
+                nextQuestion();
+            }, 2000);
+        });
+
+        function showFeedback(isCorrect, selectedOption, correctAnswer = null) {
+            if (isCorrect) {
+                selectedOption.classList.add('correct');
+                feedbackContainer.innerHTML = '<div class="feedback correct">CORRECT +10 POINTS</div>';
+            } else {
+                selectedOption.classList.add('incorrect');
+                if (correctAnswer) {
+                    const correctOption = document.querySelector(`[data-answer="${correctAnswer.toLowerCase()}"]`);
+                    if (correctOption) correctOption.classList.add('correct');
+                }
+                feedbackContainer.innerHTML = '<div class="feedback incorrect">INCORRECT</div>';
+            }
+        }
+
+        // Skip question
+        skipBtn.addEventListener('click', () => {
+            quizData.skipped++;
+            nextQuestion();
+        });
+
+        // Next question
+        function nextQuestion() {
+            if (quizData.currentQuestion >= quizData.totalQuestions) {
+                endQuiz();
+                return;
+            }
+
+            quizData.currentQuestion++;
+            updateProgress();
+            renderQuestion();
+            feedbackContainer.innerHTML = '';
+            submitBtn.disabled = true;
+            skipBtn.disabled = false;
+        }
+
+        function updateProgress() {
+            currentQuestionEl.textContent = quizData.currentQuestion;
+            const progressPercent = (quizData.currentQuestion / quizData.totalQuestions) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        function renderQuestion() {
+            // For demo purposes, we'll just show the first question repeatedly
+            // In a real implementation, you'd cycle through quizData.questions
+            const question = quizData.questions[0];
+
+            questionLabelEl.textContent = `Question ${quizData.currentQuestion} of ${quizData.totalQuestions}`;
+            difficultyEl.textContent = question.difficulty;
+            difficultyEl.className = `question-difficulty ${question.difficulty}`;
+            questionTextEl.textContent = question.text;
+
+            // Reset answer options
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.querySelector('input').checked = false;
+            });
+        }
+
+        // End quiz
+        function endQuiz() {
+            clearInterval(timerInterval);
+            questionView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+
+            // Calculate results
+            const totalAnswered = quizData.correct + quizData.incorrect;
+            const accuracy = totalAnswered > 0 ? Math.round((quizData.correct / totalAnswered) * 100) : 0;
+
+            // Update results display
+            document.getElementById('final-score').textContent = `${quizData.correct}/${quizData.totalQuestions}`;
+            document.getElementById('correct-count').textContent = quizData.correct;
+            document.getElementById('incorrect-count').textContent = quizData.incorrect;
+            document.getElementById('skipped-count').textContent = quizData.skipped;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+        }
+
+        // Review answers
+        reviewBtn.addEventListener('click', () => {
+            alert('Review mode would show all questions with user answers and correct answers highlighted.');
+        });
+
+        // Restart quiz
+        restartBtn.addEventListener('click', () => {
+            // Reset quiz data
+            quizData.currentQuestion = 1;
+            quizData.score = 0;
+            quizData.correct = 0;
+            quizData.incorrect = 0;
+            quizData.skipped = 0;
+            quizData.timeRemaining = 165;
+            quizData.answers = {};
+
+            // Reset UI
+            resultsView.classList.add('hidden');
+            questionView.classList.remove('hidden');
+            currentScoreEl.textContent = '0';
+            updateProgress();
+            renderQuestion();
+            feedbackContainer.innerHTML = '';
+            document.querySelector('.timer').classList.remove('warning');
+
+            // Restart timer
+            startTimer();
+        });
+
+        // Navigation between designs
+        const TOTAL_DESIGNS = 250;
+        const CURRENT_DESIGN = 60;
+
+        document.getElementById('prev-design').addEventListener('click', () => {
+            const prevId = CURRENT_DESIGN - 1;
+            if (prevId >= 1) {
+                window.location.href = `design-${prevId}.html`;
+            }
+        });
+
+        document.getElementById('next-design').addEventListener('click', () => {
+            const nextId = CURRENT_DESIGN + 1;
+            if (nextId <= TOTAL_DESIGNS) {
+                window.location.href = `design-${nextId}.html`;
+            }
+        });
+
+        // Keyboard navigation
+        /* Navigation removed */
+
+        // Initialize
+        startTimer();
+    </script>
+</body>
+</html>

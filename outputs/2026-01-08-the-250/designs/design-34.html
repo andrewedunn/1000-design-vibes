@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisp Metro - Mid Century Modern Comment Section</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Merriweather:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Crisp Metro - Mid century modern design with natural neutral tones
+        ABOUTME: This design system implements a comment_section with mid-century modern aesthetics.
+        ABOUTME: Key characteristics: organic rounded corners, warm neutral palette with rust accents, generous whitespace
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #C96A3C;
+        --color-background: #1C1A17;
+        --color-surface: #2A2722;
+        --color-surface-elevated: #373229;
+        --color-text: #E8E3DA;
+        --color-text-muted: #9B9488;
+        --color-accent-warm: #D4A574;
+        --color-accent-green: #6B8E7A;
+        --font-heading: 'Poppins', sans-serif;
+        --font-body: 'Merriweather', serif;
+        --radius-default: 16px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Warm neutrals with natural rust and sage accents evoke mid-century comfort
+        2. Generous rounded corners and whitespace create organic, flowing layouts
+        3. Serif body text paired with geometric sans headings honors 1950s-60s design tradition
+        4. Soft shadows and subtle elevation maintain depth without harsh contrasts
+
+        BEST FOR:
+        - Food blogs and recipe discussion platforms
+        - Community cooking forums
+        - Restaurant review sections
+        - Nostalgic content platforms
+        - Editorial content with engaged readership
+
+        AVOID IF:
+        - You need high-density technical discussions
+        - Bright, playful branding is required
+        - Ultra-modern or minimalist aesthetic is preferred
+        - Light mode is essential
+
+        FUNCTIONAL DIRECTION: comment_section
+        This design must clearly function as a comment_section. Required elements:
+        - Threaded comments with clear reply hierarchy
+        - Reply forms with text input and submit buttons
+        - Vote/like buttons for community feedback
+        - User avatars for visual identification
+        - Timestamps for temporal context
+        - Clear visual threading with indentation
+        - Author metadata (username, date, badges)
+
+        TECHNICAL NOTES:
+        - Dark mode only with WCAG AA compliant contrast ratios
+        - Typography scale: 1.25 (major third) for hierarchy
+        - Spacing system: 8px base unit for consistent rhythm
+        - Interactive states: hover, focus, active with smooth transitions
+        - Accessible focus indicators on all interactive elements
+        - Touch targets: minimum 44x44px for mobile usability
+
+        COLOR PALETTE DETAILS:
+        Primary (Rust): #C96A3C - Warm terracotta for primary actions
+        Background: #1C1A17 - Deep warm gray, not pure black
+        Surface: #2A2722 - Elevated surface color
+        Surface Elevated: #373229 - Highest elevation
+        Text Primary: #E8E3DA - Warm off-white
+        Text Muted: #9B9488 - Muted taupe for secondary text
+        Accent Warm: #D4A574 - Golden wheat
+        Accent Green: #6B8E7A - Sage green for positive actions
+
+        TYPOGRAPHY SYSTEM:
+        Heading: Poppins - Clean geometric sans, echoes mid-century signage
+        Body: Merriweather - Readable serif with warmth
+        Scale: 14px base → 17.5px → 22px → 27.5px → 34px
+        Line height: 1.6 for body, 1.2 for headings
+        -->
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-primary: #C96A3C;
+            --color-background: #1C1A17;
+            --color-surface: #2A2722;
+            --color-surface-elevated: #373229;
+            --color-text: #E8E3DA;
+            --color-text-muted: #9B9488;
+            --color-accent-warm: #D4A574;
+            --color-accent-green: #6B8E7A;
+            --color-border: #403C36;
+            --color-hover: #E07B4D;
+
+            /* Typography */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Merriweather', serif;
+            --type-base: 14px;
+            --type-scale: 1.25;
+            --type-sm: 14px;
+            --type-md: 17.5px;
+            --type-lg: 22px;
+            --type-xl: 27.5px;
+            --type-xxl: 34px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
+
+            /* Shapes */
+            --radius-sm: 8px;
+            --radius-default: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-default: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            min-height: 100vh;
+            padding: var(--space-lg);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-sm);
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: var(--type-xxl);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: var(--type-md);
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Article Context */
+        .article-context {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .article-context h2 {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .article-context p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        /* Comment Stats Bar */
+        .comment-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .comment-count {
+            font-family: var(--font-heading);
+            font-size: var(--type-md);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .sort-options {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .sort-btn {
+            padding: var(--space-xs) var(--space-sm);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-text-muted);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .sort-btn:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        .sort-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .sort-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        /* New Comment Form */
+        .new-comment-form {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-default);
+        }
+
+        .new-comment-form h3 {
+            font-family: var(--font-heading);
+            font-size: var(--type-lg);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: var(--space-sm);
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--type-sm);
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(201, 106, 60, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--color-border);
+            color: var(--color-text-muted);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-text-muted);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:focus {
+            outline: 2px solid var(--color-text-muted);
+            outline-offset: 2px;
+        }
+
+        /* Comments List */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        /* Comment Card */
+        .comment {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .comment:hover {
+            box-shadow: var(--shadow-default);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent-warm));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: var(--type-md);
+            color: var(--color-background);
+            flex-shrink: 0;
+        }
+
+        .comment-meta {
+            flex: 1;
+        }
+
+        .comment-author {
+            font-family: var(--font-heading);
+            font-size: var(--type-md);
+            font-weight: 600;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-author {
+            background: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .badge-chef {
+            background: var(--color-accent-green);
+            color: var(--color-background);
+        }
+
+        .comment-time {
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+        }
+
+        .comment-body {
+            color: var(--color-text);
+            line-height: 1.7;
+            margin-bottom: var(--space-md);
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-text-muted);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .action-btn:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        .action-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .action-btn.active {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-accent-green);
+            color: var(--color-accent-green);
+        }
+
+        .vote-count {
+            font-weight: 600;
+        }
+
+        /* Threaded Replies */
+        .replies {
+            margin-top: var(--space-lg);
+            margin-left: var(--space-xl);
+            border-left: 3px solid var(--color-border);
+            padding-left: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .replies {
+                margin-left: var(--space-md);
+                padding-left: var(--space-md);
+            }
+        }
+
+        .reply {
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+        }
+
+        /* Reply Form (inline) */
+        .reply-form {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: var(--color-background);
+            border-radius: var(--radius-default);
+            border: 2px solid var(--color-border);
+        }
+
+        .reply-form .form-textarea {
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Navigation Footer */
+        .nav-footer {
+            margin-top: var(--space-xxl);
+            padding-top: var(--space-lg);
+            border-top: 2px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-default);
+        }
+
+        .nav-btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-info {
+            font-family: var(--font-heading);
+            font-size: var(--type-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Hidden class for toggling */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Crisp Metro</h1>
+            <p>Mid century modern design with natural neutral tones</p>
+        </header>
+
+        <!-- Article Context -->
+        <article class="article-context">
+            <h2>Grandma's Secret Lasagna Recipe</h2>
+            <p>After years of family gatherings and countless requests, I'm finally sharing my grandmother's legendary lasagna recipe. This isn't your typical lasagna—it features a unique blend of three cheeses, fresh herbs from her garden, and a secret ingredient that transforms the sauce into something truly magical. Join the conversation below!</p>
+        </article>
+
+        <!-- Comment Stats -->
+        <div class="comment-stats">
+            <div class="comment-count">38 Comments</div>
+            <div class="sort-options">
+                <button class="sort-btn active">Top</button>
+                <button class="sort-btn">Newest</button>
+                <button class="sort-btn">Oldest</button>
+            </div>
+        </div>
+
+        <!-- New Comment Form -->
+        <section class="new-comment-form">
+            <h3>Join the Discussion</h3>
+            <form>
+                <div class="form-group">
+                    <label for="comment-name">Name</label>
+                    <input type="text" id="comment-name" class="form-input" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="comment-text">Comment</label>
+                    <textarea id="comment-text" class="form-textarea" placeholder="Share your thoughts, tips, or variations..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">Preview</button>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+            <!-- Comment 1 -->
+            <article class="comment">
+                <div class="comment-header">
+                    <div class="comment-avatar">ME</div>
+                    <div class="comment-meta">
+                        <div class="comment-author">
+                            Maria Elena Rodriguez
+                            <span class="badge badge-chef">Chef</span>
+                        </div>
+                        <div class="comment-time">2 hours ago</div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    This brings back so many memories! My nonna had a similar recipe, but she would add a pinch of nutmeg to the béchamel. It's such a subtle touch but it really elevates the whole dish. The key is definitely using fresh pasta sheets—dried just doesn't have the same tender texture. Have you tried making your own pasta for this?
+                </div>
+                <div class="comment-actions">
+                    <button class="action-btn active">
+                        <span>↑</span>
+                        <span class="vote-count">24</span>
+                    </button>
+                    <button class="action-btn">
+                        <span>↓</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleReplyForm('reply-1')">Reply</button>
+                    <button class="action-btn">Share</button>
+                </div>
+
+                <!-- Reply Form (hidden by default) -->
+                <div id="reply-1" class="reply-form hidden">
+                    <textarea class="form-textarea" placeholder="Write your reply..."></textarea>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="toggleReplyForm('reply-1')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Reply</button>
+                    </div>
+                </div>
+
+                <!-- Replies -->
+                <div class="replies">
+                    <article class="comment reply">
+                        <div class="comment-header">
+                            <div class="comment-avatar" style="background: linear-gradient(135deg, #6B8E7A, #D4A574);">JW</div>
+                            <div class="comment-meta">
+                                <div class="comment-author">
+                                    James Wong
+                                    <span class="badge badge-author">Author</span>
+                                </div>
+                                <div class="comment-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            Maria Elena, you're absolutely right about the fresh pasta! I do make my own when I have time. The nutmeg in béchamel is genius—Grandma used to do something similar with white pepper. These Italian grandmothers knew what they were doing!
+                        </div>
+                        <div class="comment-actions">
+                            <button class="action-btn">
+                                <span>↑</span>
+                                <span class="vote-count">15</span>
+                            </button>
+                            <button class="action-btn">
+                                <span>↓</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleReplyForm('reply-1-1')">Reply</button>
+                        </div>
+                    </article>
+
+                    <article class="comment reply">
+                        <div class="comment-header">
+                            <div class="comment-avatar" style="background: linear-gradient(135deg, #D4A574, #C96A3C);">TC</div>
+                            <div class="comment-meta">
+                                <div class="comment-author">Thomas Chen</div>
+                                <div class="comment-time">45 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            I've been making lasagna for 20 years and never thought to add nutmeg. Trying this weekend!
+                        </div>
+                        <div class="comment-actions">
+                            <button class="action-btn">
+                                <span>↑</span>
+                                <span class="vote-count">8</span>
+                            </button>
+                            <button class="action-btn">
+                                <span>↓</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleReplyForm('reply-1-2')">Reply</button>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <!-- Comment 2 -->
+            <article class="comment">
+                <div class="comment-header">
+                    <div class="comment-avatar" style="background: linear-gradient(135deg, #6B8E7A, #C96A3C);">SK</div>
+                    <div class="comment-meta">
+                        <div class="comment-author">Sarah Kim</div>
+                        <div class="comment-time">3 hours ago</div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    Made this last night for a dinner party and everyone was blown away! The secret ingredient (coffee in the sauce!) is genius. It adds such depth without being obvious. One question: can I make this ahead and freeze it? Would the texture hold up?
+                </div>
+                <div class="comment-actions">
+                    <button class="action-btn">
+                        <span>↑</span>
+                        <span class="vote-count">19</span>
+                    </button>
+                    <button class="action-btn">
+                        <span>↓</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleReplyForm('reply-2')">Reply</button>
+                    <button class="action-btn">Share</button>
+                </div>
+
+                <div class="replies">
+                    <article class="comment reply">
+                        <div class="comment-header">
+                            <div class="comment-avatar" style="background: linear-gradient(135deg, #6B8E7A, #D4A574);">JW</div>
+                            <div class="comment-meta">
+                                <div class="comment-author">
+                                    James Wong
+                                    <span class="badge badge-author">Author</span>
+                                </div>
+                                <div class="comment-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            Sarah, it freezes beautifully! Assemble it completely, wrap tightly in plastic wrap and then foil. It'll keep for up to 3 months. When you're ready, thaw overnight in the fridge and bake as directed (might need an extra 10-15 minutes). The texture stays perfect!
+                        </div>
+                        <div class="comment-actions">
+                            <button class="action-btn active">
+                                <span>↑</span>
+                                <span class="vote-count">22</span>
+                            </button>
+                            <button class="action-btn">
+                                <span>↓</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleReplyForm('reply-2-1')">Reply</button>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <!-- Comment 3 -->
+            <article class="comment">
+                <div class="comment-header">
+                    <div class="comment-avatar" style="background: linear-gradient(135deg, #C96A3C, #D4A574);">DP</div>
+                    <div class="comment-meta">
+                        <div class="comment-author">David Park</div>
+                        <div class="comment-time">5 hours ago</div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    As someone who's lactose intolerant, I modified this using cashew-based cheese alternatives and it still turned out amazing! The flavor profile is so well-balanced that the dairy substitutes work perfectly. Thanks for sharing this family treasure!
+                </div>
+                <div class="comment-actions">
+                    <button class="action-btn">
+                        <span>↑</span>
+                        <span class="vote-count">16</span>
+                    </button>
+                    <button class="action-btn">
+                        <span>↓</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleReplyForm('reply-3')">Reply</button>
+                    <button class="action-btn">Share</button>
+                </div>
+            </article>
+
+            <!-- Comment 4 -->
+            <article class="comment">
+                <div class="comment-header">
+                    <div class="comment-avatar" style="background: linear-gradient(135deg, #D4A574, #6B8E7A);">LN</div>
+                    <div class="comment-meta">
+                        <div class="comment-author">Lisa Nguyen</div>
+                        <div class="comment-time">6 hours ago</div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    The layering technique you described is crucial! I used to just dump everything in, but taking the time to properly layer (sauce, pasta, ricotta mixture, repeat) creates such a better structure. And letting it rest for 15 minutes after baking? Game changer. Clean slices every time.
+                </div>
+                <div class="comment-actions">
+                    <button class="action-btn">
+                        <span>↑</span>
+                        <span class="vote-count">13</span>
+                    </button>
+                    <button class="action-btn">
+                        <span>↓</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleReplyForm('reply-4')">Reply</button>
+                    <button class="action-btn">Share</button>
+                </div>
+
+                <div class="replies">
+                    <article class="comment reply">
+                        <div class="comment-header">
+                            <div class="comment-avatar" style="background: linear-gradient(135deg, #C96A3C, #6B8E7A);">AJ</div>
+                            <div class="comment-meta">
+                                <div class="comment-author">Andrea Johnson</div>
+                                <div class="comment-time">4 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            Yes! The resting time is so underrated. It's like letting a steak rest—everything settles and the flavors meld together beautifully.
+                        </div>
+                        <div class="comment-actions">
+                            <button class="action-btn">
+                                <span>↑</span>
+                                <span class="vote-count">7</span>
+                            </button>
+                            <button class="action-btn">
+                                <span>↓</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleReplyForm('reply-4-1')">Reply</button>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <!-- Comment 5 -->
+            <article class="comment">
+                <div class="comment-header">
+                    <div class="comment-avatar" style="background: linear-gradient(135deg, #6B8E7A, #C96A3C);">RM</div>
+                    <div class="comment-meta">
+                        <div class="comment-author">Robert Martinez</div>
+                        <div class="comment-time">8 hours ago</div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    Your grandmother would be proud! This recipe is a masterclass in traditional Italian cooking. I especially appreciate that you included the why behind each step—understanding the technique makes you a better cook. Bookmarked for Sunday dinner this week!
+                </div>
+                <div class="comment-actions">
+                    <button class="action-btn">
+                        <span>↑</span>
+                        <span class="vote-count">11</span>
+                    </button>
+                    <button class="action-btn">
+                        <span>↓</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleReplyForm('reply-5')">Reply</button>
+                    <button class="action-btn">Share</button>
+                </div>
+            </article>
+        </div>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <button class="nav-btn" onclick="navigatePrev()">
+                <span>←</span>
+                <span>Previous</span>
+            </button>
+            <div class="nav-info">Design 34 of 250</div>
+            <button class="nav-btn" onclick="navigateNext()">
+                <span>Next</span>
+                <span>→</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        // Toggle reply form visibility
+        function toggleReplyForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.classList.toggle('hidden');
+            }
+        }
+
+        // Sort button functionality
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Vote button functionality
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            if (btn.textContent.includes('↑') || btn.textContent.includes('↓')) {
+                btn.addEventListener('click', function() {
+                    // Toggle active state only for vote buttons
+                    if (this.textContent.includes('↑')) {
+                        this.classList.toggle('active');
+                        // If upvote is active, remove downvote active state
+                        const downBtn = this.nextElementSibling;
+                        if (downBtn && downBtn.textContent.includes('↓')) {
+                            downBtn.classList.remove('active');
+                        }
+                    } else if (this.textContent.includes('↓')) {
+                        this.classList.toggle('active');
+                        // If downvote is active, remove upvote active state
+                        const upBtn = this.previousElementSibling;
+                        if (upBtn && upBtn.textContent.includes('↑')) {
+                            upBtn.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        });
+
+        // Navigation functions
+        function navigatePrev() {
+            const currentDesign = 34;
+            const prevDesign = currentDesign - 1;
+            if (prevDesign >= 1) {
+                window.location.href = `design-${prevDesign}.html`;
+            }
+        }
+
+        function navigateNext() {
+            const currentDesign = 34;
+            const totalDesigns = 250;
+            const nextDesign = currentDesign + 1;
+            if (nextDesign <= totalDesigns) {
+                window.location.href = `design-${nextDesign}.html`;
+            }
+        }
+
+        // Keyboard navigation
+        {
+                navigateNext();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -31,21 +31,6 @@ def status(path: str):
 
 
 @cli.command()
-def build_indexes():
-    """Build or rebuild index pages for all runs."""
-    from pathlib import Path
-    from src.index import build_all_indexes
-
-    outputs_path = Path("outputs")
-    if not outputs_path.exists():
-        click.echo("No outputs directory found")
-        return
-
-    build_all_indexes(outputs_path)
-    click.echo("Done!")
-
-
-@cli.command()
 @click.option("--path", required=True, help="Path to output folder")
 @click.option("--fix", is_flag=True, help="Attempt to fix fixable issues")
 def validate(path: str, fix: bool):

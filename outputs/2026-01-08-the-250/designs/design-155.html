@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Global - Mortgage Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Clean Global - Natural vibes for ecommerce
+ABOUTME: This design system implements a mortgage_calculator with scandinavian_modern aesthetics.
+ABOUTME: Key characteristics: Luxurious minimalism, abundant whitespace, warm natural tones with premium feel.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #8B7355;
+--color-primary-light: #B5A08F;
+--color-background: #FEFDFB;
+--color-surface: #FFFFFF;
+--color-text: #2C2419;
+--color-text-muted: #857A6E;
+--color-accent: #D4C5B3;
+--color-success: #7A9B76;
+--font-heading: 'Playfair Display', Georgia, serif;
+--font-body: 'Inter', -apple-system, sans-serif;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Light, airy layouts with generous whitespace create breathing room and luxury
+2. Warm earth tones with subtle beige palette evoke natural, organic sophistication
+3. Refined serif headings paired with clean sans-serif body create editorial elegance
+4. Minimal borders and subtle shadows maintain clean Scandinavian sensibility
+5. Tactile interactions with smooth animations feel premium and considered
+
+BEST FOR:
+- Financial services targeting affluent customers
+- Real estate platforms emphasizing lifestyle over transactions
+- Premium mortgage brokers wanting sophisticated web presence
+- Ecommerce brands with natural, organic positioning
+- Lifestyle-oriented financial planning tools
+
+AVOID IF:
+- Need high-energy, action-oriented urgency
+- Target audience expects traditional corporate banking aesthetic
+- Require dense information display with minimal spacing
+- Brand identity is bold, colorful, or maximalist
+
+FUNCTIONAL DIRECTION: mortgage_calculator
+This design must clearly function as a mortgage_calculator. Required elements:
+- Input sliders for loan amount, interest rate, loan term
+- Real-time monthly payment calculation display
+- Amortization chart showing principal vs interest over time
+- Comparison feature for different scenarios
+- Clear breakdown of costs (principal, interest, taxes, insurance)
+
+DIMENSIONS APPLIED:
+- functional_direction: mortgage_calculator
+- design_era: scandinavian_modern
+- emotional_tone: luxurious
+- industry: ecommerce
+- color_mode: light_only
+- ui_paradigm: flat (with subtle depth)
+- page_structure: sidebar_main
+- color_theory: analogous
+- color_temperature: warm
+- color_saturation: desaturated
+- color_mood: natural
+- heading_font: transitional_serif
+- body_font: humanist_sans
+- type_scale: major_third (1.25)
+- spacing_density: airy
+- corner_radius: subtle
+- shadow_depth: subtle
+- border_weight: hairline
+- texture: none (pure minimalism)
+-->
+
+<style>
+:root {
+    /* Colors - Warm Natural Palette */
+    --color-primary: #8B7355;
+    --color-primary-light: #B5A08F;
+    --color-primary-dark: #6B5742;
+    --color-background: #FEFDFB;
+    --color-surface: #FFFFFF;
+    --color-surface-hover: #F9F7F5;
+    --color-text: #2C2419;
+    --color-text-muted: #857A6E;
+    --color-accent: #D4C5B3;
+    --color-border: #EBE7E1;
+    --color-success: #7A9B76;
+    --color-chart-principal: #8B7355;
+    --color-chart-interest: #D4C5B3;
+
+    /* Typography */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Type Scale - Major Third (1.25) */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+    --text-4xl: 3.052rem;
+
+    /* Spacing - Airy */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 5);
+    --space-xl: calc(var(--space-unit) * 8);
+    --space-2xl: calc(var(--space-unit) * 13);
+
+    /* Shapes */
+    --radius-default: 2px;
+    --shadow-default: 0 1px 3px rgba(44, 36, 25, 0.04);
+    --shadow-hover: 0 4px 12px rgba(44, 36, 25, 0.06);
+    --border-default: 1px solid var(--color-border);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--color-text);
+    background: var(--color-background);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Layout - Sidebar + Main */
+.app-container {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-default);
+    padding: var(--space-2xl) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.main-content {
+    padding: var(--space-2xl) var(--space-xl);
+    max-width: 1000px;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+h1 {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-lg);
+    letter-spacing: -0.01em;
+}
+
+h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
+}
+
+.subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+}
+
+.label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-xs);
+}
+
+/* Input Controls */
+.input-group {
+    margin-bottom: var(--space-lg);
+}
+
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-xs);
+}
+
+.input-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--color-primary);
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 2px;
+    background: var(--color-border);
+    outline: none;
+    border: none;
+    border-radius: 0;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.3);
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.3);
+}
+
+input[type="range"]:focus {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+/* Payment Display */
+.payment-card {
+    background: var(--color-surface);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-default);
+}
+
+.payment-amount {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+}
+
+.payment-frequency {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Breakdown Grid */
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.breakdown-item {
+    background: var(--color-surface);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-lg);
+}
+
+.breakdown-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.breakdown-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+}
+
+/* Chart Container */
+.chart-container {
+    background: var(--color-surface);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.chart-canvas {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+.chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 100%;
+    gap: 4px;
+}
+
+.chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.chart-bar:hover {
+    opacity: 0.8;
+}
+
+.bar-segment {
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.bar-principal {
+    background: var(--color-chart-principal);
+}
+
+.bar-interest {
+    background: var(--color-chart-interest);
+}
+
+.chart-legend {
+    display: flex;
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-default);
+}
+
+/* Comparison Section */
+.comparison-container {
+    background: var(--color-surface);
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    padding: var(--space-xl);
+}
+
+.comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.comparison-toggle {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.toggle-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: var(--border-default);
+    border-radius: var(--radius-default);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.toggle-btn:hover {
+    background: var(--color-surface-hover);
+}
+
+.toggle-btn.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.toggle-btn:focus {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+.comparison-scenario {
+    padding: var(--space-lg);
+    background: var(--color-background);
+    border-radius: var(--radius-default);
+}
+
+.scenario-name {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scenario-payment {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.scenario-savings {
+    font-size: var(--text-sm);
+    color: var(--color-success);
+    font-weight: 500;
+}
+
+.scenario-details {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: var(--border-default);
+}
+
+.scenario-detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.scenario-detail-row span:last-child {
+    color: var(--color-text);
+}
+
+/* Summary Stats */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    padding: var(--space-xl) 0;
+    border-top: var(--border-default);
+    margin-top: var(--space-xl);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: var(--border-default);
+    }
+
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+:focus {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Utility */
+.divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-lg) 0;
+}
+</style>
+
+<div class="app-container">
+    <!-- Sidebar with Inputs -->
+    <aside class="sidebar">
+        <div>
+            <h1>Clean Global</h1>
+            <p class="subtitle">Calculate your mortgage with clarity</p>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="loan-amount">Home Price</label>
+                <span class="input-value" id="loan-amount-display">$450,000</span>
+            </div>
+            <input
+                type="range"
+                id="loan-amount"
+                min="50000"
+                max="2000000"
+                step="10000"
+                value="450000"
+                aria-label="Home price slider"
+            >
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="down-payment">Down Payment</label>
+                <span class="input-value" id="down-payment-display">$90,000 (20%)</span>
+            </div>
+            <input
+                type="range"
+                id="down-payment"
+                min="0"
+                max="100"
+                step="1"
+                value="20"
+                aria-label="Down payment percentage slider"
+            >
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="interest-rate">Interest Rate</label>
+                <span class="input-value" id="interest-rate-display">6.75%</span>
+            </div>
+            <input
+                type="range"
+                id="interest-rate"
+                min="2.0"
+                max="12.0"
+                step="0.125"
+                value="6.75"
+                aria-label="Interest rate slider"
+            >
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="loan-term">Loan Term</label>
+                <span class="input-value" id="loan-term-display">30 years</span>
+            </div>
+            <input
+                type="range"
+                id="loan-term"
+                min="10"
+                max="30"
+                step="5"
+                value="30"
+                aria-label="Loan term slider"
+            >
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="property-tax">Property Tax</label>
+                <span class="input-value" id="property-tax-display">$450/mo</span>
+            </div>
+            <input
+                type="range"
+                id="property-tax"
+                min="0"
+                max="2000"
+                step="25"
+                value="450"
+                aria-label="Property tax slider"
+            >
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label class="label" for="home-insurance">Home Insurance</label>
+                <span class="input-value" id="home-insurance-display">$180/mo</span>
+            </div>
+            <input
+                type="range"
+                id="home-insurance"
+                min="0"
+                max="1000"
+                step="20"
+                value="180"
+                aria-label="Home insurance slider"
+            >
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Monthly Payment Card -->
+        <div class="payment-card">
+            <h2>Monthly Payment</h2>
+            <div class="payment-amount" id="monthly-payment">$2,963</div>
+            <div class="payment-frequency">Per month</div>
+        </div>
+
+        <!-- Breakdown Grid -->
+        <div class="breakdown-grid">
+            <div class="breakdown-item">
+                <div class="breakdown-label">Principal & Interest</div>
+                <div class="breakdown-value" id="principal-interest">$2,333</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-label">Property Tax</div>
+                <div class="breakdown-value" id="tax-display">$450</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-label">Home Insurance</div>
+                <div class="breakdown-value" id="insurance-display">$180</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-label">Total Loan Amount</div>
+                <div class="breakdown-value" id="total-loan">$360,000</div>
+            </div>
+        </div>
+
+        <!-- Amortization Chart -->
+        <div class="chart-container">
+            <h3>Amortization Schedule</h3>
+            <p class="subtitle" style="margin-bottom: var(--space-lg);">Principal vs Interest over 30 years</p>
+            <div class="chart-canvas">
+                <div class="chart-bars" id="amortization-chart"></div>
+            </div>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-chart-principal);"></div>
+                    <span>Principal</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-chart-interest);"></div>
+                    <span>Interest</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-container">
+            <div class="comparison-header">
+                <h3 style="margin: 0;">Compare Scenarios</h3>
+                <div class="comparison-toggle">
+                    <button class="toggle-btn active" data-scenario="15yr">15 Year</button>
+                    <button class="toggle-btn" data-scenario="20yr">20 Year</button>
+                    <button class="toggle-btn" data-scenario="extra">Extra Payment</button>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-scenario">
+                    <div class="scenario-name">Current (30 Year)</div>
+                    <div class="scenario-payment" id="scenario-current">$2,963</div>
+                    <div class="scenario-details">
+                        <div class="scenario-detail-row">
+                            <span>Total Interest</span>
+                            <span id="scenario-current-interest">$479,880</span>
+                        </div>
+                        <div class="scenario-detail-row">
+                            <span>Total Paid</span>
+                            <span id="scenario-current-total">$839,880</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-scenario">
+                    <div class="scenario-name" id="comparison-name">15 Year Fixed</div>
+                    <div class="scenario-payment" id="scenario-alternate">$3,598</div>
+                    <div class="scenario-savings" id="scenario-savings">Save $237,240</div>
+                    <div class="scenario-details">
+                        <div class="scenario-detail-row">
+                            <span>Total Interest</span>
+                            <span id="scenario-alternate-interest">$242,640</span>
+                        </div>
+                        <div class="scenario-detail-row">
+                            <span>Total Paid</span>
+                            <span id="scenario-alternate-total">$602,640</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-scenario">
+                    <div class="scenario-name">Bi-Weekly Payment</div>
+                    <div class="scenario-payment" id="scenario-biweekly">$1,481</div>
+                    <div class="scenario-savings" id="biweekly-savings">Save $78,920 • 4.2 years sooner</div>
+                    <div class="scenario-details">
+                        <div class="scenario-detail-row">
+                            <span>Total Interest</span>
+                            <span id="scenario-biweekly-interest">$400,960</span>
+                        </div>
+                        <div class="scenario-detail-row">
+                            <span>Total Paid</span>
+                            <span id="scenario-biweekly-total">$760,960</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="summary-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="total-interest-stat">$479,880</div>
+                <div class="stat-label">Total Interest</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-paid-stat">$839,880</div>
+                <div class="stat-label">Total Amount Paid</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="payoff-date-stat">Jan 2054</div>
+                <div class="stat-label">Payoff Date</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+
+</body>
+</html>

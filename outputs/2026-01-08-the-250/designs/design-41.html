@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Quartz - A flat approach meets international sensibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Univers:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+        DESIGN: Thesis Quartz - A flat approach meets international sensibility
+        ABOUTME: This design system implements a flashcard_app with flat aesthetics in Swiss International style.
+        ABOUTME: Key characteristics: Grid-based precision, mathematical spacing, absolute clarity through typography.
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #E63946;
+        --color-background: #F8F9FA;
+        --color-surface: #FFFFFF;
+        --color-text: #1D1D1F;
+        --color-text-muted: #6E6E73;
+        --font-heading: 'Helvetica Neue', 'Arial', sans-serif;
+        --font-body: 'Helvetica Neue', 'Arial', sans-serif;
+        --radius-default: 0px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Grid precision - Every element aligns to an 8px baseline grid
+        2. Typographic hierarchy through size and weight alone - no decorative elements
+        3. Objective clarity - Information architecture over personality
+        4. Flat color blocks create spatial relationships without shadows
+        5. Asymmetric balance guided by mathematical proportions
+
+        BEST FOR:
+        - Educational applications requiring focus and clarity
+        - Content-heavy interfaces where information hierarchy is critical
+        - Professional learning environments
+        - Media training and memorization tools
+        - Serious study applications
+
+        AVOID IF:
+        - You need emotional warmth or playful engagement
+        - Target audience prefers visual decoration
+        - Brand requires strong personality or character
+        - Gamification is a core feature
+
+        FUNCTIONAL DIRECTION: flashcard_app
+        This design must clearly function as a flashcard app. Required elements:
+        - Card with front/back flip mechanism
+        - Progress indicator showing position in deck
+        - Navigation controls (previous/next)
+        - Difficulty rating system (easy/medium/hard buttons)
+        - Deck selection interface
+        - Study session statistics
+        - Card collection organization
+        - Spaced repetition indicators
+
+        DESIGN PHILOSOPHY:
+        Swiss International Style emerged in the 1950s emphasizing:
+        - Mathematical grids and objective layouts
+        - Sans-serif typography (primarily Helvetica)
+        - Flush-left, ragged-right text alignment
+        - Asymmetric composition
+        - Reduction to essential elements
+        - Use of photography over illustration
+        - Negative space as active design element
+
+        Applied to flashcard learning:
+        - Cards use maximum surface area within grid constraints
+        - Progress is visualized through precise geometric indicators
+        - Color is functional, not decorative (red for primary actions/difficulty)
+        - All interactions are direct and unambiguous
+        - Typography creates hierarchy without ornamentation
+        */
+
+        :root {
+            /* Colors - Swiss red accent on neutral grayscale */
+            --color-primary: #E63946;
+            --color-primary-dark: #C4303B;
+            --color-background: #F8F9FA;
+            --color-surface: #FFFFFF;
+            --color-surface-secondary: #E9ECEF;
+            --color-text: #1D1D1F;
+            --color-text-muted: #6E6E73;
+            --color-border: #D1D5DB;
+            --color-success: #2D6A4F;
+            --color-warning: #F77F00;
+            --color-easy: #52B788;
+            --color-medium: #F9C74F;
+            --color-hard: #E63946;
+
+            /* Typography - Helvetica Neue for Swiss precision */
+            --font-heading: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-body: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-weight-light: 300;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+
+            /* Type scale - 1.25 major third */
+            --font-size-xs: 0.64rem;
+            --font-size-sm: 0.8rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.563rem;
+            --font-size-2xl: 1.953rem;
+            --font-size-3xl: 2.441rem;
+            --font-size-4xl: 3.052rem;
+
+            /* Spacing - 8px grid system */
+            --space-unit: 8px;
+            --space-1: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+            --space-8: 64px;
+            --space-10: 80px;
+            --space-12: 96px;
+
+            /* Shapes - Sharp, no rounded corners */
+            --radius-default: 0px;
+            --shadow-default: none;
+            --border-width: 1px;
+            --border-width-thick: 2px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-regular);
+            line-height: 1.5;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Grid container - Swiss grid precision */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 64px 1fr;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header - Minimal top bar */
+        .app-header {
+            grid-column: 1 / -1;
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-4);
+        }
+
+        .app-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            letter-spacing: -0.02em;
+        }
+
+        .app-title span {
+            color: var(--color-primary);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: var(--space-4);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .stat-label {
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text);
+        }
+
+        /* Sidebar - Deck selection */
+        .sidebar {
+            background: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-border);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-3);
+        }
+
+        .sidebar-section-title {
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .deck-list {
+            list-style: none;
+        }
+
+        .deck-item {
+            padding: var(--space-2);
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .deck-item:hover {
+            background-color: var(--color-surface-secondary);
+        }
+
+        .deck-item.active {
+            background-color: var(--color-surface-secondary);
+            border-left-color: var(--color-primary);
+        }
+
+        .deck-name {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-1);
+        }
+
+        .deck-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Main study area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6);
+            gap: var(--space-4);
+        }
+
+        /* Progress indicator - Geometric precision */
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: var(--space-2);
+        }
+
+        .progress-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-numbers {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-surface-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--color-primary);
+            width: 24%;
+            transition: width 0.3s ease;
+        }
+
+        /* Flashcard - Maximum clarity */
+        .flashcard {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background: var(--color-surface);
+            border: var(--border-width-thick) solid var(--color-text);
+            position: relative;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .flashcard-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6);
+        }
+
+        .flashcard-front {
+            background: var(--color-surface);
+        }
+
+        .flashcard-back {
+            background: var(--color-surface);
+            transform: rotateY(180deg);
+        }
+
+        .card-label {
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-4);
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-light);
+            line-height: 1.4;
+            padding: var(--space-4);
+        }
+
+        .card-hint {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Navigation controls */
+        .controls {
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: var(--space-3);
+            align-items: center;
+        }
+
+        .nav-button {
+            padding: var(--space-2) var(--space-4);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-text);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: var(--color-text);
+            color: var(--color-surface);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-button:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-button.previous {
+            justify-self: start;
+        }
+
+        .nav-button.next {
+            justify-self: end;
+        }
+
+        .flip-button {
+            padding: var(--space-3) var(--space-6);
+            background: var(--color-primary);
+            border: none;
+            color: var(--color-surface);
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .flip-button:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .flip-button:focus-visible {
+            outline: 2px solid var(--color-text);
+            outline-offset: 2px;
+        }
+
+        /* Difficulty rating - Color-coded system */
+        .difficulty-rating {
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-2);
+        }
+
+        .difficulty-button {
+            padding: var(--space-3);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .difficulty-button .difficulty-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        .difficulty-button .difficulty-time {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .difficulty-button.easy {
+            border-color: var(--color-easy);
+        }
+
+        .difficulty-button.easy:hover {
+            background: var(--color-easy);
+            color: var(--color-surface);
+        }
+
+        .difficulty-button.easy:hover .difficulty-label {
+            color: var(--color-surface);
+        }
+
+        .difficulty-button.medium {
+            border-color: var(--color-medium);
+        }
+
+        .difficulty-button.medium:hover {
+            background: var(--color-medium);
+            color: var(--color-text);
+        }
+
+        .difficulty-button.hard {
+            border-color: var(--color-hard);
+        }
+
+        .difficulty-button.hard:hover {
+            background: var(--color-hard);
+            color: var(--color-surface);
+        }
+
+        .difficulty-button.hard:hover .difficulty-label {
+            color: var(--color-surface);
+        }
+
+        .difficulty-button:focus-visible {
+            outline: 2px solid var(--color-text);
+            outline-offset: 2px;
+        }
+
+        /* Session stats panel */
+        .session-stats {
+            position: fixed;
+            bottom: var(--space-3);
+            right: var(--space-3);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-3);
+            min-width: 200px;
+        }
+
+        .session-stats-title {
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: var(--space-2);
+            background: var(--color-surface-secondary);
+        }
+
+        .stat-box-value {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .stat-box-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Spaced repetition indicator */
+        .srs-indicator {
+            position: absolute;
+            top: var(--space-3);
+            right: var(--space-3);
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .srs-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-border);
+        }
+
+        .srs-dot.active {
+            background: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .flashcard-inner,
+            .nav-button,
+            .difficulty-button,
+            .flip-button,
+            .progress-fill {
+                transition: none;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 64px auto 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: var(--border-width) solid var(--color-border);
+                max-height: 200px;
+            }
+
+            .flashcard {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--space-3);
+            }
+
+            .flashcard {
+                height: 350px;
+            }
+
+            .card-content {
+                font-size: var(--font-size-xl);
+            }
+
+            .session-stats {
+                position: static;
+                width: 100%;
+                max-width: 800px;
+                margin-top: var(--space-3);
+            }
+
+            .header-stats {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="app-title">Thesis <span>Quartz</span></h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Streak</div>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Mastered</div>
+                    <div class="stat-value">487</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar - Deck selection -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h2 class="sidebar-section-title">Active Decks</h2>
+                <ul class="deck-list">
+                    <li class="deck-item active">
+                        <div class="deck-name">Media Theory Fundamentals</div>
+                        <div class="deck-meta">
+                            <span>42 cards</span>
+                            <span>18 due</span>
+                        </div>
+                    </li>
+                    <li class="deck-item">
+                        <div class="deck-name">Film History Timeline</div>
+                        <div class="deck-meta">
+                            <span>156 cards</span>
+                            <span>7 due</span>
+                        </div>
+                    </li>
+                    <li class="deck-item">
+                        <div class="deck-name">Critical Theory Concepts</div>
+                        <div class="deck-meta">
+                            <span>89 cards</span>
+                            <span>23 due</span>
+                        </div>
+                    </li>
+                    <li class="deck-item">
+                        <div class="deck-name">Documentary Methods</div>
+                        <div class="deck-meta">
+                            <span>64 cards</span>
+                            <span>5 due</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-section-title">Completed</h2>
+                <ul class="deck-list">
+                    <li class="deck-item">
+                        <div class="deck-name">Narrative Structure</div>
+                        <div class="deck-meta">
+                            <span>73 cards</span>
+                            <span>0 due</span>
+                        </div>
+                    </li>
+                    <li class="deck-item">
+                        <div class="deck-name">Cinematography Basics</div>
+                        <div class="deck-meta">
+                            <span>51 cards</span>
+                            <span>0 due</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main study area -->
+        <main class="main-content">
+            <!-- Progress indicator -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-label">Progress</span>
+                    <span class="progress-numbers">6 / 25</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Flashcard -->
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-face flashcard-front">
+                        <div class="card-label">Question</div>
+                        <div class="card-content">
+                            What framework did Marshall McLuhan introduce to analyze how different media shape human consciousness and social organization?
+                        </div>
+                        <div class="card-hint">Click card to reveal answer</div>
+                        <div class="srs-indicator">
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot"></div>
+                            <div class="srs-dot"></div>
+                        </div>
+                    </div>
+                    <div class="flashcard-face flashcard-back">
+                        <div class="card-label">Answer</div>
+                        <div class="card-content">
+                            "The medium is the message" - McLuhan argued that the form of a medium embeds itself in the message, creating a symbiotic relationship where the medium influences how the message is perceived and understood.
+                        </div>
+                        <div class="card-hint">Rate your confidence below</div>
+                        <div class="srs-indicator">
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot active"></div>
+                            <div class="srs-dot"></div>
+                            <div class="srs-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation controls -->
+            <div class="controls">
+                <button class="nav-button previous" id="prevBtn">← Previous</button>
+                <button class="flip-button" id="flipBtn">Flip Card</button>
+                <button class="nav-button next" id="nextBtn">Next →</button>
+            </div>
+
+            <!-- Difficulty rating -->
+            <div class="difficulty-rating">
+                <button class="difficulty-button easy">
+                    <span class="difficulty-label">Easy</span>
+                    <span class="difficulty-time">4 days</span>
+                </button>
+                <button class="difficulty-button medium">
+                    <span class="difficulty-label">Medium</span>
+                    <span class="difficulty-time">2 days</span>
+                </button>
+                <button class="difficulty-button hard">
+                    <span class="difficulty-label">Hard</span>
+                    <span class="difficulty-time">10 min</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Session statistics -->
+    <aside class="session-stats">
+        <h3 class="session-stats-title">Session</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-box-value">18</div>
+                <div class="stat-box-label">Reviewed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-value">12</div>
+                <div class="stat-box-label">Mastered</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-value">8:34</div>
+                <div class="stat-box-label">Time</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-value">94%</div>
+                <div class="stat-box-label">Accuracy</div>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        // Navigation state
+        const TOTAL = 250;
+        const CURRENT = 41;
+
+        // Flashcard flip functionality
+        const flashcard = document.getElementById('flashcard');
+        const flipBtn = document.getElementById('flipBtn');
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        flipBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            flashcard.classList.toggle('flipped');
+        });
+
+        // Navigation between designs
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        prevBtn.disabled = CURRENT <= 1;
+        nextBtn.disabled = CURRENT >= TOTAL;
+
+        prevBtn.addEventListener('click', () => {
+            if (CURRENT > 1) {
+                window.location.href = `design-${CURRENT - 1}.html`;
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (CURRENT < TOTAL) {
+                window.location.href = `design-${CURRENT + 1}.html`;
+            }
+        });
+
+        // Keyboard navigation
+        /* Navigation removed */
+
+        // Difficulty rating buttons
+        const difficultyButtons = document.querySelectorAll('.difficulty-button');
+
+        difficultyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Visual feedback
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+
+                // In a real app, this would update spaced repetition algorithm
+                // and potentially move to next card
+                console.log('Difficulty rated:', this.classList[1]);
+
+                // Simulate moving to next card after rating
+                setTimeout(() => {
+                    if (CURRENT < TOTAL) {
+                        window.location.href = `design-${CURRENT + 1}.html`;
+                    }
+                }, 500);
+            });
+        });
+
+        // Deck selection
+        const deckItems = document.querySelectorAll('.deck-item');
+
+        deckItems.forEach(item => {
+            item.addEventListener('click', function() {
+                deckItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Update progress bar based on current position
+        const progressFill = document.querySelector('.progress-fill');
+        const progressNumbers = document.querySelector('.progress-numbers');
+
+        // Calculate progress within current session (simulated)
+        const sessionProgress = 6;
+        const sessionTotal = 25;
+        const progressPercent = (sessionProgress / sessionTotal) * 100;
+
+        progressFill.style.width = `${progressPercent}%`;
+    </script>
+</body>
+</html>

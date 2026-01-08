@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meadow Graphite - International minimalism with natural undertones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+/*
+DESIGN: Meadow Graphite - International minimalism with natural undertones
+ABOUTME: This design system implements a presentation interface with Bauhaus aesthetics.
+ABOUTME: Key characteristics: geometric precision, functional typography, natural earth tones in dark mode
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #8FA876;
+--color-primary-bright: #A8C490;
+--color-background: #1A1E1A;
+--color-surface: #252925;
+--color-surface-elevated: #2F342F;
+--color-border: #3F463F;
+--color-text: #E8EDE8;
+--color-text-muted: #9AA59A;
+--color-accent-warm: #C4A574;
+--color-accent-cool: #6B8E8E;
+--font-heading: 'Work Sans', sans-serif;
+--font-body: 'Work Sans', sans-serif;
+--font-mono: 'IBM Plex Mono', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Bauhaus geometric precision - rectangular forms, clear grid structure, functional layout
+2. Natural earth tone palette - muted greens and browns create friendly warmth in dark mode
+3. Typography hierarchy through weight and spacing rather than size extremes
+4. Minimal ornamentation - every element serves a functional purpose
+5. Generous whitespace creates breathing room between functional zones
+
+BEST FOR:
+- Real estate presentations and property showcases
+- Professional slide decks requiring warmth without sacrificing authority
+- Training materials and educational content
+- Client-facing presentations in natural/sustainable industries
+
+AVOID IF:
+- You need playful or highly decorative designs
+- Bright, high-energy presentations are required
+- Complex data visualization is the primary focus
+- You need ornamental or expressive typography
+
+FUNCTIONAL DIRECTION: presentation
+This design must clearly function as a presentation interface. Required elements:
+- Slide canvas (main viewing area)
+- Thumbnail sidebar (slide navigation)
+- Presenter notes (below main canvas)
+- Controls (play, previous, next, fullscreen)
+
+BAUHAUS INFLUENCE:
+The Bauhaus design era emphasizes:
+- Form follows function - clean geometric shapes
+- Primary shapes (rectangles, circles) as building blocks
+- Rationalist typography with clear hierarchy
+- Grid-based layouts with mathematical precision
+- Limited color palette applied systematically
+- Honest materials and clear structure
+
+DARK MODE INTERPRETATION:
+Rather than pure black, we use deep charcoal greens to maintain the natural "Meadow" theme.
+Earth tones (sage green, warm graphite, muted gold) create approachability while maintaining
+professional restraint. High contrast ensures readability without harshness.
+
+REAL ESTATE CONTEXT:
+This presentation tool is ideal for property showcases. The natural color palette
+suggests sustainability and quality materials. The clean geometric approach communicates
+professionalism and trustworthiness. Friendly tone comes from warm accents and generous spacing.
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Natural earth tones in dark mode */
+            --color-primary: #8FA876;
+            --color-primary-bright: #A8C490;
+            --color-background: #1A1E1A;
+            --color-surface: #252925;
+            --color-surface-elevated: #2F342F;
+            --color-border: #3F463F;
+            --color-text: #E8EDE8;
+            --color-text-muted: #9AA59A;
+            --color-accent-warm: #C4A574;
+            --color-accent-cool: #6B8E8E;
+
+            /* Typography - Bauhaus rationalist approach */
+            --font-heading: 'Work Sans', sans-serif;
+            --font-body: 'Work Sans', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+
+            /* Spacing - 8px base unit system */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-xxl: calc(var(--space-unit) * 8);
+
+            /* Shapes - Minimal Bauhaus geometry */
+            --radius-default: 2px;
+            --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+            /* Layout */
+            --sidebar-width: 220px;
+            --header-height: 64px;
+            --notes-height: 180px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Main Layout - Bauhaus grid structure */
+        .presentation-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--header-height) 1fr var(--notes-height);
+            grid-template-areas:
+                "sidebar header"
+                "sidebar canvas"
+                "sidebar notes";
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Header - Top control bar */
+        .presentation-header {
+            grid-area: header;
+            background: var(--color-surface);
+            border-bottom: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-lg);
+        }
+
+        .presentation-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+            letter-spacing: -0.02em;
+        }
+
+        .presentation-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .time-icon {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .time-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 6px;
+            background: currentColor;
+            transform: translate(-50%, -80%);
+        }
+
+        /* Sidebar - Thumbnail navigation */
+        .presentation-sidebar {
+            grid-area: sidebar;
+            background: var(--color-surface-elevated);
+            border-right: 2px solid var(--color-border);
+            overflow-y: auto;
+            padding: var(--space-md);
+        }
+
+        .sidebar-header {
+            padding: var(--space-sm) 0 var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--space-md);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .slide-count {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-primary);
+            margin-top: var(--space-xs);
+        }
+
+        .thumbnails-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .thumbnail {
+            background: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .thumbnail:hover {
+            border-color: var(--color-primary);
+            background: var(--color-surface);
+        }
+
+        .thumbnail:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .thumbnail.active {
+            border-color: var(--color-primary-bright);
+            background: var(--color-surface);
+            box-shadow: 0 0 0 1px var(--color-primary-bright);
+        }
+
+        .thumbnail-number {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .thumbnail.active .thumbnail-number {
+            color: var(--color-primary-bright);
+            font-weight: 500;
+        }
+
+        .thumbnail-preview {
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-default);
+            padding: var(--space-md);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .thumbnail-line {
+            height: 3px;
+            background: var(--color-border);
+            border-radius: 2px;
+        }
+
+        .thumbnail-line.primary {
+            background: var(--color-primary);
+            width: 60%;
+        }
+
+        .thumbnail-line.secondary {
+            background: var(--color-border);
+            width: 80%;
+        }
+
+        /* Main Canvas - Primary slide viewing area */
+        .presentation-canvas {
+            grid-area: canvas;
+            background: var(--color-background);
+            padding: var(--space-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 960px;
+            aspect-ratio: 16 / 9;
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-xxl);
+            box-shadow: var(--shadow-elevated);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Slide Content Styles */
+        .slide {
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-heading {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-text);
+            margin-bottom: var(--space-lg);
+            letter-spacing: -0.03em;
+        }
+
+        .slide-subheading {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xl);
+            line-height: 1.4;
+        }
+
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .content-block {
+            background: var(--color-surface-elevated);
+            border-left: 3px solid var(--color-primary);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-default);
+        }
+
+        .content-block h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary-bright);
+            margin-bottom: var(--space-sm);
+        }
+
+        .content-block p {
+            font-size: 16px;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .feature-item {
+            background: var(--color-surface-elevated);
+            padding: var(--space-lg);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-sm);
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        /* Navigation Controls */
+        .slide-controls {
+            position: absolute;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--color-surface-elevated);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 18px;
+        }
+
+        .control-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-background);
+        }
+
+        .control-btn:focus {
+            outline: 2px solid var(--color-primary-bright);
+            outline-offset: 2px;
+        }
+
+        .control-btn:active {
+            transform: translateY(1px);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .control-btn:disabled:hover {
+            background: var(--color-surface-elevated);
+            border-color: var(--color-border);
+            color: var(--color-text);
+            transform: none;
+        }
+
+        /* Presenter Notes */
+        .presentation-notes {
+            grid-area: notes;
+            background: var(--color-surface);
+            border-top: 2px solid var(--color-border);
+            padding: var(--space-lg);
+            overflow-y: auto;
+        }
+
+        .notes-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .notes-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .notes-indicator {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--color-accent-warm);
+            background: var(--color-surface-elevated);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-default);
+        }
+
+        .notes-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--color-text-muted);
+        }
+
+        .notes-content p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .notes-content strong {
+            color: var(--color-primary-bright);
+            font-weight: 600;
+        }
+
+        /* Slide Indicator */
+        .slide-indicator {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            background: var(--color-surface-elevated);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary-bright);
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Header -->
+        <header class="presentation-header">
+            <div class="presentation-title">Green Valley Properties — Q1 2024 Portfolio</div>
+            <div class="presentation-meta">
+                <div class="time-display">
+                    <div class="time-icon"></div>
+                    <span>14:32</span>
+                </div>
+                <span>45 min</span>
+            </div>
+        </header>
+
+        <!-- Sidebar with Thumbnails -->
+        <aside class="presentation-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Slides</div>
+                <div class="slide-count">5 of 5</div>
+            </div>
+            <div class="thumbnails-list">
+                <button class="thumbnail active" data-slide="0" tabindex="0">
+                    <div class="thumbnail-number">01</div>
+                    <div class="thumbnail-preview">
+                        <div class="thumbnail-line primary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                    </div>
+                </button>
+                <button class="thumbnail" data-slide="1" tabindex="0">
+                    <div class="thumbnail-number">02</div>
+                    <div class="thumbnail-preview">
+                        <div class="thumbnail-line primary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                    </div>
+                </button>
+                <button class="thumbnail" data-slide="2" tabindex="0">
+                    <div class="thumbnail-number">03</div>
+                    <div class="thumbnail-preview">
+                        <div class="thumbnail-line primary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                    </div>
+                </button>
+                <button class="thumbnail" data-slide="3" tabindex="0">
+                    <div class="thumbnail-number">04</div>
+                    <div class="thumbnail-preview">
+                        <div class="thumbnail-line primary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                    </div>
+                </button>
+                <button class="thumbnail" data-slide="4" tabindex="0">
+                    <div class="thumbnail-number">05</div>
+                    <div class="thumbnail-preview">
+                        <div class="thumbnail-line primary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                        <div class="thumbnail-line secondary"></div>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Canvas -->
+        <main class="presentation-canvas">
+            <div class="slide-container">
+                <div class="slide-indicator">
+                    <span id="current-slide">1</span> / <span id="total-slides">5</span>
+                </div>
+
+                <!-- Slide 1 -->
+                <div class="slide active" data-slide="0">
+                    <h1 class="slide-heading">Sustainable Living Spaces</h1>
+                    <p class="slide-subheading">Premium real estate portfolio for modern lifestyles</p>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Urban Integration</div>
+                            <div class="feature-desc">Connected to transit and community spaces</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Green Design</div>
+                            <div class="feature-desc">LEED certified with passive energy systems</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Natural Materials</div>
+                            <div class="feature-desc">Responsibly sourced wood and stone finishes</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Community Focus</div>
+                            <div class="feature-desc">Shared gardens and collaborative spaces</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide" data-slide="1">
+                    <h1 class="slide-heading">Market Overview</h1>
+                    <div class="slide-content">
+                        <div class="content-block">
+                            <h3>Regional Growth</h3>
+                            <p>The Green Valley corridor has seen 23% appreciation year-over-year, driven by infrastructure investment and quality-of-life improvements.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Buyer Demographics</h3>
+                            <p>Primary market: professionals aged 28-45 seeking walkable neighborhoods with access to nature and strong school districts.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Competitive Advantage</h3>
+                            <p>Our properties combine modern amenities with sustainable design, attracting environmentally conscious buyers willing to pay premium prices.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide" data-slide="2">
+                    <h1 class="slide-heading">Meadow Lofts</h1>
+                    <p class="slide-subheading">42 residential units | 8 commercial spaces</p>
+                    <div class="slide-content">
+                        <div class="content-block">
+                            <h3>Architecture</h3>
+                            <p>Six-story mixed-use building featuring timber frame construction, floor-to-ceiling windows, and rooftop terraces with native plantings.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Sustainability Features</h3>
+                            <p>Geothermal heating, rainwater harvesting, solar array, electric vehicle charging, bike storage, and zero-waste construction practices.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Timeline & Investment</h3>
+                            <p>Groundbreaking Q2 2024. Estimated completion Q4 2025. Total project value: $18.5M with projected 28% ROI over five years.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="slide" data-slide="3">
+                    <h1 class="slide-heading">Financial Projections</h1>
+                    <div class="slide-content">
+                        <div class="content-block">
+                            <h3>Revenue Streams</h3>
+                            <p>Residential sales: $14.2M | Commercial leases: $420K annually | Parking & amenities: $180K annually</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Cost Structure</h3>
+                            <p>Land acquisition: $3.2M | Construction: $12.8M | Marketing & sales: $1.2M | Contingency: $1.3M</p>
+                        </div>
+                        <div class="content-block">
+                            <h3>Exit Strategy</h3>
+                            <p>Sell residential units individually (months 18-24). Retain commercial spaces for long-term income. Option to refinance and hold.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="slide" data-slide="4">
+                    <h1 class="slide-heading">Next Steps</h1>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Due Diligence</div>
+                            <div class="feature-desc">Complete environmental and zoning review by March 15</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Financing</div>
+                            <div class="feature-desc">Finalize construction loan and investor commitments</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Design Refinement</div>
+                            <div class="feature-desc">Work with architects on unit layouts and material selections</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"></div>
+                            <div class="feature-title">Community Engagement</div>
+                            <div class="feature-desc">Present plans to neighborhood association and gather feedback</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="slide-controls">
+                    <button class="control-btn" id="prev-btn" aria-label="Previous slide">
+                        <span>◀</span>
+                    </button>
+                    <button class="control-btn" id="play-btn" aria-label="Play presentation">
+                        <span>▶</span>
+                    </button>
+                    <button class="control-btn" id="next-btn" aria-label="Next slide">
+                        <span>▶</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Presenter Notes -->
+        <section class="presentation-notes">
+            <div class="notes-header">
+                <div class="notes-title">Presenter Notes</div>
+                <div class="notes-indicator">Slide 1</div>
+            </div>
+            <div class="notes-content" id="notes-content">
+                <p><strong>Opening hook:</strong> Start with the question "What does sustainable living mean to you?" to engage the audience.</p>
+                <p>Emphasize that Green Valley Properties combines environmental responsibility with financial performance—these are not competing goals.</p>
+                <p>The four key features represent our core value proposition. Spend 30 seconds on each, using the Riverside Commons project as a concrete example.</p>
+                <p><strong>Transition:</strong> "Let's look at the market data that validates this approach..."</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Presentation state
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let isPlaying = false;
+        let playInterval = null;
+
+        // Presenter notes for each slide
+        const presenterNotes = [
+            `<p><strong>Opening hook:</strong> Start with the question "What does sustainable living mean to you?" to engage the audience.</p>
+            <p>Emphasize that Green Valley Properties combines environmental responsibility with financial performance—these are not competing goals.</p>
+            <p>The four key features represent our core value proposition. Spend 30 seconds on each, using the Riverside Commons project as a concrete example.</p>
+            <p><strong>Transition:</strong> "Let's look at the market data that validates this approach..."</p>`,
+
+            `<p><strong>Key point:</strong> The 23% appreciation figure is conservative—some comparables have seen 30%+.</p>
+            <p>When discussing buyer demographics, mention the "green premium" research: buyers will pay 8-12% more for certified sustainable properties.</p>
+            <p>Have the school district rankings report ready if anyone asks about specific schools.</p>
+            <p><strong>Transition:</strong> "Now let's look at our flagship project..."</p>`,
+
+            `<p><strong>Visual aid:</strong> If possible, show the architectural renderings on your tablet and pass them around.</p>
+            <p>The timber frame is a selling point—explain that it's both beautiful and has lower embodied carbon than steel/concrete.</p>
+            <p>Emphasize the rooftop terraces as a unique amenity that differentiates us from competitors.</p>
+            <p><strong>Anticipate question:</strong> Be ready to discuss construction timeline risks and our mitigation strategies.</p>`,
+
+            `<p><strong>Financial transparency:</strong> These numbers have been reviewed by independent analysts—mention this upfront to build credibility.</p>
+            <p>The commercial lease income provides stable cash flow during residential sellout phase—this reduces risk.</p>
+            <p>Parking revenue may seem small but it's pure margin with minimal operating costs.</p>
+            <p><strong>Pause for questions:</strong> This is typically where investors have detailed financial questions—allow time.</p>`,
+
+            `<p><strong>Call to action:</strong> "We're looking for investment partners who share our vision of profitable sustainability."</p>
+            <p>The March 15 deadline for due diligence is firm—we have backup sites if this one doesn't work out.</p>
+            <p>Emphasize community engagement as a core value, not just a checkbox—it reduces opposition and improves outcomes.</p>
+            <p><strong>Closing:</strong> Distribute term sheets and schedule one-on-one follow-up meetings this week.</p>`
+        ];
+
+        // Elements
+        const slides = document.querySelectorAll('.slide');
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playBtn = document.getElementById('play-btn');
+        const currentSlideEl = document.getElementById('current-slide');
+        const notesContent = document.getElementById('notes-content');
+        const notesIndicator = document.querySelector('.notes-indicator');
+
+        // Update slide display
+        function updateSlide(index) {
+            // Bounds check
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            currentSlide = index;
+
+            // Update slides
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === currentSlide);
+            });
+
+            // Update thumbnails
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === currentSlide);
+            });
+
+            // Update indicator
+            currentSlideEl.textContent = currentSlide + 1;
+
+            // Update notes
+            notesContent.innerHTML = presenterNotes[currentSlide];
+            notesIndicator.textContent = `Slide ${currentSlide + 1}`;
+
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        // Navigation functions
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                updateSlide(currentSlide + 1);
+            } else if (isPlaying) {
+                stopPresentation();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                updateSlide(currentSlide - 1);
+            }
+        }
+
+        function playPresentation() {
+            if (isPlaying) {
+                stopPresentation();
+                return;
+            }
+
+            isPlaying = true;
+            playBtn.innerHTML = '<span>⏸</span>';
+            playBtn.setAttribute('aria-label', 'Pause presentation');
+
+            // Auto-advance every 5 seconds
+            playInterval = setInterval(() => {
+                if (currentSlide < totalSlides - 1) {
+                    nextSlide();
+                } else {
+                    stopPresentation();
+                }
+            }, 5000);
+        }
+
+        function stopPresentation() {
+            isPlaying = false;
+            playBtn.innerHTML = '<span>▶</span>';
+            playBtn.setAttribute('aria-label', 'Play presentation');
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+        playBtn.addEventListener('click', playPresentation);
+
+        // Thumbnail navigation
+        thumbnails.forEach((thumb, index) => {
+            thumb.addEventListener('click', () => {
+                updateSlide(index);
+            });
+        });
+
+        // Keyboard navigation - Arrow keys for browsing designs
+        /* Navigation removed */
+
+        // Initialize
+        updateSlide(0);
+    </script>
+</body>
+</html>

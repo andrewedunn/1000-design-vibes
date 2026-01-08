@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Metro - Natural meets neutral: a pop art perspective</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com?family=Archivo+Black:400&family=Work+Sans:400,500,600&display=swap" rel="stylesheet">
+    <style>
+        /*
+        DESIGN: Stark Metro - Natural meets neutral: a pop art perspective
+        ABOUTME: This design system implements survey_form with pop art aesthetics in a mysterious, neutral-natural palette.
+        ABOUTME: Key characteristics: Bold graphic shapes, high-contrast black outlines, Ben-Day dot patterns, dramatic typography
+
+        QUICK START - Copy these variables to apply this design:
+        --color-primary: #2D5016;
+        --color-background: #F5F3ED;
+        --color-surface: #FFFFFF;
+        --color-text: #1A1A1A;
+        --color-accent-warm: #D4A574;
+        --color-accent-cool: #7A9D96;
+        --font-heading: 'Archivo Black', sans-serif;
+        --font-body: 'Work Sans', sans-serif;
+        --radius-default: 0px;
+        --space-unit: 8px;
+
+        AESTHETIC PRINCIPLES:
+        1. Bold 4px black borders on all interactive elements (Lichtenstein-inspired)
+        2. Ben-Day dot patterns create textured surfaces and mysterious depth
+        3. Geometric shapes and angular compositions break grid expectations
+        4. Natural neutral palette (moss, sand, stone) subverts typical pop art primaries
+        5. Dramatic scale contrast between heading and body text
+        6. White space used strategically to create tension and focus
+
+        DESIGN DIMENSIONS:
+        - functional_direction: survey_form (Question progression, answer types, progress bar, submit)
+        - ui_paradigm: flat (clean, bold borders, solid colors)
+        - design_era: pop_art (graphic boldness, commercial irony, Ben-Day dots)
+        - emotional_tone: mysterious (unusual neutral palette, ambiguous imagery, tension)
+        - industry: saas (professional, scalable, data-focused)
+        - color_mode: light_only (optimized for single mode)
+
+        BEST FOR:
+        - User research surveys with personality
+        - Brand perception studies
+        - Customer feedback forms
+        - Market research questionnaires
+        - SaaS onboarding surveys
+        - Product discovery interviews
+
+        AVOID IF:
+        - Need traditional corporate aesthetic
+        - Require dark mode support
+        - Medical or legal contexts requiring conservative design
+        - High-density information display
+
+        FUNCTIONAL DIRECTION: survey_form
+        This design must clearly function as a survey_form. Required elements:
+        - Question progression with clear numbering
+        - Multiple answer types (multiple choice, scale, text input)
+        - Progress bar showing completion status
+        - Submit button with clear call-to-action
+        - Question navigation (previous/next)
+
+        COLOR PSYCHOLOGY:
+        The natural neutral palette creates mystery through restraint:
+        - Moss green (#2D5016): Grounded, natural authority
+        - Warm sand (#D4A574): Approachable, organic
+        - Cool sage (#7A9D96): Calm, contemplative
+        - Cream background (#F5F3ED): Soft, sophisticated
+        Combined with pop art's bold graphics, this creates cognitive dissonance -
+        the visual language says "bold commercial" while colors whisper "natural mystery"
+
+        TYPOGRAPHY SCALE:
+        Using Perfect Fourth ratio (1.333) for balanced hierarchy
+        - Display: 48px (Questions)
+        - H1: 36px
+        - H2: 27px
+        - Body: 18px
+        - Small: 14px
+
+        NAVIGATION:
+        Arrow key support for design browsing (not survey navigation)
+        - ArrowLeft: Previous design (#190)
+        - ArrowRight: Next design (#192)
+        */
+
+        :root {
+            /* Colors - Natural Neutral Palette with Pop Art Contrast */
+            --color-primary: #2D5016;
+            --color-primary-dark: #1F3810;
+            --color-background: #F5F3ED;
+            --color-surface: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-muted: #595959;
+            --color-accent-warm: #D4A574;
+            --color-accent-cool: #7A9D96;
+            --color-accent-light: #E8DCC8;
+            --color-border: #1A1A1A;
+
+            /* Typography */
+            --font-heading: 'Archivo Black', sans-serif;
+            --font-body: 'Work Sans', sans-serif;
+            --font-size-display: 48px;
+            --font-size-h1: 36px;
+            --font-size-h2: 27px;
+            --font-size-body: 18px;
+            --font-size-small: 14px;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: calc(var(--space-unit) * 1);
+            --space-sm: calc(var(--space-unit) * 2);
+            --space-md: calc(var(--space-unit) * 3);
+            --space-lg: calc(var(--space-unit) * 4);
+            --space-xl: calc(var(--space-unit) * 6);
+            --space-2xl: calc(var(--space-unit) * 8);
+
+            /* Shapes */
+            --radius-default: 0px;
+            --border-width: 4px;
+            --shadow-default: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-body);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: var(--color-background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ben-Day Dot Pattern Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, var(--color-text) 1px, transparent 1px);
+            background-size: 8px 8px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header with Progress Bar */
+        .header {
+            background: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-h2);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: var(--color-primary);
+        }
+
+        .progress-container {
+            flex: 1;
+            max-width: 400px;
+            margin-left: var(--space-xl);
+        }
+
+        .progress-label {
+            font-size: var(--font-size-small);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar {
+            height: 16px;
+            background: var(--color-accent-light);
+            border: var(--border-width) solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 40%;
+            transition: width 0.4s ease;
+            position: relative;
+        }
+
+        /* Ben-Day dots on progress fill */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--font-size-small);
+            font-weight: 700;
+            color: var(--color-border);
+            z-index: 2;
+            mix-blend-mode: multiply;
+        }
+
+        /* Main Survey Container */
+        .survey-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .question-card {
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-2xl);
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Geometric accent shape - pop art angular composition */
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            background: var(--color-accent-warm);
+            border: var(--border-width) solid var(--color-border);
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+
+        .question-number {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-small);
+            color: var(--color-accent-cool);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .question-text {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-display);
+            line-height: 1.2;
+            color: var(--color-text);
+            margin-bottom: var(--space-xl);
+            letter-spacing: -0.02em;
+        }
+
+        .question-subtext {
+            font-size: var(--font-size-body);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xl);
+            font-weight: 500;
+        }
+
+        /* Answer Options */
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .answer-option {
+            position: relative;
+        }
+
+        .answer-option input[type="radio"],
+        .answer-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .answer-option label {
+            display: flex;
+            align-items: center;
+            padding: var(--space-lg);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: var(--font-size-body);
+            font-weight: 500;
+            min-height: 64px;
+        }
+
+        .answer-option label::before {
+            content: '';
+            width: 28px;
+            height: 28px;
+            border: var(--border-width) solid var(--color-border);
+            margin-right: var(--space-md);
+            flex-shrink: 0;
+            background: var(--color-surface);
+            position: relative;
+        }
+
+        .answer-option input[type="radio"] + label::before {
+            border-radius: 50%;
+        }
+
+        .answer-option input:checked + label {
+            background: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-border);
+        }
+
+        .answer-option input:checked + label::before {
+            background: var(--color-accent-warm);
+            border-color: var(--color-border);
+        }
+
+        /* Ben-Day dots on checked options */
+        .answer-option input:checked + label::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+            background-size: 6px 6px;
+            pointer-events: none;
+        }
+
+        .answer-option label:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--color-border);
+        }
+
+        .answer-option input:focus + label {
+            outline: 3px solid var(--color-accent-warm);
+            outline-offset: 2px;
+        }
+
+        /* Scale Rating Options */
+        .scale-options {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            justify-content: space-between;
+        }
+
+        .scale-option {
+            flex: 1;
+        }
+
+        .scale-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .scale-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-md);
+            background: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 80px;
+            justify-content: center;
+        }
+
+        .scale-number {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-h1);
+            line-height: 1;
+            margin-bottom: var(--space-xs);
+        }
+
+        .scale-label {
+            font-size: var(--font-size-small);
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scale-option input:checked + label {
+            background: var(--color-accent-cool);
+            color: var(--color-surface);
+            transform: scale(1.05);
+        }
+
+        .scale-option label:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 3px 3px 0 var(--color-border);
+        }
+
+        .scale-option input:focus + label {
+            outline: 3px solid var(--color-accent-warm);
+            outline-offset: 2px;
+        }
+
+        .scale-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-small);
+            color: var(--color-text-muted);
+            font-weight: 600;
+            margin-top: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Text Input */
+        .text-input-container {
+            margin-bottom: var(--space-xl);
+        }
+
+        .text-input,
+        .text-area {
+            width: 100%;
+            padding: var(--space-lg);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            font-family: var(--font-body);
+            font-size: var(--font-size-body);
+            color: var(--color-text);
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .text-input:focus,
+        .text-area:focus {
+            outline: 3px solid var(--color-accent-warm);
+            outline-offset: 2px;
+        }
+
+        .text-input::placeholder,
+        .text-area::placeholder {
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* Navigation Buttons */
+        .navigation {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: var(--space-md) var(--space-xl);
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: var(--font-size-body);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+            min-height: 56px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-secondary {
+            background: var(--color-accent-light);
+            color: var(--color-text);
+        }
+
+        .btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 5px 5px 0 var(--color-border);
+        }
+
+        .btn:active {
+            transform: translate(0, 0);
+            box-shadow: none;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-accent-warm);
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: var(--font-size-small);
+            color: var(--color-text-muted);
+        }
+
+        .footer-accent {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: var(--color-accent-warm);
+            border: 2px solid var(--color-border);
+            margin: 0 var(--space-xs);
+            transform: rotate(45deg);
+        }
+
+        /* Question Type Variations - Multiple Instances */
+        .question-card.hidden {
+            display: none;
+        }
+
+        /* Decorative Shapes - Pop Art Angular Composition */
+        .decorative-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape-1 {
+            position: absolute;
+            bottom: 60px;
+            left: 40px;
+            width: 100px;
+            height: 100px;
+            background: var(--color-accent-cool);
+            border: var(--border-width) solid var(--color-border);
+            opacity: 0.6;
+        }
+
+        .shape-2 {
+            position: absolute;
+            top: 120px;
+            right: 60px;
+            width: 60px;
+            height: 60px;
+            background: var(--color-accent-warm);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* Ben-Day dots on shapes */
+        .shape-1::after,
+        .shape-2::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(0,0,0,0.2) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --font-size-display: 36px;
+                --font-size-h1: 27px;
+                --space-xl: calc(var(--space-unit) * 4);
+                --space-2xl: calc(var(--space-unit) * 6);
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+
+            .progress-container {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .question-card {
+                padding: var(--space-xl);
+            }
+
+            .scale-options {
+                flex-wrap: wrap;
+            }
+
+            .scale-option {
+                flex: 0 0 calc(20% - var(--space-sm));
+                min-width: 70px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .shape-1,
+            .shape-2 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Shapes -->
+    <div class="decorative-shapes">
+        <div class="shape-1"></div>
+        <div class="shape-2"></div>
+    </div>
+
+    <!-- Header with Progress -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Stark Metro</div>
+            <div class="progress-container">
+                <div class="progress-label">Survey Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-text" id="progressText">2 of 5</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Survey Container -->
+    <main class="survey-container">
+        <!-- Question 1: Multiple Choice -->
+        <div class="question-card" id="question1">
+            <div class="question-number">Question 1 of 5</div>
+            <h1 class="question-text">How would you describe your design preferences?</h1>
+            <p class="question-subtext">Select the option that best matches your aesthetic sensibilities.</p>
+
+            <div class="answer-options">
+                <div class="answer-option">
+                    <input type="radio" id="q1a1" name="q1" value="minimalist">
+                    <label for="q1a1">Minimalist — Less is always more, clean lines define everything</label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q1a2" name="q1" value="maximalist">
+                    <label for="q1a2">Maximalist — More is more, layer patterns and textures freely</label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q1a3" name="q1" value="balanced">
+                    <label for="q1a3">Balanced — Context matters, adapt to the specific need</label>
+                </div>
+                <div class="answer-option">
+                    <input type="radio" id="q1a4" name="q1" value="experimental">
+                    <label for="q1a4">Experimental — Break conventions, create new visual languages</label>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" disabled>Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion(1)">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Question 2: Scale Rating -->
+        <div class="question-card hidden" id="question2">
+            <div class="question-number">Question 2 of 5</div>
+            <h1 class="question-text">Rate your comfort with bold color choices</h1>
+            <p class="question-subtext">How willing are you to embrace vivid, high-contrast palettes?</p>
+
+            <div class="scale-options">
+                <div class="scale-option">
+                    <input type="radio" id="q2a1" name="q2" value="1">
+                    <label for="q2a1">
+                        <span class="scale-number">1</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q2a2" name="q2" value="2">
+                    <label for="q2a2">
+                        <span class="scale-number">2</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q2a3" name="q2" value="3">
+                    <label for="q2a3">
+                        <span class="scale-number">3</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q2a4" name="q2" value="4">
+                    <label for="q2a4">
+                        <span class="scale-number">4</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q2a5" name="q2" value="5">
+                    <label for="q2a5">
+                        <span class="scale-number">5</span>
+                    </label>
+                </div>
+            </div>
+            <div class="scale-legend">
+                <span>Very Conservative</span>
+                <span>Very Bold</span>
+            </div>
+
+            <div class="navigation" style="margin-top: var(--space-xl);">
+                <button class="btn btn-secondary" onclick="prevQuestion(2)">Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion(2)">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Question 3: Multiple Select -->
+        <div class="question-card hidden" id="question3">
+            <div class="question-number">Question 3 of 5</div>
+            <h1 class="question-text">Which industries most interest you?</h1>
+            <p class="question-subtext">Select all that apply. Your selections help us understand your context.</p>
+
+            <div class="answer-options">
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a1" name="q3" value="tech">
+                    <label for="q3a1">Technology & Software</label>
+                </div>
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a2" name="q3" value="creative">
+                    <label for="q3a2">Creative Services & Design</label>
+                </div>
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a3" name="q3" value="finance">
+                    <label for="q3a3">Finance & Banking</label>
+                </div>
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a4" name="q3" value="health">
+                    <label for="q3a4">Healthcare & Wellness</label>
+                </div>
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a5" name="q3" value="education">
+                    <label for="q3a5">Education & Learning</label>
+                </div>
+                <div class="answer-option">
+                    <input type="checkbox" id="q3a6" name="q3" value="retail">
+                    <label for="q3a6">Retail & E-commerce</label>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion(3)">Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion(3)">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Question 4: Text Response -->
+        <div class="question-card hidden" id="question4">
+            <div class="question-number">Question 4 of 5</div>
+            <h1 class="question-text">Describe your ideal design system</h1>
+            <p class="question-subtext">What characteristics make a design system truly effective for you?</p>
+
+            <div class="text-input-container">
+                <textarea class="text-area" id="q4response" placeholder="Share your thoughts... Consider aspects like flexibility, consistency, ease of use, visual appeal, and scalability."></textarea>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion(4)">Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion(4)">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Question 5: Final Rating -->
+        <div class="question-card hidden" id="question5">
+            <div class="question-number">Question 5 of 5</div>
+            <h1 class="question-text">How likely are you to recommend this survey format?</h1>
+            <p class="question-subtext">Rate your experience with this survey's design and interaction patterns.</p>
+
+            <div class="scale-options">
+                <div class="scale-option">
+                    <input type="radio" id="q5a1" name="q5" value="1">
+                    <label for="q5a1">
+                        <span class="scale-number">1</span>
+                        <span class="scale-label">Not at all</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q5a2" name="q5" value="2">
+                    <label for="q5a2">
+                        <span class="scale-number">2</span>
+                        <span class="scale-label">Unlikely</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q5a3" name="q5" value="3">
+                    <label for="q5a3">
+                        <span class="scale-number">3</span>
+                        <span class="scale-label">Neutral</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q5a4" name="q5" value="4">
+                    <label for="q5a4">
+                        <span class="scale-number">4</span>
+                        <span class="scale-label">Likely</span>
+                    </label>
+                </div>
+                <div class="scale-option">
+                    <input type="radio" id="q5a5" name="q5" value="5">
+                    <label for="q5a5">
+                        <span class="scale-number">5</span>
+                        <span class="scale-label">Very likely</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="navigation" style="margin-top: var(--space-xl);">
+                <button class="btn btn-secondary" onclick="prevQuestion(5)">Previous</button>
+                <button class="btn btn-primary" onclick="submitSurvey()">Submit Survey</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            Design #191 <span class="footer-accent"></span> Stark Metro <span class="footer-accent"></span> Natural meets neutral: a pop art perspective
+        </div>
+    </footer>
+
+    <script>
+        // Survey Navigation
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+
+        function showQuestion(questionNum) {
+            // Hide all questions
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`question${i}`).classList.add('hidden');
+            }
+            // Show target question
+            document.getElementById(`question${questionNum}`).classList.remove('hidden');
+
+            // Update progress
+            updateProgress(questionNum);
+            currentQuestion = questionNum;
+        }
+
+        function nextQuestion(current) {
+            if (current < totalQuestions) {
+                showQuestion(current + 1);
+            }
+        }
+
+        function prevQuestion(current) {
+            if (current > 1) {
+                showQuestion(current - 1);
+            }
+        }
+
+        function updateProgress(questionNum) {
+            const percentage = (questionNum / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${questionNum} of ${totalQuestions}`;
+        }
+
+        function submitSurvey() {
+            // Collect all responses
+            const responses = {
+                q1: document.querySelector('input[name="q1"]:checked')?.value,
+                q2: document.querySelector('input[name="q2"]:checked')?.value,
+                q3: Array.from(document.querySelectorAll('input[name="q3"]:checked')).map(el => el.value),
+                q4: document.getElementById('q4response').value,
+                q5: document.querySelector('input[name="q5"]:checked')?.value
+            };
+
+            console.log('Survey responses:', responses);
+
+            // Simulate submission
+            alert('Thank you for completing the survey!\n\nYour responses have been recorded.\n\nThis is a design showcase - in a real implementation, data would be sent to your backend.');
+
+            // Reset to first question
+            showQuestion(1);
+        }
+
+        // Design Navigation (Arrow Keys)
+        // Navigate between designs in the 1000 Design Vibes collection
+        {
+                // Next design
+                if (currentDesign < totalDesigns) {
+                    window.location.href = `design-${currentDesign + 1}.html`;
+                }
+            }
+        });
+
+        // Initialize
+        showQuestion(1);
+    </script>
+</body>
+</html>

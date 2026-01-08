@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Marble - Swiss International Settings Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+/*
+DESIGN: Nexus Marble - Swiss international design with natural neutral tones
+ABOUTME: This design system implements a settings_panel with swiss_international aesthetics.
+ABOUTME: Key characteristics: Rigid grid precision, high-contrast toggles, categorical organization
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #6B8E6F;
+--color-background: #F5F3F0;
+--color-surface: #FFFFFF;
+--color-text: #2C2C2C;
+--color-text-muted: #6B6B6B;
+--font-heading: 'Archivo', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Grid-based layout with mathematical precision - every element aligns to 8px grid
+2. Minimal ornamentation with maximum clarity - function over decoration
+3. High contrast interactions with natural earth tones - energetic yet grounded
+4. Typography creates clear hierarchy through weight and scale variations
+5. Generous whitespace organizes complex settings into digestible sections
+
+BEST FOR:
+- Healthcare applications requiring clinical precision and trust
+- Professional settings panels where clarity is critical
+- Systems needing both light and dark modes with identical usability
+- Applications where accessibility and readability are paramount
+- Complex preference systems requiring clear categorical organization
+
+AVOID IF:
+- Brand requires playful or decorative aesthetics
+- Product needs to feel warm and conversational
+- Interface requires minimal structure or freeform layouts
+- Design should feel cutting-edge or experimental
+
+FUNCTIONAL DIRECTION: settings_panel
+This design must clearly function as a settings_panel. Required elements:
+- Toggle groups for binary preferences
+- Preference sections organized by category
+- Save/apply buttons with clear affordances
+- Category navigation (sidebar-based)
+- Search functionality for finding settings
+- Visual feedback for changed/unsaved states
+- Form controls (inputs, selects, radio groups)
+- Clear hierarchy showing setting importance
+
+COLOR THEORY: Natural neutrals with earth accent
+- Background: Warm off-white (#F5F3F0) mimicking natural paper
+- Surface: Pure white for content cards
+- Primary: Sage green (#6B8E6F) - natural, healthcare-appropriate
+- Text: Deep charcoal for maximum legibility
+- Borders: Subtle grays defining grid structure
+
+TYPOGRAPHY:
+- Heading: Archivo - Geometric precision with Swiss neutrality
+- Body: Inter - Optimized for UI readability at all sizes
+- Scale: Perfect fourth (1.333) for measured hierarchy
+- Line height: 1.6 for body, 1.2 for headings
+
+DARK MODE:
+- Background: Deep charcoal (#1A1A1A)
+- Surface: Slightly lighter charcoal (#242424)
+- Primary: Lighter sage (#8BAE8F) for contrast
+- Text: Off-white (#E8E8E8)
+- Maintains all contrast ratios for WCAG AA compliance
+
+GRID SYSTEM:
+- 8px base unit creating mathematical harmony
+- 12-column layout for content areas
+- Fixed 240px sidebar for categories
+- Content max-width: 800px for optimal reading
+- Consistent 24px gutters
+
+INTERACTION DESIGN:
+- Toggles animate smoothly with 200ms transitions
+- Save button highlights when changes detected
+- Category indicators show active state clearly
+- Focus states use 2px offset outline in primary color
+- Hover states brighten surfaces by 3%
+
+ACCESSIBILITY FEATURES:
+- All interactive elements meet 44x44px touch target
+- Color never sole indicator of state
+- Form labels always visible
+- Error messages descriptive and actionable
+- Keyboard navigation follows logical tab order
+- Screen reader labels for all controls
+*/
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Light Mode */
+            --color-primary: #6B8E6F;
+            --color-primary-hover: #5A7A5E;
+            --color-primary-light: #E8F0E9;
+            --color-background: #F5F3F0;
+            --color-surface: #FFFFFF;
+            --color-border: #D4D1CC;
+            --color-border-light: #E8E6E2;
+            --color-text: #2C2C2C;
+            --color-text-muted: #6B6B6B;
+            --color-text-light: #8A8A8A;
+            --color-danger: #C74440;
+            --color-warning: #D97706;
+            --color-success: #6B8E6F;
+            --color-info: #4A7C9B;
+
+            /* Typography */
+            --font-heading: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-base: 15px;
+            --font-size-sm: 13px;
+            --font-size-xs: 12px;
+            --font-size-h1: 28px;
+            --font-size-h2: 21px;
+            --font-size-h3: 18px;
+            --line-height-base: 1.6;
+            --line-height-tight: 1.2;
+
+            /* Spacing */
+            --space-unit: 8px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Shapes */
+            --radius-default: 2px;
+            --radius-sm: 1px;
+            --shadow-default: none;
+            --border-width: 1px;
+
+            /* Layout */
+            --sidebar-width: 240px;
+            --content-max-width: 800px;
+            --header-height: 64px;
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #8BAE8F;
+            --color-primary-hover: #9DBF9F;
+            --color-primary-light: #2A3A2B;
+            --color-background: #1A1A1A;
+            --color-surface: #242424;
+            --color-border: #3A3A3A;
+            --color-border-light: #2E2E2E;
+            --color-text: #E8E8E8;
+            --color-text-muted: #A8A8A8;
+            --color-text-light: #888888;
+            --color-danger: #E85855;
+            --color-warning: #F59E0B;
+            --color-success: #8BAE8F;
+            --color-info: #60A5D0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            line-height: var(--line-height-tight);
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: var(--font-size-h1);
+            margin-bottom: var(--space-md);
+        }
+
+        h2 {
+            font-size: var(--font-size-h2);
+            margin-bottom: var(--space-md);
+        }
+
+        h3 {
+            font-size: var(--font-size-h3);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Layout Structure */
+        .settings-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .settings-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--color-surface);
+            border-right: var(--border-width) solid var(--color-border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: var(--space-lg);
+            border-bottom: var(--border-width) solid var(--color-border-light);
+        }
+
+        .sidebar-logo {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-search {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: var(--border-width) solid var(--color-border-light);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            transition: border-color 150ms ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px var(--color-primary-light);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-light);
+        }
+
+        .sidebar-nav {
+            padding: var(--space-md) 0;
+        }
+
+        .nav-category {
+            margin-bottom: var(--space-lg);
+        }
+
+        .nav-category-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            padding: 0 var(--space-lg);
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-item {
+            display: block;
+            padding: var(--space-sm) var(--space-lg);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all 150ms ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--color-text);
+            background-color: var(--color-background);
+        }
+
+        .nav-item.active {
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            background-color: var(--color-primary-light);
+            font-weight: 500;
+        }
+
+        /* Main Content Area */
+        .settings-main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .settings-header {
+            height: var(--header-height);
+            background-color: var(--color-surface);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-xl);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-h3);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .theme-toggle {
+            padding: var(--space-sm) var(--space-md);
+            background-color: transparent;
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 150ms ease;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            border-color: var(--color-text-muted);
+        }
+
+        .theme-toggle:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .settings-content {
+            padding: var(--space-xl);
+            max-width: var(--content-max-width);
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background-color: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header {
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: var(--border-width) solid var(--color-border-light);
+        }
+
+        .section-title {
+            font-size: var(--font-size-h2);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .section-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Settings Items */
+        .setting-item {
+            padding: var(--space-md) 0;
+            border-bottom: var(--border-width) solid var(--color-border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-lg);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+            display: block;
+        }
+
+        .setting-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        .setting-control {
+            flex-shrink: 0;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+            min-width: 48px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: relative;
+            cursor: pointer;
+            width: 48px;
+            height: 24px;
+            background-color: var(--color-border);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: 24px;
+            transition: all 200ms ease;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            top: 2px;
+            background-color: var(--color-surface);
+            border-radius: 50%;
+            transition: all 200ms ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .toggle-switch input:focus + .toggle-slider {
+            box-shadow: 0 0 0 2px var(--color-primary-light);
+        }
+
+        /* Select Input */
+        .select-input {
+            padding: var(--space-sm) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            min-width: 160px;
+            min-height: 44px;
+            cursor: pointer;
+            transition: border-color 150ms ease;
+        }
+
+        .select-input:hover {
+            border-color: var(--color-text-muted);
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px var(--color-primary-light);
+        }
+
+        /* Text Input */
+        .text-input {
+            padding: var(--space-sm) var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            font-family: var(--font-body);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            min-width: 200px;
+            min-height: 44px;
+            transition: border-color 150ms ease;
+        }
+
+        .text-input:hover {
+            border-color: var(--color-text-muted);
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px var(--color-primary-light);
+        }
+
+        .text-input::placeholder {
+            color: var(--color-text-light);
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            border: var(--border-width) solid var(--color-border);
+            border-radius: 50%;
+            cursor: pointer;
+            appearance: none;
+            position: relative;
+            transition: all 150ms ease;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary);
+        }
+
+        .radio-option input[type="radio"]:checked::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-surface);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-option input[type="radio"]:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .radio-option label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .button {
+            padding: var(--space-sm) var(--space-lg);
+            border: var(--border-width) solid transparent;
+            border-radius: var(--radius-default);
+            font-family: var(--font-heading);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 150ms ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            min-height: 44px;
+            letter-spacing: 0.01em;
+        }
+
+        .button-primary {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border-color: var(--color-primary);
+        }
+
+        .button-primary:hover {
+            background-color: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
+        }
+
+        .button-primary:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            color: var(--color-text);
+            border-color: var(--color-border);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--color-background);
+            border-color: var(--color-text-muted);
+        }
+
+        .button-secondary:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .button-danger {
+            background-color: var(--color-danger);
+            color: var(--color-surface);
+            border-color: var(--color-danger);
+        }
+
+        .button-danger:hover {
+            background-color: #B33935;
+            border-color: #B33935;
+        }
+
+        .button-danger:focus {
+            outline: 2px solid var(--color-danger);
+            outline-offset: 2px;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            position: sticky;
+            bottom: 0;
+            background-color: var(--color-surface);
+            border-top: var(--border-width) solid var(--color-border);
+            padding: var(--space-lg) var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-2xl);
+            margin-left: calc(-1 * var(--space-xl));
+            margin-right: calc(-1 * var(--space-xl));
+            margin-bottom: calc(-1 * var(--space-xl));
+        }
+
+        .action-bar-left {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        .action-bar-right {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .changes-indicator {
+            display: none;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-warning);
+            font-weight: 500;
+        }
+
+        .changes-indicator.visible {
+            display: flex;
+        }
+
+        .changes-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--color-warning);
+        }
+
+        /* Alert Box */
+        .alert-box {
+            padding: var(--space-md);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            gap: var(--space-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .alert-info {
+            background-color: #EBF5FB;
+            border-color: var(--color-info);
+            color: #1A4D6F;
+        }
+
+        [data-theme="dark"] .alert-info {
+            background-color: #1A2F3A;
+            border-color: var(--color-info);
+            color: #A8D5EE;
+        }
+
+        .alert-warning {
+            background-color: #FEF3E7;
+            border-color: var(--color-warning);
+            color: #6B4108;
+        }
+
+        [data-theme="dark"] .alert-warning {
+            background-color: #2E2108;
+            border-color: var(--color-warning);
+            color: #F5C98E;
+        }
+
+        .alert-icon {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--radius-default);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            background-color: var(--color-border);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-primary {
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .settings-sidebar {
+                width: 100%;
+                position: relative;
+            }
+
+            .settings-main {
+                margin-left: 0;
+            }
+
+            .settings-content {
+                padding: var(--space-lg);
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Navigation Keys Indicator */
+        .nav-keys {
+            position: fixed;
+            bottom: var(--space-md);
+            right: var(--space-md);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 200;
+        }
+
+        .nav-key {
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-surface);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Sidebar Navigation -->
+        <aside class="settings-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">Nexus Marble</div>
+            </div>
+
+            <div class="sidebar-search">
+                <input type="search" class="search-input" placeholder="Search settings..." aria-label="Search settings">
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-category">
+                    <div class="nav-category-title">Account</div>
+                    <a href="#profile" class="nav-item active">Profile & Identity</a>
+                    <a href="#security" class="nav-item">Security & Access</a>
+                    <a href="#notifications" class="nav-item">Notifications</a>
+                </div>
+
+                <div class="nav-category">
+                    <div class="nav-category-title">Healthcare</div>
+                    <a href="#medical" class="nav-item">Medical Records</a>
+                    <a href="#appointments" class="nav-item">Appointments</a>
+                    <a href="#providers" class="nav-item">Healthcare Providers</a>
+                    <a href="#insurance" class="nav-item">Insurance</a>
+                </div>
+
+                <div class="nav-category">
+                    <div class="nav-category-title">Privacy</div>
+                    <a href="#data" class="nav-item">Data & Storage</a>
+                    <a href="#sharing" class="nav-item">Sharing Preferences</a>
+                    <a href="#permissions" class="nav-item">App Permissions</a>
+                </div>
+
+                <div class="nav-category">
+                    <div class="nav-category-title">System</div>
+                    <a href="#appearance" class="nav-item">Appearance</a>
+                    <a href="#language" class="nav-item">Language & Region</a>
+                    <a href="#advanced" class="nav-item">Advanced</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="settings-main">
+            <header class="settings-header">
+                <h1 class="header-title">Profile & Identity</h1>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                        <span id="theme-label">Dark</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="settings-content">
+                <!-- Alert Box -->
+                <div class="alert-box alert-info">
+                    <span class="alert-icon">ℹ</span>
+                    <div>
+                        <strong>Healthcare Privacy Notice:</strong> All personal health information is encrypted and complies with HIPAA regulations. Changes to sharing preferences may take up to 24 hours to propagate across healthcare networks.
+                    </div>
+                </div>
+
+                <!-- Personal Information Section -->
+                <section class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Personal Information</h2>
+                        <p class="section-description">Manage your basic profile details and contact information.</p>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="full-name">Full Name</label>
+                            <p class="setting-description">Your legal name as it appears on insurance documents.</p>
+                        </div>
+                        <div class="setting-control">
+                            <input type="text" id="full-name" class="text-input" value="Sarah Chen" aria-describedby="name-desc">
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="email">Email Address</label>
+                            <p class="setting-description">Primary contact for appointment reminders and health updates.</p>
+                        </div>
+                        <div class="setting-control">
+                            <input type="email" id="email" class="text-input" value="sarah.chen@email.com">
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="phone">Phone Number</label>
+                            <p class="setting-description">Used for urgent medical communications.</p>
+                        </div>
+                        <div class="setting-control">
+                            <input type="tel" id="phone" class="text-input" value="+1 (555) 123-4567">
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="date-format">Date of Birth</label>
+                            <p class="setting-description">Required for medical record verification.</p>
+                        </div>
+                        <div class="setting-control">
+                            <input type="text" id="date-format" class="text-input" value="March 15, 1985">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy & Sharing Section -->
+                <section class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Privacy & Sharing</h2>
+                        <p class="section-description">Control who can access your health information.</p>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="share-providers">Share records with healthcare providers</label>
+                            <p class="setting-description">Allow your medical history to be shared with authorized providers in your network.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="share-providers" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="family-access">Family member access</label>
+                            <p class="setting-description">Grant designated family members view-only access to your health dashboard.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="family-access" onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="research">Contribute data to medical research</label>
+                            <p class="setting-description">Help advance healthcare by anonymously sharing de-identified data with research institutions.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="research" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label">Data retention period</label>
+                            <p class="setting-description">How long to keep your health records after account closure.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-input" onchange="markChanged()" aria-label="Data retention period">
+                                <option>7 years (Legal minimum)</option>
+                                <option selected>10 years (Recommended)</option>
+                                <option>Indefinitely</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications Section -->
+                <section class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Notification Preferences</h2>
+                        <p class="section-description">Choose how and when you receive health-related notifications.</p>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="appointment-reminders">Appointment reminders</label>
+                            <p class="setting-description">Receive notifications 24 hours before scheduled appointments.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="appointment-reminders" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="test-results">Test result notifications</label>
+                            <p class="setting-description">Get notified when lab results or diagnostic reports are available.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="test-results" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="medication-reminders">Medication reminders</label>
+                            <p class="setting-description">Daily reminders to take prescribed medications.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="medication-reminders" onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label">Preferred notification method</label>
+                            <p class="setting-description">How should we contact you for time-sensitive health updates?</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="notify-email" name="notify-method" value="email" checked onchange="markChanged()">
+                                    <label for="notify-email">Email</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="notify-sms" name="notify-method" value="sms" onchange="markChanged()">
+                                    <label for="notify-sms">SMS</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="notify-both" name="notify-method" value="both" onchange="markChanged()">
+                                    <label for="notify-both">Both</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label">Quiet hours</label>
+                            <p class="setting-description">Block non-urgent notifications during these hours.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-input" onchange="markChanged()" aria-label="Quiet hours">
+                                <option>None</option>
+                                <option selected>10:00 PM - 7:00 AM</option>
+                                <option>9:00 PM - 6:00 AM</option>
+                                <option>11:00 PM - 8:00 AM</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Section -->
+                <section class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Security Settings</h2>
+                        <p class="section-description">Protect your health information with additional security measures.</p>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="two-factor">Two-factor authentication <span class="badge badge-primary">Recommended</span></label>
+                            <p class="setting-description">Require a verification code in addition to your password when signing in.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="two-factor" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="biometric">Biometric authentication</label>
+                            <p class="setting-description">Use fingerprint or face recognition for quick, secure access.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="biometric" onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="session-timeout">Auto sign-out</label>
+                            <p class="setting-description">Automatically sign out after period of inactivity.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select-input" id="session-timeout" onchange="markChanged()" aria-label="Auto sign-out duration">
+                                <option>15 minutes</option>
+                                <option selected>30 minutes</option>
+                                <option>1 hour</option>
+                                <option>Never</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label" for="login-alerts">Sign-in notifications</label>
+                            <p class="setting-description">Get alerts when your account is accessed from a new device or location.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="login-alerts" checked onchange="markChanged()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Warning Section -->
+                <div class="alert-box alert-warning">
+                    <span class="alert-icon">⚠</span>
+                    <div>
+                        <strong>Account Deletion:</strong> Deleting your account will permanently remove all health records and cannot be undone. Medical records will be retained per legal requirements but will no longer be accessible to you.
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <section class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Danger Zone</h2>
+                        <p class="section-description">Irreversible actions that affect your account.</p>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <label class="setting-label">Delete Account</label>
+                            <p class="setting-description">Permanently delete your account and all associated health records.</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="button button-danger" onclick="confirmDelete()">Delete Account</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <div class="action-bar-left">
+                        <span class="changes-indicator" id="changes-indicator">
+                            <span class="changes-dot"></span>
+                            Unsaved changes
+                        </span>
+                    </div>
+                    <div class="action-bar-right">
+                        <button class="button button-secondary" onclick="resetChanges()">Reset</button>
+                        <button class="button button-primary" onclick="saveChanges()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navigation Keys Indicator -->
+    <div class="nav-keys">
+        <div class="nav-key">←</div>
+        <div class="nav-key">→</div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-label').textContent = newTheme === 'dark' ? 'Light' : 'Dark';
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.getElementById('theme-label').textContent = 'Light';
+        }
+
+        // Track changes
+        let hasChanges = false;
+
+        function markChanged() {
+            hasChanges = true;
+            document.getElementById('changes-indicator').classList.add('visible');
+        }
+
+        function saveChanges() {
+            hasChanges = false;
+            document.getElementById('changes-indicator').classList.remove('visible');
+
+            // Simulate save with visual feedback
+            const saveButton = event.target;
+            const originalText = saveButton.textContent;
+            saveButton.textContent = 'Saved!';
+            saveButton.style.backgroundColor = 'var(--color-success)';
+
+            setTimeout(() => {
+                saveButton.textContent = originalText;
+                saveButton.style.backgroundColor = '';
+            }, 2000);
+        }
+
+        function resetChanges() {
+            if (hasChanges && !confirm('Are you sure you want to discard all unsaved changes?')) {
+                return;
+            }
+            hasChanges = false;
+            document.getElementById('changes-indicator').classList.remove('visible');
+            location.reload();
+        }
+
+        function confirmDelete() {
+            const confirmed = confirm('⚠️ WARNING: This action cannot be undone.\n\nDeleting your account will:\n- Permanently remove all health records\n- Cancel all appointments\n- Revoke provider access\n- Delete all personal information\n\nType "DELETE" in the next prompt to confirm.');
+
+            if (confirmed) {
+                const verify = prompt('Type DELETE to confirm account deletion:');
+                if (verify === 'DELETE') {
+                    alert('Account deletion initiated. You will receive a confirmation email within 24 hours.');
+                }
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.settings-section');
+
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                section.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        });
+
+        // Navigation between designs
+        const TOTAL = 250;
+        const CURRENT = 212;
+
+        /* Navigation removed */
+
+        // Navigation item click handlers
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const targetId = item.getAttribute('href').substring(1);
+                const headerTitle = document.querySelector('.header-title');
+                headerTitle.textContent = item.textContent;
+            });
+        });
+
+        // Form change tracking
+        document.querySelectorAll('input, select').forEach(element => {
+            if (!element.classList.contains('search-input')) {
+                element.addEventListener('change', markChanged);
+            }
+        });
+    </script>
+</body>
+</html>

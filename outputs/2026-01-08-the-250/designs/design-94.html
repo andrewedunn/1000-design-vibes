@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Misty - The flat way to media</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Modern Misty - The flat way to media
+ABOUTME: This design system implements a file_manager for media with neo_brutalist aesthetics.
+ABOUTME: Key characteristics: Thick black borders, flat solid colors, raw unpolished structural honesty.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF6B35;
+--color-secondary: #004E89;
+--color-background: #F7F7FF;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #6B6B6B;
+--color-border: #000000;
+--color-success: #06D6A0;
+--color-warning: #FFD60A;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Space Grotesk', sans-serif;
+--font-mono: 'IBM Plex Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--border-width: 3px;
+
+AESTHETIC PRINCIPLES:
+1. "Brutal honesty" - All structure is visible through thick black borders, nothing is hidden
+2. "Flat clarity" - No shadows, no gradients, no blur - pure solid colors define space
+3. "Calm through restraint" - Limited color palette with generous spacing creates breathing room
+4. "Monospace truth" - File metadata uses monospace to reflect digital reality
+
+VISUAL LANGUAGE:
+- Neo-brutalist approach: structure over polish, borders over shadows
+- Flat design: solid colors, no depth illusions
+- Calm emotional tone: muted pastels, generous whitespace, organized hierarchy
+- Media industry: visual file previews, grid/list toggle, media type badges
+
+BEST FOR:
+- Media asset management systems
+- Creative professional file organization
+- Design team collaboration tools
+- Digital asset libraries
+- Content management platforms
+
+AVOID IF:
+- You need soft, friendly aesthetics
+- Your brand requires luxury/polish
+- Users expect material depth metaphors
+- Mobile-first tiny screens (borders eat space)
+
+FUNCTIONAL DIRECTION: file_manager
+This design must clearly function as a file_manager. Required elements:
+- Folder tree (left sidebar with expandable hierarchy)
+- File grid/list (main content area with toggle view)
+- Breadcrumbs (navigation path at top)
+- Upload functionality (prominent upload button and drag-drop zone)
+- Preview pane (right sidebar showing selected file details)
+
+LAYOUT STRUCTURE:
+- Page structure: sidebar_main (persistent folder tree + main file area + preview pane)
+- Navigation: side_persistent (always-visible folder hierarchy)
+- Content flow: card_grid with list_detail option
+
+TYPOGRAPHY:
+- Headings: Space Grotesk (geometric sans) at 1.333 scale ratio
+- Body: Space Grotesk for clean readability
+- Monospace: IBM Plex Mono for file sizes, dates, metadata
+- Scale creates clear hierarchy without needing weight changes
+
+COLOR SYSTEM:
+- Theory: split_complementary (orange primary, blue secondary, green accent)
+- Temperature: neutral (balanced warm/cool)
+- Saturation: muted (calm, professional)
+- Mood: pastel with punchy accents
+
+INTERACTION STATES:
+- Hover: Background color change (no shadows)
+- Active: Thick border highlight
+- Focus: 4px offset border (accessibility)
+- Disabled: 50% opacity
+- Selected: Primary color background
+
+COMPONENT INVENTORY:
+1. Folder tree with expand/collapse
+2. Breadcrumb navigation
+3. View toggle (grid/list)
+4. File cards with preview thumbnails
+5. File list rows with metadata
+6. Upload button and drop zone
+7. Preview pane with file details
+8. Search input
+9. Sort dropdown
+10. Action toolbar
+11. Status badges (file types)
+12. Loading states
+
+ACCESSIBILITY:
+- WCAG AA contrast ratios maintained
+- Keyboard navigation fully supported
+- Focus indicators on all interactive elements
+- Semantic HTML structure
+- Aria labels for icon buttons
+- Reduced motion support
+
+TECHNICAL NOTES:
+- Uses CSS Grid for main layout
+- Flexbox for component internals
+- CSS custom properties for theming
+- No JavaScript frameworks required
+- Vanilla JS for interactions
+- Mobile-responsive breakpoints
+-->
+
+<style>
+:root {
+    /* Colors */
+    --color-primary: #FF6B35;
+    --color-secondary: #004E89;
+    --color-background: #F7F7FF;
+    --color-surface: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-muted: #6B6B6B;
+    --color-border: #000000;
+    --color-success: #06D6A0;
+    --color-warning: #FFD60A;
+    --color-error: #EF476F;
+    --color-info: #118AB2;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    /* Type scale (1.333 - Perfect Fourth) */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.333rem;
+    --text-xl: 1.777rem;
+    --text-2xl: 2.369rem;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --border-width: 3px;
+    --shadow-default: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow: hidden;
+}
+
+/* Layout Grid */
+.app-container {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    border: var(--border-width) solid var(--color-border);
+}
+
+/* Header */
+.header {
+    grid-column: 1 / -1;
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.logo {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+}
+
+.breadcrumb {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-xs) var(--space-sm);
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.breadcrumb:hover {
+    color: var(--color-text);
+    background: var(--color-background);
+}
+
+.breadcrumb.active {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.breadcrumb-separator {
+    color: var(--color-text-muted);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-input {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    min-width: 280px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: 4px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    background: var(--color-background);
+}
+
+.btn:active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.btn:focus {
+    outline: 4px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+.btn-primary:hover {
+    background: #FF8555;
+}
+
+.btn-primary:active {
+    background: #E55525;
+}
+
+/* Sidebar - Folder Tree */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    overflow-y: auto;
+    padding: var(--space-md);
+}
+
+.sidebar-header {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+}
+
+.folder-tree {
+    list-style: none;
+}
+
+.folder-item {
+    margin-bottom: var(--space-xs);
+}
+
+.folder-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    font-size: var(--text-sm);
+}
+
+.folder-label:hover {
+    background: var(--color-background);
+}
+
+.folder-label.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+.folder-label:focus {
+    outline: 4px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+.folder-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.folder-children {
+    margin-left: var(--space-md);
+    margin-top: var(--space-xs);
+    border-left: 2px solid var(--color-border);
+    padding-left: var(--space-sm);
+}
+
+/* Main Content Area */
+.main-content {
+    background: var(--color-background);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.view-toggle {
+    display: flex;
+    border: var(--border-width) solid var(--color-border);
+}
+
+.view-btn {
+    padding: var(--space-sm);
+    border: none;
+    background: var(--color-surface);
+    cursor: pointer;
+    border-right: 2px solid var(--color-border);
+    transition: all 0.2s;
+}
+
+.view-btn:last-child {
+    border-right: none;
+}
+
+.view-btn:hover {
+    background: var(--color-background);
+}
+
+.view-btn.active {
+    background: var(--color-secondary);
+    color: var(--color-surface);
+}
+
+.view-btn:focus {
+    outline: 4px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.sort-select {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    cursor: pointer;
+}
+
+.sort-select:focus {
+    outline: 4px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.file-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* File Grid */
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+
+.file-card {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-card:hover {
+    background: var(--color-background);
+}
+
+.file-card.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.file-card:focus {
+    outline: 4px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+.file-preview {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: var(--color-background);
+    border-bottom: var(--border-width) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.file-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file-type-badge {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    padding: 4px var(--space-xs);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.file-info {
+    padding: var(--space-sm);
+}
+
+.file-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.file-card.selected .file-meta {
+    color: var(--color-surface);
+    opacity: 0.9;
+}
+
+/* File List View */
+.file-list {
+    display: none; /* Toggled by JS */
+    flex-direction: column;
+    padding: var(--space-md);
+    gap: var(--space-xs);
+}
+
+.file-list.active {
+    display: flex;
+}
+
+.file-list-item {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    display: grid;
+    grid-template-columns: 40px 2fr 1fr 120px 120px;
+    gap: var(--space-md);
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.file-list-item:hover {
+    background: var(--color-background);
+}
+
+.file-list-item.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.file-list-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xs);
+    font-weight: 700;
+}
+
+.file-list-name {
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+.file-list-type {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.file-list-size {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.file-list-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.file-list-item.selected .file-list-type,
+.file-list-item.selected .file-list-size,
+.file-list-item.selected .file-list-date {
+    color: var(--color-surface);
+    opacity: 0.9;
+}
+
+/* Preview Pane */
+.preview-pane {
+    background: var(--color-surface);
+    border-left: var(--border-width) solid var(--color-border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-header {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.preview-title {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.preview-content {
+    padding: var(--space-md);
+    flex: 1;
+}
+
+.preview-image {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.detail-group {
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: var(--space-md);
+}
+
+.detail-group:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.detail-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+}
+
+.preview-actions {
+    padding: var(--space-md);
+    border-top: var(--border-width) solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.btn-block {
+    width: 100%;
+    text-align: center;
+}
+
+/* Upload Zone */
+.upload-zone {
+    margin: var(--space-md);
+    padding: var(--space-xl);
+    border: 4px dashed var(--color-border);
+    background: var(--color-surface);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-zone:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.upload-zone.dragover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-style: solid;
+}
+
+.upload-icon {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+}
+
+.upload-text {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.upload-hint {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* Status Messages */
+.status-bar {
+    background: var(--color-surface);
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-message {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.status-badge {
+    padding: 4px var(--space-xs);
+    border: 2px solid var(--color-border);
+    font-weight: 600;
+}
+
+.status-badge.success {
+    background: var(--color-success);
+    color: var(--color-surface);
+}
+
+.status-badge.warning {
+    background: var(--color-warning);
+    color: var(--color-text);
+}
+
+.status-badge.error {
+    background: var(--color-error);
+    color: var(--color-surface);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+    border-left: var(--border-width) solid var(--color-border);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-text-muted);
+    border: 2px solid var(--color-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .app-container {
+        grid-template-columns: 240px 1fr;
+    }
+
+    .preview-pane {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .breadcrumbs {
+        display: none;
+    }
+
+    .search-input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .file-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}
+</style>
+
+<div class="app-container">
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">Modern Misty</div>
+            <nav class="breadcrumbs" aria-label="Breadcrumb navigation">
+                <a href="#" class="breadcrumb">Media Library</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="#" class="breadcrumb">Projects</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb active">Summer Campaign</span>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <input type="search" class="search-input" placeholder="Search files..." aria-label="Search files">
+            </div>
+            <button class="btn btn-primary">
+                <span aria-hidden="true">↑</span> Upload
+            </button>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">Folders</div>
+        <ul class="folder-tree">
+            <li class="folder-item">
+                <div class="folder-label" tabindex="0">
+                    <span class="folder-icon" aria-hidden="true">📁</span>
+                    <span>Media Library</span>
+                </div>
+                <ul class="folder-children">
+                    <li class="folder-item">
+                        <div class="folder-label" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📁</span>
+                            <span>Images</span>
+                        </div>
+                    </li>
+                    <li class="folder-item">
+                        <div class="folder-label" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📁</span>
+                            <span>Videos</span>
+                        </div>
+                    </li>
+                    <li class="folder-item">
+                        <div class="folder-label" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📁</span>
+                            <span>Audio</span>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="folder-item">
+                <div class="folder-label active" tabindex="0">
+                    <span class="folder-icon" aria-hidden="true">📂</span>
+                    <span>Projects</span>
+                </div>
+                <ul class="folder-children">
+                    <li class="folder-item">
+                        <div class="folder-label" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📁</span>
+                            <span>Spring Launch</span>
+                        </div>
+                    </li>
+                    <li class="folder-item">
+                        <div class="folder-label active" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📂</span>
+                            <span>Summer Campaign</span>
+                        </div>
+                    </li>
+                    <li class="folder-item">
+                        <div class="folder-label" tabindex="0">
+                            <span class="folder-icon" aria-hidden="true">📁</span>
+                            <span>Fall Collection</span>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="folder-item">
+                <div class="folder-label" tabindex="0">
+                    <span class="folder-icon" aria-hidden="true">📁</span>
+                    <span>Archive</span>
+                </div>
+            </li>
+            <li class="folder-item">
+                <div class="folder-label" tabindex="0">
+                    <span class="folder-icon" aria-hidden="true">⭐</span>
+                    <span>Favorites</span>
+                </div>
+            </li>
+            <li class="folder-item">
+                <div class="folder-label" tabindex="0">
+                    <span class="folder-icon" aria-hidden="true">🗑️</span>
+                    <span>Trash</span>
+                </div>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <div class="view-toggle" role="group" aria-label="View options">
+                    <button class="view-btn active" id="gridViewBtn" aria-label="Grid view" aria-pressed="true">
+                        <span aria-hidden="true">▦</span>
+                    </button>
+                    <button class="view-btn" id="listViewBtn" aria-label="List view" aria-pressed="false">
+                        <span aria-hidden="true">☰</span>
+                    </button>
+                </div>
+                <select class="sort-select" aria-label="Sort files">
+                    <option>Name</option>
+                    <option>Date modified</option>
+                    <option>Size</option>
+                    <option>Type</option>
+                </select>
+                <span class="file-count">24 files</span>
+            </div>
+            <div class="toolbar-right">
+                <button class="btn">Select All</button>
+                <button class="btn">Actions ▾</button>
+            </div>
+        </div>
+
+        <div class="file-grid" id="fileGrid">
+            <div class="file-card selected" tabindex="0" data-file="1">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    <span class="file-type-badge">JPG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">hero-gradient.jpg</div>
+                    <div class="file-meta">2.4 MB • Today</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="2">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <span class="file-type-badge">PNG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">banner-main.png</div>
+                    <div class="file-meta">3.1 MB • Yesterday</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="3">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <span class="file-type-badge">JPG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">ocean-theme.jpg</div>
+                    <div class="file-meta">1.8 MB • 2 days ago</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="4">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                    <span class="file-type-badge">PNG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">product-shot-1.png</div>
+                    <div class="file-meta">4.2 MB • 3 days ago</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="5">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                    <span class="file-type-badge">MP4</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">promo-video.mp4</div>
+                    <div class="file-meta">24.5 MB • Last week</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="6">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+                    <span class="file-type-badge">JPG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">background-dark.jpg</div>
+                    <div class="file-meta">1.2 MB • Last week</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="7">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                    <span class="file-type-badge">PNG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">texture-pastel.png</div>
+                    <div class="file-meta">2.7 MB • 2 weeks ago</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="8">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
+                    <span class="file-type-badge">SVG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">logo-variations.svg</div>
+                    <div class="file-meta">156 KB • 2 weeks ago</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="9">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"></div>
+                    <span class="file-type-badge">JPG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">sunset-beach.jpg</div>
+                    <div class="file-meta">3.8 MB • 3 weeks ago</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="10">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);"></div>
+                    <span class="file-type-badge">PNG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">illustration-1.png</div>
+                    <div class="file-meta">2.1 MB • Last month</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="11">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);"></div>
+                    <span class="file-type-badge">MP3</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">soundtrack.mp3</div>
+                    <div class="file-meta">8.4 MB • Last month</div>
+                </div>
+            </div>
+
+            <div class="file-card" tabindex="0" data-file="12">
+                <div class="file-preview">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #f77062 0%, #fe5196 100%);"></div>
+                    <span class="file-type-badge">JPG</span>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">campaign-photo.jpg</div>
+                    <div class="file-meta">5.2 MB • Last month</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="file-list" id="fileList">
+            <div class="file-list-item selected" tabindex="0">
+                <div class="file-list-icon">JPG</div>
+                <div class="file-list-name">hero-gradient.jpg</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">2.4 MB</div>
+                <div class="file-list-date">Today, 3:42 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">PNG</div>
+                <div class="file-list-name">banner-main.png</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">3.1 MB</div>
+                <div class="file-list-date">Yesterday, 11:20 AM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">JPG</div>
+                <div class="file-list-name">ocean-theme.jpg</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">1.8 MB</div>
+                <div class="file-list-date">Jan 6, 2:15 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">PNG</div>
+                <div class="file-list-name">product-shot-1.png</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">4.2 MB</div>
+                <div class="file-list-date">Jan 5, 9:30 AM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">MP4</div>
+                <div class="file-list-name">promo-video.mp4</div>
+                <div class="file-list-type">Video</div>
+                <div class="file-list-size">24.5 MB</div>
+                <div class="file-list-date">Jan 2, 4:45 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">JPG</div>
+                <div class="file-list-name">background-dark.jpg</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">1.2 MB</div>
+                <div class="file-list-date">Jan 1, 10:00 AM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">PNG</div>
+                <div class="file-list-name">texture-pastel.png</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">2.7 MB</div>
+                <div class="file-list-date">Dec 28, 3:20 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">SVG</div>
+                <div class="file-list-name">logo-variations.svg</div>
+                <div class="file-list-type">Vector</div>
+                <div class="file-list-size">156 KB</div>
+                <div class="file-list-date">Dec 25, 1:15 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">JPG</div>
+                <div class="file-list-name">sunset-beach.jpg</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">3.8 MB</div>
+                <div class="file-list-date">Dec 20, 5:30 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">PNG</div>
+                <div class="file-list-name">illustration-1.png</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">2.1 MB</div>
+                <div class="file-list-date">Dec 15, 2:00 PM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">MP3</div>
+                <div class="file-list-name">soundtrack.mp3</div>
+                <div class="file-list-type">Audio</div>
+                <div class="file-list-size">8.4 MB</div>
+                <div class="file-list-date">Dec 12, 11:45 AM</div>
+            </div>
+            <div class="file-list-item" tabindex="0">
+                <div class="file-list-icon">JPG</div>
+                <div class="file-list-name">campaign-photo.jpg</div>
+                <div class="file-list-type">Image</div>
+                <div class="file-list-size">5.2 MB</div>
+                <div class="file-list-date">Dec 10, 9:00 AM</div>
+            </div>
+        </div>
+
+        <div class="upload-zone" tabindex="0" role="button" aria-label="Upload files">
+            <div class="upload-icon" aria-hidden="true">↑</div>
+            <div class="upload-text">Drop files here to upload</div>
+            <div class="upload-hint">or click to browse</div>
+        </div>
+    </main>
+
+    <aside class="preview-pane">
+        <div class="preview-header">
+            <div class="preview-title">File Details</div>
+        </div>
+        <div class="preview-content">
+            <div class="preview-image">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+            </div>
+            <div class="preview-details">
+                <div class="detail-group">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">hero-gradient.jpg</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Type</div>
+                    <div class="detail-value">JPEG Image</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Size</div>
+                    <div class="detail-value">2.4 MB (2,458,624 bytes)</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Dimensions</div>
+                    <div class="detail-value">1920 × 1080 px</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Modified</div>
+                    <div class="detail-value">Today at 3:42 PM</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Created</div>
+                    <div class="detail-value">Jan 8, 2026 at 3:42 PM</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">/Projects/Summer Campaign/</div>
+                </div>
+            </div>
+        </div>
+        <div class="preview-actions">
+            <button class="btn btn-block btn-primary">Download</button>
+            <button class="btn btn-block">Share</button>
+            <button class="btn btn-block">Move</button>
+            <button class="btn btn-block">Delete</button>
+        </div>
+    </aside>
+</div>
+
+<script>
+// View toggle functionality
+const gridViewBtn = document.getElementById('gridViewBtn');
+const listViewBtn = document.getElementById('listViewBtn');
+const fileGrid = document.getElementById('fileGrid');
+const fileList = document.getElementById('fileList');
+
+gridViewBtn.addEventListener('click', () => {
+    gridViewBtn.classList.add('active');
+    listViewBtn.classList.remove('active');
+    gridViewBtn.setAttribute('aria-pressed', 'true');
+    listViewBtn.setAttribute('aria-pressed', 'false');
+    fileGrid.style.display = 'grid';
+    fileList.classList.remove('active');
+});
+
+listViewBtn.addEventListener('click', () => {
+    listViewBtn.classList.add('active');
+    gridViewBtn.classList.remove('active');
+    listViewBtn.setAttribute('aria-pressed', 'true');
+    gridViewBtn.setAttribute('aria-pressed', 'false');
+    fileGrid.style.display = 'none';
+    fileList.classList.add('active');
+});
+
+// File selection (grid view)
+const fileCards = document.querySelectorAll('.file-card');
+fileCards.forEach(card => {
+    card.addEventListener('click', () => {
+        fileCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+    });
+});
+
+// File selection (list view)
+const fileListItems = document.querySelectorAll('.file-list-item');
+fileListItems.forEach(item => {
+    item.addEventListener('click', () => {
+        fileListItems.forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
+
+// Folder tree interactions
+const folderLabels = document.querySelectorAll('.folder-label');
+folderLabels.forEach(label => {
+    label.addEventListener('click', () => {
+        folderLabels.forEach(l => l.classList.remove('active'));
+        label.classList.add('active');
+    });
+
+    label.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            label.click();
+        }
+    });
+});
+
+// Upload zone drag and drop
+const uploadZone = document.querySelector('.upload-zone');
+
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+});
+
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    // File upload would happen here
+    alert('Files uploaded! (This is a demo)');
+});
+
+uploadZone.addEventListener('click', () => {
+    // Would open file browser
+    alert('File browser would open here (This is a demo)');
+});
+
+uploadZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        uploadZone.click();
+    }
+});
+
+// Arrow key navigation
+const TOTAL_DESIGNS = 250;
+const CURRENT_DESIGN = 94;
+
+/* Navigation removed */
+</script>
+
+</body>
+</html>

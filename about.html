@@ -254,17 +254,20 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .run-header {
             padding: 1rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-decoration: none;
-            color: inherit;
-            transition: border-color 0.15s;
+            cursor: pointer;
+            transition: background 0.15s;
         }
 
-        .run-card:hover {
-            border-color: var(--accent);
+        .run-header:hover {
+            background: var(--bg);
         }
 
         .run-info {
@@ -275,6 +278,18 @@
 
         .run-name {
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .run-name .expand-icon {
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .run-card.expanded .expand-icon {
+            transform: rotate(90deg);
         }
 
         .run-desc {
@@ -300,6 +315,65 @@
             border-radius: 4px;
             background: var(--bg);
             border: 1px solid var(--border);
+        }
+
+        .run-details {
+            display: none;
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+            font-size: 0.875rem;
+        }
+
+        .run-card.expanded .run-details {
+            display: block;
+        }
+
+        .run-details h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .run-details p {
+            margin: 0 0 1rem 0;
+            font-size: 0.875rem;
+        }
+
+        .run-details .dim-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .run-details .dim-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .run-details .approach-mode {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+        }
+
+        .run-details pre.prompt {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            margin: 0.5rem 0 1rem 0;
         }
 
         ul.feature-list {
@@ -330,7 +404,7 @@
         }
 
         @media (max-width: 600px) {
-            .run-card {
+            .run-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.75rem;
@@ -357,6 +431,12 @@
 
         <h1>1000 Design Vibes</h1>
         <p class="subtitle"><em>Burning my Claude Max limits to the ground</em></p>
+
+        <div class="stats-row">
+            <div class="stat"><strong>620</strong> designs generated</div>
+            <div class="stat"><strong>12</strong> batches</div>
+            <div class="stat"><strong>380</strong> to go</div>
+        </div>
 
         <p>
             I was working on a project and hated the design because I'm a terrible designer. I asked Claude to generate a few options. That worked well enough that I wondered: <strong>What if I described a design using a bunch of different dimensions and let Claude go nuts? And once you have a few options why not make a thousand?</strong>
@@ -527,92 +607,403 @@ python design_vibes.py manifest --count 20 --name "my-batch" --core-only
 
         <h2 class="section-title">Design Runs</h2>
 
-        <p>Here's all of the "design runs" I ran. Click on to see the index for that design run, including the prompt.</p>
+        <p>Here's all of the "design runs" I ran. Click to expand and see the approach used.</p>
 
         <div class="runs-list">
-            <a href="outputs/2026-01-07-minimal-100/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">minimal-100</span>
-                    <span class="run-desc">Minimal guide approach - 5 core dimensions only</span>
+            <!-- 2026-01-08 -->
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> the-250</span>
+                        <span class="run-desc">Largest batch - 5 core dimensions, agent picks the rest</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>250</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
                 </div>
-                <div class="run-meta">
-                    <span><strong>100</strong> designs</span>
-                    <span>3.0 MB</span>
-                    <span class="badge">Sonnet</span>
-                </div>
-            </a>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_MINIMAL.md" target="_blank">DESIGN_GUIDE_MINIMAL.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
 
-            <a href="outputs/2026-01-07-functional-100/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">functional-100</span>
-                    <span class="run-desc">158 functional directions, Sonnet quality</span>
-                </div>
-                <div class="run-meta">
-                    <span><strong>100</strong> designs</span>
-                    <span>3.5 MB</span>
-                    <span class="badge">Sonnet</span>
-                </div>
-            </a>
+Read the design guide at DESIGN_GUIDE_MINIMAL.md and manifest for this batch.
 
-            <a href="outputs/2026-01-07-batch-100/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">batch-100</span>
-                    <span class="run-desc">First big batch with all 35 dimensions</span>
-                </div>
-                <div class="run-meta">
-                    <span><strong>100</strong> designs</span>
-                    <span>2.1 MB</span>
-                    <span class="badge">Haiku</span>
-                </div>
-            </a>
+Design: {name}
+Tagline: {tagline}
 
-            <a href="outputs/2026-01-07-nav-test/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">nav-test</span>
-                    <span class="run-desc">Testing navigation fix. Nothing to see here</span>
-                </div>
-                <div class="run-meta">
-                    <span><strong>3</strong> designs</span>
-                    <span>100 KB</span>
-                    <span class="badge">Haiku</span>
-                </div>
-            </a>
+Core Dimensions:
+  functional_direction: {value}  ← PRIMARY: this MUST look like a {value}
+  design_era: {value}
+  emotional_tone: {value}
+  industry: {value}
+  color_mode: {value}
 
-            <a href="outputs/2026-01-06-ab-test-loose/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">ab-test-loose</span>
-                    <span class="run-desc">Haiku vs Sonnet comparison.</span>
-                </div>
-                <div class="run-meta">
-                    <span><strong>10</strong> designs</span>
-                    <span>352 KB</span>
-                    <span class="badge">Mixed</span>
-                </div>
-            </a>
+You choose all other design details (typography, colors, spacing, etc.) to create a coherent design.
 
-            <a href="outputs/2026-01-06-full-test/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">full-test</span>
-                    <span class="run-desc">First batch with strict design guide</span>
+Write to: outputs/2026-01-08-the-250/.staging/design-{id}.html</pre>
                 </div>
-                <div class="run-meta">
-                    <span><strong>20</strong> designs</span>
-                    <span>1.9 MB</span>
-                    <span class="badge">Sonnet</span>
-                </div>
-            </a>
+            </div>
 
-            <a href="outputs/2026-01-06-test-batch/designs/index.html" class="run-card">
-                <div class="run-info">
-                    <span class="run-name">test-batch</span>
-                    <span class="run-desc">Where it all began</span>
+            <!-- 2026-01-07 main batches -->
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> minimal-100</span>
+                        <span class="run-desc">Minimal guide approach - 5 core dimensions only</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>100</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
                 </div>
-                <div class="run-meta">
-                    <span><strong>7</strong> designs</span>
-                    <span>412 KB</span>
-                    <span class="badge">Sonnet</span>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_MINIMAL.md" target="_blank">DESIGN_GUIDE_MINIMAL.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read the design guide at DESIGN_GUIDE_MINIMAL.md and manifest for this batch.
+
+Design: {name}
+Tagline: {tagline}
+
+Core Dimensions:
+  functional_direction: {value}  ← PRIMARY: this MUST look like a {value}
+  design_era: {value}
+  emotional_tone: {value}
+  industry: {value}
+  color_mode: {value}
+
+You choose all other design details (typography, colors, spacing, etc.) to create a coherent design.
+
+Write to: outputs/2026-01-07-minimal-100/.staging/design-{id}.html</pre>
+                    <h4>Notes</h4>
+                    <p>First really successful batch. The minimal approach produced much more coherent designs than specifying all 35 dimensions.</p>
                 </div>
-            </a>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> functional-100</span>
+                        <span class="run-desc">158 functional directions, Sonnet quality</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>100</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read the design guide at DESIGN_GUIDE_LOOSE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+The functional_direction "{value}" is PRIMARY - this page MUST look like a {value}.
+
+All 35 Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  density: {value}
+  color_theory: {value}
+  color_temperature: {value}
+  ... (30 more dimensions)
+  functional_direction: {value}
+
+Write to: outputs/2026-01-07-functional-100/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> batch-100</span>
+                        <span class="run-desc">First big batch with all 35 dimensions</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>100</strong> designs</span>
+                        <span class="badge">Haiku</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read the design guide at DESIGN_GUIDE_LOOSE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+All 35 Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  density: {value}
+  ... (32 more dimensions)
+
+Write to: outputs/2026-01-07-batch-100/.staging/design-{id}.html</pre>
+                    <h4>Notes</h4>
+                    <p>Used Haiku model for speed. Produces wacky, sometimes conflicting designs. Interesting but often not usable.</p>
+                </div>
+            </div>
+
+            <!-- 2026-01-07 test batches -->
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> test-weighted</span>
+                        <span class="run-desc">Testing weighted dimension sampling</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>10</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE_LOOSE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+Dimensions (weighted sampling - prefers common values):
+  ui_paradigm: {value}
+  design_era: {value}
+  ... (33 more dimensions)
+
+Write to: outputs/2026-01-07-test-weighted/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> test-minimal</span>
+                        <span class="run-desc">Testing minimal prompt approach</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>10</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_MINIMAL.md" target="_blank">DESIGN_GUIDE_MINIMAL.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE_MINIMAL.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+Core Dimensions:
+  functional_direction: {value}
+  design_era: {value}
+  emotional_tone: {value}
+  industry: {value}
+  color_mode: {value}
+
+Write to: outputs/2026-01-07-test-minimal/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> test-doc-improvements</span>
+                        <span class="run-desc">Testing improved documentation in designs</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>10</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE_LOOSE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+All 35 Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  ... (33 more dimensions)
+
+IMPORTANT: Include extensive HTML comment documentation at the top of the file
+for LLM readability. Document design choices, CSS variables, and usage patterns.
+
+Write to: outputs/2026-01-07-test-doc-improvements/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> test-core-only</span>
+                        <span class="run-desc">Testing core-only dimension approach</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>10</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_CORE.md" target="_blank">DESIGN_GUIDE_CORE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE_CORE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+Core Dimensions (you choose the rest):
+  functional_direction: {value}
+  design_era: {value}
+  emotional_tone: {value}
+  industry: {value}
+  color_mode: {value}
+
+Write to: outputs/2026-01-07-test-core-only/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> nav-test</span>
+                        <span class="run-desc">Testing navigation fix. Nothing to see here</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>3</strong> designs</span>
+                        <span class="badge">Haiku</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Notes</h4>
+                    <p>Quick test batch to verify navigation script stripping works correctly.</p>
+                </div>
+            </div>
+
+            <!-- 2026-01-06 -->
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> full-test</span>
+                        <span class="run-desc">First batch with strict design guide</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>20</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE.md" target="_blank">DESIGN_GUIDE.md →</a> (strict version)</p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE.md first (strict version with detailed requirements).
+
+Design: {name}
+Tagline: {tagline}
+
+All 35 Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  density: {value}
+  ... (32 more dimensions)
+
+Write to: outputs/2026-01-06-full-test/.staging/design-{id}.html</pre>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> ab-test-loose</span>
+                        <span class="run-desc">Haiku vs Sonnet comparison</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>10</strong> designs</span>
+                        <span class="badge">Mixed</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE_LOOSE.md" target="_blank">DESIGN_GUIDE_LOOSE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read DESIGN_GUIDE_LOOSE.md first.
+
+Design: {name}
+Tagline: {tagline}
+
+All 35 Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  ... (33 more dimensions)
+
+Write to: outputs/2026-01-06-ab-test-loose/.staging/design-{id}.html</pre>
+                    <h4>Notes</h4>
+                    <p>A/B test: designs 1-5 used Haiku, designs 6-10 used Sonnet. Sonnet produced significantly better results.</p>
+                </div>
+            </div>
+
+            <div class="run-card">
+                <div class="run-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div class="run-info">
+                        <span class="run-name"><span class="expand-icon">▶</span> test-batch</span>
+                        <span class="run-desc">Where it all began</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><strong>7</strong> designs</span>
+                        <span class="badge">Sonnet</span>
+                    </div>
+                </div>
+                <div class="run-details">
+                    <h4>Design Guide</h4>
+                    <p><a href="https://github.com/andrewedunn/1000-design-vibes/blob/main/DESIGN_GUIDE.md" target="_blank">DESIGN_GUIDE.md →</a></p>
+                    <h4>Agent Prompt Template</h4>
+<pre class="prompt">Generate design #{id} for 1000 Design Vibes.
+
+Read the design guide and manifest, then create a complete HTML file.
+
+Design: {name}
+Tagline: {tagline}
+
+Dimensions:
+  ui_paradigm: {value}
+  design_era: {value}
+  ... (33 more dimensions)
+
+Write to: outputs/2026-01-06-test-batch/.staging/design-{id}.html</pre>
+                    <h4>Notes</h4>
+                    <p>The very first test run. Just seeing if the whole thing would work. It did!</p>
+                </div>
+            </div>
         </div>
 
         <footer>

@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Hearth - Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!--
+DESIGN: Modern Hearth - A flat approach meets international sensibility
+ABOUTME: This design system implements expense_tracker with flat aesthetics rooted in Scandinavian modern principles.
+ABOUTME: Key characteristics: Dark charcoal backgrounds with warm accent highlights, generous whitespace, humanist sans-serif typography with excellent readability.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #E8A87C;
+--color-primary-hover: #F4BF96;
+--color-background: #1A1D23;
+--color-surface: #252932;
+--color-surface-elevated: #2E333D;
+--color-text: #E8EAED;
+--color-text-muted: #9BA1AB;
+--color-success: #7BC47F;
+--color-warning: #F4BF96;
+--color-danger: #E85D75;
+--font-heading: 'DM Sans', sans-serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 12px;
+--space-unit: 8px;
+--shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.2);
+--shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+AESTHETIC PRINCIPLES:
+1. "Light-touch" design - minimal ornamentation, maximum clarity
+2. Warm neutrals in dark mode create inviting, cozy atmosphere (the "hearth")
+3. Generous spacing and soft corners soften the digital experience
+4. Flat color blocks with subtle shadows for depth without heaviness
+5. Friendly, approachable tone through rounded elements and warm color palette
+
+BEST FOR:
+- Personal finance applications where users need regular engagement
+- Gaming industry expense tracking (subscriptions, in-game purchases, development costs)
+- Applications requiring extended reading sessions in low-light environments
+- Tools where emotional connection matters as much as functionality
+
+AVOID IF:
+- You need dense data visualization with minimal whitespace
+- You require high-intensity color coding (muted palette may limit options)
+- Your users expect traditional corporate/enterprise aesthetics
+- Accessibility needs require pure black backgrounds (we use softer charcoals)
+
+FUNCTIONAL DIRECTION: expense_tracker
+This design must clearly function as an expense_tracker. Required elements:
+- Transaction list with categories, amounts, and dates
+- Category breakdown visualization
+- Budget progress indicators
+- Quick add transaction button
+- Date filtering controls
+- Balance/total summary
+- Category icons and labels
+- Search or filter functionality
+- Income vs expense differentiation
+- Monthly/weekly view toggles
+-->
+
+<style>
+    :root {
+        /* Color Palette - Scandinavian Warmth in Dark Mode */
+        --color-primary: #E8A87C;
+        --color-primary-hover: #F4BF96;
+        --color-primary-subtle: rgba(232, 168, 124, 0.15);
+        --color-background: #1A1D23;
+        --color-surface: #252932;
+        --color-surface-elevated: #2E333D;
+        --color-border: #3A3F4B;
+        --color-text: #E8EAED;
+        --color-text-muted: #9BA1AB;
+        --color-success: #7BC47F;
+        --color-warning: #F4BF96;
+        --color-danger: #E85D75;
+        --color-info: #7CA4E8;
+
+        /* Category Colors - Gaming-themed */
+        --category-subscription: #8B7FE8;
+        --category-hardware: #E87F9F;
+        --category-software: #7FE8CF;
+        --category-events: #E8C77F;
+        --category-food: #7FC4E8;
+        --category-transport: #C47FE8;
+        --category-entertainment: #E8A87C;
+        --category-other: #9BA1AB;
+
+        /* Typography */
+        --font-heading: 'DM Sans', sans-serif;
+        --font-body: 'Inter', sans-serif;
+        --font-size-xs: 0.75rem;
+        --font-size-sm: 0.875rem;
+        --font-size-base: 1rem;
+        --font-size-lg: 1.125rem;
+        --font-size-xl: 1.5rem;
+        --font-size-2xl: 2rem;
+        --font-size-3xl: 2.5rem;
+
+        /* Spacing */
+        --space-unit: 8px;
+        --space-xs: calc(var(--space-unit) * 1);
+        --space-sm: calc(var(--space-unit) * 2);
+        --space-md: calc(var(--space-unit) * 3);
+        --space-lg: calc(var(--space-unit) * 4);
+        --space-xl: calc(var(--space-unit) * 6);
+        --space-2xl: calc(var(--space-unit) * 8);
+
+        /* Shapes */
+        --radius-default: 12px;
+        --radius-lg: 16px;
+        --radius-full: 9999px;
+        --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.2);
+        --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Reset & Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        line-height: 1.6;
+        color: var(--color-text);
+        background-color: var(--color-background);
+        min-height: 100vh;
+    }
+
+    /* Layout */
+    .app-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background: var(--color-surface);
+        padding: var(--space-lg);
+        border-right: 1px solid var(--color-border);
+    }
+
+    .app-header {
+        margin-bottom: var(--space-xl);
+    }
+
+    .app-title {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: var(--space-xs);
+    }
+
+    .app-subtitle {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+    }
+
+    /* Balance Card */
+    .balance-card {
+        background: linear-gradient(135deg, var(--color-primary) 0%, #D89566 100%);
+        padding: var(--space-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-xl);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .balance-label {
+        font-size: var(--font-size-sm);
+        color: rgba(0, 0, 0, 0.7);
+        font-weight: 500;
+        margin-bottom: var(--space-xs);
+    }
+
+    .balance-amount {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-3xl);
+        font-weight: 700;
+        color: var(--color-background);
+    }
+
+    .balance-change {
+        font-size: var(--font-size-sm);
+        color: rgba(0, 0, 0, 0.6);
+        margin-top: var(--space-xs);
+    }
+
+    /* Navigation */
+    .nav-menu {
+        list-style: none;
+        margin-bottom: var(--space-xl);
+    }
+
+    .nav-item {
+        margin-bottom: var(--space-xs);
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--radius-default);
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+        background: var(--color-surface-elevated);
+        color: var(--color-text);
+    }
+
+    .nav-link.active {
+        background: var(--color-primary-subtle);
+        color: var(--color-primary);
+    }
+
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Category Summary */
+    .category-summary {
+        margin-top: auto;
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--color-border);
+    }
+
+    .category-summary-title {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--space-md);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .category-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-sm) 0;
+    }
+
+    .category-info {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+
+    .category-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: var(--radius-full);
+    }
+
+    .category-name {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+    }
+
+    .category-amount {
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    /* Main Content */
+    .main-content {
+        padding: var(--space-xl);
+        overflow-y: auto;
+    }
+
+    /* Header Bar */
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-xl);
+    }
+
+    .page-title {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        color: var(--color-text);
+    }
+
+    .header-actions {
+        display: flex;
+        gap: var(--space-md);
+        align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        padding: var(--space-sm) var(--space-lg);
+        border: none;
+        border-radius: var(--radius-default);
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: var(--color-background);
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .btn-secondary {
+        background: var(--color-surface-elevated);
+        color: var(--color-text);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-border);
+    }
+
+    .btn-icon {
+        padding: var(--space-sm);
+        width: 44px;
+        height: 44px;
+        justify-content: center;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+        padding: var(--space-lg);
+        background: var(--color-surface);
+        border-radius: var(--radius-lg);
+    }
+
+    .filter-group {
+        flex: 1;
+    }
+
+    .filter-label {
+        display: block;
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: var(--space-sm) var(--space-md);
+        background: var(--color-surface-elevated);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-default);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        transition: all 0.2s ease;
+    }
+
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px var(--color-primary-subtle);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+        background: var(--color-surface);
+        padding: var(--space-lg);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+    }
+
+    .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-xs);
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: var(--space-xs);
+    }
+
+    .stat-value.income {
+        color: var(--color-success);
+    }
+
+    .stat-value.expense {
+        color: var(--color-danger);
+    }
+
+    .stat-change {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+    }
+
+    .stat-change.positive {
+        color: var(--color-success);
+    }
+
+    .stat-change.negative {
+        color: var(--color-danger);
+    }
+
+    /* Budget Progress */
+    .budget-section {
+        margin-bottom: var(--space-xl);
+    }
+
+    .section-title {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--space-lg);
+    }
+
+    .budget-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .budget-card {
+        background: var(--color-surface);
+        padding: var(--space-lg);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+    }
+
+    .budget-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: var(--space-md);
+    }
+
+    .budget-info h4 {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--space-xs);
+    }
+
+    .budget-amounts {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+    }
+
+    .budget-amounts strong {
+        color: var(--color-text);
+    }
+
+    .budget-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--font-size-lg);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--color-surface-elevated);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+        margin-bottom: var(--space-xs);
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: var(--radius-full);
+        transition: width 0.3s ease;
+    }
+
+    .progress-label {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+    }
+
+    /* Transactions */
+    .transactions-section {
+        margin-bottom: var(--space-xl);
+    }
+
+    .transaction-list {
+        background: var(--color-surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+        overflow: hidden;
+    }
+
+    .transaction-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding: var(--space-lg);
+        border-bottom: 1px solid var(--color-border);
+        transition: background 0.2s ease;
+    }
+
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+
+    .transaction-item:hover {
+        background: var(--color-surface-elevated);
+    }
+
+    .transaction-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--font-size-xl);
+        flex-shrink: 0;
+    }
+
+    .transaction-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .transaction-title {
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: 2px;
+    }
+
+    .transaction-meta {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+    }
+
+    .transaction-amount {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .transaction-amount.income {
+        color: var(--color-success);
+    }
+
+    .transaction-amount.expense {
+        color: var(--color-text);
+    }
+
+    /* Navigation Controls */
+    .nav-controls {
+        position: fixed;
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+        display: flex;
+        gap: var(--space-sm);
+        background: var(--color-surface);
+        padding: var(--space-xs);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-elevated);
+        border: 1px solid var(--color-border);
+    }
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-full);
+        background: transparent;
+        border: none;
+        color: var(--color-text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+        background: var(--color-surface-elevated);
+        color: var(--color-primary);
+    }
+
+    .nav-btn:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Focus Styles */
+    *:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .app-container {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            display: none;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .budget-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <header class="app-header">
+            <h1 class="app-title">Modern Hearth</h1>
+            <p class="app-subtitle">Gaming Expense Tracker</p>
+        </header>
+
+        <div class="balance-card">
+            <div class="balance-label">Current Balance</div>
+            <div class="balance-amount">$4,287.50</div>
+            <div class="balance-change">+$342.00 this month</div>
+        </div>
+
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        Transactions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Budgets
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        Analytics
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="category-summary">
+            <h3 class="category-summary-title">This Month</h3>
+            <div class="category-item">
+                <div class="category-info">
+                    <div class="category-dot" style="background: var(--category-subscription);"></div>
+                    <span class="category-name">Subscriptions</span>
+                </div>
+                <span class="category-amount">$89.97</span>
+            </div>
+            <div class="category-item">
+                <div class="category-info">
+                    <div class="category-dot" style="background: var(--category-hardware);"></div>
+                    <span class="category-name">Hardware</span>
+                </div>
+                <span class="category-amount">$324.50</span>
+            </div>
+            <div class="category-item">
+                <div class="category-info">
+                    <div class="category-dot" style="background: var(--category-software);"></div>
+                    <span class="category-name">Software</span>
+                </div>
+                <span class="category-amount">$156.00</span>
+            </div>
+            <div class="category-item">
+                <div class="category-info">
+                    <div class="category-dot" style="background: var(--category-events);"></div>
+                    <span class="category-name">Events</span>
+                </div>
+                <span class="category-amount">$180.00</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header-bar">
+            <h2 class="page-title">January 2026</h2>
+            <div class="header-actions">
+                <button class="btn btn-secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                </button>
+                <button class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Transaction
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label" for="search">Search</label>
+                <input type="text" id="search" class="filter-input" placeholder="Search transactions...">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="category">Category</label>
+                <select id="category" class="filter-input">
+                    <option>All Categories</option>
+                    <option>Subscriptions</option>
+                    <option>Hardware</option>
+                    <option>Software</option>
+                    <option>Events</option>
+                    <option>Food & Drink</option>
+                    <option>Transport</option>
+                    <option>Entertainment</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="date-range">Date Range</label>
+                <select id="date-range" class="filter-input">
+                    <option>This Month</option>
+                    <option>Last Month</option>
+                    <option>Last 3 Months</option>
+                    <option>This Year</option>
+                    <option>Custom</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Income</div>
+                <div class="stat-value income">$5,240.00</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                    +12% from last month
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Expenses</div>
+                <div class="stat-value expense">$4,898.00</div>
+                <div class="stat-change negative">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                        <polyline points="17 18 23 18 23 12"></polyline>
+                    </svg>
+                    +8% from last month
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Net Savings</div>
+                <div class="stat-value">$342.00</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                    6.5% savings rate
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Progress -->
+        <section class="budget-section">
+            <h3 class="section-title">Budget Overview</h3>
+            <div class="budget-grid">
+                <div class="budget-card">
+                    <div class="budget-header">
+                        <div class="budget-info">
+                            <h4>Game Subscriptions</h4>
+                            <div class="budget-amounts">
+                                <strong>$89.97</strong> of $100.00
+                            </div>
+                        </div>
+                        <div class="budget-icon" style="background: rgba(139, 127, 232, 0.15); color: var(--category-subscription);">
+                            🎮
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%; background: var(--category-subscription);"></div>
+                    </div>
+                    <div class="progress-label">90% used • $10.03 remaining</div>
+                </div>
+
+                <div class="budget-card">
+                    <div class="budget-header">
+                        <div class="budget-info">
+                            <h4>Hardware & Gear</h4>
+                            <div class="budget-amounts">
+                                <strong>$324.50</strong> of $500.00
+                            </div>
+                        </div>
+                        <div class="budget-icon" style="background: rgba(232, 127, 159, 0.15); color: var(--category-hardware);">
+                            ⚙️
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%; background: var(--category-hardware);"></div>
+                    </div>
+                    <div class="progress-label">65% used • $175.50 remaining</div>
+                </div>
+
+                <div class="budget-card">
+                    <div class="budget-header">
+                        <div class="budget-info">
+                            <h4>Software Tools</h4>
+                            <div class="budget-amounts">
+                                <strong>$156.00</strong> of $300.00
+                            </div>
+                        </div>
+                        <div class="budget-icon" style="background: rgba(127, 232, 207, 0.15); color: var(--category-software);">
+                            💻
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 52%; background: var(--category-software);"></div>
+                    </div>
+                    <div class="progress-label">52% used • $144.00 remaining</div>
+                </div>
+
+                <div class="budget-card">
+                    <div class="budget-header">
+                        <div class="budget-info">
+                            <h4>Gaming Events</h4>
+                            <div class="budget-amounts">
+                                <strong>$180.00</strong> of $200.00
+                            </div>
+                        </div>
+                        <div class="budget-icon" style="background: rgba(232, 199, 127, 0.15); color: var(--category-events);">
+                            🎫
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%; background: var(--category-events);"></div>
+                    </div>
+                    <div class="progress-label">90% used • $20.00 remaining</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Transactions -->
+        <section class="transactions-section">
+            <h3 class="section-title">Recent Transactions</h3>
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(139, 127, 232, 0.15); color: var(--category-subscription);">
+                        🎮
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Xbox Game Pass Ultimate</div>
+                        <div class="transaction-meta">Subscription • Jan 8, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$16.99</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(123, 196, 127, 0.15); color: var(--color-success);">
+                        💰
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Freelance Project Payment</div>
+                        <div class="transaction-meta">Income • Jan 7, 2026</div>
+                    </div>
+                    <div class="transaction-amount income">+$2,400.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(232, 127, 159, 0.15); color: var(--category-hardware);">
+                        ⚙️
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Mechanical Keyboard</div>
+                        <div class="transaction-meta">Hardware • Jan 6, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$189.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(127, 232, 207, 0.15); color: var(--category-software);">
+                        💻
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Unity Pro Annual</div>
+                        <div class="transaction-meta">Software • Jan 5, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$156.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(127, 196, 232, 0.15); color: var(--category-food);">
+                        🍕
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Late Night Pizza Co.</div>
+                        <div class="transaction-meta">Food & Drink • Jan 5, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$32.50</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(232, 199, 127, 0.15); color: var(--category-events);">
+                        🎫
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">PAX West 3-Day Pass</div>
+                        <div class="transaction-meta">Events • Jan 4, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$180.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(139, 127, 232, 0.15); color: var(--category-subscription);">
+                        🎮
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">PlayStation Plus Premium</div>
+                        <div class="transaction-meta">Subscription • Jan 3, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$17.99</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(232, 127, 159, 0.15); color: var(--category-hardware);">
+                        ⚙️
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Gaming Mouse - Logitech G Pro</div>
+                        <div class="transaction-meta">Hardware • Jan 2, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$135.50</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(123, 196, 127, 0.15); color: var(--color-success);">
+                        💰
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Monthly Salary</div>
+                        <div class="transaction-meta">Income • Jan 1, 2026</div>
+                    </div>
+                    <div class="transaction-amount income">+$2,840.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-icon" style="background: rgba(139, 127, 232, 0.15); color: var(--category-subscription);">
+                        🎮
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-title">Discord Nitro</div>
+                        <div class="transaction-meta">Subscription • Jan 1, 2026</div>
+                    </div>
+                    <div class="transaction-amount expense">-$9.99</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Navigation Controls -->
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous design">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+    <button class="nav-btn" id="nextBtn" aria-label="Next design">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
+</div>
+
+
+
+</body>
+</html>

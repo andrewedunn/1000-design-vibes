@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Steel - Password Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Core Steel - Crafted for users with international roots
+ABOUTME: This design system implements a password_generator with Memphis aesthetics.
+ABOUTME: Key characteristics: Luxurious geometric patterns, international cultural motifs, government-grade professionalism.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #1a4d7a;
+--color-secondary: #d4af37;
+--color-accent: #e63946;
+--color-background: #fafbfc;
+--color-surface: #ffffff;
+--color-text: #1a1a2e;
+--color-text-muted: #6b7280;
+--color-border: #d1d5db;
+--font-heading: 'Playfair Display', serif;
+--font-body: 'Inter', sans-serif;
+--radius-default: 3px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Memphis geometry creates visual interest through strategic pattern placement
+2. Luxurious gold accents highlight premium features and important actions
+3. International motifs (multilingual labels, global iconography) acknowledge diverse users
+4. Government-appropriate restraint balances playful patterns with professional credibility
+5. Generous spacing and clear hierarchy ensure accessibility and usability
+
+BEST FOR:
+- Government portals requiring secure credential generation
+- International organizations serving multilingual users
+- Professional tools that need to feel trustworthy yet approachable
+- Applications where security meets user experience
+- Systems requiring compliance with global accessibility standards
+
+AVOID IF:
+- You need minimalist, pattern-free aesthetics
+- Your brand is strictly corporate with no playful elements
+- You require dark mode or multiple color schemes
+- Your target users prefer stark, utilitarian interfaces
+
+FUNCTIONAL DIRECTION: password_generator
+This design must clearly function as a password generator. Required elements:
+- Output field (large, prominent display of generated password)
+- Length slider (visual control for password length 8-64 characters)
+- Options checkboxes (uppercase, lowercase, numbers, symbols)
+- Copy button (prominent action to copy password to clipboard)
+- Generation trigger (button or automatic generation)
+- Visual feedback (success states, clipboard confirmation)
+- Security strength indicator
+- Additional settings (exclude ambiguous characters, pronounceable options)
+
+DESIGN DIMENSIONS:
+- functional_direction: password_generator
+- design_era: memphis
+- emotional_tone: luxurious
+- industry: government
+- color_mode: light_only
+- ui_paradigm: flat with geometric patterns
+- typography: Display serif headings + modern sans body
+- color_theory: split_complementary (blue, gold, red accents)
+- spatial_density: balanced (generous but organized)
+- corners: sharp (Memphis characteristic)
+
+MEMPHIS DESIGN CHARACTERISTICS:
+Memphis design (1980s Italian design movement) features:
+- Bold geometric shapes (circles, triangles, squiggles)
+- Bright, contrasting colors with unexpected combinations
+- Playful patterns and decorative elements
+- Flat surfaces with graphic overlays
+- Asymmetric compositions
+- Mix of textures and patterns
+
+This implementation adapts Memphis for government/professional context by:
+- Using sophisticated color palette (navy, gold, muted red)
+- Limiting pattern density to avoid visual chaos
+- Maintaining clear information hierarchy
+- Ensuring WCAG AA compliance
+- Balancing playfulness with credibility
+-->
+
+<style>
+:root {
+    /* Colors - Split Complementary Palette */
+    --color-primary: #1a4d7a;
+    --color-secondary: #d4af37;
+    --color-accent: #e63946;
+    --color-background: #fafbfc;
+    --color-surface: #ffffff;
+    --color-text: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-border: #d1d5db;
+    --color-success: #10b981;
+    --color-pattern-light: rgba(26, 77, 122, 0.05);
+    --color-pattern-accent: rgba(212, 175, 55, 0.1);
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Spacing - 8px base unit */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 1);
+    --space-sm: calc(var(--space-unit) * 2);
+    --space-md: calc(var(--space-unit) * 3);
+    --space-lg: calc(var(--space-unit) * 4);
+    --space-xl: calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+
+    /* Shapes */
+    --radius-default: 3px;
+    --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-background);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Memphis Geometric Background Patterns */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            var(--color-pattern-light),
+            var(--color-pattern-light) 10px,
+            transparent 10px,
+            transparent 20px
+        );
+    border: 3px solid var(--color-pattern-light);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background:
+        linear-gradient(135deg, transparent 30%, var(--color-pattern-accent) 30%, var(--color-pattern-accent) 70%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Header with International Motif */
+header {
+    position: relative;
+    background: var(--color-primary);
+    color: white;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 4px solid var(--color-secondary);
+    z-index: 10;
+}
+
+.header-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 20px,
+            white 20px,
+            white 22px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 20px,
+            white 20px,
+            white 22px
+        );
+    pointer-events: none;
+}
+
+.header-content {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.tagline {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.language-badges {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.lang-badge {
+    padding: var(--space-xs) var(--space-sm);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+/* Main Container */
+main {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-lg);
+    z-index: 1;
+}
+
+/* Password Generator Card */
+.generator-card {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    padding: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Memphis decorative corner elements */
+.generator-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: 60px;
+    width: 60px;
+    height: 60px;
+    background: var(--color-secondary);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    opacity: 0.15;
+}
+
+.generator-card::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 80px;
+    height: 80px;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            var(--color-accent),
+            var(--color-accent) 3px,
+            transparent 3px,
+            transparent 6px
+        );
+    opacity: 0.08;
+    border-radius: 50%;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+    position: relative;
+    padding-left: var(--space-md);
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 100%;
+    background: var(--color-secondary);
+}
+
+/* Password Output Display */
+.password-output {
+    position: relative;
+    margin-bottom: var(--space-xl);
+}
+
+.output-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.output-label span {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.strength-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.strength-bar {
+    width: 24px;
+    height: 6px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+}
+
+.strength-bar.active {
+    background: var(--color-success);
+}
+
+.strength-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-success);
+    margin-left: var(--space-xs);
+}
+
+.password-display-wrapper {
+    position: relative;
+}
+
+.password-display {
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: var(--space-lg);
+    background: var(--color-background);
+    border: 3px solid var(--color-primary);
+    color: var(--color-text);
+    letter-spacing: 0.05em;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow-x: auto;
+}
+
+.password-display:focus {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+button {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: var(--space-md) var(--space-lg);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:focus {
+    outline: 3px solid var(--color-text);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-secondary);
+    color: var(--color-text);
+    border: 3px solid var(--color-secondary);
+    grid-column: 1;
+}
+
+.btn-primary:hover {
+    background: #c19d2f;
+    border-color: #c19d2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-primary);
+    border: 3px solid var(--color-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(26, 77, 122, 0.3);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Success notification */
+.copy-success {
+    position: fixed;
+    top: var(--space-xl);
+    right: var(--space-xl);
+    background: var(--color-success);
+    color: white;
+    padding: var(--space-md) var(--space-lg);
+    border: 3px solid white;
+    font-weight: 600;
+    box-shadow: var(--shadow-elevated);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.copy-success.show {
+    transform: translateX(0);
+}
+
+/* Password Settings */
+.settings-section {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 3px solid var(--color-border);
+}
+
+/* Length Slider */
+.length-control {
+    margin-bottom: var(--space-xl);
+}
+
+.length-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.length-label span:first-child {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+}
+
+.length-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    min-width: 60px;
+    text-align: right;
+}
+
+.slider-wrapper {
+    position: relative;
+    padding: var(--space-sm) 0;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    background: var(--color-border);
+    border: 2px solid var(--color-primary);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    background: var(--color-secondary);
+    cursor: pointer;
+    border: 3px solid var(--color-primary);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 32px;
+    height: 32px;
+    background: var(--color-secondary);
+    cursor: pointer;
+    border: 3px solid var(--color-primary);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+input[type="range"]:focus {
+    outline: 3px solid var(--color-text);
+    outline-offset: 4px;
+}
+
+.slider-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xs);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* Character Options */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.option-item {
+    position: relative;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox-wrapper:hover {
+    border-color: var(--color-primary);
+    background: white;
+}
+
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    accent-color: var(--color-secondary);
+    border: 2px solid var(--color-primary);
+}
+
+input[type="checkbox"]:focus {
+    outline: 3px solid var(--color-text);
+    outline-offset: 2px;
+}
+
+.option-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.option-example {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+    display: block;
+}
+
+/* Advanced Options */
+.advanced-section {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-pattern-light);
+    border-left: 4px solid var(--color-accent);
+}
+
+.advanced-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+}
+
+.advanced-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.advanced-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Footer with Navigation */
+footer {
+    position: relative;
+    background: var(--color-surface);
+    border-top: 3px solid var(--color-border);
+    padding: var(--space-lg);
+    margin-top: var(--space-2xl);
+    z-index: 10;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.design-credit {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.design-credit strong {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.nav-controls {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.nav-button {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-primary);
+    font-size: 0.875rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-button:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--color-text);
+}
+
+.nav-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.nav-button:disabled:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    transform: none;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .generator-card {
+        padding: var(--space-lg);
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-primary {
+        grid-column: auto;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: var(--space-lg) var(--space-sm);
+    }
+
+    .password-display {
+        font-size: 1.125rem;
+        padding: var(--space-md);
+    }
+}
+</style>
+
+<header>
+    <div class="header-pattern"></div>
+    <div class="header-content">
+        <div>
+            <h1>Core Steel</h1>
+            <p class="tagline">Crafted for users with international roots</p>
+        </div>
+        <div class="language-badges">
+            <span class="lang-badge">EN</span>
+            <span class="lang-badge">中文</span>
+            <span class="lang-badge">ES</span>
+            <span class="lang-badge">عربي</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="generator-card">
+        <h2 class="section-title">Secure Password Generator</h2>
+
+        <!-- Password Output -->
+        <div class="password-output">
+            <div class="output-label">
+                <span>Generated Password</span>
+                <div class="strength-indicator">
+                    <div class="strength-bar active"></div>
+                    <div class="strength-bar active"></div>
+                    <div class="strength-bar active"></div>
+                    <div class="strength-bar active"></div>
+                    <div class="strength-bar active"></div>
+                    <span class="strength-text">Very Strong</span>
+                </div>
+            </div>
+
+            <div class="password-display-wrapper">
+                <div class="password-display" id="passwordDisplay" tabindex="0" role="textbox" aria-label="Generated password" aria-readonly="true">
+                    Kp9#mXq2$vL8nRt4
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" id="generateBtn" aria-label="Generate new password">
+                    ⚡ Generate New Password
+                </button>
+                <button class="btn-secondary" id="copyBtn" aria-label="Copy password to clipboard">
+                    📋 Copy
+                </button>
+                <button class="btn-secondary" id="refreshBtn" aria-label="Regenerate password">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="settings-section">
+            <h3 class="section-title">Password Configuration</h3>
+
+            <!-- Length Slider -->
+            <div class="length-control">
+                <div class="length-label">
+                    <span>Password Length</span>
+                    <span class="length-value" id="lengthValue">16</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input
+                        type="range"
+                        id="lengthSlider"
+                        min="8"
+                        max="64"
+                        value="16"
+                        step="1"
+                        aria-label="Password length slider"
+                    >
+                    <div class="slider-marks">
+                        <span>8</span>
+                        <span>16</span>
+                        <span>32</span>
+                        <span>64</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Character Options -->
+            <div class="options-grid">
+                <div class="option-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="uppercaseCheck" checked aria-label="Include uppercase letters">
+                        <div>
+                            <span class="option-label">Uppercase Letters</span>
+                            <span class="option-example">A-Z</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="option-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="lowercaseCheck" checked aria-label="Include lowercase letters">
+                        <div>
+                            <span class="option-label">Lowercase Letters</span>
+                            <span class="option-example">a-z</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="option-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="numbersCheck" checked aria-label="Include numbers">
+                        <div>
+                            <span class="option-label">Numbers</span>
+                            <span class="option-example">0-9</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="option-item">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="symbolsCheck" checked aria-label="Include symbols">
+                        <div>
+                            <span class="option-label">Special Symbols</span>
+                            <span class="option-example">!@#$%^&*</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Advanced Options -->
+            <div class="advanced-section">
+                <div class="advanced-title">Advanced Options</div>
+                <div class="advanced-options">
+                    <label class="advanced-checkbox">
+                        <input type="checkbox" id="excludeAmbiguous" aria-label="Exclude ambiguous characters">
+                        <span class="option-label">Exclude ambiguous characters (0, O, l, 1, I)</span>
+                    </label>
+                    <label class="advanced-checkbox">
+                        <input type="checkbox" id="noRepeat" aria-label="No repeated characters">
+                        <span class="option-label">No repeated characters</span>
+                    </label>
+                    <label class="advanced-checkbox">
+                        <input type="checkbox" id="beginWithLetter" aria-label="Begin with letter">
+                        <span class="option-label">Begin with letter (recommended for systems)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="design-credit">
+            Design <strong>#17</strong> of 1000 Design Vibes
+        </div>
+        <div class="nav-controls">
+            <button class="nav-button" id="prevBtn" aria-label="Previous design">◄</button>
+            <button class="nav-button" id="nextBtn" aria-label="Next design">►</button>
+        </div>
+    </div>
+</footer>
+
+<!-- Copy Success Notification -->
+<div class="copy-success" id="copySuccess" role="alert" aria-live="polite">
+    ✓ Password copied to clipboard
+</div>
+
+<script>
+// Password generation logic
+const passwordDisplay = document.getElementById('passwordDisplay');
+const generateBtn = document.getElementById('generateBtn');
+const copyBtn = document.getElementById('copyBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const lengthSlider = document.getElementById('lengthSlider');
+const lengthValue = document.getElementById('lengthValue');
+const copySuccess = document.getElementById('copySuccess');
+
+// Checkboxes
+const uppercaseCheck = document.getElementById('uppercaseCheck');
+const lowercaseCheck = document.getElementById('lowercaseCheck');
+const numbersCheck = document.getElementById('numbersCheck');
+const symbolsCheck = document.getElementById('symbolsCheck');
+const excludeAmbiguous = document.getElementById('excludeAmbiguous');
+const noRepeat = document.getElementById('noRepeat');
+const beginWithLetter = document.getElementById('beginWithLetter');
+
+// Character sets
+const charSets = {
+    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lowercase: 'abcdefghijklmnopqrstuvwxyz',
+    numbers: '0123456789',
+    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
+    ambiguous: '0Ol1I'
+};
+
+// Update length display
+lengthSlider.addEventListener('input', (e) => {
+    lengthValue.textContent = e.target.value;
+});
+
+// Generate password function
+function generatePassword() {
+    const length = parseInt(lengthSlider.value);
+    let availableChars = '';
+    let requiredChars = [];
+
+    // Build character set based on selections
+    if (uppercaseCheck.checked) {
+        availableChars += charSets.uppercase;
+        requiredChars.push(charSets.uppercase);
+    }
+    if (lowercaseCheck.checked) {
+        availableChars += charSets.lowercase;
+        requiredChars.push(charSets.lowercase);
+    }
+    if (numbersCheck.checked) {
+        availableChars += charSets.numbers;
+        requiredChars.push(charSets.numbers);
+    }
+    if (symbolsCheck.checked) {
+        availableChars += charSets.symbols;
+        requiredChars.push(charSets.symbols);
+    }
+
+    // Exclude ambiguous characters if selected
+    if (excludeAmbiguous.checked) {
+        availableChars = availableChars.split('').filter(char =>
+            !charSets.ambiguous.includes(char)
+        ).join('');
+    }
+
+    // Ensure at least one character set is selected
+    if (availableChars.length === 0) {
+        passwordDisplay.textContent = 'Please select at least one character type';
+        return;
+    }
+
+    let password = '';
+
+    // Ensure at least one character from each selected set
+    requiredChars.forEach(set => {
+        let filteredSet = set;
+        if (excludeAmbiguous.checked) {
+            filteredSet = set.split('').filter(char =>
+                !charSets.ambiguous.includes(char)
+            ).join('');
+        }
+        if (filteredSet.length > 0) {
+            password += filteredSet.charAt(Math.floor(Math.random() * filteredSet.length));
+        }
+    });
+
+    // Fill remaining length
+    for (let i = password.length; i < length; i++) {
+        let char = availableChars.charAt(Math.floor(Math.random() * availableChars.length));
+
+        // Handle no repeat option
+        if (noRepeat.checked && password.includes(char)) {
+            i--;
+            continue;
+        }
+
+        password += char;
+    }
+
+    // Shuffle password
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+    // Ensure begins with letter if selected
+    if (beginWithLetter.checked) {
+        const letters = password.split('').filter(char =>
+            /[a-zA-Z]/.test(char)
+        );
+        if (letters.length > 0) {
+            // Remove the letter from its position
+            const letterIndex = password.indexOf(letters[0]);
+            password = letters[0] + password.slice(0, letterIndex) + password.slice(letterIndex + 1);
+        }
+    }
+
+    passwordDisplay.textContent = password;
+    updateStrengthIndicator(password);
+}
+
+// Update strength indicator
+function updateStrengthIndicator(password) {
+    const strengthBars = document.querySelectorAll('.strength-bar');
+    const strengthText = document.querySelector('.strength-text');
+
+    let strength = 0;
+    if (password.length >= 12) strength++;
+    if (password.length >= 16) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+    const strengthLevels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+    const strengthColors = ['#e63946', '#f77f00', '#fcbf49', '#06d6a0', '#10b981'];
+
+    strengthBars.forEach((bar, index) => {
+        if (index < strength) {
+            bar.classList.add('active');
+            bar.style.background = strengthColors[strength - 1];
+        } else {
+            bar.classList.remove('active');
+        }
+    });
+
+    strengthText.textContent = strengthLevels[strength - 1] || 'Weak';
+    strengthText.style.color = strengthColors[strength - 1] || '#e63946';
+}
+
+// Copy to clipboard
+async function copyToClipboard() {
+    const password = passwordDisplay.textContent;
+
+    try {
+        await navigator.clipboard.writeText(password);
+        showCopySuccess();
+    } catch (err) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = password;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess();
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+// Show copy success notification
+function showCopySuccess() {
+    copySuccess.classList.add('show');
+    setTimeout(() => {
+        copySuccess.classList.remove('show');
+    }, 2000);
+}
+
+// Event listeners
+generateBtn.addEventListener('click', generatePassword);
+refreshBtn.addEventListener('click', generatePassword);
+copyBtn.addEventListener('click', copyToClipboard);
+
+// Auto-generate on option change
+[uppercaseCheck, lowercaseCheck, numbersCheck, symbolsCheck,
+ excludeAmbiguous, noRepeat, beginWithLetter].forEach(checkbox => {
+    checkbox.addEventListener('change', generatePassword);
+});
+
+lengthSlider.addEventListener('change', generatePassword);
+
+// Navigation
+const TOTAL_DESIGNS = 250;
+const CURRENT_DESIGN = 17;
+
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+if (CURRENT_DESIGN <= 1) {
+    prevBtn.disabled = true;
+}
+
+if (CURRENT_DESIGN >= TOTAL_DESIGNS) {
+    nextBtn.disabled = true;
+}
+
+prevBtn.addEventListener('click', () => {
+    if (CURRENT_DESIGN > 1) {
+        window.location.href = `design-${CURRENT_DESIGN - 1}.html`;
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    if (CURRENT_DESIGN < TOTAL_DESIGNS) {
+        window.location.href = `design-${CURRENT_DESIGN + 1}.html`;
+    }
+});
+
+// Keyboard navigation
+/* Navigation removed */
+
+// Initialize with a password
+generatePassword();
+</script>
+
+</body>
+</html>

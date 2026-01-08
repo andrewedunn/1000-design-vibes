@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type Phantom - Markdown Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Type Phantom - Crafted for users with international roots
+ABOUTME: This design system implements a markdown_editor with Swiss International aesthetics.
+ABOUTME: Key characteristics: Extreme grid precision, stark monochromatic palette with single accent, clinical typography with mysterious shadows.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #2d2d2d;
+--color-accent: #6b6b6b;
+--color-background: #fafafa;
+--color-surface: #ffffff;
+--color-text: #1a1a1a;
+--color-text-muted: #6b6b6b;
+--color-border: #e0e0e0;
+--color-shadow: rgba(0, 0, 0, 0.08);
+--font-heading: 'Inter', -apple-system, sans-serif;
+--font-body: 'Inter', -apple-system, sans-serif;
+--font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+--shadow-subtle: 0 1px 3px var(--color-shadow);
+--shadow-medium: 0 2px 8px var(--color-shadow);
+
+AESTHETIC PRINCIPLES:
+1. Absolute grid alignment - every element snaps to an 8px grid with mathematical precision
+2. Monochromatic restraint - shades of gray with mysterious depth created through layering
+3. Typography as structure - font weight and spacing create all hierarchy, no decorative elements
+4. Clinical whitespace - generous spacing emphasizes the emptiness between content
+5. Subtle shadows suggest hidden depth - barely perceptible elevation hints at mystery
+
+BEST FOR:
+- Technical documentation requiring precision and clarity
+- Writers who value minimal distraction and focus
+- International teams needing language-agnostic interfaces
+- Developer-centric markdown workflows
+- Projects requiring professional, neutral aesthetics
+
+AVOID IF:
+- You need vibrant, playful, or emotional design
+- Your content requires decorative flourishes or illustrations
+- Color coding is essential to your workflow
+- You prefer soft, rounded, friendly interfaces
+- Your audience expects warm, welcoming aesthetics
+
+FUNCTIONAL DIRECTION: markdown_editor
+This design must clearly function as a markdown_editor. Required elements:
+- Split pane editor/preview (resizable split view with editor on left, preview on right)
+- Toolbar (formatting controls for markdown syntax)
+- File browser (sidebar showing document structure and file navigation)
+- Export functionality (options to export as HTML, PDF, or copy markdown)
+
+DIMENSIONAL SPECIFICATIONS:
+- functional_direction: markdown_editor
+- design_era: swiss_international (Grid-based, objective, precise)
+- emotional_tone: mysterious (Subtle shadows, enigmatic depth, clinical detachment)
+- industry: developer (Technical, precise, functional)
+- color_mode: light_only (Single light theme, no dark mode toggle)
+- ui_paradigm: flat (No gradients, minimal shadows, stark clarity)
+- typography_heading: neo_grotesque (Inter for objective neutrality)
+- typography_body: neo_grotesque (Inter for consistency)
+- typography_scale: major_third (1.25 ratio for clear hierarchy)
+- spacing_density: balanced (Neither cramped nor excessive)
+- color_theory: monochromatic (Grays with single accent)
+- color_temperature: neutral (No warm or cool bias)
+- color_saturation: desaturated (Minimal color intensity)
+- corners: sharp (0px border radius for Swiss precision)
+- shadows: subtle (Barely visible, mysterious depth)
+- borders: thin (1px lines for grid definition)
+
+INTERACTION PATTERNS:
+- Click file names in sidebar to switch documents
+- Drag vertical divider to resize editor/preview panes
+- Use toolbar buttons to insert markdown syntax at cursor
+- Export menu reveals format options on click
+- Hover states are minimal (slight opacity change)
+- Focus states use subtle border emphasis
+
+ACCESSIBILITY:
+- WCAG AA compliant contrast ratios (text: 1a1a1a on fafafa = 17:1)
+- Focus indicators on all interactive elements
+- Keyboard shortcuts for all toolbar actions
+- Resizable text respects user preferences
+- Reduced motion support for animations
+
+TECHNICAL NOTES:
+- Split pane uses CSS Grid with resizable column template
+- Preview pane auto-scrolls to match editor position
+- Markdown parsing uses simple regex for demo purposes
+- All state managed in vanilla JavaScript
+- No framework dependencies for maximum performance
+-->
+
+<style>
+:root {
+    /* Colors - Monochromatic palette */
+    --color-primary: #2d2d2d;
+    --color-accent: #6b6b6b;
+    --color-background: #fafafa;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b6b6b;
+    --color-border: #e0e0e0;
+    --color-hover: #f5f5f5;
+    --color-active: #eeeeee;
+    --color-shadow: rgba(0, 0, 0, 0.08);
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+    /* Type scale - Major Third (1.25) */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+
+    /* Spacing - 8px grid */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-2xl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --shadow-subtle: 0 1px 3px var(--color-shadow);
+    --shadow-medium: 0 2px 8px var(--color-shadow);
+    --border-width: 1px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    overflow: hidden;
+}
+
+/* Main layout - App shell with sidebar */
+.app-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 56px 1fr 40px;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Header toolbar */
+.header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.logo {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-primary);
+}
+
+.toolbar {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.toolbar-btn {
+    padding: var(--space-xs) var(--space-sm);
+    background: transparent;
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+    background: var(--color-hover);
+}
+
+.toolbar-btn:active {
+    background: var(--color-active);
+}
+
+.toolbar-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.header-right {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.export-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-primary);
+    border: none;
+    color: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.export-btn:hover {
+    background: var(--color-text);
+}
+
+.export-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.export-menu {
+    position: absolute;
+    top: 52px;
+    right: var(--space-md);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-medium);
+    display: none;
+    z-index: 100;
+}
+
+.export-menu.active {
+    display: block;
+}
+
+.export-option {
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.export-option:last-child {
+    border-bottom: none;
+}
+
+.export-option:hover {
+    background: var(--color-hover);
+}
+
+/* Sidebar file browser */
+.sidebar {
+    grid-row: 2 / -1;
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.sidebar-title {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.file-list {
+    list-style: none;
+}
+
+.file-item {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    color: var(--color-text);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.file-item:hover {
+    background: var(--color-hover);
+    border-left-color: var(--color-accent);
+}
+
+.file-item.active {
+    background: var(--color-active);
+    border-left-color: var(--color-primary);
+    font-weight: 500;
+}
+
+.file-item:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+/* Main editor area - Split pane */
+.editor-container {
+    grid-column: 2 / -1;
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--color-background);
+}
+
+.editor-pane,
+.preview-pane {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.pane-header {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-border);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+.editor {
+    flex: 1;
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: none;
+    resize: none;
+    outline: none;
+}
+
+.editor:focus {
+    box-shadow: inset 0 0 0 2px var(--color-border);
+}
+
+.preview-pane {
+    border-left: var(--border-width) solid var(--color-border);
+}
+
+.preview {
+    flex: 1;
+    padding: var(--space-lg);
+    overflow-y: auto;
+    background: var(--color-surface);
+}
+
+.preview h1 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+}
+
+.preview h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+}
+
+.preview h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.preview p {
+    margin-bottom: var(--space-md);
+    line-height: 1.7;
+}
+
+.preview code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background: var(--color-background);
+    padding: 2px 6px;
+    border: var(--border-width) solid var(--color-border);
+}
+
+.preview pre {
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    overflow-x: auto;
+}
+
+.preview pre code {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.preview ul, .preview ol {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+}
+
+.preview li {
+    margin-bottom: var(--space-xs);
+}
+
+.preview blockquote {
+    border-left: 3px solid var(--color-border);
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.preview hr {
+    border: none;
+    border-top: var(--border-width) solid var(--color-border);
+    margin: var(--space-xl) 0;
+}
+
+.preview a {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: var(--border-width) solid var(--color-primary);
+}
+
+.preview a:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-text);
+}
+
+/* Footer status bar */
+.footer {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+    background: var(--color-surface);
+    border-top: var(--border-width) solid var(--color-border);
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+}
+
+.status-left,
+.status-right {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Navigation controls */
+.nav-controls {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    display: flex;
+    gap: var(--space-xs);
+    z-index: 1000;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-size: var(--text-lg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.15s ease;
+}
+
+.nav-btn:hover {
+    background: var(--color-hover);
+    border-color: var(--color-primary);
+}
+
+.nav-btn:active {
+    background: var(--color-active);
+}
+
+.nav-btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+}
+</style>
+
+<div class="app-container">
+    <!-- Header toolbar -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">Type Phantom</div>
+            <div class="toolbar">
+                <button class="toolbar-btn" onclick="insertMarkdown('**', '**')" title="Bold (Ctrl+B)">
+                    <strong>B</strong>
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('*', '*')" title="Italic (Ctrl+I)">
+                    <em>I</em>
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('`', '`')" title="Code">
+                    &lt;/&gt;
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('## ', '')" title="Heading">
+                    H
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('\n- ', '')" title="List">
+                    •
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('[', '](url)')" title="Link">
+                    🔗
+                </button>
+                <button class="toolbar-btn" onclick="insertMarkdown('\n> ', '')" title="Quote">
+                    "
+                </button>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="export-btn" onclick="toggleExportMenu()">Export ▾</button>
+            <div class="export-menu" id="exportMenu">
+                <button class="export-option" onclick="exportAs('html')">Export as HTML</button>
+                <button class="export-option" onclick="exportAs('markdown')">Copy Markdown</button>
+                <button class="export-option" onclick="exportAs('text')">Export as Text</button>
+                <button class="export-option" onclick="exportAs('pdf')">Save as PDF</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar file browser -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Documents</div>
+            <ul class="file-list">
+                <li class="file-item active" tabindex="0" onclick="loadDocument('welcome')">welcome.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('design-system')">design-system.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('guidelines')">guidelines.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('api-docs')">api-docs.md</li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Projects</div>
+            <ul class="file-list">
+                <li class="file-item" tabindex="0" onclick="loadDocument('project-alpha')">project-alpha.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('roadmap')">roadmap-2026.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('notes')">meeting-notes.md</li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Archive</div>
+            <ul class="file-list">
+                <li class="file-item" tabindex="0" onclick="loadDocument('changelog')">changelog.md</li>
+                <li class="file-item" tabindex="0" onclick="loadDocument('research')">research-2025.md</li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main editor area -->
+    <div class="editor-container">
+        <div class="editor-pane">
+            <div class="pane-header">Editor</div>
+            <textarea class="editor" id="editor" oninput="updatePreview()" spellcheck="true"># Welcome to Type Phantom
+
+A markdown editor crafted for users with **international roots**.
+
+## Features
+
+This editor combines Swiss precision with mysterious depth:
+
+- **Split-pane editing** - Write and preview simultaneously
+- **Grid-based layout** - Everything aligns to an 8px grid
+- **Monochromatic design** - Focus on your words, not colors
+- **Developer-focused** - Built for technical documentation
+
+## Getting Started
+
+Type Phantom supports standard markdown syntax:
+
+### Text Formatting
+
+Use `**bold**` for **bold text** and `*italic*` for *italic text*.
+
+Inline `code` uses backticks.
+
+### Code Blocks
+
+```javascript
+function phantom() {
+    return "mysterious";
+}
+```
+
+### Lists
+
+- First item
+- Second item
+- Third item
+
+1. Numbered
+2. List
+3. Items
+
+### Quotes
+
+> The phantom types in shadows,
+> leaving only words behind.
+
+### Links
+
+Connect ideas with [hyperlinks](https://example.com).
+
+---
+
+## Design Philosophy
+
+Type Phantom embraces **Swiss International** design principles:
+
+1. **Grid precision** - Mathematical alignment creates order
+2. **Objective typography** - Neo-grotesque fonts serve function
+3. **Neutral palette** - Monochrome focus eliminates distraction
+4. **Systematic spacing** - Consistent rhythm guides the eye
+
+The mysterious tone emerges through subtle shadows and clinical detachment.
+
+## For International Users
+
+This editor respects linguistic diversity:
+
+- Language-agnostic interface
+- Unicode support for all scripts
+- RTL text rendering
+- International date/time formats
+
+---
+
+*Crafted with precision. Typed in shadows.*</textarea>
+        </div>
+        <div class="preview-pane">
+            <div class="pane-header">Preview</div>
+            <div class="preview" id="preview"></div>
+        </div>
+    </div>
+
+    <!-- Footer status bar -->
+    <footer class="footer">
+        <div class="status-left">
+            <div class="status-item">
+                <span>Lines: <span id="lineCount">0</span></span>
+            </div>
+            <div class="status-item">
+                <span>Words: <span id="wordCount">0</span></span>
+            </div>
+            <div class="status-item">
+                <span>Characters: <span id="charCount">0</span></span>
+            </div>
+        </div>
+        <div class="status-right">
+            <div class="status-item">
+                <span>UTF-8</span>
+            </div>
+            <div class="status-item">
+                <span>Markdown</span>
+            </div>
+            <div class="status-item">
+                <span id="saveStatus">Saved</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="navigateDesign(-1)" title="Previous Design" aria-label="Previous">←</button>
+        <button class="nav-btn" onclick="navigateDesign(1)" title="Next Design" aria-label="Next">→</button>
+    </div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Metro - Where flat meets international aesthetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Phantom Metro - Where flat meets international aesthetics
+ABOUTME: This design system implements a transit_app with Bauhaus flat aesthetics.
+ABOUTME: Key characteristics: geometric precision with primary color coding, mysterious depth through strategic color use, food-focused destination system.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #e63946;
+--color-secondary: #ffd60a;
+--color-tertiary: #06aed5;
+--color-background: #f1f1f1;
+--color-surface: #ffffff;
+--color-text: #1a1a1a;
+--color-text-muted: #6b6b6b;
+--color-dark-background: #1a1a1a;
+--color-dark-surface: #2a2a2a;
+--color-dark-text: #f1f1f1;
+--font-heading: 'IBM Plex Sans', sans-serif;
+--font-body: 'IBM Plex Sans', sans-serif;
+--font-mono: 'Space Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Geometric purity - All elements use strict rectangular forms inspired by Bauhaus grid systems
+2. Primary color system - Red (active line), yellow (warnings/alerts), blue (information) create visual hierarchy
+3. Mysterious depth - Dark backgrounds with strategic color accents evoke nighttime transit atmosphere
+4. Functional typography - Monospace for departure times creates precision, sans-serif for wayfinding clarity
+
+BEST FOR:
+- Transit and navigation applications requiring clear information hierarchy
+- Food delivery systems with route tracking and timing
+- Any interface where color-coding and geometric precision aid comprehension
+- Applications needing seamless light/dark mode transitions
+
+AVOID IF:
+- You need organic, flowing forms
+- Brand requires skeuomorphic or textured elements
+- Target audience prefers minimal color differentiation
+
+FUNCTIONAL DIRECTION: transit_app
+This design must clearly function as a transit_app. Required elements:
+- Route map with multiple lines showing connections
+- Real-time arrival/departure information board
+- Station/stop list with transfer points
+- Trip planner with origin/destination selection
+- Service alerts and status indicators
+- Fare information display
+- Line legends with color coding
+- Current location indicator
+- Next arrival countdown timers
+- Transfer connection information
+
+DESIGN PHILOSOPHY:
+Phantom Metro reimagines transit wayfinding through Bauhaus principles applied to a food-focused underground network.
+The mysterious emotional tone emerges from the noir aesthetic of nighttime subway systems - dark backgrounds punctuated
+by bright primary colors that guide travelers through the culinary underground. Each line represents a different cuisine
+or food district, creating a transit system that's both functional and evocative.
+
+COLOR SYSTEM:
+- Red Line (#e63946): International/Fusion districts
+- Yellow Line (#ffd60a): Asian cuisine corridor
+- Blue Line (#06aed5): Seafood/coastal routes
+- The mysterious tone comes from high contrast between dark surfaces and vibrant accent colors
+
+SPATIAL ORGANIZATION:
+Bauhaus grid system with strict 8px baseline. All elements snap to geometric divisions.
+No curves, no gradients, no shadows - pure flat design with color as the primary spatial indicator.
+
+TYPOGRAPHY HIERARCHY:
+- Station names: 20px bold, all caps for wayfinding clarity
+- Departure times: 16px monospace for precision and scannability
+- Service alerts: 14px medium weight for clear communication
+- Body text: 14px regular for general information
+
+INTERACTION PATTERNS:
+- Line selection changes entire interface color scheme
+- Station selection highlights route path and connections
+- Time-based updates create dynamic departure boards
+- Service alerts slide in from top with appropriate color coding
+-->
+
+<style>
+:root {
+    /* Core Colors - Light Mode */
+    --color-primary: #e63946;
+    --color-secondary: #ffd60a;
+    --color-tertiary: #06aed5;
+    --color-quaternary: #06d6a0;
+    --color-background: #f1f1f1;
+    --color-surface: #ffffff;
+    --color-surface-elevated: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b6b6b;
+    --color-border: #d1d1d1;
+    --color-accent: var(--color-primary);
+
+    /* Typography */
+    --font-heading: 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono: 'Space Mono', 'Courier New', monospace;
+
+    /* Spacing - Bauhaus 8px grid */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-2xl: calc(var(--space-unit) * 6);
+
+    /* Shapes - Strict rectangles only */
+    --radius-default: 0px;
+    --border-width: 2px;
+
+    /* Shadows - None (flat design) */
+    --shadow-default: none;
+
+    /* Layout */
+    --max-width: 1200px;
+    --sidebar-width: 320px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: #1a1a1a;
+        --color-surface: #2a2a2a;
+        --color-surface-elevated: #333333;
+        --color-text: #f1f1f1;
+        --color-text-muted: #a8a8a8;
+        --color-border: #404040;
+    }
+}
+
+/* Manual dark mode toggle support */
+[data-theme="dark"] {
+    --color-background: #1a1a1a;
+    --color-surface: #2a2a2a;
+    --color-surface-elevated: #333333;
+    --color-text: #f1f1f1;
+    --color-text-muted: #a8a8a8;
+    --color-border: #404040;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* App Shell Layout */
+.app-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: 64px 1fr;
+    height: 100vh;
+    gap: 0;
+}
+
+/* Header */
+.header {
+    grid-column: 1 / -1;
+    background: var(--color-surface);
+    border-bottom: var(--border-width) solid var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+    position: relative;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-size: 20px;
+    font-family: var(--font-mono);
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.theme-toggle {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--color-text);
+    color: var(--color-background);
+}
+
+.theme-toggle:focus {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Sidebar - Line Selector */
+.sidebar {
+    background: var(--color-surface);
+    border-right: var(--border-width) solid var(--color-border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-section {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.sidebar-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.line-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.line-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.line-item:hover {
+    transform: translateX(4px);
+}
+
+.line-item:focus {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.line-item.active {
+    border-color: var(--color-accent);
+    background: var(--color-surface);
+}
+
+.line-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-accent);
+}
+
+.line-color {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 14px;
+}
+
+.line-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.line-name {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-description {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+.status-normal { background: var(--color-quaternary); }
+.status-delayed { background: var(--color-secondary); }
+.status-alert { background: var(--color-primary); }
+
+/* Main Content Area */
+.main-content {
+    overflow-y: auto;
+    background: var(--color-background);
+    padding: var(--space-md);
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+/* Service Alerts */
+.service-alerts {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border-left: 4px solid;
+}
+
+.alert-info { border-left-color: var(--color-tertiary); }
+.alert-warning { border-left-color: var(--color-secondary); }
+.alert-error { border-left-color: var(--color-primary); }
+
+.alert-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: var(--space-xs);
+}
+
+.alert-message {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Departures Board */
+.departures-board {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.board-header {
+    padding: var(--space-md);
+    background: var(--color-text);
+    color: var(--color-background);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.board-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.board-subtitle {
+    font-size: 12px;
+    opacity: 0.7;
+    font-family: var(--font-mono);
+    margin-top: var(--space-xs);
+}
+
+.departure-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.departure-item {
+    display: grid;
+    grid-template-columns: 48px 1fr 80px;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.departure-item:hover {
+    background: var(--color-background);
+}
+
+.departure-line {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-mono);
+}
+
+.departure-destination {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.destination-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.destination-via {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.departure-time {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.time-minutes {
+    display: block;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+/* Trip Planner */
+.trip-planner {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.planner-header {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.planner-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.planner-form {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.form-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+.form-input {
+    padding: var(--space-md);
+    background: var(--color-background);
+    border: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.form-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.swap-button {
+    align-self: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin: calc(var(--space-sm) * -1) 0;
+    transition: transform 0.2s ease;
+}
+
+.swap-button:hover {
+    transform: scale(1.1);
+}
+
+.swap-button:focus {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.plan-button {
+    padding: var(--space-md);
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: var(--space-sm);
+}
+
+.plan-button:hover {
+    background: var(--color-text);
+}
+
+.plan-button:focus {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Route Map */
+.route-map {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    grid-column: 1 / -1;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-header {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.map-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.map-legend {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 12px;
+}
+
+.legend-color {
+    width: 24px;
+    height: 4px;
+}
+
+.map-canvas {
+    padding: var(--space-2xl);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metro-lines {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 300px;
+}
+
+.metro-line {
+    position: absolute;
+    height: 6px;
+    background: var(--line-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-sm);
+}
+
+.line-horizontal {
+    width: 80%;
+    left: 10%;
+}
+
+.line-red {
+    top: 30%;
+    --line-color: var(--color-primary);
+    background: var(--line-color);
+}
+
+.line-yellow {
+    top: 50%;
+    --line-color: var(--color-secondary);
+    background: var(--line-color);
+}
+
+.line-blue {
+    top: 70%;
+    --line-color: var(--color-tertiary);
+    background: var(--line-color);
+}
+
+.station-dot {
+    width: 16px;
+    height: 16px;
+    background: var(--color-surface);
+    border: 4px solid var(--line-color);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.station-dot:hover {
+    transform: scale(1.3);
+}
+
+.station-dot.transfer {
+    border-width: 3px;
+    width: 20px;
+    height: 20px;
+}
+
+.station-label {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--color-surface);
+    padding: 2px 6px;
+    border: 1px solid var(--color-border);
+}
+
+/* Fare Info */
+.fare-info {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.fare-header {
+    padding: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.fare-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fare-list {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.fare-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background: var(--color-background);
+    border-left: 4px solid var(--color-accent);
+}
+
+.fare-type {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.fare-description {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+.fare-price {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Navigation Controls */
+.navigation {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 200;
+}
+
+.nav-button {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background: var(--color-text);
+    transform: scale(1.05);
+}
+
+.nav-button:focus {
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.nav-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-button:disabled:hover {
+    transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .app-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 64px auto 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-border);
+        max-height: 300px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .route-map {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .header {
+        padding: 0 var(--space-sm);
+    }
+
+    .logo-text {
+        display: none;
+    }
+
+    .main-content {
+        padding: var(--space-sm);
+    }
+
+    .departure-item {
+        grid-template-columns: 40px 1fr 64px;
+        gap: var(--space-sm);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navigation,
+    .theme-toggle,
+    .header-actions {
+        display: none;
+    }
+}
+</style>
+
+<div class="app-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">Φ</div>
+            <div class="logo-text">PHANTOM METRO</div>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                THEME
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar - Line Selection -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h2 class="sidebar-title">Active Lines</h2>
+            <div class="line-list">
+                <div class="line-item active" tabindex="0" role="button" data-line="red">
+                    <div class="line-color" style="background: #e63946;">R</div>
+                    <div class="line-info">
+                        <div class="line-name">Red Line</div>
+                        <div class="line-description">International Fusion</div>
+                    </div>
+                    <div class="line-status status-normal"></div>
+                </div>
+                <div class="line-item" tabindex="0" role="button" data-line="yellow">
+                    <div class="line-color" style="background: #ffd60a;">Y</div>
+                    <div class="line-info">
+                        <div class="line-name">Yellow Line</div>
+                        <div class="line-description">Asian Corridor</div>
+                    </div>
+                    <div class="line-status status-delayed"></div>
+                </div>
+                <div class="line-item" tabindex="0" role="button" data-line="blue">
+                    <div class="line-color" style="background: #06aed5;">B</div>
+                    <div class="line-info">
+                        <div class="line-name">Blue Line</div>
+                        <div class="line-description">Coastal Seafood</div>
+                    </div>
+                    <div class="line-status status-normal"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h2 class="sidebar-title">Quick Access</h2>
+            <div class="line-list">
+                <div class="line-item" tabindex="0" role="button">
+                    <div class="line-info">
+                        <div class="line-name">Saved Trips</div>
+                    </div>
+                </div>
+                <div class="line-item" tabindex="0" role="button">
+                    <div class="line-info">
+                        <div class="line-name">Recent Stations</div>
+                    </div>
+                </div>
+                <div class="line-item" tabindex="0" role="button">
+                    <div class="line-info">
+                        <div class="line-name">System Map</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-grid">
+            <!-- Service Alerts -->
+            <div class="service-alerts">
+                <div class="alert alert-warning">
+                    <div class="alert-icon" style="color: #ffd60a;">⚠</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Yellow Line - Delayed Service</div>
+                        <div class="alert-message">Expect 5-10 minute delays between Dim Sum Plaza and Ramen District due to increased passenger volume during dinner rush.</div>
+                    </div>
+                </div>
+                <div class="alert alert-info">
+                    <div class="alert-icon" style="color: #06aed5;">i</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Weekend Schedule Active</div>
+                        <div class="alert-message">Extended service hours until 2:00 AM for late-night dining destinations.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departures Board -->
+            <div class="departures-board">
+                <div class="board-header">
+                    <h2 class="board-title">Next Departures</h2>
+                    <div class="board-subtitle">Gastronomy Central Station</div>
+                </div>
+                <div class="departure-list">
+                    <div class="departure-item">
+                        <div class="departure-line" style="background: #e63946;">R</div>
+                        <div class="departure-destination">
+                            <div class="destination-name">Fusion Quarter</div>
+                            <div class="destination-via">via Spice Market</div>
+                        </div>
+                        <div class="departure-time">
+                            2<span class="time-minutes">min</span>
+                        </div>
+                    </div>
+                    <div class="departure-item">
+                        <div class="departure-line" style="background: #06aed5;">B</div>
+                        <div class="departure-destination">
+                            <div class="destination-name">Harbor Catch</div>
+                            <div class="destination-via">express service</div>
+                        </div>
+                        <div class="departure-time">
+                            4<span class="time-minutes">min</span>
+                        </div>
+                    </div>
+                    <div class="departure-item">
+                        <div class="departure-line" style="background: #ffd60a;">Y</div>
+                        <div class="departure-destination">
+                            <div class="destination-name">Ramen District</div>
+                            <div class="destination-via">via Dim Sum Plaza</div>
+                        </div>
+                        <div class="departure-time">
+                            7<span class="time-minutes">min</span>
+                        </div>
+                    </div>
+                    <div class="departure-item">
+                        <div class="departure-line" style="background: #e63946;">R</div>
+                        <div class="departure-destination">
+                            <div class="destination-name">Mediterranean Mile</div>
+                            <div class="destination-via">via Tapas Terminal</div>
+                        </div>
+                        <div class="departure-time">
+                            9<span class="time-minutes">min</span>
+                        </div>
+                    </div>
+                    <div class="departure-item">
+                        <div class="departure-line" style="background: #06aed5;">B</div>
+                        <div class="departure-destination">
+                            <div class="destination-name">Oyster Bay</div>
+                            <div class="destination-via">all stops</div>
+                        </div>
+                        <div class="departure-time">
+                            12<span class="time-minutes">min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trip Planner -->
+            <div class="trip-planner">
+                <div class="planner-header">
+                    <h2 class="planner-title">Plan Your Journey</h2>
+                </div>
+                <form class="planner-form" id="tripForm">
+                    <div class="form-group">
+                        <label class="form-label" for="origin">From</label>
+                        <input
+                            type="text"
+                            id="origin"
+                            class="form-input"
+                            placeholder="Enter origin station"
+                            value="Gastronomy Central"
+                        >
+                    </div>
+
+                    <button type="button" class="swap-button" aria-label="Swap origin and destination">
+                        ⇅
+                    </button>
+
+                    <div class="form-group">
+                        <label class="form-label" for="destination">To</label>
+                        <input
+                            type="text"
+                            id="destination"
+                            class="form-input"
+                            placeholder="Enter destination station"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="datetime">Departure Time</label>
+                        <input
+                            type="datetime-local"
+                            id="datetime"
+                            class="form-input"
+                        >
+                    </div>
+
+                    <button type="submit" class="plan-button">
+                        Find Routes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Route Map -->
+            <div class="route-map">
+                <div class="map-header">
+                    <h2 class="map-title">Culinary Transit Network</h2>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e63946;"></div>
+                            <span>Red Line - International</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffd60a;"></div>
+                            <span>Yellow Line - Asian</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #06aed5;"></div>
+                            <span>Blue Line - Seafood</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-canvas">
+                    <div class="metro-lines">
+                        <!-- Red Line -->
+                        <div class="metro-line line-horizontal line-red">
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Fusion Quarter</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Spice Market</div>
+                            </div>
+                            <div class="station-dot transfer" tabindex="0" role="button">
+                                <div class="station-label">Gastronomy Central</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Tapas Terminal</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Mediterranean Mile</div>
+                            </div>
+                        </div>
+
+                        <!-- Yellow Line -->
+                        <div class="metro-line line-horizontal line-yellow">
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Sushi Station</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Dim Sum Plaza</div>
+                            </div>
+                            <div class="station-dot transfer" tabindex="0" role="button">
+                                <div class="station-label">Gastronomy Central</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Ramen District</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Pho Terminal</div>
+                            </div>
+                        </div>
+
+                        <!-- Blue Line -->
+                        <div class="metro-line line-horizontal line-blue">
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Oyster Bay</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Fish Market</div>
+                            </div>
+                            <div class="station-dot transfer" tabindex="0" role="button">
+                                <div class="station-label">Gastronomy Central</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Crab Wharf</div>
+                            </div>
+                            <div class="station-dot" tabindex="0" role="button">
+                                <div class="station-label">Harbor Catch</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fare Information -->
+            <div class="fare-info">
+                <div class="fare-header">
+                    <h2 class="fare-title">Fare Information</h2>
+                </div>
+                <div class="fare-list">
+                    <div class="fare-item">
+                        <div>
+                            <div class="fare-type">Single Journey</div>
+                            <div class="fare-description">Valid for 2 hours</div>
+                        </div>
+                        <div class="fare-price">$3.50</div>
+                    </div>
+                    <div class="fare-item">
+                        <div>
+                            <div class="fare-type">Day Pass</div>
+                            <div class="fare-description">Unlimited travel</div>
+                        </div>
+                        <div class="fare-price">$12.00</div>
+                    </div>
+                    <div class="fare-item">
+                        <div>
+                            <div class="fare-type">Weekly Pass</div>
+                            <div class="fare-description">7 consecutive days</div>
+                        </div>
+                        <div class="fare-price">$35.00</div>
+                    </div>
+                    <div class="fare-item">
+                        <div>
+                            <div class="fare-type">Gourmet Pass</div>
+                            <div class="fare-description">Monthly unlimited + dining discounts</div>
+                        </div>
+                        <div class="fare-price">$89.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Navigation Controls -->
+<div class="navigation">
+    <button class="nav-button" id="prevDesign" aria-label="Previous design">←</button>
+    <button class="nav-button" id="nextDesign" aria-label="Next design">→</button>
+</div>
+
+
+
+</body>
+</html>

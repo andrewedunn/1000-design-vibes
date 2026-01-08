@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Prime - Audio Visualizer Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Stark Prime - Crafted for users with international roots
+ABOUTME: This design system implements an audio_visualizer with psychedelic aesthetics.
+ABOUTME: Key characteristics: kaleidoscopic color shifts, optical illusion patterns, stark geometric forms with fluid motion
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #FF1493;
+--color-secondary: #00FFFF;
+--color-tertiary: #FFD700;
+--color-quaternary: #7FFF00;
+--color-background: #FAFAFA;
+--color-surface: #FFFFFF;
+--color-text: #1A1A1A;
+--color-text-muted: #666666;
+--font-heading: 'Orbitron', monospace;
+--font-body: 'Space Mono', monospace;
+--radius-default: 0px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Psychedelic color cycling creates hypnotic, mind-bending visual states
+2. Sharp geometric grids contrast with organic waveform fluidity
+3. High contrast black-on-white base provides clinical clarity (healthcare context)
+4. Optical patterns and moiré effects suggest altered perception (edgy tone)
+5. International medical iconography bridges cultural contexts
+
+BEST FOR:
+- Therapeutic audio applications (binaural beats, sound therapy)
+- Medical soundscape environments (meditation, stress relief)
+- Clinical music therapy interfaces
+- Biofeedback audio visualization
+- Cross-cultural wellness audio platforms
+
+AVOID IF:
+- Traditional music player aesthetics desired
+- Subtle, minimal experiences needed
+- Motion sensitivity concerns (high animation)
+- Conservative medical branding required
+
+FUNCTIONAL DIRECTION: audio_visualizer
+This design must clearly function as an audio_visualizer. Required elements:
+- Animated frequency spectrum bars showing audio analysis
+- Waveform visualization display
+- Playback controls (play/pause, skip, volume)
+- Track information display (title, artist, duration)
+- Progress bar with time indicators
+- Visual feedback responding to audio input
+- Multiple visualization modes/styles
+
+DESIGN ERA: psychedelic
+Inspired by 1960s-70s psychedelic poster art, optical illusions, kaleidoscopic patterns,
+vibrant clashing colors, mind-expansion visual metaphors, and the fusion of Eastern and
+Western aesthetic traditions that defined the era.
+
+INDUSTRY: healthcare
+Applied healthcare context through clinical precision, therapeutic color theory,
+medical-grade clarity, accessibility standards, and biofeedback visualization patterns
+used in therapeutic settings.
+
+EMOTIONAL TONE: edgy
+Sharp contrasts, aggressive geometry, boundary-pushing color combinations, and
+unconventional spatial relationships create tension and contemporary edge.
+
+COLOR MODE: light_only
+High-brightness white background maintains clinical clarity while allowing vibrant
+psychedelic colors to achieve maximum saturation and optical vibration effects.
+-->
+
+<style>
+:root {
+    /* Core Colors */
+    --color-primary: #FF1493;      /* Deep Pink */
+    --color-secondary: #00FFFF;    /* Cyan */
+    --color-tertiary: #FFD700;     /* Gold */
+    --color-quaternary: #7FFF00;   /* Chartreuse */
+    --color-quinary: #FF00FF;      /* Magenta */
+    --color-background: #FAFAFA;   /* Off-white */
+    --color-surface: #FFFFFF;      /* Pure white */
+    --color-text: #1A1A1A;         /* Near black */
+    --color-text-muted: #666666;   /* Medium gray */
+    --color-border: #000000;       /* Pure black */
+
+    /* Typography */
+    --font-heading: 'Orbitron', monospace;
+    --font-body: 'Space Mono', monospace;
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-size-2xl: 36px;
+    --font-size-3xl: 48px;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: calc(var(--space-unit) * 1);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+    --space-2xl: calc(var(--space-unit) * 6);
+
+    /* Shapes */
+    --radius-default: 0px;
+    --shadow-default: 4px 4px 0 rgba(0, 0, 0, 1);
+    --shadow-elevated: 8px 8px 0 rgba(0, 0, 0, 1);
+    --border-width: 3px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-background);
+    overflow-x: hidden;
+}
+
+/* Psychedelic Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 20, 147, 0.03) 10px, rgba(255, 20, 147, 0.03) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0, 255, 255, 0.03) 10px, rgba(0, 255, 255, 0.03) 20px);
+    animation: patternShift 20s linear infinite;
+}
+
+@keyframes patternShift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(40px, 40px); }
+}
+
+/* Layout Grid */
+.visualizer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: var(--space-xl) 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+    position: relative;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * var(--border-width));
+    left: 0;
+    width: 100%;
+    height: var(--border-width);
+    background: linear-gradient(90deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 25%,
+        var(--color-tertiary) 50%,
+        var(--color-quaternary) 75%,
+        var(--color-primary) 100%);
+    animation: gradientFlow 4s linear infinite;
+}
+
+@keyframes gradientFlow {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: var(--space-sm);
+    position: relative;
+    display: inline-block;
+}
+
+h1::before {
+    content: '◆';
+    position: absolute;
+    left: -40px;
+    color: var(--color-primary);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+h1::after {
+    content: '◆';
+    position: absolute;
+    right: -40px;
+    color: var(--color-secondary);
+    animation: pulse 2s ease-in-out infinite 1s;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.tagline {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Main Visualizer Area */
+.visualizer-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-lg);
+}
+
+/* Frequency Spectrum Visualizer */
+.spectrum-container {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    padding: var(--space-lg);
+    position: relative;
+}
+
+.spectrum-container::before {
+    content: 'FREQUENCY SPECTRUM';
+    position: absolute;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+}
+
+.spectrum-display {
+    height: 400px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2px;
+    margin-top: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Frequency Bars */
+.frequency-bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--color-primary), var(--color-secondary));
+    border: 2px solid var(--color-border);
+    animation: frequencyPulse 0.5s ease-in-out infinite alternate;
+    min-height: 20px;
+    position: relative;
+    transition: all 0.1s ease;
+}
+
+.frequency-bar:nth-child(2n) {
+    background: linear-gradient(to top, var(--color-tertiary), var(--color-quaternary));
+    animation-delay: 0.1s;
+}
+
+.frequency-bar:nth-child(3n) {
+    background: linear-gradient(to top, var(--color-secondary), var(--color-quinary));
+    animation-delay: 0.2s;
+}
+
+.frequency-bar:nth-child(4n) {
+    background: linear-gradient(to top, var(--color-quaternary), var(--color-primary));
+    animation-delay: 0.3s;
+}
+
+@keyframes frequencyPulse {
+    0% { height: 20%; opacity: 0.8; }
+    100% { height: var(--bar-height, 60%); opacity: 1; }
+}
+
+/* Generate 64 frequency bars */
+.frequency-bar:nth-child(1) { --bar-height: 45%; }
+.frequency-bar:nth-child(2) { --bar-height: 65%; }
+.frequency-bar:nth-child(3) { --bar-height: 80%; }
+.frequency-bar:nth-child(4) { --bar-height: 70%; }
+.frequency-bar:nth-child(5) { --bar-height: 55%; }
+.frequency-bar:nth-child(6) { --bar-height: 85%; }
+.frequency-bar:nth-child(7) { --bar-height: 60%; }
+.frequency-bar:nth-child(8) { --bar-height: 75%; }
+.frequency-bar:nth-child(9) { --bar-height: 50%; }
+.frequency-bar:nth-child(10) { --bar-height: 90%; }
+.frequency-bar:nth-child(11) { --bar-height: 65%; }
+.frequency-bar:nth-child(12) { --bar-height: 70%; }
+.frequency-bar:nth-child(13) { --bar-height: 55%; }
+.frequency-bar:nth-child(14) { --bar-height: 80%; }
+.frequency-bar:nth-child(15) { --bar-height: 45%; }
+.frequency-bar:nth-child(16) { --bar-height: 95%; }
+
+/* Waveform Display */
+.waveform-container {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-default);
+    padding: var(--space-lg);
+    position: relative;
+}
+
+.waveform-container::before {
+    content: 'WAVEFORM';
+    position: absolute;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+}
+
+.waveform-display {
+    height: 150px;
+    margin-top: var(--space-xl);
+    position: relative;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0, 0, 0, 0.1) 24px, rgba(0, 0, 0, 0.1) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(0, 0, 0, 0.1) 24px, rgba(0, 0, 0, 0.1) 25px);
+    overflow: hidden;
+}
+
+.waveform-path {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-50%);
+}
+
+.waveform-path svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Circular Visualizer */
+.circular-viz {
+    margin-top: var(--space-lg);
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-default);
+}
+
+.circle-pattern {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: var(--border-width) solid var(--color-border);
+    position: relative;
+    animation: rotate 10s linear infinite;
+    background: conic-gradient(
+        var(--color-primary) 0deg,
+        var(--color-secondary) 60deg,
+        var(--color-tertiary) 120deg,
+        var(--color-quaternary) 180deg,
+        var(--color-quinary) 240deg,
+        var(--color-primary) 300deg,
+        var(--color-primary) 360deg
+    );
+}
+
+.circle-pattern::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+}
+
+.circle-pattern::after {
+    content: '◎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-3xl);
+    color: var(--color-border);
+    animation: counterRotate 5s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes counterRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/* Track Info Panel */
+.track-info-panel {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.album-art {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-secondary) 25%,
+        var(--color-tertiary) 50%,
+        var(--color-quaternary) 75%,
+        var(--color-quinary) 100%);
+    border: var(--border-width) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-3xl);
+    animation: albumPulse 4s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.album-art::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: repeating-conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 10deg,
+        rgba(0, 0, 0, 0.3) 10deg,
+        rgba(0, 0, 0, 0.3) 20deg
+    );
+    animation: spinPattern 20s linear infinite;
+}
+
+@keyframes albumPulse {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(180deg); }
+}
+
+@keyframes spinPattern {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.track-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.2;
+}
+
+.track-artist {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.track-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 2px solid var(--color-border);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.meta-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.meta-value {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* Visualization Modes */
+.viz-modes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.viz-mode-btn {
+    padding: var(--space-sm);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.viz-mode-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.viz-mode-btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+.viz-mode-btn.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.viz-mode-btn:focus {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+/* Playback Controls */
+.playback-controls {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.progress-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.progress-bar-container {
+    position: relative;
+    height: 40px;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 37%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+    transition: width 0.3s ease;
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.progress-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+}
+
+.time-current {
+    color: var(--color-primary);
+}
+
+.time-total {
+    color: var(--color-text-muted);
+}
+
+/* Control Buttons */
+.control-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.control-btn {
+    width: 60px;
+    height: 60px;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    font-size: var(--font-size-xl);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.control-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: var(--shadow-elevated);
+}
+
+.control-btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+.control-btn:focus {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+.control-btn.play-btn {
+    width: 80px;
+    height: 80px;
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-size: var(--font-size-2xl);
+}
+
+.control-btn.play-btn:hover {
+    background: var(--color-secondary);
+}
+
+/* Volume Control */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.volume-icon {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    min-width: 30px;
+}
+
+.volume-slider-container {
+    flex: 1;
+    height: 30px;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    position: relative;
+}
+
+.volume-slider-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 67%;
+    background: var(--color-quaternary);
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+/* Biometric Indicators (Healthcare Context) */
+.biometric-panel {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-default);
+    padding: var(--space-lg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.biometric-indicator {
+    text-align: center;
+    padding: var(--space-md);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.biometric-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-xs);
+}
+
+.biometric-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    color: var(--color-primary);
+    position: relative;
+}
+
+.biometric-value::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: currentColor;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.biometric-unit {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Playlist Queue */
+.playlist-queue {
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    box-shadow: var(--shadow-default);
+    padding: var(--space-lg);
+}
+
+.queue-header {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.queue-item:hover {
+    border-color: var(--color-primary);
+    transform: translateX(4px);
+}
+
+.queue-item.active {
+    background: linear-gradient(90deg, rgba(255, 20, 147, 0.1), transparent);
+    border-left: 4px solid var(--color-primary);
+}
+
+.queue-number {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    min-width: 30px;
+}
+
+.queue-item.active .queue-number {
+    color: var(--color-primary);
+}
+
+.queue-info {
+    flex: 1;
+}
+
+.queue-track-name {
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+}
+
+.queue-track-artist {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.queue-duration {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+
+/* Footer Navigation */
+.footer-nav {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    border-top: var(--border-width) solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-btn {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.nav-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: var(--shadow-elevated);
+}
+
+.nav-btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+.nav-btn:focus {
+    outline: 3px solid var(--color-tertiary);
+    outline-offset: 2px;
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nav-info {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .visualizer-main {
+        grid-template-columns: 1fr;
+    }
+
+    .biometric-panel {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .visualizer-container {
+        padding: var(--space-md);
+    }
+
+    h1 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .spectrum-display {
+        height: 250px;
+    }
+
+    .control-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .control-btn.play-btn {
+        width: 70px;
+        height: 70px;
+    }
+
+    .biometric-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .viz-modes {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-background: #FFFFFF;
+        --color-text: #000000;
+        --border-width: 4px;
+    }
+}
+</style>
+
+<div class="visualizer-container">
+    <header class="header">
+        <h1>Stark Prime</h1>
+        <p class="tagline">Crafted for users with international roots</p>
+    </header>
+
+    <div class="visualizer-main">
+        <div>
+            <div class="spectrum-container">
+                <div class="spectrum-display" id="spectrum">
+                    <!-- Frequency bars generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="waveform-container">
+                <div class="waveform-display">
+                    <div class="waveform-path">
+                        <svg viewBox="0 0 1000 150" preserveAspectRatio="none">
+                            <path d="M0,75 Q50,20 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75"
+                                  stroke="#FF1493"
+                                  stroke-width="3"
+                                  fill="none"
+                                  stroke-linecap="round">
+                                <animate attributeName="d"
+                                         dur="3s"
+                                         repeatCount="indefinite"
+                                         values="M0,75 Q50,20 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75;
+                                                 M0,75 Q50,130 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75;
+                                                 M0,75 Q50,20 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75" />
+                            </path>
+                            <path d="M0,75 Q50,130 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75"
+                                  stroke="#00FFFF"
+                                  stroke-width="2"
+                                  fill="none"
+                                  stroke-linecap="round"
+                                  opacity="0.6">
+                                <animate attributeName="d"
+                                         dur="2s"
+                                         repeatCount="indefinite"
+                                         values="M0,75 Q50,130 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75;
+                                                 M0,75 Q50,20 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75;
+                                                 M0,75 Q50,130 100,75 T200,75 T300,75 T400,75 T500,75 T600,75 T700,75 T800,75 T900,75 T1000,75" />
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="circular-viz">
+                <div class="circle-pattern"></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="track-info-panel">
+                <div class="album-art">♫</div>
+                <div class="track-details">
+                    <div class="track-title">Binaural Theta Wave</div>
+                    <div class="track-artist">Therapeutic Soundscapes</div>
+                    <div class="track-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Frequency</span>
+                            <span class="meta-value">528 Hz</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">BPM</span>
+                            <span class="meta-value">60</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Format</span>
+                            <span class="meta-value">FLAC</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Bitrate</span>
+                            <span class="meta-value">1411 kbps</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viz-modes">
+                    <button class="viz-mode-btn active">Spectrum</button>
+                    <button class="viz-mode-btn">Radial</button>
+                    <button class="viz-mode-btn">Mandala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="playback-controls">
+        <div class="progress-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div class="progress-times">
+                <span class="time-current">02:47</span>
+                <span class="time-total">07:30</span>
+            </div>
+        </div>
+
+        <div class="control-buttons">
+            <button class="control-btn" aria-label="Previous track">⏮</button>
+            <button class="control-btn" aria-label="Rewind 10 seconds">⏪</button>
+            <button class="control-btn play-btn" aria-label="Play">▶</button>
+            <button class="control-btn" aria-label="Forward 10 seconds">⏩</button>
+            <button class="control-btn" aria-label="Next track">⏭</button>
+        </div>
+
+        <div class="volume-control">
+            <span class="volume-icon">🔊</span>
+            <div class="volume-slider-container">
+                <div class="volume-slider-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="biometric-panel">
+        <div class="biometric-indicator">
+            <div class="biometric-label">Heart Rate</div>
+            <div class="biometric-value">68</div>
+            <div class="biometric-unit">BPM</div>
+        </div>
+        <div class="biometric-indicator">
+            <div class="biometric-label">Relaxation</div>
+            <div class="biometric-value">82%</div>
+            <div class="biometric-unit">Index</div>
+        </div>
+        <div class="biometric-indicator">
+            <div class="biometric-label">Session</div>
+            <div class="biometric-value">14:20</div>
+            <div class="biometric-unit">Minutes</div>
+        </div>
+    </div>
+
+    <div class="playlist-queue">
+        <h2 class="queue-header">Therapeutic Session Queue</h2>
+        <div class="queue-list">
+            <div class="queue-item">
+                <div class="queue-number">01</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">Alpha Wave Introduction</div>
+                    <div class="queue-track-artist">Mindful Frequencies</div>
+                </div>
+                <div class="queue-duration">05:23</div>
+            </div>
+            <div class="queue-item active">
+                <div class="queue-number">02</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">Binaural Theta Wave</div>
+                    <div class="queue-track-artist">Therapeutic Soundscapes</div>
+                </div>
+                <div class="queue-duration">07:30</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">03</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">Delta Sleep Induction</div>
+                    <div class="queue-track-artist">Clinical Sleep Solutions</div>
+                </div>
+                <div class="queue-duration">12:45</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">04</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">Gamma Focus Enhancement</div>
+                    <div class="queue-track-artist">Cognitive Performance Lab</div>
+                </div>
+                <div class="queue-duration">08:15</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">05</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">432 Hz Healing Tone</div>
+                    <div class="queue-track-artist">Vibrational Medicine Collective</div>
+                </div>
+                <div class="queue-duration">10:00</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">06</div>
+                <div class="queue-info">
+                    <div class="queue-track-name">Schumann Resonance 7.83</div>
+                    <div class="queue-track-artist">Earth Frequency Institute</div>
+                </div>
+                <div class="queue-duration">15:30</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-nav">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous design">← Previous</button>
+        <span class="nav-info">Design 81 / 250</span>
+        <button class="nav-btn" id="nextBtn" aria-label="Next design">Next →</button>
+    </footer>
+</div>
+
+<script>
+// Generate 64 frequency bars
+const spectrumDisplay = document.getElementById('spectrum');
+for (let i = 0; i < 64; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'frequency-bar';
+
+    // Randomize bar heights for more organic feel
+    const height = Math.random() * 80 + 20;
+    bar.style.setProperty('--bar-height', height + '%');
+
+    spectrumDisplay.appendChild(bar);
+}
+
+// Animate frequency bars continuously
+setInterval(() => {
+    const bars = document.querySelectorAll('.frequency-bar');
+    bars.forEach(bar => {
+        const newHeight = Math.random() * 80 + 20;
+        bar.style.setProperty('--bar-height', newHeight + '%');
+    });
+}, 150);
+
+// Visualization mode buttons
+document.querySelectorAll('.viz-mode-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.viz-mode-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+    });
+});
+
+// Play/Pause button toggle
+const playBtn = document.querySelector('.play-btn');
+let isPlaying = false;
+playBtn.addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    playBtn.textContent = isPlaying ? '⏸' : '▶';
+    playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+});
+
+// Queue item interactions
+document.querySelectorAll('.queue-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.queue-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+    });
+});
+
+// Keyboard navigation
+const TOTAL_DESIGNS = 250;
+const CURRENT_DESIGN = 81;
+
+document.getElementById('prevBtn').addEventListener('click', () => navigateDesign(-1));
+document.getElementById('nextBtn').addEventListener('click', () => navigateDesign(1));
+
+function navigateDesign(direction) {
+    const newDesign = CURRENT_DESIGN + direction;
+    if (newDesign >= 1 && newDesign <= TOTAL_DESIGNS) {
+        window.location.href = `design-${newDesign}.html`;
+    }
+}
+
+// Disable navigation buttons at boundaries
+if (CURRENT_DESIGN === 1) {
+    document.getElementById('prevBtn').disabled = true;
+}
+if (CURRENT_DESIGN === TOTAL_DESIGNS) {
+    document.getElementById('nextBtn').disabled = true;
+}
+
+// Simulate biometric updates
+setInterval(() => {
+    const heartRate = document.querySelector('.biometric-indicator:nth-child(1) .biometric-value');
+    const relaxation = document.querySelector('.biometric-indicator:nth-child(2) .biometric-value');
+
+    const currentHR = parseInt(heartRate.textContent);
+    const newHR = Math.max(60, Math.min(75, currentHR + (Math.random() > 0.5 ? 1 : -1)));
+    heartRate.textContent = newHR;
+
+    const currentRelax = parseInt(relaxation.textContent);
+    const newRelax = Math.max(75, Math.min(90, currentRelax + (Math.random() > 0.5 ? 1 : -1)));
+    relaxation.textContent = newRelax + '%';
+}, 3000);
+
+// Update session timer
+let sessionSeconds = 860; // 14:20
+setInterval(() => {
+    sessionSeconds++;
+    const minutes = Math.floor(sessionSeconds / 60);
+    const seconds = sessionSeconds % 60;
+    const sessionTimer = document.querySelector('.biometric-indicator:nth-child(3) .biometric-value');
+    sessionTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}, 1000);
+
+// Progress bar animation
+let progress = 37;
+setInterval(() => {
+    progress += 0.2;
+    if (progress > 100) progress = 0;
+    document.querySelector('.progress-bar-fill').style.width = progress + '%';
+
+    // Update time display
+    const totalSeconds = 450; // 7:30
+    const currentSeconds = Math.floor((progress / 100) * totalSeconds);
+    const currentMin = Math.floor(currentSeconds / 60);
+    const currentSec = currentSeconds % 60;
+    document.querySelector('.time-current').textContent =
+        `${currentMin}:${currentSec.toString().padStart(2, '0')}`;
+}, 100);
+</script>
+
+</body>
+</html>

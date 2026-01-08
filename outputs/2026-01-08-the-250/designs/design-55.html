@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dusk Marble - Memphis Code Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!--
+DESIGN: Dusk Marble - Memphis design with natural neutral tones
+ABOUTME: This design system implements a code_editor with Memphis aesthetics in dark mode.
+ABOUTME: Key characteristics: Playful geometric patterns, natural neutral palette, mysterious depth with layered shapes.
+
+QUICK START - Copy these variables to apply this design:
+--color-primary: #D4A574;
+--color-accent-pink: #C4889B;
+--color-accent-teal: #6B9B9E;
+--color-accent-sage: #8B9B7E;
+--color-background: #1A1812;
+--color-surface: #2B2419;
+--color-surface-raised: #3A3328;
+--color-text: #E8DFD3;
+--color-text-muted: #A69885;
+--color-border: #4A4338;
+--font-heading: 'Space Grotesk', sans-serif;
+--font-body: 'Space Grotesk', sans-serif;
+--font-mono: 'Space Mono', monospace;
+--radius-default: 2px;
+--space-unit: 8px;
+
+AESTHETIC PRINCIPLES:
+1. Memphis geometric patterns create visual rhythm - circles, triangles, squiggles scattered throughout
+2. Natural neutral tones evoke marble and stone - beiges, taupes, sage greens in dark mode
+3. Playful asymmetry balanced with functional grid - shapes break edges but don't obstruct
+4. Mysterious depth through layering - overlapping geometric forms create shadow play
+5. Bold geometric borders on interactive elements - thick lines in accent colors
+
+BEST FOR:
+- Creative coding environments where personality matters
+- Developer tools targeting designers or creative technologists
+- Nighttime coding sessions with reduced eye strain
+- Projects that want to stand out from typical dark themes
+
+AVOID IF:
+- You need maximum information density (patterns take space)
+- Corporate/enterprise settings requiring conservative aesthetics
+- Users expect traditional code editor conventions
+- Performance-critical displays (decorative elements add complexity)
+
+FUNCTIONAL DIRECTION: code_editor
+This design must clearly function as a code_editor. Required elements:
+- Code editing area with syntax highlighting
+- Line numbers
+- File tree/explorer sidebar
+- Tab system for multiple open files
+- Toolbar with common actions (save, undo, redo)
+- Status bar with file info and cursor position
+- Search/replace functionality
+- Settings/configuration access
+
+MEMPHIS DESIGN ERA INTERPRETATION:
+Memphis design (1980s postmodern movement) is characterized by:
+- Bold geometric shapes (circles, triangles, squiggles, zigzags)
+- Unexpected color combinations and patterns
+- Playful, anti-functional decoration
+- Flat planes with strong outlines
+- Mix of organic and geometric forms
+- Rejection of minimalism in favor of maximalism
+
+In this dark theme, we soften Memphis's typical bright primaries to natural neutrals
+while maintaining the geometric playfulness and pattern-heavy aesthetic.
+
+COLOR PALETTE RATIONALE:
+- Base: Deep warm grays suggesting marble and stone
+- Primary: Warm tan/beige for gold-like accent
+- Accents: Dusty rose, weathered teal, sage green - all desaturated naturals
+- Memphis typically uses bright colors, but "natural neutral tones" brief requires
+  we reimagine Memphis through earth tones and stone textures
+
+SPATIAL STRATEGY:
+- Asymmetric decorative elements don't interfere with functional zones
+- Geometric patterns concentrated in margins and backgrounds
+- Code area remains clean and highly readable
+- Memphis shapes used as visual separators and section markers
+
+TYPOGRAPHY:
+- Space Grotesk: Geometric sans-serif with Memphis-friendly forms
+- Space Mono: Monospace with circular forms echoing Memphis geometry
+- Both have the constructed, geometric quality Memphis design celebrated
+
+INTERACTIVE STATES:
+All buttons and interactive elements feature:
+- Thick geometric borders (Memphis style)
+- Shape transformations on hover
+- Color shifts maintaining the natural palette
+- Playful animations that feel hand-drawn
+
+FILE SIZE TARGET: 35KB+
+This design includes extensive pattern work, multiple component states,
+realistic code content, and decorative Memphis geometric elements.
+-->
+
+<style>
+:root {
+    /* Color Palette - Natural Neutral Memphis */
+    --color-primary: #D4A574;
+    --color-accent-pink: #C4889B;
+    --color-accent-teal: #6B9B9E;
+    --color-accent-sage: #8B9B7E;
+    --color-accent-coral: #C49B89;
+
+    --color-background: #1A1812;
+    --color-surface: #2B2419;
+    --color-surface-raised: #3A3328;
+    --color-surface-hover: #4A4338;
+    --color-text: #E8DFD3;
+    --color-text-muted: #A69885;
+    --color-border: #4A4338;
+    --color-border-focus: #D4A574;
+
+    /* Syntax highlighting */
+    --code-keyword: #C4889B;
+    --code-string: #8B9B7E;
+    --code-function: #6B9B9E;
+    --code-number: #D4A574;
+    --code-comment: #6B5E52;
+    --code-operator: #A69885;
+
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    /* Spacing */
+    --space-unit: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Shapes */
+    --radius-default: 2px;
+    --border-thick: 3px;
+    --border-medium: 2px;
+    --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow: hidden;
+}
+
+/* Memphis Geometric Patterns */
+.pattern-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: var(--border-thick) solid;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.pattern-squiggle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.pattern-triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* App Shell Layout */
+.editor-shell {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 48px 1fr 28px;
+    grid-template-areas:
+        "toolbar toolbar"
+        "sidebar main"
+        "statusbar statusbar";
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Toolbar */
+.toolbar {
+    grid-area: toolbar;
+    background: var(--color-surface);
+    border-bottom: var(--border-thick) solid var(--color-primary);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-md);
+    gap: var(--space-sm);
+    position: relative;
+    z-index: 10;
+}
+
+.toolbar-brand {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-primary);
+    margin-right: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.brand-shape {
+    width: 24px;
+    height: 24px;
+    background: var(--color-accent-teal);
+    border: var(--border-medium) solid var(--color-primary);
+    transform: rotate(45deg);
+}
+
+.toolbar-section {
+    display: flex;
+    gap: var(--space-xs);
+    padding: 0 var(--space-sm);
+    border-left: 2px solid var(--color-border);
+}
+
+.toolbar-section:first-of-type {
+    border-left: none;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: 2px solid transparent;
+    color: var(--color-text-muted);
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.toolbar-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-primary);
+    background: var(--color-surface-raised);
+}
+
+.toolbar-btn:focus {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+}
+
+.toolbar-btn.active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Sidebar File Explorer */
+.sidebar {
+    grid-area: sidebar;
+    background: var(--color-surface);
+    border-right: var(--border-thick) solid var(--color-border);
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar-header {
+    padding: var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-action {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.sidebar-action:hover {
+    color: var(--color-primary);
+}
+
+.file-tree {
+    padding: var(--space-sm);
+}
+
+.file-item {
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    border-left: var(--border-thick) solid transparent;
+    margin-bottom: 2px;
+    transition: all 0.2s;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.file-item:hover {
+    background: var(--color-surface-raised);
+    border-left-color: var(--color-accent-teal);
+}
+
+.file-item.active {
+    background: var(--color-surface-raised);
+    border-left-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.file-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.folder-item {
+    font-weight: 600;
+    color: var(--color-text);
+    padding: var(--space-sm);
+    margin-top: var(--space-sm);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Main Editor Area */
+.main-editor {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Tab Bar */
+.tab-bar {
+    display: flex;
+    background: var(--color-surface);
+    border-bottom: var(--border-medium) solid var(--color-border);
+    overflow-x: auto;
+    position: relative;
+    z-index: 5;
+}
+
+.tab {
+    padding: var(--space-sm) var(--space-md);
+    border-right: 2px solid var(--color-border);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    transition: all 0.2s;
+    position: relative;
+    min-width: 140px;
+}
+
+.tab:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+}
+
+.tab.active {
+    background: var(--color-background);
+    color: var(--color-primary);
+    border-bottom: var(--border-thick) solid var(--color-primary);
+}
+
+.tab-close {
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.tab:hover .tab-close {
+    opacity: 1;
+}
+
+.tab-close:hover {
+    color: var(--color-accent-pink);
+}
+
+/* Code Editor */
+.code-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    overflow: auto;
+    position: relative;
+    background: var(--color-background);
+}
+
+.line-numbers {
+    background: var(--color-surface);
+    border-right: var(--border-medium) solid var(--color-border);
+    padding: var(--space-md) var(--space-sm);
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    user-select: none;
+    position: relative;
+}
+
+.code-editor {
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text);
+    white-space: pre;
+    overflow: auto;
+}
+
+/* Syntax Highlighting */
+.keyword { color: var(--code-keyword); font-weight: 600; }
+.string { color: var(--code-string); }
+.function { color: var(--code-function); font-weight: 600; }
+.number { color: var(--code-number); }
+.comment { color: var(--code-comment); font-style: italic; }
+.operator { color: var(--code-operator); }
+.variable { color: var(--color-text); }
+
+/* Status Bar */
+.statusbar {
+    grid-area: statusbar;
+    background: var(--color-surface);
+    border-top: var(--border-thick) solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--space-md);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    position: relative;
+    z-index: 10;
+}
+
+.status-left,
+.status-right {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.status-item.clickable {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: var(--radius-default);
+    transition: all 0.2s;
+}
+
+.status-item.clickable:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent-sage);
+}
+
+.status-indicator.error {
+    background: var(--color-accent-pink);
+}
+
+/* Memphis Decorative Elements */
+.memphis-decoration {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.circle-decoration {
+    border: var(--border-thick) solid;
+    border-radius: 50%;
+}
+
+.squiggle-decoration {
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+}
+
+/* Search Panel */
+.search-panel {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 320px;
+    background: var(--color-surface);
+    border: var(--border-thick) solid var(--color-primary);
+    box-shadow: var(--shadow-default);
+    padding: var(--space-md);
+    z-index: 100;
+    display: none;
+}
+
+.search-panel.active {
+    display: block;
+}
+
+.search-header {
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-close {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.search-close:hover {
+    color: var(--color-text);
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-sm);
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    margin-bottom: var(--space-sm);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.search-options {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.search-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 12px;
+}
+
+.search-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.search-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.search-btn {
+    flex: 1;
+    padding: var(--space-sm);
+    background: var(--color-surface-raised);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.search-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-hover);
+}
+
+.search-btn.primary {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.search-btn.primary:hover {
+    background: var(--color-accent-coral);
+    border-color: var(--color-accent-coral);
+}
+
+/* Settings Panel */
+.settings-panel {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 360px;
+    background: var(--color-surface);
+    border: var(--border-thick) solid var(--color-accent-teal);
+    box-shadow: var(--shadow-default);
+    padding: var(--space-lg);
+    z-index: 100;
+    display: none;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-section {
+    margin-bottom: var(--space-lg);
+}
+
+.settings-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    font-size: 13px;
+}
+
+.setting-control select,
+.setting-control input[type="number"] {
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    padding: 4px 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.setting-control select:focus,
+.setting-control input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Memphis Background Patterns */
+.memphis-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border: 2px solid var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Navigation */
+.navigation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.nav-btn {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--color-primary);
+    background: var(--color-surface);
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: var(--color-primary);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    z-index: -1;
+}
+
+.nav-btn:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-btn:hover {
+    color: var(--color-background);
+    transform: scale(1.05);
+}
+
+.nav-btn:focus {
+    outline: 3px solid var(--color-border-focus);
+    outline-offset: 3px;
+}
+</style>
+
+<div class="editor-shell">
+    <!-- Memphis Background Decorations -->
+    <div class="memphis-bg">
+        <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+            <!-- Decorative circles -->
+            <circle cx="120" cy="30" r="12" fill="none" stroke="#D4A574" stroke-width="3" opacity="0.3"/>
+            <circle cx="280" cy="85" r="8" fill="#C4889B" opacity="0.15"/>
+            <circle cx="1200" cy="150" r="20" fill="none" stroke="#6B9B9E" stroke-width="3" opacity="0.25"/>
+            <circle cx="1450" cy="80" r="15" fill="#8B9B7E" opacity="0.12"/>
+
+            <!-- Decorative squiggles -->
+            <path d="M 200 40 Q 210 50, 220 40 T 240 40" stroke="#C4889B" stroke-width="3" fill="none" opacity="0.3"/>
+            <path d="M 1300 120 Q 1320 130, 1340 120 T 1380 120" stroke="#6B9B9E" stroke-width="3" fill="none" opacity="0.25"/>
+
+            <!-- Decorative triangles -->
+            <polygon points="60,70 70,90 50,90" fill="#8B9B7E" opacity="0.15"/>
+            <polygon points="1500,140 1515,165 1485,165" fill="none" stroke="#D4A574" stroke-width="3" opacity="0.2"/>
+
+            <!-- Bottom decorations -->
+            <circle cx="150" cy="750" r="18" fill="none" stroke="#C4889B" stroke-width="3" opacity="0.25"/>
+            <circle cx="1350" cy="720" r="14" fill="#6B9B9E" opacity="0.15"/>
+            <path d="M 1100 770 Q 1120 760, 1140 770 T 1180 770" stroke="#8B9B7E" stroke-width="3" fill="none" opacity="0.3"/>
+        </svg>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-brand">
+            <div class="brand-shape"></div>
+            Dusk Marble
+        </div>
+
+        <div class="toolbar-section">
+            <button class="toolbar-btn" title="New File">
+                <span>📄</span> New
+            </button>
+            <button class="toolbar-btn" title="Open File">
+                <span>📂</span> Open
+            </button>
+            <button class="toolbar-btn" title="Save">
+                <span>💾</span> Save
+            </button>
+        </div>
+
+        <div class="toolbar-section">
+            <button class="toolbar-btn" title="Undo">
+                <span>↶</span>
+            </button>
+            <button class="toolbar-btn" title="Redo">
+                <span>↷</span>
+            </button>
+        </div>
+
+        <div class="toolbar-section">
+            <button class="toolbar-btn" onclick="toggleSearch()" title="Find">
+                <span>🔍</span> Find
+            </button>
+            <button class="toolbar-btn" title="Replace">
+                <span>🔄</span> Replace
+            </button>
+        </div>
+
+        <div class="toolbar-section" style="margin-left: auto;">
+            <button class="toolbar-btn" title="Run Code">
+                <span>▶</span> Run
+            </button>
+            <button class="toolbar-btn" title="Debug">
+                <span>🐛</span> Debug
+            </button>
+            <button class="toolbar-btn" onclick="toggleSettings()" title="Settings">
+                <span>⚙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sidebar File Explorer -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            Explorer
+            <div>
+                <button class="sidebar-action" title="New File">+</button>
+                <button class="sidebar-action" title="Refresh">↻</button>
+            </div>
+        </div>
+
+        <div class="file-tree">
+            <div class="folder-item">📁 my-project</div>
+
+            <div class="file-item">
+                <span class="file-icon">📁</span> src
+            </div>
+
+            <div class="file-item active" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> App.jsx
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> index.js
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> utils.js
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">📁</span> components
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> Button.jsx
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> Header.jsx
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">📄</span> Card.jsx
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">📁</span> styles
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">🎨</span> theme.css
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">🎨</span> global.css
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">📁</span> public
+            </div>
+
+            <div class="file-item" style="padding-left: 32px;">
+                <span class="file-icon">🖼</span> logo.png
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">📄</span> package.json
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">📄</span> README.md
+            </div>
+
+            <div class="file-item">
+                <span class="file-icon">⚙</span> .gitignore
+            </div>
+        </div>
+
+        <!-- Decorative Memphis elements in sidebar -->
+        <svg style="position: absolute; bottom: 40px; left: 20px; opacity: 0.2;" width="60" height="60">
+            <circle cx="30" cy="30" r="20" fill="none" stroke="#D4A574" stroke-width="3"/>
+            <line x1="15" y1="30" x2="45" y2="30" stroke="#6B9B9E" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <!-- Main Editor Area -->
+    <div class="main-editor">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <div class="tab active">
+                <span>📄</span>
+                <span>App.jsx</span>
+                <button class="tab-close">×</button>
+            </div>
+            <div class="tab">
+                <span>📄</span>
+                <span>index.js</span>
+                <button class="tab-close">×</button>
+            </div>
+            <div class="tab">
+                <span>📄</span>
+                <span>utils.js</span>
+                <button class="tab-close">×</button>
+            </div>
+        </div>
+
+        <!-- Code Editor -->
+        <div class="code-container">
+            <div class="line-numbers">
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+<div>6</div>
+<div>7</div>
+<div>8</div>
+<div>9</div>
+<div>10</div>
+<div>11</div>
+<div>12</div>
+<div>13</div>
+<div>14</div>
+<div>15</div>
+<div>16</div>
+<div>17</div>
+<div>18</div>
+<div>19</div>
+<div>20</div>
+<div>21</div>
+<div>22</div>
+<div>23</div>
+<div>24</div>
+<div>25</div>
+<div>26</div>
+<div>27</div>
+<div>28</div>
+<div>29</div>
+<div>30</div>
+<div>31</div>
+<div>32</div>
+<div>33</div>
+<div>34</div>
+<div>35</div>
+<div>36</div>
+<div>37</div>
+<div>38</div>
+<div>39</div>
+<div>40</div>
+<div>41</div>
+<div>42</div>
+<div>43</div>
+<div>44</div>
+<div>45</div>
+            </div>
+
+            <div class="code-editor"><span class="keyword">import</span> React, { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { Header } <span class="keyword">from</span> <span class="string">'./components/Header'</span>;
+<span class="keyword">import</span> { Card } <span class="keyword">from</span> <span class="string">'./components/Card'</span>;
+<span class="keyword">import</span> <span class="string">'./styles/theme.css'</span>;
+
+<span class="comment">// Main application component with Memphis-inspired design</span>
+<span class="comment">// Natural neutral palette meets playful geometric forms</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">const</span> [<span class="variable">activeTheme</span>, <span class="variable">setActiveTheme</span>] <span class="operator">=</span> <span class="function">useState</span>(<span class="string">'dusk'</span>);
+  <span class="keyword">const</span> [<span class="variable">designs</span>, <span class="variable">setDesigns</span>] <span class="operator">=</span> <span class="function">useState</span>([]);
+
+  <span class="comment">// Fetch design collection on mount</span>
+  <span class="function">useEffect</span>(() <span class="operator">=></span> {
+    <span class="keyword">const</span> <span class="function">loadDesigns</span> <span class="operator">=</span> <span class="keyword">async</span> () <span class="operator">=></span> {
+      <span class="keyword">const</span> response <span class="operator">=</span> <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/designs'</span>);
+      <span class="keyword">const</span> data <span class="operator">=</span> <span class="keyword">await</span> response.<span class="function">json</span>();
+      <span class="function">setDesigns</span>(data);
+    };
+
+    <span class="function">loadDesigns</span>();
+  }, []);
+
+  <span class="keyword">const</span> <span class="function">handleThemeChange</span> <span class="operator">=</span> (newTheme) <span class="operator">=></span> {
+    <span class="function">setActiveTheme</span>(newTheme);
+    document.body.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, newTheme);
+  };
+
+  <span class="keyword">return</span> (
+    <span class="operator">&lt;</span><span class="keyword">div</span> <span class="variable">className</span><span class="operator">=</span><span class="string">"app-container"</span><span class="operator">></span>
+      <span class="operator">&lt;</span>Header
+        theme<span class="operator">=</span>{activeTheme}
+        onThemeChange<span class="operator">=</span>{handleThemeChange}
+      <span class="operator">/></span>
+
+      <span class="operator">&lt;</span><span class="keyword">main</span> <span class="variable">className</span><span class="operator">=</span><span class="string">"design-grid"</span><span class="operator">></span>
+        {designs.<span class="function">map</span>(design <span class="operator">=></span> (
+          <span class="operator">&lt;</span>Card
+            key<span class="operator">=</span>{design.id}
+            title<span class="operator">=</span>{design.name}
+            tagline<span class="operator">=</span>{design.tagline}
+            era<span class="operator">=</span>{design.era}
+          <span class="operator">/></span>
+        ))}
+      <span class="operator">&lt;/</span><span class="keyword">main</span><span class="operator">></span>
+    <span class="operator">&lt;/</span><span class="keyword">div</span><span class="operator">></span>
+  );
+}
+
+<span class="keyword">export default</span> App;</div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="statusbar">
+        <div class="status-left">
+            <div class="status-item">
+                <span class="status-indicator"></span>
+                <span>Git: main</span>
+            </div>
+            <div class="status-item">
+                <span>UTF-8</span>
+            </div>
+            <div class="status-item">
+                <span>JavaScript JSX</span>
+            </div>
+        </div>
+
+        <div class="status-right">
+            <div class="status-item clickable">
+                <span>Ln 12, Col 18</span>
+            </div>
+            <div class="status-item clickable">
+                <span>Spaces: 2</span>
+            </div>
+            <div class="status-item">
+                <span>0 ⚠ | 0 ✕</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel" id="searchPanel">
+        <div class="search-header">
+            Find & Replace
+            <button class="search-close" onclick="toggleSearch()">×</button>
+        </div>
+
+        <input type="text" class="search-input" placeholder="Find in current file..." value="useState">
+        <input type="text" class="search-input" placeholder="Replace with...">
+
+        <div class="search-options">
+            <label class="search-option">
+                <input type="checkbox" checked>
+                <span>Match Case</span>
+            </label>
+            <label class="search-option">
+                <input type="checkbox">
+                <span>Whole Word</span>
+            </label>
+            <label class="search-option">
+                <input type="checkbox">
+                <span>Regex</span>
+            </label>
+        </div>
+
+        <div class="search-actions">
+            <button class="search-btn">Find All</button>
+            <button class="search-btn primary">Replace</button>
+        </div>
+
+        <!-- Memphis decoration in panel -->
+        <svg style="position: absolute; bottom: 10px; right: 10px; opacity: 0.15;" width="40" height="40">
+            <polygon points="20,5 35,30 5,30" fill="#C4889B"/>
+        </svg>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="search-header">
+            Editor Settings
+            <button class="search-close" onclick="toggleSettings()">×</button>
+        </div>
+
+        <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+                <span class="setting-label">Color Theme</span>
+                <div class="setting-control">
+                    <select>
+                        <option selected>Dusk Marble (Dark)</option>
+                        <option>Dawn Marble (Light)</option>
+                        <option>Midnight Memphis</option>
+                        <option>Natural Neutrals</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Font Size</span>
+                <div class="setting-control">
+                    <input type="number" value="14" min="10" max="24">
+                </div>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Line Height</span>
+                <div class="setting-control">
+                    <select>
+                        <option>1.4</option>
+                        <option>1.6</option>
+                        <option selected>1.8</option>
+                        <option>2.0</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Editor Behavior</h3>
+            <div class="setting-item">
+                <span class="setting-label">Tab Size</span>
+                <div class="setting-control">
+                    <select>
+                        <option selected>2 spaces</option>
+                        <option>4 spaces</option>
+                        <option>Tab character</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Word Wrap</span>
+                <div class="setting-control">
+                    <select>
+                        <option>Off</option>
+                        <option selected>On</option>
+                        <option>Word Boundary</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Auto Save</span>
+                <div class="setting-control">
+                    <select>
+                        <option>Off</option>
+                        <option selected>After Delay</option>
+                        <option>On Focus Change</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Features</h3>
+            <div class="setting-item">
+                <span class="setting-label">Minimap</span>
+                <div class="setting-control">
+                    <select>
+                        <option selected>Enabled</option>
+                        <option>Disabled</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Bracket Pairs</span>
+                <div class="setting-control">
+                    <select>
+                        <option selected>Colorize</option>
+                        <option>Simple</option>
+                        <option>Off</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memphis decoration in settings -->
+        <svg style="position: absolute; top: 10px; right: 10px; opacity: 0.1;" width="50" height="50">
+            <circle cx="25" cy="25" r="20" fill="none" stroke="#6B9B9E" stroke-width="3"/>
+            <circle cx="25" cy="25" r="10" fill="#8B9B7E"/>
+        </svg>
+    </div>
+</div>
+
+<!-- Navigation Controls -->
+<div class="navigation">
+    <button class="nav-btn" onclick="navigateDesign(-1)" aria-label="Previous design" title="Previous Design">
+        <span>←</span>
+    </button>
+    <button class="nav-btn" onclick="navigateDesign(1)" aria-label="Next design" title="Next Design">
+        <span>→</span>
+    </button>
+</div>
+
+
+
+</body>
+</html>
